@@ -30,11 +30,13 @@ def couponUsageRate(dataSet,times,methods,seedNum_list,monteCarlo_L,distribution
     distribution_list = get_distribution(distribution_file,distribution,n)
     succ_distribution, dis_distribution, tran_distribution, constantFactor_distribution = distribution_list
     init_tranProMatrix,D = single_deliverer.getTranProMatrix(adj,tran_distribution)
+
     method_deliverers = []
     method_deliverers_file = 'D:/{}/deliverers_{}_distri{}_constantFactor{}_monteCarloL{}_seedNum{}.txt'\
         .format(dataFile_prefix,dataSet,distribution,constantFactorDistri,monteCarlo_L,m,personalization)
     methods_temp = []
     method2runningTime = {key:0 for key in methods}
+
     if method_type == None:
         if os.path.exists(method_deliverers_file):
             with open(method_deliverers_file, 'r') as f:
@@ -77,6 +79,7 @@ def couponUsageRate(dataSet,times,methods,seedNum_list,monteCarlo_L,distribution
                     deliverers = get_couponDeliverers.deliverers_1_neighbor(dataSet,m,succ_distribution,tran_distribution,init_tranProMatrix)
                     method_deliverers.append(deliverers)
                 end_time = time.time()
+
                 method2runningTime[method] = end_time-start_time
             res_list = list(zip(methods, method_deliverers))
             with open(method_deliverers_file, 'a+') as file:
@@ -143,6 +146,8 @@ def couponUsageRate(dataSet,times,methods,seedNum_list,monteCarlo_L,distribution
     #     for item in method_usageRate_list:
     #         file.write(f'{item[0]}:{item[1]}\n')
 
+
+
 def get_distribution(distribution_file,distribution,n):
     if os.path.exists(distribution_file):
         with open(distribution_file, 'rb') as f:
@@ -184,7 +189,8 @@ def get_distribution(distribution_file,distribution,n):
             total = (succ_distribution + dis_distribution + tran_distribution).astype(float)
             succ_distribution = np.divide(succ_distribution,total,out=np.zeros_like(succ_distribution),where=(total!=0))
             dis_distribution = np.divide(dis_distribution,total,out=np.zeros_like(dis_distribution),where=(total!=0))
-            tran_distribution = np.divide(tran_distribution,total,out=np.ones_like(tran_distribution),where=(total!=0))
+            # tran_distribution = np.divide(tran_distribution,total,out=np.ones_like(tran_distribution),where=(total!=0)) # todo gzc modify
+            tran_distribution = np.divide(tran_distribution,total,out=np.zeros_like(tran_distribution),where=(total!=0))
             constantFactor_distribution = np.random.poisson(lambda_4,n).astype(float)
             constantFactor_distribution = (constantFactor_distribution-np.min(constantFactor_distribution))\
                                           /(np.max(constantFactor_distribution)-np.min(constantFactor_distribution))
@@ -198,7 +204,9 @@ def get_distribution(distribution_file,distribution,n):
                                           where=(total != 0))
             dis_distribution = np.divide(dis_distribution, total, out=np.zeros_like(dis_distribution),
                                          where=(total != 0))
-            tran_distribution = np.divide(tran_distribution, total, out=np.ones_like(tran_distribution),
+            # tran_distribution = np.divide(tran_distribution, total, out=np.ones_like(tran_distribution), # todo gzc modify
+            #                               where=(total != 0))
+            tran_distribution = np.divide(tran_distribution, total, out=np.zeros_like(tran_distribution), 
                                           where=(total != 0))
             constantFactor_distribution = truncnorm.rvs(0,np.inf,loc=0,scale=1,size=n)
             constantFactor_distribution = (constantFactor_distribution - np.min(constantFactor_distribution)) \
@@ -218,13 +226,16 @@ def simulation(methods,method_deliverers,init_tranProMatrix,usageRate_file,distr
     lastSeedSet2usageNum = {key: 0 for key in methods}
     for k in range(len(seedNum_list)):
         seedNum = seedNum_list[k]
+
         with open(usageRate_file, 'a+') as file:
             file.write(f'seedNum:{seedNum}\n')
+            
         for i in range(len(methods)):
             if k == 0:
                 deliverers = method_deliverers[i][:seedNum]
             else:
                 deliverers = method_deliverers[i][seedNum_list[k-1]:seedNum_list[k]]
+
             method = methods[i]
             usageNum = 0
             count = 0
@@ -366,10 +377,12 @@ def simulation(methods,method_deliverers,init_tranProMatrix,usageRate_file,distr
                     usageNum_list.append(last_usageNum+usageNum)
                     print('seedNum='+str(seedNum)+' '+method + ' avgUsageRate = ' + str(avg_usageRate)+' times:'+ str(times[count]))
                     count += 1
+                    
             with open(usageRate_file, 'a+') as file:
                 file.write(f'{method}:{avg_usageRate_list}\n')
                 lastSeedSet2usageNum[method] = usageNum_list
     return None
+
 #在simulation基础上：对于首次取得券未使用的用户后续使用概率为0
 def simulation_firstUnused(methods, method_deliverers, init_tranProMatrix, usageRate_file, distribution_list, seedNum_list):
     succ_distribution, dis_distribution, tran_distribution, constantFactor_distribution = distribution_list

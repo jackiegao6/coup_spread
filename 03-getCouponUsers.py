@@ -14,10 +14,13 @@ def monteCarloSimulation(tranProMatrix,indexes,index,L,succ_distribution,dis_dis
     n = tranProMatrix.shape[0]
     S = np.zeros((1,n))
     avg_succ_pros = np.full((1, n), 0,dtype=np.float64)
+
+    temp_tranProMatrix = copy.deepcopy(tranProMatrix)# 转发概率
+    temp_succ_distribution = copy.deepcopy(succ_distribution)# 用户的使用概率
+    temp_dis_distribution = copy.deepcopy(dis_distribution)# 丢弃概率
+
     for i in range(L): # 进行L轮蒙特卡洛模拟，记录每轮中用户使用优惠券的情况
-        temp_tranProMatrix = copy.deepcopy(tranProMatrix)# 转发概率
-        temp_succ_distribution = copy.deepcopy(succ_distribution)# 用户的使用概率
-        temp_dis_distribution = copy.deepcopy(dis_distribution)# 丢弃概率
+
         if personalization == None:
             avg_succ_pros += monteCarlo_singleTime(temp_tranProMatrix,indexes,temp_succ_distribution,temp_dis_distribution,constantFactor_distribution)
         elif personalization == 'firstUnused':
@@ -69,33 +72,33 @@ def monteCarlo_singleTime(tranProMatrix,indexes,succ_distribution,dis_distributi
                 else:
                     continue
 
-        while (True):
-            random_pro = np.random.rand()
-            if next_node not in users_useAndDis:
-                if random_pro<succ_distribution[next_node]:
-                    users_useAndDis.append(next_node)
-                    modify_tranProMatrix_singleUser(tranProMatrix, next_node, constantFactor_distribution[next_node], succ_distribution[next_node])
-                    break
-                elif random_pro < succ_distribution[next_node]+dis_distribution[next_node]:
-                    break
-                else:
-                    neighbors = [index for index, value in enumerate(tranProMatrix[:,next_node]) if value != 0]
-                    if len(neighbors) > 0:
-                        neighbors_pro = [value for index, value in enumerate(tranProMatrix[:,next_node]) if value != 0]
-                        neighbors_pro = neighbors_pro / np.sum(neighbors_pro)
-                        next_node = np.random.choice(neighbors, p=neighbors_pro)
+        # while (True):
+        #     random_pro = np.random.rand()
+        #     if next_node not in users_useAndDis:
+        #         if random_pro<succ_distribution[next_node]:
+        #             users_useAndDis.append(next_node)
+        #             modify_tranProMatrix_singleUser(tranProMatrix, next_node, constantFactor_distribution[next_node], succ_distribution[next_node])
+        #             break
+        #         elif random_pro < succ_distribution[next_node]+dis_distribution[next_node]:
+        #             break
+        #         else:
+        #             neighbors = [index for index, value in enumerate(tranProMatrix[:,next_node]) if value != 0]
+        #             if len(neighbors) > 0:
+        #                 neighbors_pro = [value for index, value in enumerate(tranProMatrix[:,next_node]) if value != 0]
+        #                 neighbors_pro = neighbors_pro / np.sum(neighbors_pro)
+        #                 next_node = np.random.choice(neighbors, p=neighbors_pro)
 
-            else:
-                if random_pro < dis_distribution[next_node]+constantFactor_distribution[next_node]*succ_distribution[next_node]:
-                    break
-                else:
-                    neighbors = [index for index, value in enumerate(tranProMatrix[:,next_node]) if value != 0]
-                    if len(neighbors) > 0:
-                        neighbors_pro = [value for index, value in enumerate(tranProMatrix[:,next_node]) if value != 0]
-                        neighbors_pro = neighbors_pro / np.sum(neighbors_pro)
-                        next_node = np.random.choice(neighbors, p=neighbors_pro)
-                    else:
-                        break
+        #     else:
+        #         if random_pro < dis_distribution[next_node]+constantFactor_distribution[next_node]*succ_distribution[next_node]:
+        #             break
+        #         else:
+        #             neighbors = [index for index, value in enumerate(tranProMatrix[:,next_node]) if value != 0]
+        #             if len(neighbors) > 0:
+        #                 neighbors_pro = [value for index, value in enumerate(tranProMatrix[:,next_node]) if value != 0]
+        #                 neighbors_pro = neighbors_pro / np.sum(neighbors_pro)
+        #                 next_node = np.random.choice(neighbors, p=neighbors_pro)
+        #             else:
+        #                 break
 
     succ_pros = get_succPros(tranProMatrix, users_useAndDis, succ_distribution)
     return succ_pros
@@ -262,6 +265,7 @@ def monteCarlo_singleTime_firstDiscard(tranProMatrix,indexes,succ_distribution,d
        users_useAndDis.extend(firstdiscard)
     succ_pros = get_succPros(tranProMatrix, users_useAndDis, succ_distribution)
     return succ_pros
+
 def modify_tranProMatrix_singleUser(tranProMatrix,index,constantFactor,use_pro):
     if np.count_nonzero(tranProMatrix[:,index])>0:
         tranProMatrix[:, index] += np.where(tranProMatrix[:, index] != 0,

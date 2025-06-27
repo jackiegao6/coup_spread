@@ -18,19 +18,17 @@ import networkx as nx
 def deliverers_monteCarlo(dataSet,m,init_tranProMatrix,succ_distribution,dis_distribution,constantFactor_distribution,L,personalization):
 
     deliverers = []
-    users = []
-    # tranProMatrix = copy.deepcopy(init_tranProMatrix)
     deliverer = single_deliverer.getBestSingleDeliverer(init_tranProMatrix, succ_distribution,users) # 初始选择第一个节点
 
 
     deliverers.append(deliverer)
     new_deliverer = deliverer
-    print(deliverer)
+    print("first deliverer:",deliverer)
 
-    for i in range(m-1): #然后迭代进行 m-1 次
+    for i in range(m-1): 
         deliverers,new_deliverer = getCouponUsers.monteCarloSimulation(init_tranProMatrix,deliverers,new_deliverer,L,succ_distribution,dis_distribution,constantFactor_distribution,personalization)
-        print(new_deliverer)
-    print(deliverers)
+        print(i, " deliverer:",new_deliverer)
+    print("all deliverers",deliverers)
     return deliverers
 
 
@@ -47,6 +45,7 @@ def deliverers_theroy(dataSet, m, init_tranProMatrix,succ_distribution, dis_dist
     tranProMatrix = copy.deepcopy(init_tranProMatrix)
     temp1 = np.multiply(succ_distribution, (1 - constantFactor_distribution))
     tran_increment = np.multiply(succ_distribution, (1 - constantFactor_distribution)).reshape((1,-1)) / D.reshape(-1)
+
     for i in range(n):
         column_indices = np.nonzero(tranProMatrix[:,i])[0]
         temp = tran_increment[0][i]
@@ -118,7 +117,7 @@ def deliverers_1_neighbor(dataSet,m,succ_distribution,tran_distribution,init_tra
     return one_neighbor_pro_indexes
 
 if __name__ == '__main__':
-    dataSet = 'Facebook'
+    dataSet = '/root/autodl-tmp/data-processed/facebook-adj.pkl'
     m = 5
     use_pro = 0.4
     dis_pro = 0.2
@@ -138,8 +137,8 @@ if __name__ == '__main__':
     
     personalization = None
     init_tranProMatrix,D = single_deliverer.getTranProMatrix(adj,tran_distribution)
-    # deliverers = deliverers_threoy(dataSet, m, init_tranProMatrix,succ_distribution, dis_distribution,constantFactor_distribution,personalization,D)
-    # deliverers = deliverers_monteCarlo(dataSet,m,init_tranProMatrix,succ_distribution,dis_distribution,constantFactor_distribution,L,personalization)
-    deliverers = deliverers_1_neighbor(dataSet,m,succ_distribution,tran_distribution,init_tranProMatrix)
+    deliverers = deliverers_threoy(dataSet, m, init_tranProMatrix,succ_distribution, dis_distribution,constantFactor_distribution,personalization,D)
+    deliverers = deliverers_monteCarlo(dataSet,m,init_tranProMatrix,succ_distribution,dis_distribution,constantFactor_distribution,L,personalization)
+    # deliverers = deliverers_1_neighbor(dataSet,m,succ_distribution,tran_distribution,init_tranProMatrix)
     print(deliverers)
     # deliverers_monteCarlo(dataSet,m,init_tranProMatrix,dis_pro,use_pro,L,constantFactor)
