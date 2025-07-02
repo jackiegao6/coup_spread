@@ -104,12 +104,3 @@ if __name__ == '__main__':
     #计算转发矩阵
     tranProMatrix,neighbor_having = getTranProMatrix(adj,use_pro,dis_pro)
     max_column_index = getBestSingleDeliverer(tranProMatrix,use_pro,neighbor_having)#找到当前最适合单点投放的用户编号（max_column_index）
-    '''
-    这份脚本的作用是：
-
-    在社交网络中模拟优惠券从一个节点开始传播的过程
-
-    根据传播矩阵和用户行为建模找到最有效的单点投放者
-
-    支持理论优化策略，用于更复杂的投放策略分析
-    '''
