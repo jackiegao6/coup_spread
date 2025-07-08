@@ -18,7 +18,8 @@ from scipy.stats import truncnorm
 #methods 使用的方法集
 #m 投放源节点个数
 #monteCarlo_L 蒙特卡洛模拟轮数
-def couponUsageRate(dataSet,times,methods,seedNum_list,monteCarlo_L,distribution,constantFactorDistri,personalization,dataFile_prefix,method_type):
+def couponUsageRate(dataSet,times,methods,seedNum_list,monteCarlo_L,distribution,constantFactorDistri
+                    ,personalization,dataFile_prefix,method_type):
     print(dataSet)
     data_file = 'D:/data-processed/{}-adj.pkl'.format(dataSet)
     with open(data_file, 'rb') as f:
@@ -27,10 +28,11 @@ def couponUsageRate(dataSet,times,methods,seedNum_list,monteCarlo_L,distribution
     m = seedNum_list[-1]
     distribution_file = 'D:/{}/distribution{}_distri{}_constantFactor{}_seedNum{}.pkl' \
         .format(dataFile_prefix,dataSet, distribution, constantFactorDistri, m)
+    
     distribution_list = get_distribution(distribution_file,distribution,n)
     succ_distribution, dis_distribution, tran_distribution, constantFactor_distribution = distribution_list
     init_tranProMatrix,D = single_deliverer.getTranProMatrix(adj,tran_distribution)
-
+    # =============================
     method_deliverers = []
     method_deliverers_file = 'D:/{}/deliverers_{}_distri{}_constantFactor{}_monteCarloL{}_seedNum{}.txt'\
         .format(dataFile_prefix,dataSet,distribution,constantFactorDistri,monteCarlo_L,m,personalization)
@@ -47,6 +49,7 @@ def couponUsageRate(dataSet,times,methods,seedNum_list,monteCarlo_L,distribution
                     deliverers = eval(parts[1])
                     method_deliverers.append(deliverers)
             methods = methods_temp
+            
         else:
             print(methods)
             for method in methods:
@@ -654,5 +657,8 @@ if __name__ == '__main__':
         # methods = ['deliverers_theroy','succPro']
         seedNum_percent = 1000
         seedNum_list = get_seedNumList(dataSet,10,seedNum_percent)
-        couponUsageRate(dataSet,times,methods,seedNum_list,monteCarlo_L = 1000,distribution='random',constantFactorDistri='random',personalization ='None',dataFile_prefix='/大论文/第一个点实验/res_coupon_deliverers_theroy_test_succPro0.2_0.3_constantFactor0.4',method_type=None)
+        couponUsageRate(dataSet,times,methods,seedNum_list,monteCarlo_L = 1000,
+                        distribution='random',constantFactorDistri='random',personalization ='None',
+                        dataFile_prefix='/大论文/第一个点实验/res_coupon_deliverers_theroy_test_succPro0.2_0.3_constantFactor0.4',
+                        method_type=None)
         # couponUsageRate(dataSet,times,methods,seedNum_list,monteCarlo_L = 1000,distribution='random',constantFactorDistri='random',personalization ='None',dataFile_prefix='res_coupon_deliverers_theroy_test_succPro0.2_0.3',method_type=None)

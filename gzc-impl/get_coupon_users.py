@@ -101,10 +101,6 @@ def _select_next_neighbor(current_user: int, tran_matrix: np.ndarray) -> int or 
     normalized_probs = probabilities / prob_sum
     return np.random.choice(neighbors, p=normalized_probs)
 
-
-
-
-
 def find_next_best_deliverer(
     current_deliverers: list,
     tranProMatrix: np.ndarray,

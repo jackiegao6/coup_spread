@@ -1,12 +1,11 @@
 import logging
 import numpy as np
-
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+import networkx as nx
 
 import single_deliverer
 import get_coupon_users
 
-def select_deliverers_improved(
+def deliverers_monteCarlo(
     m: int,
     init_tranProMatrix: np.ndarray,
     succ_distribution: np.ndarray,
@@ -40,7 +39,7 @@ def select_deliverers_improved(
     )
     
     deliverers = [best_first_deliverer]
-    logging.info(f"第 1 个投放者选择完毕: {best_first_deliverer}")
+    print(f"第 1 个投放者选择完毕: {best_first_deliverer}")
 
     # 2. 迭代寻找剩余的 m-1 个投放者
     for i in range(m - 1):
@@ -61,8 +60,34 @@ def select_deliverers_improved(
             break
             
         deliverers.append(next_best_deliverer)
-        logging.info(f"第 {i + 2} 个投放者选择完毕: {next_best_deliverer}")
+        print(f"第 {i + 2} 个投放者选择完毕: {next_best_deliverer}")
 
-    logging.info(f"最终选择的投放者集合: {deliverers}")
+    print(f"最终选择的投放者集合: {deliverers}")
     return deliverers
 
+if __name__ == '__main__':
+
+    G = nx.Graph()
+    G.add_nodes_from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) 
+    G.add_edges_from([(0, 2), (0, 3), (1, 2), (1, 4), (2, 4), (4,5), (4,6), (4,7),(4,8),(4,9), (5,6),(5,9)])
+    adj = nx.adjacency_matrix(G)
+
+    n = adj.shape[0]
+    use_pro = [0.01,0.2,0.3,0.4,0.3,
+               0.1,0.3,0.5,0.2,0.2]
+    dis_pro = [0.04,0.2,0.2,0.1,0.1,
+               0.4,0.3,0.2,0.1,0.3]
+    L = 5
+    constantFactor = [1,1,1,1,1,
+                      1,1,1,1,1]
+    users = []
+    initial_tran_distribution = np.array([0.001, 0.5, 0.9, 0.2, 0.7, 0.8, 0.5, 0.9, 0.2, 0.7])
+
+    tranProMatrix, neighbor_having = single_deliverer.getTranProMatrix(adj,initial_tran_distribution)
+
+
+    deliverers = deliverers_monteCarlo(3, tranProMatrix, succ_distribution=use_pro,
+                               dis_distribution=dis_pro,
+                               constantFactor_distribution=constantFactor,
+                               L=5,
+                               personalization=users)
