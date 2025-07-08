@@ -11,8 +11,7 @@ def getTranProMatrix(adj, tran_distribution):
 
     Args:
         adj (scipy.sparse.csr_matrix): NetworkX 生成的图的稀疏邻接矩阵。
-        tran_distribution (np.ndarray): 一个一维数组，其中 tran_distribution[i] 是
-                                        节点 i 将优惠券转发出去的总概率。
+        tran_distribution (np.ndarray): 一个一维数组，其中 tran_distribution[i] 是 节点 i 将优惠券转发出去的总概率。
 
     Returns:
         tuple: 一个包含以下两个元素的元组：
@@ -65,7 +64,6 @@ def getBestSingleDeliverer(tranProMatrix,succ_distribution,users_useAndDis): #�
 
     # `succ_pros` 现在是一个一维数组，其中 `succ_pros[j]` 就是从节点 `j` 开始投放优惠券，最终带来的总期望使用量
     succ_pros = np.dot(curr_succ_distribution,np.dot(N,tranProMatrix))+curr_succ_distribution
-
 
     max_column_index = np.argmax(succ_pros) # 找出影响力最大的节点
     return max_column_index
