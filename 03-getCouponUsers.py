@@ -45,13 +45,16 @@ def monteCarlo_singleTime(tranProMatrix,indexes,succ_distribution,dis_distributi
     for index in indexes:
         random_pro = np.random.rand() # 生成 [0, 1) 之间的随机数，用于模拟用户的行为
         next_node = index
+
+    
         if next_node not in users_useAndDis:
             # 根据生成的随机数和用户的概率分布，模拟优惠券的传播过程
-            if random_pro < succ_distribution[next_node]: # 随机数小于用户的使用概率，则用户使用优惠券
+            if random_pro < succ_distribution[next_node]: # 用户使用优惠券
                 users_useAndDis.append(next_node)
+                # todo 
                 modify_tranProMatrix_singleUser(tranProMatrix, next_node, constantFactor_distribution[next_node],succ_distribution[next_node])
                 continue
-            elif random_pro < succ_distribution[next_node] + dis_distribution[next_node]: #随机数小于用户的使用概率加上丢弃概率，则用户丢弃优惠券
+            elif random_pro < succ_distribution[next_node] + dis_distribution[next_node]: #用户丢弃优惠券
                 continue
             else: # 否则，用户将优惠券转发给邻居
                 neighbors = [index for index, value in enumerate(tranProMatrix[:, next_node]) if value != 0]
@@ -59,6 +62,8 @@ def monteCarlo_singleTime(tranProMatrix,indexes,succ_distribution,dis_distributi
                     neighbors_pro = [value for index, value in enumerate(tranProMatrix[:, next_node]) if value != 0]
                     neighbors_pro = neighbors_pro / np.sum(neighbors_pro)
                     next_node = np.random.choice(neighbors, p=neighbors_pro)
+        
+        
         else:
             if random_pro < dis_distribution[next_node] + constantFactor_distribution[next_node] * succ_distribution[next_node]:
                 continue
@@ -99,7 +104,8 @@ def monteCarlo_singleTime(tranProMatrix,indexes,succ_distribution,dis_distributi
                         next_node = np.random.choice(neighbors, p=neighbors_pro)
                     else:
                         break
-
+            
+    # **结束条件**: 一个随机游走分支在以下情况结束：节点决定“使用”或“丢弃”。节点尝试转发，但没有邻居可供转发。                    
     succ_pros = get_succPros(tranProMatrix, users_useAndDis, succ_distribution)
     return succ_pros
 

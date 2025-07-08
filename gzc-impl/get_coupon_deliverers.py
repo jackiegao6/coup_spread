@@ -1,7 +1,6 @@
 import logging
 import numpy as np
 
-# 配置日志，便于调试而不是使用print
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 import single_deliverer
