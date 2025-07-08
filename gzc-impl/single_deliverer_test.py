@@ -5,18 +5,12 @@ import scipy.sparse
 import copy
 
 
-# --- 步骤 1: 创建一个社交网络图 ---
-# 假设我们有5个用户，编号为 0, 1, 2, 3, 4
 G = nx.Graph()
 G.add_nodes_from([0, 1, 2, 3, 4]) 
-# 定义他们之间的好友关系
 G.add_edges_from([(0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (2, 4), (3, 4)])
 
-# 获取图的邻接矩阵（SciPy稀疏矩阵格式）
 adj_matrix = nx.adjacency_matrix(G, nodelist=sorted(G.nodes()))
 print("="*20 + " 图结构信息 " + "="*20)
-print("节点列表:", sorted(G.nodes()))
-print("边列表:", G.edges())
 print("邻接矩阵 (A):\n", adj_matrix.toarray())
 print("-" * 55)
 
@@ -39,21 +33,21 @@ print("各用户的直接使用概率 (succ_distribution):\n", usage_probs)
 print("-" * 55)
 
 # --- 步骤 3: 计算转发概率矩阵 ---
-# 调用第一个函数，得到瞬时态之间的转移矩阵 Q
+# 调用第一个函数，得到瞬时态之间的转移矩阵tranProMatrix
 tranProMatrix, degrees = single_deliverer.getTranProMatrix(adj_matrix, forwarding_probs)
 
 print("\n" + "="*20 + " 计算转发矩阵 " + "="*20)
 print("各节点的度 (邻居数量):\n", degrees)
 # 打印结果，保留两位小数以便观察
-print("\n转发概率矩阵 (Q = tranProMatrix):\n", np.round(tranProMatrix, 2))
+print("\n转发概率矩阵tranProMatrix:\n", np.round(tranProMatrix, 2))
 # 验证：矩阵的第i列和应该等于第i个用户的总转发概率
 print("\n验证：矩阵各列之和 (应等于总转发概率):\n", np.round(np.sum(tranProMatrix, axis=0), 2))
 print("-" * 55)
 
-# --- 步骤 4: 寻找最佳投放节点 ---
+# # --- 步骤 4: 寻找最佳投放节点 ---
 print("\n" + "="*20 + " 寻找最佳投放点 " + "="*20)
 
-# 场景A: 网络中所有人都未参与活动
+# # 场景A: 网络中所有人都未参与活动
 print("--- 场景 A: 初始投放 ---")
 best_node_A = single_deliverer.getBestSingleDeliverer(tranProMatrix, usage_probs, [])
 print(f"\n结论：最佳的初始投放节点是用户【{best_node_A}】。")

@@ -5,10 +5,6 @@ import pickle
 import networkx as nx
 
 
-
-# 假设这些单次模拟函数已存在且设计良好（不修改输入参数）
-# from .simulation import monteCarlo_singleTime, monteCarlo_singleTime_firstUnused, ...
-
 def monteCarloSimulation(tranProMatrix,indexes,index,L,succ_distribution,dis_distribution,constantFactor_distribution,personalization):
     best_next_deliverer = find_next_best_deliverer(current_deliverers=indexes, tranProMatrix=tranProMatrix,L=L,
                              succ_distribution=succ_distribution, dis_distribution=dis_distribution, constantFactor_distribution=constantFactor_distribution,

@@ -4,7 +4,6 @@ import numpy as np
 # 配置日志，便于调试而不是使用print
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# 假设这两个外部函数已经存在
 import single_deliverer
 import get_coupon_users
 
