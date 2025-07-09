@@ -2,16 +2,16 @@ import numpy as np
 import networkx as nx
 import copy
 
-def getTranProMatrix(adj, tran_distribution):
+def getTranProMatrix(adj, tran_distribution_list):
     """
     根据邻接矩阵和初始转发概率，生成一个转发概率矩阵。
-    核心假设：一个节点 i 会将其总的转发概率 tran_distribution[i] 平均分配给它的所有邻居。
+    核心假设：一个节点 i 会将其总的转发概率 tran_distribution_list[i] 平均分配给它的所有邻居。
     
     矩阵中的元素 A[j, i] 代表优惠券从节点 i 转发到节点 j 的概率。
 
     Args:
         adj (scipy.sparse.csr_matrix): NetworkX 生成的图的稀疏邻接矩阵。
-        tran_distribution (np.ndarray): 一个一维数组，其中 tran_distribution[i] 是 节点 i 将优惠券转发出去的总概率。
+        tran_distribution_list (np.ndarray): 一个一维数组，其中 tran_distribution_list[i] 是 节点 i 将优惠券转发出去的总概率。
 
     Returns:
         tuple: 一个包含以下两个元素的元组：
@@ -21,8 +21,8 @@ def getTranProMatrix(adj, tran_distribution):
     # 1. 将稀疏邻接矩阵adj转换为标准的、浮点类型的 NumPy 矩阵A_graph
     A_graph = adj.toarray().astype(float)
 
-    # 确保 初始转发概率 tran_distribution 是一个扁平的一维数组，便于后续广播操作
-    tran_distribution = np.array(tran_distribution).flatten()
+    # 确保 初始转发概率 tran_distribution_list 是一个扁平的一维数组，便于后续广播操作
+    tran_distribution_list = np.array(tran_distribution_list).flatten()
 
     # 2. 计算每个节点的度（即每列的和）
     D = np.sum(A_graph, axis=0)
@@ -35,7 +35,7 @@ def getTranProMatrix(adj, tran_distribution):
     non_isolated_nodes = D > 0
     
     # 仅对非孤立节点计算其到每个邻居的转发概率
-    prob_per_neighbor[non_isolated_nodes] = tran_distribution[non_isolated_nodes] / D[non_isolated_nodes]
+    prob_per_neighbor[non_isolated_nodes] = tran_distribution_list[non_isolated_nodes] / D[non_isolated_nodes]
 
     # 4. 使用向量化（广播机制）高效地创建转发概率矩阵
     # A_graph 是一个 (n, n) 的 0-1 矩阵

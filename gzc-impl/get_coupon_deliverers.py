@@ -13,7 +13,6 @@ def deliverers_monteCarlo(
     constantFactor_distribution: np.ndarray,
     L: int,
     personalization: dict,
-    # dataset 似乎在你的原始代码中未使用，如果需要请添加
 ) -> list:
     """
     使用贪心策略和蒙特卡洛模拟，从网络中选择m个最优的优惠券投放者。
@@ -64,6 +63,10 @@ def deliverers_monteCarlo(
 
     print(f"最终选择的投放者集合: {deliverers}")
     return deliverers
+
+
+
+
 
 if __name__ == '__main__':
 

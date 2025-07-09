@@ -40,10 +40,7 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
     """获取所有方法的种子集，优先从缓存加载，否则实时计算。"""
     if os.path.exists(config.deliverers_cache_file):
         logging.info(f"Loading seed sets from cache: {config.deliverers_cache_file}")
-        # ... (此处省略从文件读取逻辑，与你的原始代码相同)
-        # 应该返回一个字典: {'method_name': [seeds], ...}
-        # 和一个运行时间的字典
-        # return method_to_seeds, method_to_runtime
+
     
     logging.info("Cache not found. Calculating seed sets...")
     

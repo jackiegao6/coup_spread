@@ -45,13 +45,12 @@ def simulation(
     usage_rate_file: str,
     distribution_list: tuple,
     seed_num_list: list,
-    simulation_times: list, # 替换原来的全局变量 `times`
+    simulation_times: list, 
     single_sim_func # 传入具体的单次模拟函数，如 monteCarlo_singleTime_improved
 ):
     """
     主评估流程，负责循环、聚合和保存结果。
     """
-    # 确保文件是干净的，或者追加模式前有明确的分隔符
     with open(usage_rate_file, 'w') as f:
         f.write(f"--- New Evaluation Run ---\n")
         f.write(f"Simulation times for evaluation points: {simulation_times}\n")

@@ -93,7 +93,6 @@ def _generate_normal_distributions(n: int) -> dict:
 def get_distribution(distribution_file: str, distribution_type: str, n: int) -> tuple:
     """
     加载或生成实验所需的概率分布。
-    这是一个职责清晰、可扩展的版本。
     """
     # 1. 优先从缓存加载
     if os.path.exists(distribution_file):
