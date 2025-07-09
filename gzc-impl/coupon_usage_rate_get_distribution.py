@@ -122,5 +122,6 @@ def get_distribution(distribution_file: str, distribution_type: str, n: int) -> 
     logging.info(f"Saving newly generated distributions to: {distribution_file}")
     with open(distribution_file, 'wb') as f:
         pickle.dump(dis_dict, f)
-        
+        # f"{self.data_prefix}/distribution-{self.data_set}/distri-{self.distribution}_constantFactor{self.constant_factor_distri}_seedNum{m}.pkl"
+
     return tuple(dis_dict.values())
