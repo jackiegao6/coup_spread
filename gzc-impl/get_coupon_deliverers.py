@@ -55,7 +55,7 @@ def deliverers_monteCarlo(
         )
         
         if next_best_deliverer is None:
-            logging.warning("未能找到下一个有效的投放者，提前终止。")
+            logging.warning("===> 未能找到下一个有效的投放者，提前终止。")
             break
             
         deliverers.append(next_best_deliverer)

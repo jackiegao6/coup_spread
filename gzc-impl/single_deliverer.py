@@ -20,7 +20,7 @@ def getTranProMatrix(adj, tran_distribution_list):
     """
     A_graph = adj.toarray().astype(float)
     tran_distribution_list = np.array(tran_distribution_list).flatten()
-    D = np.sum(A_graph, axis=0)# 计算每个节点的度（即每列的和）
+    D = np.sum(A_graph, axis=0)# 计算每个节点的度
     prob_per_neighbor = np.zeros_like(D, dtype=float)
     non_isolated_nodes = D > 0
     
@@ -38,6 +38,7 @@ def getTranProMatrix(adj, tran_distribution_list):
 
 
 def getBestSingleDeliverer(tranProMatrix,succ_distribution,users_useAndDis): #寻找在当前概率模型下最佳的单个投放节点 即能带来最多优惠券使用量的初始节点
+    '''第一种理论计算方法，一个静态模型。假设网络参数（如成功率）在一次投放中是不变的'''
     n = tranProMatrix.shape[0]
     # 使用 马尔可夫链中的吸收概率求解公式（矩阵逆）来模拟从每个节点开始投放时最终“成功”的概率
     I = np.eye(n)
@@ -49,9 +50,8 @@ def getBestSingleDeliverer(tranProMatrix,succ_distribution,users_useAndDis): #�
     #         curr_succ_distribution[int(user)] = 0
 
     '''
-    计算**基本矩阵（Fundamental Matrix）**的量。
     在马尔可夫链理论中，如果 P 是转移概率矩阵，那么 (I - P)^-1 这个矩阵 N 的元素 N[i, j] 有一个非常重要的物理意义：它代表从状态 j 出发，在被吸收（即流程结束）之前，预期访问状态 i 的平均次数。
-    在这里，N[i, j] 就代表如果从用户 j 开始投放优惠券，优惠券平均会到达（或经过）用户 i 多少次。
+    N[i, j] 就代表如果从用户 j 开始投放优惠券，优惠券平均会到达（或经过）用户 i 多少次。
     '''
     N = np.linalg.inv(I-tranProMatrix)
 
@@ -67,15 +67,15 @@ def getBestSingleDeliverer(tranProMatrix,succ_distribution,users_useAndDis): #�
     max_column_index = np.argmax(succ_pros) # 找出影响力最大的节点
     return max_column_index
 
-def getBestSingleDeliverer_theroy(init_tranProMatrix,succ_distribution,Q,tranProMatrix):#引入理论吸收模型优化 Q 向量，寻找最佳单投放点
+def getBestSingleDeliverer_theroy(init_tranProMatrix,   # 初始的、未受影响时的转移矩阵
+                                  succ_distribution,
+                                  Q,                    # 引入理论吸收模型优化 Q 向量 Q[i] 代表节点 i 已经被影响的程度（从0到1）
+                                  tranProMatrix):       # 节点完全被影响后（比如已经收到过优惠券）的转移矩阵
+    '''动态模型。它引入了一个状态向量 Q，模拟网络状态因为影响力传播而发生改变的过程'''
     #一个理论增强版本：使用向量 Q（代表某节点是否已被影响），并将其用于调整转发概率矩阵 W，迭代更新吸收/传播模型
 
     n = init_tranProMatrix.shape[0]
     I = np.eye(n)
-    # W = (1-Q)[:,np.newaxis]*init_tranProMatrix+Q[:,np.newaxis]*tranProMatrix
-    # W = np.multiply((1-Q),init_tranProMatrix)+np.multiply(Q,tranProMatrix)
-    # temp4 = (1-Q).reshape(-1,1)*init_tranProMatrix
-    # temp5 = (1-Q)*init_tranProMatrix
 
     '''
     如果节点 `i` 完全未被影响 (`Q[i] = 0`)，那么从它出发的转发行为完全由 `init_tranProMatrix` 的第 `i` 列决定。
@@ -85,8 +85,8 @@ def getBestSingleDeliverer_theroy(init_tranProMatrix,succ_distribution,Q,tranPro
     W = (1-Q)*init_tranProMatrix+Q*tranProMatrix #根据当前 Q 向量混合两个状态的传播模型
 
     R = np.dot(np.linalg.inv(I-W),W)
-    curr_succ_distribution = (1-Q)*succ_distribution
-    succ_pros = np.dot(curr_succ_distribution,R)+curr_succ_distribution
+    curr_succ_distribution = (1-Q)*succ_distribution # 如果一个节点已经被影响了 (Q[i]>0)，那么它再次因为新的传播而“首次成功使用”的概率就会降低
+    succ_pros = np.dot(curr_succ_distribution,R)+curr_succ_distribution # 计算边际影响力增益。即在当前网络状态 Q下，再选择一个新节点投放，能带来多大的额外期望使用量
     max_column_index = succ_pros.argmax()
 
     '''
@@ -95,12 +95,9 @@ def getBestSingleDeliverer_theroy(init_tranProMatrix,succ_distribution,Q,tranPro
     因为 `N[j, j]` 代表从 `j` 出发访问 `j` 自身的期望次数（至少为1，即初始那次），所以这里加上了1。
     现在 `R[:, max_column_index]` 实际上是基本矩阵 `N` 的第 `max_column_index` 列，代表从最佳投放点出发，对网络中所有节点的期望访问次数。
     '''
-    R[max_column_index][max_column_index] += 1
-    # Q_increment = np.multiply(np.multiply((1-Q),curr_succ_distribution),R[:,max_column_index].reshape(-1))
-    # todo: gzc
-    Q_increment = np.multiply(curr_succ_distribution,R[:,max_column_index].reshape(-1))
-    Q = np.minimum(Q + Q_increment, 1.0)
-    # temp3 = np.multiply(Q_increment, (1 - constantFactor_distribution))
-    # tran_increment = np.multiply(Q_increment, (1 - constantFactor_distribution))/D.reshape(-1)
+    R[max_column_index][max_column_index] += 1 # 这一步是为了将 R 的一列转换回基本矩阵 N 的一列
+    Q_increment = np.multiply(curr_succ_distribution,R[:,max_column_index].reshape(-1)) # 计算本次选择 max_column_index 后，对网络中所有节点的影响力增量。R[:, max_column_index] 是从最佳投放点出发的期望访问次数，乘以每个节点的边际成功率，就得到了对每个节点的“影响程度增量”
 
+
+    Q = np.minimum(Q + Q_increment, 1.0) # 更新状态向量 Q。将影响力增量加到 Q 上
     return max_column_index,Q

@@ -5,12 +5,105 @@ import pickle
 import networkx as nx
 import random
 
+def find_next_best_deliverer(
+    current_deliverers: list,
+    tranProMatrix: np.ndarray,
+    L: int,
+    succ_distribution: np.ndarray,
+    dis_distribution: np.ndarray,
+    constantFactor_distribution: np.ndarray,
+    personalization: str
+) -> int:
+    """
+    在已有的种子集 current_deliverers 的基础上，找到下一个能带来最大影响力增益的最佳投放者
 
-def monteCarloSimulation(tranProMatrix,indexes,L,succ_distribution,dis_distribution,constantFactor_distribution,personalization):
-    best_next_deliverer = find_next_best_deliverer(current_deliverers=indexes, tranProMatrix=tranProMatrix,L=L,
-                             succ_distribution=succ_distribution, dis_distribution=dis_distribution, constantFactor_distribution=constantFactor_distribution,
-                             personalization=personalization)
+    Args:
+        current_deliverers (list): 当前已经选定的投放者集合。
+        ... (其他参数与之前相同)
+
+    Returns:
+        int: 下一个最优投放者的节点ID。
+    """
+    n = tranProMatrix.shape[0]
+    candidate_nodes = [node for node in range(n) if node not in current_deliverers]
+
+    if not candidate_nodes:
+        logging.warning("===> 没有候选节点了，无法选择。")
+        return None
+
+    # 1. 计算当前集合的基础影响力
+    base_influence = _run_full_simulation(
+        L, current_deliverers, tranProMatrix, succ_distribution, 
+        dis_distribution, constantFactor_distribution, personalization
+    )
+    print(f"当前投放者 {current_deliverers} 的基础影响力: {base_influence:.4f}")
+
+    best_next_deliverers = []
+    max_marginal_gain = -1.0
+
+    # 2. 遍历所有候选节点，计算每个节点的边际增益
+    for candidate in candidate_nodes:
+        # 构造临时投放集合进行测试
+        test_deliverer_set = current_deliverers + [candidate]
+        
+        # 计算加入候选节点后的新影响力
+        new_influence = _run_full_simulation(
+            L, test_deliverer_set, tranProMatrix, succ_distribution,
+            dis_distribution, constantFactor_distribution, personalization
+        )
+        
+        marginal_gain = new_influence - base_influence
+        
+        print(f"  测试候选节点 {candidate}: 新影响力={new_influence:.4f}, 边际增益={marginal_gain:.4f}")
+
+        if marginal_gain >= max_marginal_gain:
+            max_marginal_gain = marginal_gain
+            best_next_deliverers.append(candidate)
+
+    best_next_deliverer = random.choice(best_next_deliverers)
+    print(f"选择的最优新投放者: {best_next_deliverer} (最大边际增益: {max_marginal_gain:.4f})")
+    
     return best_next_deliverer
+
+
+def _run_full_simulation(
+    L: int,
+    deliverer_set: list,
+    tranProMatrix: np.ndarray,
+    succ_distribution: np.ndarray,
+    dis_distribution: np.ndarray,
+    constantFactor_distribution: np.ndarray,
+    personalization: str
+) -> float:
+    """
+    对给定的种子集，重复运行 L 次单次模拟，并计算平均总影响力
+    """
+    n = tranProMatrix.shape[0]
+    total_influence_accumulator = 0.0
+
+    # 根据个性化策略选择正确的模拟函数
+    if personalization == 'firstUnused':
+        single_simulation_func = monteCarlo_singleTime_firstUnused_improved
+    elif personalization == 'firstDiscard':
+        single_simulation_func = monteCarlo_singleTime_firstDiscard_improved
+    else: # 默认或None
+        single_simulation_func = monteCarlo_singleTime_improved
+
+    for _ in range(L):
+        # 它应该返回一个(1, n)或(n,)的数组，代表此轮模拟中各节点的成功状态(0或1)
+        success_vector = single_simulation_func(
+            tranProMatrix,
+            deliverer_set,
+            succ_distribution,
+            dis_distribution,
+            constantFactor_distribution
+        )
+        # 累加本轮模拟的总成功人数
+        total_influence_accumulator += np.sum(success_vector)
+
+    # 返回平均总影响力
+    return total_influence_accumulator / L
+
 
 def monteCarlo_singleTime_improved(
     tranProMatrix: np.ndarray,
@@ -80,18 +173,18 @@ def monteCarlo_singleTime_improved(
 
 
 def _select_next_neighbor(current_user: int, 
-                          tran_matrix: np.ndarray
-                          ) -> int or None:
+                          tranProMatrix: np.ndarray
+                          ) -> int:
     """
     从当前节点的邻居中，根据转发概率矩阵选择下一个节点。
     """
     # 找到邻居及其对应的转发概率
-    neighbors = np.nonzero(tran_matrix[:, current_user])[0]
+    neighbors = np.nonzero(tranProMatrix[:, current_user])[0]# todo gzc why 0?
     
     if len(neighbors) == 0:
         return None 
         
-    probabilities = tran_matrix[neighbors, current_user]
+    probabilities = tranProMatrix[neighbors, current_user]
     prob_sum = np.sum(probabilities)
     
     if prob_sum <= 0:
@@ -101,112 +194,6 @@ def _select_next_neighbor(current_user: int,
     # 归一化概率并选择
     normalized_probs = probabilities / prob_sum
     return np.random.choice(neighbors, p=normalized_probs)
-
-def find_next_best_deliverer(
-    current_deliverers: list,
-    tranProMatrix: np.ndarray,
-    L: int,
-    succ_distribution: np.ndarray,
-    dis_distribution: np.ndarray,
-    constantFactor_distribution: np.ndarray,
-    personalization: str
-) -> int:
-    """
-    通过蒙特卡洛模拟计算边际增益，找到下一个最优的投放者。
-
-    Args:
-        current_deliverers (list): 当前已经选定的投放者集合。
-        ... (其他参数与之前相同)
-
-    Returns:
-        int: 下一个最优投放者的节点ID。
-    """
-    n = tranProMatrix.shape[0]
-    candidate_nodes = [node for node in range(n) if node not in current_deliverers]
-
-    if not candidate_nodes:
-        logging.warning("没有候选节点了，无法选择。")
-        return None
-
-    # 1. 计算当前集合的基础影响力
-    base_influence = _run_full_simulation(
-        L, current_deliverers, tranProMatrix, succ_distribution, 
-        dis_distribution, constantFactor_distribution, personalization
-    )
-    print(f"当前投放者 {current_deliverers} 的基础影响力: {base_influence:.4f}")
-
-    best_next_deliverers = []
-    max_marginal_gain = -1.0
-
-    # 2. 遍历所有候选节点，计算每个节点的边际增益
-    for candidate in candidate_nodes:
-        # 构造临时投放集合进行测试
-        test_deliverer_set = current_deliverers + [candidate]
-        
-        # 计算加入候选节点后的新影响力
-        new_influence = _run_full_simulation(
-            L, test_deliverer_set, tranProMatrix, succ_distribution,
-            dis_distribution, constantFactor_distribution, personalization
-        )
-        
-        marginal_gain = new_influence - base_influence
-        
-        print(f"  测试候选节点 {candidate}: 新影响力={new_influence:.4f}, 边际增益={marginal_gain:.4f}")
-
-        if marginal_gain >= max_marginal_gain:
-            max_marginal_gain = marginal_gain
-            best_next_deliverers.append(candidate)
-
-    best_next_deliverer = random.choice(best_next_deliverers)
-    print(f"选择的最优新投放者: {best_next_deliverer} (最大边际增益: {max_marginal_gain:.4f})")
-    
-    return best_next_deliverer
-
-
-
-
-def _run_full_simulation(
-    L: int,
-    deliverer_set: list,
-    tranProMatrix: np.ndarray,
-    succ_distribution: np.ndarray,
-    dis_distribution: np.ndarray,
-    constantFactor_distribution: np.ndarray,
-    personalization: str
-) -> float:
-    """
-    对给定的投放者集合，运行L次蒙特卡洛模拟，并返回网络中的总平均影响力。
-    总影响力 = 平均每个节点成功使用的概率之和。
-    这是一个辅助函数，封装了完整的L轮模拟。
-    """
-    n = tranProMatrix.shape[0]
-    total_influence_accumulator = 0.0
-
-    # 根据个性化策略选择正确的模拟函数
-    if personalization == 'firstUnused':
-        # single_simulation_func = monteCarlo_singleTime_firstUnused
-        single_simulation_func = monteCarlo_singleTime_improved
-    elif personalization == 'firstDiscard':
-        # single_simulation_func = monteCarlo_singleTime_firstDiscard
-        single_simulation_func = monteCarlo_singleTime_improved
-    else: # 默认或None
-        single_simulation_func = monteCarlo_singleTime_improved
-
-    for _ in range(L):
-        # 它应该返回一个(1, n)或(n,)的数组，代表此轮模拟中各节点的成功状态(0或1)
-        success_vector = single_simulation_func(
-            tranProMatrix,
-            deliverer_set,
-            succ_distribution,
-            dis_distribution,
-            constantFactor_distribution
-        )
-        # 累加本轮模拟的总成功人数
-        total_influence_accumulator += np.sum(success_vector)
-
-    # 返回平均总影响力
-    return total_influence_accumulator / L
-
 
 def monteCarlo_singleTime_firstDiscard_improved(
     tranProMatrix: np.ndarray,
@@ -352,6 +339,14 @@ def monteCarlo_singleTime_firstUnused_improved(
         success_vector[contacted_list] = 1
         
     return success_vector
+
+
+def monteCarloSimulation(tranProMatrix,indexes,L,succ_distribution,dis_distribution,constantFactor_distribution,personalization):
+    best_next_deliverer = find_next_best_deliverer(current_deliverers=indexes, tranProMatrix=tranProMatrix,L=L,
+                             succ_distribution=succ_distribution, dis_distribution=dis_distribution, constantFactor_distribution=constantFactor_distribution,
+                             personalization=personalization)
+    return best_next_deliverer
+
 
 if __name__ == '__main__':
 
