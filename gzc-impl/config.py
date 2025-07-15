@@ -18,14 +18,14 @@ class ExperimentConfig:
     def adj_file(self):
         return f"{self.data_prefix}/datasets/{self.data_set}-adj.pkl"
 
-    def distribution_file(self, m = -1):
+    def distribution_file(self, m = 0):
         # m = self.seed_num_list[-1]
         return f"{self.data_prefix}/{self.data_set}/distribution-{self.data_set}/distri-{self.distribution_type}_constantFactor{self.constant_factor_distri}_seedNum{m}.pkl"
 
-    def deliverers_cache_file(self, m = -1):
+    def deliverers_cache_file(self, method, m = 0):
         # m = self.seed_num_list[-1]
-        return f"{self.data_prefix}/{self.data_set}/deliverers_{self.data_set}_distri{self.distribution_type}_constantFactor{self.constant_factor_distri}_monteCarloL{self.monte_carlo_L}_seedNum{m}.txt"
+        return f"{self.data_prefix}/{self.data_set}/deliverers-{self.data_set}_distri-{self.distribution_type}_constantFactor-{self.constant_factor_distri}_{method}_{self.monte_carlo_L}_seedNum{m}.txt"
 
-    def usage_rate_file(self, m = -1):
+    def usage_rate_file(self, m = 0):
         # m = self.seed_num_list[-1]
-        return f"{self.data_prefix}/{self.data_set}/usageRate_{self.data_set}_distri{self.distribution_type}_constantFactor{self.constant_factor_distri}_monteCarloL{self.monte_carlo_L}_testTimes{self.simulation_times}_seedNum{m}_{self.personalization}.txt"
+        return f"{self.data_prefix}/{self.data_set}/usageRate_{self.data_set}_distri-{self.distribution_type}_constantFactor{self.constant_factor_distri}_monteCarloL{self.monte_carlo_L}_testTimes{self.simulation_times}_seedNum{m}_{self.personalization}.txt"

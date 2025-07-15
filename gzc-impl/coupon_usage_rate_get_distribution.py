@@ -33,6 +33,7 @@ def get_distribution(distribution_file: str, distribution_type: str, n: int) -> 
 
     # 3. 保存到缓存以备后用
     logging.info(f"===> Saving newly generated distributions to: {distribution_file}")
+    os.makedirs(os.path.dirname(distribution_file), exist_ok=True)
     with open(distribution_file, 'wb') as f:
         pickle.dump(dis_dict, f)
 

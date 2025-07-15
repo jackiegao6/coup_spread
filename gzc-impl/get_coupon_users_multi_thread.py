@@ -5,6 +5,132 @@ import pickle
 import networkx as nx
 import random
 
+from multiprocessing import Pool, cpu_count
+import functools
+
+
+def _calculate_marginal_gain_for_candidate(
+    candidate: int,
+    base_influence: float,
+    current_deliverers: list,
+    # 其他 _run_full_simulation 需要的固定参数
+    L: int,
+    tranProMatrix: np.ndarray,
+    succ_distribution: np.ndarray,
+    dis_distribution: np.ndarray,
+    constantFactor_distribution: np.ndarray,
+    personalization: str
+) -> tuple:
+    """
+    这是一个为单个候选节点计算边际增益的工作函数，专门用于并行处理。
+
+    Args:
+        candidate (int): 要评估的候选节点ID。
+        base_influence (float): 基础影响力值。
+        current_deliverers (list): 当前的种子集。
+        ... (其他参数)
+
+    Returns:
+        tuple: 一个包含 (候选节点ID, 边际增益) 的元组。
+    """
+    # 构造临时投放集合进行测试
+    test_deliverer_set = current_deliverers + [candidate]
+    
+    # 计算加入候选节点后的新影响力
+    new_influence = _run_full_simulation(
+        L, test_deliverer_set, tranProMatrix, succ_distribution,
+        dis_distribution, constantFactor_distribution, personalization
+    )
+    
+    marginal_gain = new_influence - base_influence
+    
+    # 打印日志可以帮助追踪进度，但在大量并行任务中可能会使输出混乱。
+    # 在生产环境中可以考虑移除或使用更高级的日志管理。
+    # print(f"  (Worker) Evaluated candidate {candidate}: Marginal gain = {marginal_gain:.4f}")
+
+    return (candidate, marginal_gain)
+
+def find_next_best_deliverer_parallel(
+    current_deliverers: list,
+    tranProMatrix: np.ndarray,
+    L: int,
+    succ_distribution: np.ndarray,
+    dis_distribution: np.ndarray,
+    constantFactor_distribution: np.ndarray,
+    personalization: str,
+    num_workers: int = None
+) -> int:
+    """
+    通过并行化的蒙特卡洛模拟计算边际增益，找到下一个最优的投放者。
+
+    Args:
+        ... (原始参数)
+        num_workers (int, optional): 使用的工作进程数。如果为None，则使用所有可用的CPU核心。
+
+    Returns:
+        int: 下一个最优投放者的节点ID。
+    """
+    n = tranProMatrix.shape[0]
+    candidate_nodes = [node for node in range(n) if node not in current_deliverers]
+
+    if not candidate_nodes:
+        logging.warning("没有候选节点了，无法选择。")
+        return None
+
+    # 1. 计算当前集合的基础影响力 (这步仍然在主进程中执行)
+    base_influence = _run_full_simulation(
+        L, current_deliverers, tranProMatrix, succ_distribution, 
+        dis_distribution, constantFactor_distribution, personalization
+    )
+    print(f"当前投放者 {current_deliverers} 的基础影响力: {base_influence:.4f}")
+
+    # 准备并行计算
+    if num_workers is None:
+        num_workers = cpu_count() / 4
+    print(f"使用 {num_workers} 个工作进程进行并行计算...")
+
+    # 2. 创建任务列表
+    # 使用 functools.partial 来“冻结”那些在所有任务中都相同的参数
+    # 这样可以简化传递给 starmap 的参数
+    worker_func_with_args = functools.partial(
+        _calculate_marginal_gain_for_candidate,
+        base_influence=base_influence,
+        current_deliverers=current_deliverers,
+        L=L,
+        tranProMatrix=tranProMatrix,
+        succ_distribution=succ_distribution,
+        dis_distribution=dis_distribution,
+        constantFactor_distribution=constantFactor_distribution,
+        personalization=personalization
+    )
+    
+    # 3. 使用进程池执行任务
+    # Pool() 上下文管理器会在结束时自动关闭和加入进程
+    with Pool(processes=num_workers) as pool:
+        # pool.map 只接受一个可迭代的参数，所以我们只迭代 candidate_nodes
+        results = pool.map(worker_func_with_args, candidate_nodes)
+        
+    # `results` 将会是一个列表，形如 [(candidate1, gain1), (candidate2, gain2), ...]
+    if not results:
+        logging.error("并行计算没有返回任何结果。")
+        return None
+
+    # 4. 在主进程中处理结果，找到最佳候选人
+    best_candidate, max_marginal_gain = max(results, key=lambda item: item[1])
+    
+    # 为了处理增益相同的情况，找到所有具有最大增益的候选者
+    best_candidates = [
+        candidate for candidate, gain in results if gain >= max_marginal_gain
+    ]
+    
+    # 从最佳候选中随机选择一个
+    best_next_deliverer = random.choice(best_candidates)
+
+    print(f"选择的最优新投放者: {best_next_deliverer} (最大边际增益: {max_marginal_gain:.4f})")
+    
+    return best_next_deliverer
+
+
 def find_next_best_deliverer(
     current_deliverers: list,
     tranProMatrix: np.ndarray,
@@ -14,55 +140,15 @@ def find_next_best_deliverer(
     constantFactor_distribution: np.ndarray,
     personalization: str
 ) -> int:
-    """
-    在已有的种子集 current_deliverers 的基础上，找到下一个能带来最大影响力增益的最佳投放者
-
-    Args:
-        current_deliverers (list): 当前已经选定的投放者集合。
-        ... (其他参数与之前相同)
-
-    Returns:
-        int: 下一个最优投放者的节点ID。
-    """
-    n = tranProMatrix.shape[0]
-    candidate_nodes = [node for node in range(n) if node not in current_deliverers]
-
-    if not candidate_nodes:
-        logging.warning("===> 没有候选节点了，无法选择。")
-        return None
-
-    # 1. 计算当前集合的基础影响力
-    base_influence = _run_full_simulation(
-        L, current_deliverers, tranProMatrix, succ_distribution, 
-        dis_distribution, constantFactor_distribution, personalization
-    )
-    print(f"当前投放者 {current_deliverers} 的基础影响力: {base_influence:.4f}")
-
-    best_next_deliverers = []
-    max_marginal_gain = -1.0
-
-    # 2. 遍历所有候选节点，计算每个节点的边际增益
-    for candidate in candidate_nodes:
-        # 构造临时投放集合进行测试
-        test_deliverer_set = current_deliverers + [candidate]
-        
-        # 计算加入候选节点后的新影响力
-        new_influence = _run_full_simulation(
-            L, test_deliverer_set, tranProMatrix, succ_distribution,
-            dis_distribution, constantFactor_distribution, personalization
-        )
-        
-        marginal_gain = new_influence - base_influence
-        
-        print(f"  测试候选节点 {candidate}: 新影响力={new_influence:.4f}, 边际增益={marginal_gain:.4f}")
-
-        if marginal_gain >= max_marginal_gain:
-            max_marginal_gain = marginal_gain
-            best_next_deliverers.append(candidate)
-
-    best_next_deliverer = random.choice(best_next_deliverers)
-    print(f"选择的最优新投放者: {best_next_deliverer} (最大边际增益: {max_marginal_gain:.4f})")
     
+    best_next_deliverer = find_next_best_deliverer_parallel(current_deliverers=current_deliverers,
+                                      tranProMatrix=tranProMatrix,
+                                      L=L,
+                                      succ_distribution=succ_distribution,
+                                      dis_distribution=dis_distribution,
+                                      constantFactor_distribution=constantFactor_distribution,
+                                      personalization=personalization
+    )
     return best_next_deliverer
 
 

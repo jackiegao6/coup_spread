@@ -20,7 +20,7 @@ def run_coupon_experiment(config: ExperimentConfig):
     experiment_data = load_experiment_data(config)
     # 获得总节点数 n 
     n = experiment_data["n"]
-    seedNumList = create_seed_num_list(total_nodes=n, num_steps=3, scale_factor=1000)
+    seedNumList = create_seed_num_list(total_nodes=n, num_steps=1, scale_factor=100)
     my_config.seed_num_list = seedNumList
     
     # 2. 获取种子集
@@ -32,12 +32,7 @@ def run_coupon_experiment(config: ExperimentConfig):
         return
 
     # 3. 运行评估 [2465, 119, 2093, 997, 1613, 1560, 2089, 1101, 2501, 1312, 840, 2263, 1976, 523, 895, 453, 1958, 515, 72, 1601, 704, 1307, 545, 2475, 2243, 971, 702]
-    # method_to_seeds = {
-    # 'monterCarlo': [2465, 119, 2093, 997, 1613, 1560, 2089, 1101, 2501,
-    #                 1312, 840, 2263, 1976, 523, 895, 453, 1958, 515,
-    #                 72, 1601, 704, 1307, 545, 2475, 2243, 971, 702]}
-
-    run_evaluation(method_to_seeds, config, experiment_data)
+    # run_evaluation(method_to_seeds, config, experiment_data)
 
 
 def load_experiment_data(config: ExperimentConfig):
@@ -91,11 +86,6 @@ def create_seed_num_list(
 
 def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
     """ 使用多种不同的算法（理论方法、蒙特卡洛、随机、度中心性）来计算出应该选择哪些用户作为种子集 todo RR"""
-    if os.path.exists(config.deliverers_cache_file):
-        logging.info(f"===> Loading seed sets from cache: {config.deliverers_cache_file}")
-
-    
-    logging.info("===> Cache not found. Calculating seed sets...")
     
     m = config.seed_num_list[-1]# 避免重复计算
 
@@ -111,6 +101,10 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
                                                                            personalization=config.personalization),
         'random': lambda: get_coupon_deliverers.deliverers_random(data["n"], m), # 基线方法
         'degreeTopM': lambda: get_coupon_deliverers.deliverers_degreeTopM(data["adj"], m), # 基线方法
+        'pageRank': lambda: get_coupon_deliverers.deliverers_pageRank(data["adj"], m),
+        'succPro': lambda: get_coupon_deliverers.deliverers_succPro(succ_distribution=data['distributions'][0], m=m),
+        '1_neighbor': lambda: get_coupon_deliverers.deliverers_1_neighbor(succ_distribution=data['distributions'][0], init_tranProMatrix=data['init_tran_matrix'],m=m),
+
     }
 
     method_to_seeds = {}
@@ -119,6 +113,11 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
         if method not in selector_dict:
             logging.warning(f"===> Method '{method}' not found in registry. Skipping.")
             continue
+
+        if os.path.exists(config.deliverers_cache_file(method=method, m=config.seed_num_list[-1])):
+            logging.info(f"===> Loading seed sets from cache: {config.deliverers_cache_file(method=method,m=config.seed_num_list[-1])}")
+        logging.info("===> Cache not found. Calculating seed sets...")
+        
         
         start_time = time.time()
         logging.info(f"===> Running method: {method}")
@@ -130,11 +129,14 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
         method_to_runtime[method] = end_time - start_time
         logging.info(f"===> Method {method} finished in {method_to_runtime[method]:.2f} seconds.")
 
-    with open(config.deliverers_cache_file, 'a+') as file:# '/root/autodl-tmp/data-processed/deliverers_cora_distrirandom_constantFactorrandom_monteCarloL5_seedNum10.txt'
-        for key, value in method_to_seeds.items():
-            file.write(f'{key}:{value}\n')
-        for key, value in method_to_runtime.items():
-            file.write(f'{key}:{value}\n')
+        deliverers_cache_file = config.deliverers_cache_file(   method=method,
+                                                                m=config.seed_num_list[-1])
+        
+        os.makedirs(os.path.dirname(deliverers_cache_file), exist_ok=True)
+        with open(deliverers_cache_file, 'a+') as file:
+            for key, value in method_to_seeds.items():
+                file.write(f'{key}:{value}\n')
+  
     
     return method_to_seeds, method_to_runtime
 
@@ -161,25 +163,25 @@ def run_evaluation(method_to_seeds: dict, config: ExperimentConfig, data: dict):
     evaluation_func(methods=methods,
                     method_deliverers=deliverers,
                     init_tran_matrix=data["init_tran_matrix"],
-                    usage_rate_file=config.usage_rate_file,
+                    usage_rate_file=config.usage_rate_file(m=config.seed_num_list[-1]),
                     distribution_list=data["distributions"],
                     seed_num_list=config.seed_num_list,
                     simulation_times=config.simulation_times,
                     single_sim_func=get_coupon_users.monteCarlo_singleTime_improved)
-    logging.info(f"Evaluation finished. Results saved to {config.usage_rate_file}")
+    logging.info(f"Evaluation finished. Results saved to {config.usage_rate_file(m=config.seed_num_list[-1])}")
 
 
 if __name__ == '__main__':
     my_config = ExperimentConfig(
-        data_set='cora',
-        simulation_times=[10, 50], #[1000, 5000]
+        data_set='students',
+        simulation_times=[10, 20], #[1000, 5000]
         methods=['monterCarlo'], # ['deliverers_theroy', 'monteCarlo', 'degreeTopM']
         seed_num_list=None,
         monte_carlo_L=5,
-        distribution='random',
+        distribution_type='random',
         constant_factor_distri='random',
         personalization='None',# firstUnused
-        data_prefix='/root/autodl-tmp/data-processed',
+        data_prefix='/root/autodl-tmp/processed-data',
         method_type='None' # new
     )
     run_coupon_experiment(my_config)

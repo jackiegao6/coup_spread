@@ -70,9 +70,7 @@ def deliverers_random(dataSet,m):
     return random.choices(range(n),k=m)# todo 只选了初始 没进行策略？
 
 
-
-
-# 度数前 m 高	选邻居最多的 m 个节点
+# 选邻居最多的 m 个节点
 def deliverers_degreeTopM(dataSet,m):
     data_file = 'D:/data-processed/{}-adj.pkl'.format(dataSet)
     with open(data_file, 'rb') as f:
