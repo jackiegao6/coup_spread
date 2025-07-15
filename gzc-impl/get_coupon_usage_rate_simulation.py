@@ -25,7 +25,6 @@ def evaluate_seed_set(
     succ_dist, dis_dist, _, const_factor_dist = distributions
 
     for _ in range(num_simulations):
-        # 调用纯函数，它不修改任何输入，所以我们不需要 deepcopy
         success_vector = simulation_function(
             tran_matrix,
             seed_set,
@@ -78,7 +77,6 @@ def simulation(
             for num_sims in simulation_times:
                 logging.info(f"    Running {num_sims} simulations...")
                 
-                # 调用清晰的评估器
                 avg_influence = evaluate_seed_set(
                     seed_set=current_seed_set,
                     simulation_function=single_sim_func,

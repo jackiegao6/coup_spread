@@ -37,4 +37,3 @@ class ExperimentConfig:
         m = 10
 
         return f"{self.data_prefix}/dataset-{self.data_set}/usageRate_{self.data_set}_distri{self.distribution}_constantFactor{self.constant_factor_distri}_monteCarloL{self.monte_carlo_L}_testTimes{self.simulation_times}_seedNum{m}_{self.personalization}.txt"
-

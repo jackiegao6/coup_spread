@@ -7,8 +7,6 @@ import logging
 def _normalize_triplet(a: np.ndarray, b: np.ndarray, c: np.ndarray) -> tuple:
     """将三个向量归一化，使得它们的元素和为1。"""
     total = a + b + c
-    # 修正逻辑：如果total为0，所有分量都应为0。
-    # 我们创建一个默认的输出，然后只在total!=0的地方进行除法。
     out_a = np.zeros_like(a, dtype=float)
     out_b = np.zeros_like(b, dtype=float)
     out_c = np.zeros_like(c, dtype=float)

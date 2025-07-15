@@ -31,7 +31,7 @@ def monteCarlo_singleTime_improved(
         np.ndarray: 一个n维的0/1向量，1表示该节点在本轮模拟中成功使用了优惠券。
     """
     n = tranProMatrix.shape[0]
-    users_useAndDis = set()# 使用集合(set)来高效存储已做出决定的节点，查询时间复杂度为O(1)
+    users_useAndDis = set()
     
     # 为每个初始投放者启动一个独立的随机游走
     for start_user in initial_deliverers:
@@ -89,7 +89,7 @@ def _select_next_neighbor(current_user: int,
     neighbors = np.nonzero(tran_matrix[:, current_user])[0]
     
     if len(neighbors) == 0:
-        return None  # 没有邻居可供转发
+        return None 
         
     probabilities = tran_matrix[neighbors, current_user]
     prob_sum = np.sum(probabilities)
@@ -113,7 +113,6 @@ def find_next_best_deliverer(
 ) -> int:
     """
     通过蒙特卡洛模拟计算边际增益，找到下一个最优的投放者。
-    这个函数取代了你原始的 monteCarloSimulation。
 
     Args:
         current_deliverers (list): 当前已经选定的投放者集合。
@@ -184,7 +183,6 @@ def _run_full_simulation(
     total_influence_accumulator = 0.0
 
     # 根据个性化策略选择正确的模拟函数
-    # 这样做可以避免在循环内部重复进行if/elif判断
     if personalization == 'firstUnused':
         # single_simulation_func = monteCarlo_singleTime_firstUnused
         single_simulation_func = monteCarlo_singleTime_improved
@@ -297,7 +295,6 @@ def monteCarlo_singleTime_firstUnused_improved(
     """
     执行单次蒙特卡洛模拟，采用"首次接触即改变"的个性化策略。
     在此模型中，我们假设所有接触过优惠券的节点最终都会被视为“成功”。
-    此函数是“纯”的，不会修改任何输入参数。
 
     Args:
         tranProMatrix (np.ndarray): 描述转发概率的矩阵 (只读)。

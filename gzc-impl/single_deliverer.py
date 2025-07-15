@@ -18,20 +18,10 @@ def getTranProMatrix(adj, tran_distribution_list):
             - tranProMatrix (np.ndarray): n x n 的转发概率矩阵。
             - D (np.ndarray): 一个包含每个节点度数的一维数组。
     """
-    # 1. 将稀疏邻接矩阵adj转换为标准的、浮点类型的 NumPy 矩阵A_graph
     A_graph = adj.toarray().astype(float)
-
-    # 确保 初始转发概率 tran_distribution_list 是一个扁平的一维数组，便于后续广播操作
     tran_distribution_list = np.array(tran_distribution_list).flatten()
-
-    # 2. 计算每个节点的度（即每列的和）
-    D = np.sum(A_graph, axis=0)
-
-    # 3. 计算分配给每个邻居的概率，并优雅地处理除以零的情况
-    # 首先创建一个全为零的数组
+    D = np.sum(A_graph, axis=0)# 计算每个节点的度（即每列的和）
     prob_per_neighbor = np.zeros_like(D, dtype=float)
-    
-    # 创建一个布尔掩码，用于标记度大于0的节点 即有邻居的节点
     non_isolated_nodes = D > 0
     
     # 仅对非孤立节点计算其到每个邻居的转发概率
@@ -59,7 +49,7 @@ def getBestSingleDeliverer(tranProMatrix,succ_distribution,users_useAndDis): #�
     #         curr_succ_distribution[int(user)] = 0
 
     '''
-    这是整个算法的数学核心。它在计算一个被称为**基本矩阵（Fundamental Matrix）**的量。
+    计算**基本矩阵（Fundamental Matrix）**的量。
     在马尔可夫链理论中，如果 P 是转移概率矩阵，那么 (I - P)^-1 这个矩阵 N 的元素 N[i, j] 有一个非常重要的物理意义：它代表从状态 j 出发，在被吸收（即流程结束）之前，预期访问状态 i 的平均次数。
     在这里，N[i, j] 就代表如果从用户 j 开始投放优惠券，优惠券平均会到达（或经过）用户 i 多少次。
     '''
@@ -67,7 +57,7 @@ def getBestSingleDeliverer(tranProMatrix,succ_distribution,users_useAndDis): #�
 
     # `succ_pros` 现在是一个一维数组，其中 `succ_pros[j]` 就是从节点 `j` 开始投放优惠券，整个网络中（包括它自己和所有被转发到的节点）产生的总的期望使用量
     '''
-    这行代码计算了从每个节点开始投放，最终产生的总期望使用量。
+    计算从每个节点开始投放，最终产生的总期望使用量。
     np.dot(N, tranProMatrix): 计算了从任意一个节点出发，经过一次转发后，对所有节点的预期访问次数。
     np.dot(curr_succ_distribution, ...): 这是一个点积运算。它将上一步算出的“预期访问次数”与每个节点的“成功使用概率”相乘并求和。这部分计算的是所有通过转发而产生的总期望使用量。
     + curr_succ_distribution: 加上了初始投放就直接被使用的期望。例如，从节点 j 开始投放，它本身就有 curr_succ_distribution[j] 的概率会直接使用。
@@ -99,9 +89,6 @@ def getBestSingleDeliverer_theroy(init_tranProMatrix,succ_distribution,Q,tranPro
     succ_pros = np.dot(curr_succ_distribution,R)+curr_succ_distribution
     max_column_index = succ_pros.argmax()
 
-    # temp = np.sum(R,axis=0)
-    # temp1 = np.multiply((1-Q),succ_distribution)
-    # temp2 = np.multiply(temp1,temp)
     '''
     状态更新部分
     **`R[max_column_index][max_column_index] += 1`**: 这一步是将 `R[:][max_column_index]` 变回 `N` 的对应列。

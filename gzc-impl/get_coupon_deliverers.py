@@ -65,9 +65,6 @@ def deliverers_monteCarlo(
     return deliverers
 
 
-
-
-
 if __name__ == '__main__':
 
     G = nx.Graph()
