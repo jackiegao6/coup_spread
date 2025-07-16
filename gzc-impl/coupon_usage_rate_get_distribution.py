@@ -6,16 +6,13 @@ import logging
 
 
 def get_distribution(distribution_file: str, distribution_type: str, n: int) -> tuple:
-    """
-    模块入口函数 为社交网络中的每个用户 生成一组描述其行为特征的概率值
-    """
+
     if os.path.exists(distribution_file):
         logging.info(f"===> Loading distributions from cache: {distribution_file}")
         with open(distribution_file, 'rb') as f:
             dis_dict = pickle.load(f)
         return tuple(dis_dict.values())
 
-    # 如果缓存不存在，使用注册表模式生成
     logging.info(f"===> Cache not found. Generating new distributions of type '{distribution_type}'.")
     generator_registry = {
         'random': _generate_random_distributions,
@@ -27,11 +24,9 @@ def get_distribution(distribution_file: str, distribution_type: str, n: int) -> 
         raise ValueError(f"Unknown distribution type: '{distribution_type}'. "
                          f"Available types are: {list(generator_registry.keys())}")
     
-    # 调用正确的生成函数
     generator_func = generator_registry[distribution_type]
     dis_dict = generator_func(n)
 
-    # 3. 保存到缓存以备后用
     logging.info(f"===> Saving newly generated distributions to: {distribution_file}")
     os.makedirs(os.path.dirname(distribution_file), exist_ok=True)
     with open(distribution_file, 'wb') as f:
@@ -41,7 +36,6 @@ def get_distribution(distribution_file: str, distribution_type: str, n: int) -> 
 
 
 def _generate_random_distributions(n: int) -> dict:
-    """生成基于 'random' 策略的分布。"""
     logging.info("===> Generating 'random' distributions...")
     tran_distribution = 0.5 + 0.2 * np.random.rand(n)
     succ_distribution = np.random.uniform(0.2, 0.3, n)
@@ -58,7 +52,6 @@ def _generate_random_distributions(n: int) -> dict:
     }
 
 def _generate_poisson_distributions(n: int) -> dict:
-    """生成基于 'poisson' 策略的分布。"""
     logging.info("===> Generating 'poisson' distributions...")
     # 使用随机的lambda值
     lambdas = np.random.uniform(1, 10, 4)
@@ -79,7 +72,6 @@ def _generate_poisson_distributions(n: int) -> dict:
     }
 
 def _generate_normal_distributions(n: int) -> dict:
-    """生成基于 'normal' 策略的分布。"""
     logging.info("===> Generating 'normal' distributions...")
     # 从截断正态分布中采样
     succ = truncnorm.rvs(0, np.inf, loc=1, scale=1, size=n)
@@ -98,7 +90,6 @@ def _generate_normal_distributions(n: int) -> dict:
     }
 
 def _normalize_triplet(a: np.ndarray, b: np.ndarray, c: np.ndarray) -> tuple:
-    """将三个向量归一化，使得它们的元素和为1。"""
     total = a + b + c
     out_a = np.zeros_like(a, dtype=float)
     out_b = np.zeros_like(b, dtype=float)
@@ -113,7 +104,6 @@ def _normalize_triplet(a: np.ndarray, b: np.ndarray, c: np.ndarray) -> tuple:
     return out_a, out_b, out_c
 
 def _min_max_scale(v: np.ndarray) -> np.ndarray:
-    """将向量进行Min-Max归一化到[0, 1]区间。"""
     min_val = np.min(v)
     max_val = np.max(v)
     range_val = max_val - min_val

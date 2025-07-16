@@ -21,18 +21,7 @@ def _calculate_marginal_gain_for_candidate(
     constantFactor_distribution: np.ndarray,
     personalization: str
 ) -> tuple:
-    """
-    为单个候选节点计算边际增益的工作函数，专门用于并行处理。
 
-    Args:
-        candidate (int): 要评估的候选节点ID。
-        base_influence (float): 基础影响力值。
-        current_deliverers (list): 当前的种子集。
-        ... (其他参数)
-
-    Returns:
-        tuple: 一个包含 (候选节点ID, 边际增益) 的元组。
-    """
     # 构造临时投放集合进行测试
     test_deliverer_set = current_deliverers + [candidate]
     
@@ -58,16 +47,7 @@ def find_next_best_deliverer_parallel(
     personalization: str,
     num_workers: int = None
 ) -> int:
-    """
-    通过并行化的蒙特卡洛模拟计算边际增益，找到下一个最优的投放者。
 
-    Args:
-        ... (原始参数)
-        num_workers (int, optional): 使用的工作进程数。如果为None，则使用所有可用的CPU核心。
-
-    Returns:
-        int: 下一个最优投放者的节点ID。
-    """
     n = tranProMatrix.shape[0]
     candidate_nodes = [node for node in range(n) if node not in current_deliverers]
 
@@ -158,9 +138,7 @@ def _run_full_simulation(
     constantFactor_distribution: np.ndarray,
     personalization: str
 ) -> float:
-    """
-    对给定的种子集，重复运行 L 次单次模拟，并计算平均总影响力
-    """
+
     n = tranProMatrix.shape[0]
     total_influence_accumulator = 0.0
 
@@ -195,17 +173,7 @@ def monteCarlo_singleTime_improved(
     dis_distribution: np.ndarray,
     constantFactor_distribution: np.ndarray
 ) -> np.ndarray:
-    """
-    执行单次蒙特卡洛模拟，模拟从初始投放者开始的多路随机游走。
 
-    Args:
-        tranProMatrix (np.ndarray): 描述转发概率的矩阵 (只读)。
-        initial_deliverers (list): 初始投放者（种子节点）的列表。
-        ... (其他概率分布)
-
-    Returns:
-        np.ndarray: 一个n维的0/1向量，1表示该节点在本轮模拟中成功使用了优惠券。
-    """
     n = tranProMatrix.shape[0]
     users_useAndDis = set()
     
@@ -285,19 +253,7 @@ def monteCarlo_singleTime_firstDiscard_improved(
     dis_distribution: np.ndarray,
     constantFactor_distribution: np.ndarray
 ) -> np.ndarray:
-    """
-    执行单次蒙特卡洛模拟，采用"首次丢弃即改变"的个性化策略。
-    此模型下，成功用户被定义为所有“首次使用者”和“首次丢弃者”的集合。
-    此函数是“纯”的，不会修改任何输入参数。
 
-    Args:
-        tranProMatrix (np.ndarray): 描述转发概率的矩阵 (只读)。
-        initial_deliverers (list): 初始投放者（种子节点）的列表。
-        ... (其他概率分布)
-
-    Returns:
-        np.ndarray: 一个n维的0/1向量，1表示该节点在本轮模拟中被视为成功。
-    """
     n = tranProMatrix.shape[0]
     # 使用集合(set)来高效地管理不同状态的节点
     successful_users = set()  # 记录首次“使用”的节点
@@ -362,18 +318,7 @@ def monteCarlo_singleTime_firstUnused_improved(
     dis_distribution: np.ndarray,
     constantFactor_distribution: np.ndarray
 ) -> np.ndarray:
-    """
-    执行单次蒙特卡洛模拟，采用"首次接触即改变"的个性化策略。
-    在此模型中，我们假设所有接触过优惠券的节点最终都会被视为“成功”。
 
-    Args:
-        tranProMatrix (np.ndarray): 描述转发概率的矩阵 (只读)。
-        initial_deliverers (list): 初始投放者（种子节点）的列表。
-        ... (其他概率分布)
-
-    Returns:
-        np.ndarray: 一个n维的0/1向量，1表示该节点在本轮模拟中接触过优惠券。
-    """
     n = tranProMatrix.shape[0]
     # 使用集合(set)来高效存储所有接触过优惠券的节点
     contacted_nodes = set()

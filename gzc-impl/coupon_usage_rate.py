@@ -12,7 +12,6 @@ import coupon_usage_rate_get_distribution
 import get_coupon_usage_rate_simulation
 
 def run_coupon_experiment(config: ExperimentConfig):
-    '''主控制函数，负责按顺序调用其他模块 将种子集的计算耗时和最终的评估结果保存到文件中，以便后续分析和绘图'''
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     
@@ -36,7 +35,6 @@ def run_coupon_experiment(config: ExperimentConfig):
 
 
 def load_experiment_data(config: ExperimentConfig):
-    """从文件中加载实验所需的所有基础数据，包括社交网络图（邻接矩阵）、各种概率分布等"""
     logging.info(f"===> Loading data for dataset: {config.data_set}")
     with open(config.adj_file, 'rb') as f:
         adj = pickle.load(f)# 邻接矩阵
@@ -68,21 +66,6 @@ def create_seed_num_list(
     num_steps: int, 
     scale_factor: int = 1000
 ) -> List[int]:
-    """
-    根据总节点数和指定的步数，生成一系列不同大小的种子集规模
-
-    根据网络的总节点数 total_nodes 和一个比例因子 scale_factor，生成从 1/scale_factor 到 num_steps/scale_factor 比例的节点数量
-    total_nodes=10000, num_steps=10, scale_factor=1000
-    会生成代表 0.1%, 0.2%, ..., 1.0% 节点数的列表 [10, 20, ..., 100]。
-
-    Args:
-        total_nodes (int): 网络中的总节点数 (n)。
-        num_steps (int): 要生成的种子数量层级数 (例如，10个层级)。
-        scale_factor (int): 用于计算比例的分母。默认为1000，表示千分比。
-
-    Returns:
-        list[int]: 一个包含不同种子数量的整数列表。
-    """
         
     seed_list = [round(total_nodes * i / scale_factor) for i in range(1, num_steps + 1)]
     
@@ -153,7 +136,6 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
     return method_to_seeds, method_to_runtime
 
 def run_evaluation(method_to_seeds: dict, config: ExperimentConfig, data: dict):
-    """对每种算法选出的种子集，通过大量的蒙特卡洛模拟来评估效果，即计算最终的“优惠券使用率”"""
     logging.info(f"Starting evaluation with personalization: {config.personalization}")
     
     evaluation_dict = {

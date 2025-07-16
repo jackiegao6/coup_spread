@@ -344,16 +344,7 @@ def _generate_single_rr_set(
     n: int, 
     graph: nx.DiGraph
 ) -> set:
-    """
-    从随机选择的一个节点开始，生成一个反向可达样本 (RR-Set)。
 
-    Args:
-        n (int): 网络中的总节点数。
-        graph (nx.DiGraph): 带有传播概率 'p' 的有向图。
-
-    Returns:
-        set: 一个包含节点ID的RR-Set。
-    """
     # 1. 在整个网络中随机选择一个起始节点
     start_node = random.randrange(n)
     
@@ -388,10 +379,7 @@ def _generate_rr_sets(
     graph: nx.DiGraph, 
     num_RR: int
 ) -> list:
-    """
-    生成指定数量的 RR-Sets。
-    """
-    print(f"--- 正在生成 {num_RR} 个反向可达样本 (RR-Sets) ---")
+    print(f"--- generating numbers of {num_RR} (RR-Sets) ---")
     return [_generate_single_rr_set(n, graph) for _ in range(num_RR)]
 
 
@@ -401,18 +389,13 @@ def deliverers_ris_coverage(
     m: int,
     num_samples: int = 50000 
 ) -> list:
-    """
-    使用反向可达集采样（RIS）和最大覆盖贪心算法选择 m 个最优投放者。
-    """
     print("--- Running: Reverse Reachable Set (RIS) Coverage ---")
     print("依据: 选择能“覆盖”最多“反向影响力场景”(RR-Sets)的节点。")
     
     n = adj.shape[0]
     
-    # 1. 使用邻接矩阵 创建一个有向图
     G = nx.from_scipy_sparse_array(adj, create_using=nx.DiGraph)
     
-    # 2. 遍历图中的每一条边，并从 tranProMatrix 中赋予其特定的传播概率
     num_edges_processed = 0
     for u, v in G.edges():
         probability = tranProMatrix[v, u]
@@ -423,10 +406,8 @@ def deliverers_ris_coverage(
         
     print(f"图构建完成，共处理了 {num_edges_processed} 条边。")
     
-    # 3. 生成大量的 RR-Sets (这部分逻辑不变)
     rr_sets = _generate_rr_sets(n, G, num_samples)
     
-    # 4. 实现最大覆盖的贪心算法 (这部分逻辑不变)
     selected_seeds = []
     
     # 创建一个从节点到其所在RR-Set索引的映射
@@ -447,7 +428,7 @@ def deliverers_ris_coverage(
             candidate_gains[node_id] = gain
 
         if not candidate_gains:
-            print("没有更多可覆盖的节点，提前终止。")
+            print("no more uncovered nodes, process finish!")
             break
 
         best_candidate = max(candidate_gains, key=candidate_gains.get)

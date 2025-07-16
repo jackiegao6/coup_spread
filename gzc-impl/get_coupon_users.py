@@ -14,16 +14,7 @@ def find_next_best_deliverer(
     constantFactor_distribution: np.ndarray,
     personalization: str
 ) -> int:
-    """
-    在已有的种子集 current_deliverers 的基础上，找到下一个能带来最大影响力增益的最佳投放者
 
-    Args:
-        current_deliverers (list): 当前已经选定的投放者集合。
-        ... (其他参数与之前相同)
-
-    Returns:
-        int: 下一个最优投放者的节点ID。
-    """
     n = tranProMatrix.shape[0]
     candidate_nodes = [node for node in range(n) if node not in current_deliverers]
 
@@ -75,9 +66,7 @@ def _run_full_simulation(
     constantFactor_distribution: np.ndarray,
     personalization: str
 ) -> float:
-    """
-    对给定的种子集，重复运行 L 次单次模拟，并计算平均总影响力
-    """
+
     n = tranProMatrix.shape[0]
     total_influence_accumulator = 0.0
 
@@ -112,17 +101,6 @@ def monteCarlo_singleTime_improved(
     dis_distribution: np.ndarray,
     constantFactor_distribution: np.ndarray
 ) -> np.ndarray:
-    """
-    执行单次蒙特卡洛模拟，模拟从初始投放者开始的多路随机游走。
-
-    Args:
-        tranProMatrix (np.ndarray): 描述转发概率的矩阵 (只读)。
-        initial_deliverers (list): 初始投放者（种子节点）的列表。
-        ... (其他概率分布)
-
-    Returns:
-        np.ndarray: 一个n维的0/1向量，1表示该节点在本轮模拟中成功使用了优惠券。
-    """
     n = tranProMatrix.shape[0]
     users_useAndDis = set()
     
