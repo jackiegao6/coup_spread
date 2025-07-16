@@ -390,7 +390,6 @@ def deliverers_ris_coverage(
     num_samples: int = 50000 
 ) -> list:
     print("--- Running: Reverse Reachable Set (RIS) Coverage ---")
-    print("依据: 选择能“覆盖”最多“反向影响力场景”(RR-Sets)的节点。")
     
     n = adj.shape[0]
     
@@ -400,7 +399,6 @@ def deliverers_ris_coverage(
     for u, v in G.edges():
         probability = tranProMatrix[v, u]
         
-        # 将概率作为边的'p'属性存储
         G.edges[u, v]['p'] = probability
         num_edges_processed += 1
         
@@ -416,7 +414,7 @@ def deliverers_ris_coverage(
         for node in rr_set:
             node_to_rr_indices[node].append(i)
 
-    is_rr_set_covered = np.zeros(num_samples, dtype=bool)
+    is_rr_set_covered = np.zeros(num_samples, dtype=bool)# 加快
     
     for i in range(m):
         candidate_gains = defaultdict(int)
@@ -424,7 +422,7 @@ def deliverers_ris_coverage(
             if node_id in selected_seeds:
                 continue
             
-            gain = np.sum(~is_rr_set_covered[rr_indices])
+            gain = np.sum(~is_rr_set_covered[rr_indices])# 计算这个节点覆盖的RR-Set数量
             candidate_gains[node_id] = gain
 
         if not candidate_gains:
@@ -437,9 +435,9 @@ def deliverers_ris_coverage(
         for rr_index in node_to_rr_indices[best_candidate]:
             is_rr_set_covered[rr_index] = True
             
-        print(f"  - 第 {i+1} 个种子: 节点 {best_candidate} (新增覆盖了 {candidate_gains[best_candidate]} 个场景)")
+        print(f"  - 第 {i+1} 个种子: 节点 {best_candidate} (新增覆盖了 {candidate_gains[best_candidate]} 个 RR-Set)")
 
-    print(f"\n最终选择的投放者集合: {selected_seeds}\n")
+    print(f"\n种子集合: {selected_seeds}\n")
     return selected_seeds
 
 if __name__ == '__main__':
@@ -472,5 +470,6 @@ if __name__ == '__main__':
 
     deliverers = deliverers_ris_coverage(adj=adj,
                                          m=3,
+                                         tranProMatrix=tranProMatrix
                                          )
     print(deliverers)
