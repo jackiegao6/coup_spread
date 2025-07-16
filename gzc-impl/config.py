@@ -13,6 +13,9 @@ class ExperimentConfig:
     data_prefix: str = '/root/autodl-tmp/processed-data'
     method_type: str = 'None'
 
+    num_steps: int = 1
+    scale_factor: int = 1000
+
     
     @property
     def adj_file(self):
@@ -24,8 +27,8 @@ class ExperimentConfig:
 
     def deliverers_cache_file(self, method, m = 0):
         # m = self.seed_num_list[-1]
-        return f"{self.data_prefix}/{self.data_set}/deliverers-{self.data_set}_distri-{self.distribution_type}_constantFactor-{self.constant_factor_distri}_{method}_{self.monte_carlo_L}_seedNum{m}.txt"
+        return f"{self.data_prefix}/{self.data_set}/deliverers_{self.data_set}-distri_{self.distribution_type}-constantFactor_{self.constant_factor_distri}_{method}_seedNum{m}.txt"
 
     def usage_rate_file(self, m = 0):
         # m = self.seed_num_list[-1]
-        return f"{self.data_prefix}/{self.data_set}/usageRate_{self.data_set}_distri-{self.distribution_type}_constantFactor{self.constant_factor_distri}_monteCarloL{self.monte_carlo_L}_testTimes{self.simulation_times}_seedNum{m}_{self.personalization}.txt"
+        return f"{self.data_prefix}/{self.data_set}/usageRate_{self.data_set}-distri_{self.distribution_type}-constantFactor_{self.constant_factor_distri}_monteCarloL-{self.monte_carlo_L}_testTimes-{self.simulation_times}_seedNum{m}_{self.personalization}.txt"

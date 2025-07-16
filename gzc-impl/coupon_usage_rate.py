@@ -17,11 +17,12 @@ def run_coupon_experiment(config: ExperimentConfig):
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     
     # 1. 加载数据
-    experiment_data = load_experiment_data(config)
-    # 获得总节点数 n 
-    n = experiment_data["n"]
-    seedNumList = create_seed_num_list(total_nodes=n, num_steps=1, scale_factor=100)
+    adj_and_n = load_experiment_data(config)
+    n = adj_and_n["n"]
+
+    seedNumList = create_seed_num_list(total_nodes=n, num_steps=config.num_steps, scale_factor=config.scale_factor)
     my_config.seed_num_list = seedNumList
+    experiment_data = load_experiment_data_get_seedsnum(config=config, adj=adj_and_n["adj"], n=adj_and_n["n"])
     
     # 2. 获取种子集
     methods = config.methods
@@ -32,7 +33,7 @@ def run_coupon_experiment(config: ExperimentConfig):
         return
 
     # 3. 运行评估 [2465, 119, 2093, 997, 1613, 1560, 2089, 1101, 2501, 1312, 840, 2263, 1976, 523, 895, 453, 1958, 515, 72, 1601, 704, 1307, 545, 2475, 2243, 971, 702]
-    # run_evaluation(method_to_seeds, config, experiment_data)
+    run_evaluation(method_to_seeds, config, experiment_data)
 
 
 def load_experiment_data(config: ExperimentConfig):
@@ -41,8 +42,14 @@ def load_experiment_data(config: ExperimentConfig):
     with open(config.adj_file, 'rb') as f:
         adj = pickle.load(f)# 邻接矩阵
     n = adj.shape[0]
-    
-    distribution_list = coupon_usage_rate_get_distribution.get_distribution(config.distribution_file(), config.distribution_type, n)
+
+    return {
+        "adj": adj,
+        "n": n
+    }
+
+def load_experiment_data_get_seedsnum(config: ExperimentConfig, adj, n):
+    distribution_list = coupon_usage_rate_get_distribution.get_distribution(config.distribution_file(m=config.seed_num_list[-1]), config.distribution_type, n)
     succ_dist, dis_dist, tran_dist, const_factor_dist = distribution_list
     
     init_tran_matrix, D = single_deliverer.getTranProMatrix(adj, tran_dist)
@@ -54,6 +61,7 @@ def load_experiment_data(config: ExperimentConfig):
         "init_tran_matrix": init_tran_matrix,
         "D": D
     }
+
 
 
 def create_seed_num_list(
@@ -90,7 +98,7 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
     m = config.seed_num_list[-1]# 避免重复计算
 
     selector_dict = { # 根据传入的 method 字符串，调用对应的种子选择函数
-        'deliverers_theroy': lambda: get_coupon_deliverers.deliverers_theroy(
+        'theroy': lambda: get_coupon_deliverers.deliverers_theroy(
             data["n"], m, data["init_tran_matrix"], *data["distributions"], config.personalization, data["D"]),
         'monterCarlo': lambda: get_coupon_deliverers.deliverers_monteCarlo(m=m,
                                                                            init_tranProMatrix=data["init_tran_matrix"],
@@ -153,7 +161,9 @@ def run_evaluation(method_to_seeds: dict, config: ExperimentConfig, data: dict):
     if config.personalization not in evaluation_dict:
         raise ValueError(f"Unknown personalization type: {config.personalization}")
 
-    with open(config.usage_rate_file, 'a+') as f:
+    usage_rate_file = config.usage_rate_file(m=config.seed_num_list[-1])
+    os.makedirs(os.path.dirname(usage_rate_file), exist_ok=True)
+    with open(usage_rate_file, 'a+') as f:
         f.write(f'times:{config.simulation_times}\n')
 
     evaluation_func = evaluation_dict[config.personalization]
@@ -173,15 +183,18 @@ def run_evaluation(method_to_seeds: dict, config: ExperimentConfig, data: dict):
 
 if __name__ == '__main__':
     my_config = ExperimentConfig(
-        data_set='students',
-        simulation_times=[10, 20], #[1000, 5000]
-        methods=['monterCarlo'], # ['deliverers_theroy', 'monteCarlo', 'degreeTopM']
+        data_set='Twitter',
+        simulation_times=[100, 200], #[1000, 5000]
+        methods=['random','degreeTopM','pageRank','succPro','1_neighbor'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor']
         seed_num_list=None,
         monte_carlo_L=5,
         distribution_type='random',
         constant_factor_distri='random',
         personalization='None',# firstUnused
         data_prefix='/root/autodl-tmp/processed-data',
-        method_type='None' # new
+        method_type='None', # new,
+
+        num_steps=2,
+        scale_factor=2000
     )
     run_coupon_experiment(my_config)

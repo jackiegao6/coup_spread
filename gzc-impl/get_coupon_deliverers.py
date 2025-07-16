@@ -66,42 +66,173 @@ def deliverers_monteCarlo(
     return deliverers
 
 
+# # 随机选择m张券的投放源节点 随机选 m 个节点
+# def deliverers_random(n, m):
+#     res = random.choices(range(n),k=m)
+#     print(f"***********随机选 {m} 个节点: {res}")
+#     return res
 
 
-# 随机选择m张券的投放源节点 随机选 m 个节点
-def deliverers_random(n, m):
-    return random.choices(range(n),k=m)
+# # 选邻居最多的 m 个节点
+# def deliverers_degreeTopM(adj, m):
+#     degrees = np.asarray(adj.sum(axis=1)).flatten()
+#     top_m_indexes = np.argsort(degrees)[-m:][::-1]
+#     res = top_m_indexes.tolist() # 根据邻接矩阵计算每个节点的度数，选出度最大的前 m 个节点
+#     print(f"***********邻居最多的 {m} 个节点: {res}")
+#     print("选择的 Top M 节点及其度数:")
+#     for index in top_m_indexes:
+#         value = degrees[index]
+#         print(f"  - 节点 {index}: 度数 = {int(value)}")
+#     print("") # 打印一个空行
+#     return res
 
 
-# 选邻居最多的 m 个节点
-def deliverers_degreeTopM(adj, m):
+# #PageRank 值前 m 高	使用图的 PageRank 值选节点
+# def deliverers_pageRank(adj,m):
+#     # 构建 networkx 图，从中计算 PageRank 值，然后选前 m 高的节点
+#     G = nx.from_scipy_sparse_array(adj,nx.Graph)
+#     # 计算 PageRank
+#     pagerank_scores = nx.pagerank(G)
+    
+#     # 对字典按值进行排序
+#     sorted_nodes = sorted(pagerank_scores.items(), key=lambda item: item[1], reverse=True)
+    
+#     top_m_nodes = sorted_nodes[:m]
+    
+#     print("选择的 Top M 节点及其 PageRank 分数:")
+#     for node, score in top_m_nodes:
+#         print(f"  - 节点 {node}: PageRank = {score:.4f}")
+#     print("")
+        
+#     return [node for node, score in top_m_nodes]
+
+
+# #优惠券使用率最大的m个节点作为投放源节点 使用概率最大前 m 个节点	选择优惠券使用意愿最大的用户
+# def deliverers_succPro(m,succ_distribution):
+#     # 根据 succ_distribution（每个用户使用优惠券的概率），直接选出前 m 高
+#     succPro_indexes = np.argsort(succ_distribution)[::-1][:m]
+#     res = succPro_indexes.tolist()
+#     print(f"***********优惠券使用率最大的{m}个节点: {res}")
+#     return res
+
+
+# # 	邻居影响力最大	根据用户能“直接影响”邻居的总使用概率选节点
+# def deliverers_1_neighbor(succ_distribution,init_tranProMatrix,m):
+#     # 计算每个节点直接影响其邻居成功使用优惠券的概率总和
+#     one_neighbor_pros = np.sum(np.multiply(init_tranProMatrix,succ_distribution.reshape(-1,1)),axis=0)
+#     one_neighbor_pro_indexes = np.argsort(one_neighbor_pros)[::-1][:m]
+#     print(f"***********优惠券使用率最大的{m}个节点: {one_neighbor_pro_indexes}")
+#     return one_neighbor_pro_indexes
+
+def deliverers_random(n: int, m: int) -> list:
+    """
+    随机选择 m 个节点。
+    """
+    print("--- Running: Random ---")
+    print(f"依据: 完全随机选择。")
+    selected_nodes = random.sample(range(n), k=m)
+    print(f"选择了 {m} 个节点: {selected_nodes}\n")
+    return selected_nodes # 随机选择没有评价值，只返回节点列表
+
+def deliverers_degreeTopM(adj, m: int) -> list:
+    """
+    选择度数最高的 m 个节点。
+    """
+    print("--- Running: Degree Top M ---")
+    print("依据: 选择连接数（度数）最多的节点。")
+    
+    # .A 属性将稀疏矩阵转为密集 NumPy 数组
     degrees = np.asarray(adj.sum(axis=1)).flatten()
-    top_m_indexes = np.argsort(degrees)[-m:][::-1]
-    return top_m_indexes.tolist() # 根据邻接矩阵计算每个节点的度数，选出度最大的前 m 个节点
+    
+    # 使用 argsort 获取排序后的索引
+    sorted_indexes = np.argsort(degrees)[::-1] # 从大到小排序
+    
+    top_m_indexes = sorted_indexes[:m]
+    
+    print("选择的 Top M 节点及其度数:")
+    selected_nodes_with_values = []
+    for index in top_m_indexes:
+        value = degrees[index]
+        print(f"  - 节点 {index}: 度数 = {int(value)}")
+        selected_nodes_with_values.append((index, value))
+    print("") # 打印一个空行
+        
+    return [node for node, value in selected_nodes_with_values] # 保持原始返回类型
 
-#PageRank 值前 m 高	使用图的 PageRank 值选节点
-def deliverers_pageRank(adj,m):
-    # 构建 networkx 图，从中计算 PageRank 值，然后选前 m 高的节点
-    G = nx.from_scipy_sparse_matrix(adj,nx.Graph)
-    scores = nx.pagerank(G)
-    top_m = sorted(scores,key=scores.get,reverse=True)[:m]
-    return top_m
+def deliverers_pageRank(adj, m: int) -> list:
+    """
+    选择 PageRank 分数最高的 m 个节点。
+    """
+    print("--- Running: PageRank Top M ---")
+    print("依据: 选择 PageRank 分数最高的节点（综合考虑数量和质量）。")
+    
+    # from_scipy_sparse_array 在新版 networkx 中是推荐用法
+    # 如果 adj 是对称的，可以用 nx.Graph，如果是有向的，用 nx.DiGraph
+    G = nx.from_scipy_sparse_array(adj, create_using=nx.DiGraph)
+    
+    # 计算 PageRank
+    pagerank_scores = nx.pagerank(G)
+    
+    # 对字典按值进行排序
+    sorted_nodes = sorted(pagerank_scores.items(), key=lambda item: item[1], reverse=True)
+    
+    top_m_nodes = sorted_nodes[:m]
+    
+    print("选择的 Top M 节点及其 PageRank 分数:")
+    for node, score in top_m_nodes:
+        print(f"  - 节点 {node}: PageRank = {score:.4f}")
+    print("")
+        
+    return [node for node, score in top_m_nodes]
 
+def deliverers_succPro(m: int, succ_distribution: np.ndarray) -> list:
+    """
+    选择自身成功使用概率最高的 m 个节点。
+    """
+    print("--- Running: Success Probability Top M ---")
+    print("依据: 选择自身使用优惠券意愿（成功概率）最强的节点。")
+    
+    sorted_indexes = np.argsort(succ_distribution)[::-1] # 从大到小排序
+    
+    top_m_indexes = sorted_indexes[:m]
+    
+    print("选择的 Top M 节点及其成功概率:")
+    selected_nodes_with_values = []
+    for index in top_m_indexes:
+        value = succ_distribution[index]
+        print(f"  - 节点 {index}: 成功概率 = {value:.4f}")
+        selected_nodes_with_values.append((index, value))
+    print("")
+        
+    return [node for node, value in selected_nodes_with_values]
 
-#优惠券使用率最大的m个节点作为投放源节点 使用概率最大前 m 个节点	选择优惠券使用意愿最大的用户
-def deliverers_succPro(m,succ_distribution):
-    # 根据 succ_distribution（每个用户使用优惠券的概率），直接选出前 m 高
-    succPro_indexes = np.argsort(succ_distribution)[::-1][:m]
-    return succPro_indexes.tolist()
+def deliverers_1_neighbor(succ_distribution,init_tranProMatrix,m) -> list:
+    print("--- Running: 1-Hop Neighbor Influence Top M ---")
+    print("依据: 选择其所有邻居的成功使用概率之和最大的节点。")
 
-
-# 	邻居影响力最大	根据用户能“直接影响”邻居的总使用概率选节点
-def deliverers_1_neighbor(succ_distribution,init_tranProMatrix,m):
-    # 计算每个节点直接影响其邻居成功使用优惠券的概率总和
-    one_neighbor_pros = np.sum(np.multiply(init_tranProMatrix,succ_distribution.reshape(-1,1)),axis=0)
-    one_neighbor_pro_indexes = np.argsort(one_neighbor_pros)[::-1][:m]
-    return one_neighbor_pro_indexes
-
+    # 确保邻接矩阵是 NumPy 数组
+    adj = init_tranProMatrix
+    adj_array = adj.toarray() if hasattr(adj, 'toarray') else np.asarray(adj)
+    
+    # 计算每个节点的邻居影响力
+    # adj_array.T[i] 是一个向量，表示哪些节点是 i 的邻居
+    # succ_distribution 是所有节点的成功概率向量
+    # 点积操作高效地计算了每个节点的所有邻居的成功概率之和
+    one_hop_influence = adj_array.T.dot(succ_distribution)
+    
+    sorted_indexes = np.argsort(one_hop_influence)[::-1]
+    
+    top_m_indexes = sorted_indexes[:m]
+    
+    print("选择的 Top M 节点及其一步邻居影响力:")
+    selected_nodes_with_values = []
+    for index in top_m_indexes:
+        value = one_hop_influence[index]
+        print(f"  - 节点 {index}: 邻居影响力 = {value:.4f}")
+        selected_nodes_with_values.append((index, value))
+    print("")
+        
+    return [node for node, value in selected_nodes_with_values]
 
 
 def _create_enhanced_tran_matrix(

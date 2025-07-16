@@ -22,7 +22,7 @@ def _calculate_marginal_gain_for_candidate(
     personalization: str
 ) -> tuple:
     """
-    这是一个为单个候选节点计算边际增益的工作函数，专门用于并行处理。
+    为单个候选节点计算边际增益的工作函数，专门用于并行处理。
 
     Args:
         candidate (int): 要评估的候选节点ID。
@@ -44,8 +44,6 @@ def _calculate_marginal_gain_for_candidate(
     
     marginal_gain = new_influence - base_influence
     
-    # 打印日志可以帮助追踪进度，但在大量并行任务中可能会使输出混乱。
-    # 在生产环境中可以考虑移除或使用更高级的日志管理。
     # print(f"  (Worker) Evaluated candidate {candidate}: Marginal gain = {marginal_gain:.4f}")
 
     return (candidate, marginal_gain)
@@ -85,8 +83,7 @@ def find_next_best_deliverer_parallel(
     print(f"当前投放者 {current_deliverers} 的基础影响力: {base_influence:.4f}")
 
     # 准备并行计算
-    if num_workers is None:
-        num_workers = cpu_count() / 4
+    num_workers = 24
     print(f"使用 {num_workers} 个工作进程进行并行计算...")
 
     # 2. 创建任务列表

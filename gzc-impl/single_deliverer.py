@@ -44,7 +44,6 @@ def getBestSingleDeliverer(tranProMatrix,succ_distribution,users_useAndDis): #�
     I = np.eye(n)
 
     curr_succ_distribution = copy.deepcopy(succ_distribution)
-    # todo gzc: 二维还是一维
     # if len(users_useAndDis) > 0:
     #     for user in users_useAndDis:
     #         curr_succ_distribution[int(user)] = 0
