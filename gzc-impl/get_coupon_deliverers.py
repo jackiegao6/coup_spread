@@ -2,6 +2,7 @@ import logging
 import numpy as np
 import networkx as nx
 import random
+from collections import defaultdict
 
 import single_deliverer
 import get_coupon_users_multi_thread
@@ -339,6 +340,126 @@ def select_deliverers_theory_improved(
     return deliverers
 
 
+def _generate_single_rr_set(
+    n: int, 
+    graph: nx.DiGraph
+) -> set:
+    """
+    从随机选择的一个节点开始，生成一个反向可达样本 (RR-Set)。
+
+    Args:
+        n (int): 网络中的总节点数。
+        graph (nx.DiGraph): 带有传播概率 'p' 的有向图。
+
+    Returns:
+        set: 一个包含节点ID的RR-Set。
+    """
+    # 1. 在整个网络中随机选择一个起始节点
+    start_node = random.randrange(n)
+    
+    rr_set = {start_node}
+    queue = [start_node]
+    
+    # 使用 visited 集合来防止在一次生成中重复访问同一个节点
+    visited = {start_node}
+
+    head = 0
+    while head < len(queue):
+        current_node = queue[head]
+        head += 1
+        
+        # 2. 遍历所有指向 current_node 的“入边”
+        for predecessor in graph.predecessors(current_node):
+            if predecessor not in visited:
+                visited.add(predecessor)
+                
+                # 3. 以传播概率 p 进行“反向穿越”
+                edge_prob = graph.edges[predecessor, current_node].get('p', 0.1) # 默认概率0.1
+                if random.random() < edge_prob:
+                    # 如果成功，则将前驱节点加入样本和队列
+                    rr_set.add(predecessor)
+                    queue.append(predecessor)
+                    
+    return rr_set
+
+
+def _generate_rr_sets(
+    n: int, 
+    graph: nx.DiGraph, 
+    num_RR: int
+) -> list:
+    """
+    生成指定数量的 RR-Sets。
+    """
+    print(f"--- 正在生成 {num_RR} 个反向可达样本 (RR-Sets) ---")
+    return [_generate_single_rr_set(n, graph) for _ in range(num_RR)]
+
+
+def deliverers_ris_coverage(
+    adj, # 原始邻接矩阵，用于确定图的结构
+    tranProMatrix, # 包含边特定概率的转移矩阵
+    m: int,
+    num_samples: int = 50000 
+) -> list:
+    """
+    使用反向可达集采样（RIS）和最大覆盖贪心算法选择 m 个最优投放者。
+    """
+    print("--- Running: Reverse Reachable Set (RIS) Coverage ---")
+    print("依据: 选择能“覆盖”最多“反向影响力场景”(RR-Sets)的节点。")
+    
+    n = adj.shape[0]
+    
+    # 1. 使用邻接矩阵 创建一个有向图
+    G = nx.from_scipy_sparse_array(adj, create_using=nx.DiGraph)
+    
+    # 2. 遍历图中的每一条边，并从 tranProMatrix 中赋予其特定的传播概率
+    num_edges_processed = 0
+    for u, v in G.edges():
+        probability = tranProMatrix[v, u]
+        
+        # 将概率作为边的'p'属性存储
+        G.edges[u, v]['p'] = probability
+        num_edges_processed += 1
+        
+    print(f"图构建完成，共处理了 {num_edges_processed} 条边。")
+    
+    # 3. 生成大量的 RR-Sets (这部分逻辑不变)
+    rr_sets = _generate_rr_sets(n, G, num_samples)
+    
+    # 4. 实现最大覆盖的贪心算法 (这部分逻辑不变)
+    selected_seeds = []
+    
+    # 创建一个从节点到其所在RR-Set索引的映射
+    node_to_rr_indices = defaultdict(list)
+    for i, rr_set in enumerate(rr_sets):
+        for node in rr_set:
+            node_to_rr_indices[node].append(i)
+
+    is_rr_set_covered = np.zeros(num_samples, dtype=bool)
+    
+    for i in range(m):
+        candidate_gains = defaultdict(int)
+        for node_id, rr_indices in node_to_rr_indices.items():
+            if node_id in selected_seeds:
+                continue
+            
+            gain = np.sum(~is_rr_set_covered[rr_indices])
+            candidate_gains[node_id] = gain
+
+        if not candidate_gains:
+            print("没有更多可覆盖的节点，提前终止。")
+            break
+
+        best_candidate = max(candidate_gains, key=candidate_gains.get)
+        selected_seeds.append(best_candidate)
+        
+        for rr_index in node_to_rr_indices[best_candidate]:
+            is_rr_set_covered[rr_index] = True
+            
+        print(f"  - 第 {i+1} 个种子: 节点 {best_candidate} (新增覆盖了 {candidate_gains[best_candidate]} 个场景)")
+
+    print(f"\n最终选择的投放者集合: {selected_seeds}\n")
+    return selected_seeds
 
 if __name__ == '__main__':
 
@@ -361,8 +482,14 @@ if __name__ == '__main__':
     tranProMatrix, neighbor_having = single_deliverer.getTranProMatrix(adj,initial_tran_distribution)
 
 
-    deliverers = deliverers_monteCarlo(3, tranProMatrix, succ_distribution=use_pro,
+    deliverers1 = deliverers_monteCarlo(3, tranProMatrix, succ_distribution=use_pro,
                                dis_distribution=dis_pro,
                                constantFactor_distribution=constantFactor,
                                L=5,
                                personalization=users)
+    print(deliverers1)
+
+    deliverers = deliverers_ris_coverage(adj=adj,
+                                         m=3,
+                                         )
+    print(deliverers)

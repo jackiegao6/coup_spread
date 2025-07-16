@@ -149,8 +149,8 @@ def monteCarlo_singleTime_improved(
                     break 
                 elif rand_pro < (succ_distribution[current_user] + dis_distribution[current_user]):
                     # 决定“丢弃”
-                    # todo gzc: 丢弃也算成功使用 吸收态
-                    users_useAndDis.add(current_user) # 即使丢弃，也算“处理过”
+                    # todo gzc: 丢弃不算成功使用 吸收态
+                    # users_useAndDis.add(current_user) # 即使丢弃，也算“处理过”
                     break # 游走在此中断
             
             # 如果没有中断，则意味着节点决定“转发”

@@ -32,7 +32,6 @@ def run_coupon_experiment(config: ExperimentConfig):
         logging.error("No seed sets were generated. Aborting.")
         return
 
-    # 3. 运行评估 [2465, 119, 2093, 997, 1613, 1560, 2089, 1101, 2501, 1312, 840, 2263, 1976, 523, 895, 453, 1958, 515, 72, 1601, 704, 1307, 545, 2475, 2243, 971, 702]
     run_evaluation(method_to_seeds, config, experiment_data)
 
 
@@ -48,6 +47,7 @@ def load_experiment_data(config: ExperimentConfig):
         "n": n
     }
 
+
 def load_experiment_data_get_seedsnum(config: ExperimentConfig, adj, n):
     distribution_list = coupon_usage_rate_get_distribution.get_distribution(config.distribution_file(m=config.seed_num_list[-1]), config.distribution_type, n)
     succ_dist, dis_dist, tran_dist, const_factor_dist = distribution_list
@@ -61,7 +61,6 @@ def load_experiment_data_get_seedsnum(config: ExperimentConfig, adj, n):
         "init_tran_matrix": init_tran_matrix,
         "D": D
     }
-
 
 
 def create_seed_num_list(
@@ -97,7 +96,7 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
     
     m = config.seed_num_list[-1]# 避免重复计算
 
-    selector_dict = { # 根据传入的 method 字符串，调用对应的种子选择函数
+    selector_dict = {
         'theroy': lambda: get_coupon_deliverers.deliverers_theroy(
             data["n"], m, data["init_tran_matrix"], *data["distributions"], config.personalization, data["D"]),
         'monterCarlo': lambda: get_coupon_deliverers.deliverers_monteCarlo(m=m,
@@ -112,7 +111,12 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
         'pageRank': lambda: get_coupon_deliverers.deliverers_pageRank(data["adj"], m),
         'succPro': lambda: get_coupon_deliverers.deliverers_succPro(succ_distribution=data['distributions'][0], m=m),
         '1_neighbor': lambda: get_coupon_deliverers.deliverers_1_neighbor(succ_distribution=data['distributions'][0], init_tranProMatrix=data['init_tran_matrix'],m=m),
-
+        'ris_coverage': lambda: get_coupon_deliverers.deliverers_ris_coverage(
+                                                                            adj=data["adj"], 
+                                                                            tranProMatrix=data["init_tran_matrix"],
+                                                                            m=m,
+                                                                            num_samples=50000 # 可以通过 config 对象来配置
+                                                                        ),
     }
 
     method_to_seeds = {}
@@ -185,7 +189,7 @@ if __name__ == '__main__':
     my_config = ExperimentConfig(
         data_set='Twitter',
         simulation_times=[100, 200], #[1000, 5000]
-        methods=['random','degreeTopM','pageRank','succPro','1_neighbor'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor']
+        methods=['ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         seed_num_list=None,
         monte_carlo_L=5,
         distribution_type='random',
