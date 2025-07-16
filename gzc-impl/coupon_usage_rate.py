@@ -98,7 +98,7 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
                                                                             adj=data["adj"], 
                                                                             tranProMatrix=data["init_tran_matrix"],
                                                                             m=m,
-                                                                            num_samples=50000 # 可以通过 config 对象来配置
+                                                                            num_samples=config.num_samples # 通过 config 对象来配置
                                                                         ),
     }
 
@@ -131,7 +131,6 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
         with open(deliverers_cache_file, 'a+') as file:
             for key, value in method_to_seeds.items():
                 file.write(f'{key}:{value}\n')
-  
     
     return method_to_seeds, method_to_runtime
 
@@ -148,9 +147,7 @@ def run_evaluation(method_to_seeds: dict, config: ExperimentConfig, data: dict):
         raise ValueError(f"Unknown personalization type: {config.personalization}")
 
     usage_rate_file = config.usage_rate_file(m=config.seed_num_list[-1])
-    os.makedirs(os.path.dirname(usage_rate_file), exist_ok=True)
-    with open(usage_rate_file, 'a+') as f:
-        f.write(f'times:{config.simulation_times}\n')
+
 
     evaluation_func = evaluation_dict[config.personalization]
     methods = list(method_to_seeds.keys())
@@ -169,9 +166,9 @@ def run_evaluation(method_to_seeds: dict, config: ExperimentConfig, data: dict):
 
 if __name__ == '__main__':
     my_config = ExperimentConfig(
-        data_set='Twitter',
-        simulation_times=[100, 200], #[1000, 5000]
-        methods=['ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
+        data_set='students',
+        simulation_times=[1000, 2000], #[1000, 5000]
+        methods=['random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         seed_num_list=None,
         monte_carlo_L=5,
         distribution_type='random',
@@ -180,7 +177,8 @@ if __name__ == '__main__':
         data_prefix='/root/autodl-tmp/processed-data',
         method_type='None', # new,
 
-        num_steps=2,
-        scale_factor=2000
+        num_steps=3,
+        scale_factor=100,
+        num_samples = 50000
     )
     run_coupon_experiment(my_config)

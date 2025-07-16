@@ -15,6 +15,7 @@ class ExperimentConfig:
 
     num_steps: int = 1
     scale_factor: int = 1000
+    num_samples: int = 50000
 
     
     @property
@@ -31,4 +32,5 @@ class ExperimentConfig:
 
     def usage_rate_file(self, m = 0):
         # m = self.seed_num_list[-1]
-        return f"{self.data_prefix}/{self.data_set}/usageRate_{self.data_set}-distri_{self.distribution_type}-constantFactor_{self.constant_factor_distri}_monteCarloL-{self.monte_carlo_L}_testTimes-{self.simulation_times}_seedNum{m}_{self.personalization}.txt"
+        times = ",".join(str(time) for time in self.simulation_times)
+        return f"{self.data_prefix}/{self.data_set}/usageRate_{self.data_set}/distri_{self.distribution_type}-constantFactor_{self.constant_factor_distri}_monteCarloL-{self.monte_carlo_L}_testTimes-{times}_seedNum{m}_{self.personalization}.csv"
