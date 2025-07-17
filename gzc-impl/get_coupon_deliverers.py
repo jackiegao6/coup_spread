@@ -67,64 +67,6 @@ def deliverers_monteCarlo(
     return deliverers
 
 
-# # 随机选择m张券的投放源节点 随机选 m 个节点
-# def deliverers_random(n, m):
-#     res = random.choices(range(n),k=m)
-#     print(f"***********随机选 {m} 个节点: {res}")
-#     return res
-
-
-# # 选邻居最多的 m 个节点
-# def deliverers_degreeTopM(adj, m):
-#     degrees = np.asarray(adj.sum(axis=1)).flatten()
-#     top_m_indexes = np.argsort(degrees)[-m:][::-1]
-#     res = top_m_indexes.tolist() # 根据邻接矩阵计算每个节点的度数，选出度最大的前 m 个节点
-#     print(f"***********邻居最多的 {m} 个节点: {res}")
-#     print("选择的 Top M 节点及其度数:")
-#     for index in top_m_indexes:
-#         value = degrees[index]
-#         print(f"  - 节点 {index}: 度数 = {int(value)}")
-#     print("") # 打印一个空行
-#     return res
-
-
-# #PageRank 值前 m 高	使用图的 PageRank 值选节点
-# def deliverers_pageRank(adj,m):
-#     # 构建 networkx 图，从中计算 PageRank 值，然后选前 m 高的节点
-#     G = nx.from_scipy_sparse_array(adj,nx.Graph)
-#     # 计算 PageRank
-#     pagerank_scores = nx.pagerank(G)
-    
-#     # 对字典按值进行排序
-#     sorted_nodes = sorted(pagerank_scores.items(), key=lambda item: item[1], reverse=True)
-    
-#     top_m_nodes = sorted_nodes[:m]
-    
-#     print("选择的 Top M 节点及其 PageRank 分数:")
-#     for node, score in top_m_nodes:
-#         print(f"  - 节点 {node}: PageRank = {score:.4f}")
-#     print("")
-        
-#     return [node for node, score in top_m_nodes]
-
-
-# #优惠券使用率最大的m个节点作为投放源节点 使用概率最大前 m 个节点	选择优惠券使用意愿最大的用户
-# def deliverers_succPro(m,succ_distribution):
-#     # 根据 succ_distribution（每个用户使用优惠券的概率），直接选出前 m 高
-#     succPro_indexes = np.argsort(succ_distribution)[::-1][:m]
-#     res = succPro_indexes.tolist()
-#     print(f"***********优惠券使用率最大的{m}个节点: {res}")
-#     return res
-
-
-# # 	邻居影响力最大	根据用户能“直接影响”邻居的总使用概率选节点
-# def deliverers_1_neighbor(succ_distribution,init_tranProMatrix,m):
-#     # 计算每个节点直接影响其邻居成功使用优惠券的概率总和
-#     one_neighbor_pros = np.sum(np.multiply(init_tranProMatrix,succ_distribution.reshape(-1,1)),axis=0)
-#     one_neighbor_pro_indexes = np.argsort(one_neighbor_pros)[::-1][:m]
-#     print(f"***********优惠券使用率最大的{m}个节点: {one_neighbor_pro_indexes}")
-#     return one_neighbor_pro_indexes
-
 def deliverers_random(n: int, m: int) -> list:
     """
     随机选择 m 个节点。
@@ -414,7 +356,7 @@ def deliverers_ris_coverage(
         for node in rr_set:
             node_to_rr_indices[node].append(i)
 
-    is_rr_set_covered = np.zeros(num_samples, dtype=bool)# 加快
+    is_rr_set_covered = np.zeros(num_samples, dtype=bool)# 计算边际增益
     
     for i in range(m):
         candidate_gains = defaultdict(int)

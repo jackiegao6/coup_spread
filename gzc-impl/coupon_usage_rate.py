@@ -156,29 +156,30 @@ def run_evaluation(method_to_seeds: dict, config: ExperimentConfig, data: dict):
     evaluation_func(methods=methods,
                     method_deliverers=deliverers,
                     init_tran_matrix=data["init_tran_matrix"],
-                    usage_rate_file=config.usage_rate_file(m=config.seed_num_list[-1]),
+                    usage_rate_file=usage_rate_file,
                     distribution_list=data["distributions"],
                     seed_num_list=config.seed_num_list,
                     simulation_times=config.simulation_times,
                     single_sim_func=get_coupon_users.monteCarlo_singleTime_improved)
-    logging.info(f"Evaluation finished. Results saved to {config.usage_rate_file(m=config.seed_num_list[-1])}")
+    logging.info(f"Evaluation finished. Results saved to {usage_rate_file}")
 
 
 if __name__ == '__main__':
     my_config = ExperimentConfig(
-        data_set='students',
-        simulation_times=[1000, 2000], #[1000, 5000]
+        data_set='Twitter',
+        simulation_times=[5000], #[1000, 5000]
         methods=['random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         seed_num_list=None,
-        monte_carlo_L=5,
+        monte_carlo_L=10,
         distribution_type='random',
         constant_factor_distri='random',
         personalization='None',# firstUnused
-        data_prefix='/root/autodl-tmp/processed-data',
+        data_prefix='/home/wen/pythonspace/processed-data',
         method_type='None', # new,
 
-        num_steps=3,
-        scale_factor=100,
-        num_samples = 50000
+        num_steps=5,
+        scale_factor=5000,
+        num_samples = 400000    
     )
+
     run_coupon_experiment(my_config)

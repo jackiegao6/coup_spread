@@ -69,13 +69,13 @@ def simulation(
                 
                 # 计算使用率 (平均影响力 / 种子数)
                 usage_rate = avg_influence / seed_num if seed_num > 0 else 0
-                usage_rates_at_times.append(usage_rate)
                 
                 logging.info(f"    Result: Avg. Influence = {avg_influence:.2f}, Usage Rate = {usage_rate:.4f}")
             
-            # 将这个方法在所有评估时间点的结果写入文件
-            for rate in usage_rates_at_times:
+                # 将这个方法在所有评估时间点的结果写入文件
                 file_exists = os.path.exists(usage_rate_file)
-
-                df = pd.DataFrame({"method": [method], "seed_num": [seed_num], "rate": [f"{rate:.4f}"]})
+                if not file_exists:
+                    os.makedirs(os.path.dirname(usage_rate_file), exist_ok=True)
+                    
+                df = pd.DataFrame({"method": [method], "seed_num": [seed_num], "num_sims": [num_sims], "rate": [f"{usage_rate:.4f}"]})
                 df.to_csv(usage_rate_file, mode='a', header= not file_exists, index=False, encoding='utf-8-sig')
