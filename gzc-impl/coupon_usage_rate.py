@@ -170,7 +170,7 @@ if __name__ == '__main__':
         simulation_times=[5000], #[1000, 5000]
         methods=['random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         seed_num_list=None,
-        monte_carlo_L=10,
+        monte_carlo_L=15,
         distribution_type='random',
         constant_factor_distri='random',
         personalization='None',# firstUnused
@@ -179,7 +179,7 @@ if __name__ == '__main__':
 
         num_steps=5,
         scale_factor=5000,
-        num_samples = 400000    
+        num_samples = 600000    
     )
 
     run_coupon_experiment(my_config)
