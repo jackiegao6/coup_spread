@@ -10,6 +10,7 @@ def evaluate_seed_set(
     tran_matrix: np.ndarray,
     distributions: tuple
 ) -> float:
+
     total_activated_count = 0
     succ_dist, dis_dist, _, const_factor_dist = distributions
 
@@ -32,7 +33,7 @@ def simulation(
     init_tran_matrix: np.ndarray,
     usage_rate_file: str,
     distribution_list: tuple,
-    seed_num_list: list,
+    seed_num_list: list, # deprecated
     simulation_times: list, 
     single_sim_func # 传入具体的单次模拟函数，如 monteCarlo_singleTime_improved
 ):
@@ -79,3 +80,50 @@ def simulation(
                     
                 df = pd.DataFrame({"method": [method], "seed_num": [seed_num], "num_sims": [num_sims], "rate": [f"{usage_rate:.4f}"]})
                 df.to_csv(usage_rate_file, mode='a', header= not file_exists, index=False, encoding='utf-8-sig')
+
+def simulation2(
+    methods: list,
+    seeds_list: list,
+    init_tran_matrix: np.ndarray,
+    usage_rate_file: str,
+    distribution_list: tuple,
+    simulation_times: list,
+    single_sim_func, # 传入具体的单次模拟函数，如 monteCarlo_singleTime_improved
+    seed_num: int
+):
+    logging.info(f"--- New Evaluation Run ---\n")
+    logging.info(f"Simulation times for evaluation points: {simulation_times}\n")
+
+    num_methods = len(methods)
+    logging.info(f"--- Evaluating for seed number: {seed_num} ---")
+    # 中层循环：遍历不同的方法 控制评估的算法
+    for i in range(num_methods):
+        method = methods[i]
+        # 获取当前种子数量对应的完整种子集
+        current_seed_set = seeds_list[i]
+
+        logging.info(f"  Evaluating method: '{method}' with {len(current_seed_set)} seeds.")
+        # 内层循环： 控制评估的精度（模拟次数）
+        for num_sims in simulation_times: #[50000, 100000]
+            logging.info(f"    Running {num_sims} simulations...")
+
+            avg_influence = evaluate_seed_set(
+                seed_set=current_seed_set,
+                simulation_function=single_sim_func,
+                num_simulations=num_sims,
+                tran_matrix=init_tran_matrix,
+                distributions=distribution_list
+            )
+
+            # 计算使用率 (平均影响力 / 种子数)
+            usage_rate = avg_influence / seed_num
+
+            logging.info(f"    Result: Avg. Influence = {avg_influence:.2f}, Usage Rate = {usage_rate:.4f}")
+
+            # 将这个方法在所有评估时间点的结果写入文件
+            file_exists = os.path.exists(usage_rate_file)
+            if not file_exists:
+                os.makedirs(os.path.dirname(usage_rate_file), exist_ok=True)
+
+            df = pd.DataFrame({"method": [method], "seed_num": [seed_num], "num_sims": [num_sims], "rate": [f"{usage_rate:.4f}"]})
+            df.to_csv(usage_rate_file, mode='a', header= not file_exists, index=False, encoding='utf-8-sig')

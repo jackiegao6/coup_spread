@@ -8,6 +8,8 @@ import os
 import get_coupon_deliverers
 import time
 import ast
+import get_coupon_usage_rate_simulation
+import get_coupon_users
 
 
 
@@ -105,6 +107,35 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
 
     return methods_with_seeds
 
+
+def run_evaluation(methods_with_seeds: dict, config: ExperimentConfig, data: dict):
+    logging.info(f"Starting evaluation with personalization: {config.personalization}")
+
+    evaluation_dict = {
+        'None': get_coupon_usage_rate_simulation.simulation2,
+        'firstUnused': get_coupon_usage_rate_simulation.simulation2,
+        'firstDiscard': get_coupon_usage_rate_simulation.simulation2,
+    }
+
+    if config.personalization not in evaluation_dict: raise ValueError(f"Unknown personalization type: {config.personalization}")
+
+    usage_rate_file = config.usage_rate_file(m=config.seeds_num)
+
+    evaluation_func = evaluation_dict[config.personalization]
+    methods = list(methods_with_seeds.keys())
+    seeds = list(methods_with_seeds.values())
+
+    evaluation_func(methods=methods,
+                    seeds_list=seeds,
+                    init_tran_matrix=data["init_tran_matrix"],
+                    usage_rate_file=usage_rate_file,
+                    distribution_list=data["distributions"],
+                    simulation_times=config.simulation_times,
+                    single_sim_func=get_coupon_users.monteCarlo_singleTime_improved,
+                    seed_num=config.seeds_num)
+    logging.info(f"Evaluation finished. Results saved to {usage_rate_file}")
+
+
 def run_coupon_experiment(config: ExperimentConfig):
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -124,16 +155,16 @@ def run_coupon_experiment(config: ExperimentConfig):
         return
 
     # 3. 评估种子集
-    # run_evaluation(methods_with_seeds, config, experiment_data)
+    run_evaluation(methods_with_seeds, config, experiment_data)
 
 
 if __name__ == '__main__':
     my_config = ExperimentConfig(
         data_set='BA',
-        simulation_times=[5000], #[1000, 5000]
+        simulation_times=[50000], #[1000, 5000]
         methods=['random','pageRank','ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         monte_carlo_L=15,
-        distribution_type='random',# poisson gamma powerlaw random
+        distribution_type='powerlaw',# poisson gamma powerlaw random
         personalization='None',# firstUnused
         method_type='None', # new,
 
