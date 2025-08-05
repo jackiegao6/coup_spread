@@ -6,10 +6,14 @@ import copy
 def getTranProMatrix(adj, tran_distribution):
     """
     :param adj: 原始的图
-    :param tran_distribution_list: 每个节点的转发概率
+    :param tran_distribution: 每个节点的转发概率
     :return: 返回转移概率矩阵 tranProMatrix[i, j] 代表了优惠券从节点 j 成功转发到节点 i 的概率
     """
-    A_graph = adj.toarray().astype(float)
+    if not isinstance(adj, np.ndarray):
+        A_graph = adj.toarray().astype(float)
+    else:
+        A_graph = adj.astype(float)
+
     tran_distribution_list = np.array(tran_distribution).flatten()
     D = np.sum(A_graph, axis=0)  # 计算每个节点的度
     prob_per_neighbor = np.zeros_like(D, dtype=float)
@@ -17,8 +21,8 @@ def getTranProMatrix(adj, tran_distribution):
 
     # 仅对非孤立节点计算其到每个邻居的转发概率
     prob_per_neighbor[non_isolated_nodes] = tran_distribution_list[non_isolated_nodes] / D[non_isolated_nodes]
-    tranProMatrix = A_graph * prob_per_neighbor
-    return tranProMatrix, D
+    init_tran_matrix = A_graph * prob_per_neighbor
+    return init_tran_matrix
 
 
 def getBestSingleDeliverer(tranProMatrix, succ_distribution, users_useAndDis):

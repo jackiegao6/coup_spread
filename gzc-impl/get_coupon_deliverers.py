@@ -7,6 +7,8 @@ from collections import defaultdict
 import single_deliverer
 import get_coupon_users_multi_thread
 
+import scipy.sparse as sp
+
 def deliverers_monteCarlo(
     m: int,
     init_tranProMatrix: np.ndarray,
@@ -111,8 +113,10 @@ def deliverers_pageRank(adj, m: int) -> list:
     
     # from_scipy_sparse_array 在新版 networkx 中是推荐用法
     # 如果 adj 是对称的，可以用 nx.Graph，如果是有向的，用 nx.DiGraph
+    if isinstance(adj, np.ndarray):
+        adj = sp.csr_matrix(adj)
     G = nx.from_scipy_sparse_array(adj, create_using=nx.DiGraph)
-    
+
     # 计算 PageRank
     pagerank_scores = nx.pagerank(G)
     
@@ -332,7 +336,10 @@ def deliverers_ris_coverage(
     num_samples: int = 50000 
 ) -> list:
     print("--- Running: Reverse Reachable Set (RIS) Coverage ---")
-    
+
+    if isinstance(adj, np.ndarray):
+        adj = sp.csr_matrix(adj)
+
     n = adj.shape[0]
     
     G = nx.from_scipy_sparse_array(adj, create_using=nx.DiGraph)
