@@ -5,6 +5,7 @@ from scipy.stats import truncnorm, gamma, expon
 import logging
 import networkx as nx  # 引入 networkx 来处理图和度
 import scipy.sparse as sp
+from config import ExperimentConfig
 
 
 # --- 保持不变的辅助函数 ---
@@ -34,12 +35,10 @@ def _map_degree_to_behavior(
 ) -> np.ndarray:
     """
     将缩放后的度映射到一个行为倾向值上。
-
     Args:
         scaled_degrees: 经过对数或其它方式缩放后的度向量。
         base_value: 基础概率 (用于低度节点)。
         degree_influence_factor: 度的影响系数 (正相关或负相关)。
-
     Returns:
         一个代表行为倾向的向量。
     """
@@ -49,9 +48,7 @@ def _map_degree_to_behavior(
     return np.clip(behavior_tendency, 1e-6, None)
 
 
-# --- 修改后的、与度相关的生成函数 ---
-
-def _generate_poisson_distributions_degree_aware(n: int, degrees: np.ndarray) -> dict:
+def _generate_poisson_distributions_degree_aware(n: int, degrees: np.ndarray, config: ExperimentConfig) -> dict:
     logging.info("===> Generating 'poisson' distributions (degree-aware)...")
 
     # 对度进行对数缩放，以减弱超级节点的影响
@@ -83,7 +80,7 @@ def _generate_poisson_distributions_degree_aware(n: int, degrees: np.ndarray) ->
     }
 
 
-def _generate_gamma_distributions_degree_aware(n: int, degrees: np.ndarray) -> dict:
+def _generate_gamma_distributions_degree_aware(n: int, degrees: np.ndarray, config: ExperimentConfig) -> dict:
     logging.info("===> Generating 'gamma' distributions (degree-aware)...")
 
     scaled_degrees = _min_max_scale(np.log1p(degrees))
@@ -111,7 +108,7 @@ def _generate_gamma_distributions_degree_aware(n: int, degrees: np.ndarray) -> d
     }
 
 
-def _generate_powerlaw_distributions_degree_aware(n: int, degrees: np.ndarray) -> dict:
+def _generate_powerlaw_distributions_degree_aware(n: int, degrees: np.ndarray, config: ExperimentConfig) -> dict:
     """
     使用幂律分布生成原始倾向值，然后归一化。
     将节点的度映射到幂律分布的指数 a 上。
@@ -126,11 +123,11 @@ def _generate_powerlaw_distributions_degree_aware(n: int, degrees: np.ndarray) -
 
     # 指数 a 必须 > 0。
     # base_value 较大，degree_influence 为负，实现反向关系
-    tran_exponent_a = _map_degree_to_behavior(scaled_degrees, base_value=5.0, degree_influence_factor=-4.5)
+    tran_exponent_a = _map_degree_to_behavior(scaled_degrees, base_value=config.tran_base_value, degree_influence_factor=config.tran_degree_influence_factor)
 
     # base_value 较小，degree_influence 为正，实现正向关系
-    succ_exponent_a = _map_degree_to_behavior(scaled_degrees, base_value=1.5, degree_influence_factor=3.0)
-    dis_exponent_a = _map_degree_to_behavior(scaled_degrees, base_value=2.0, degree_influence_factor=2.0)
+    succ_exponent_a = _map_degree_to_behavior(scaled_degrees, base_value=config.succ_base_value, degree_influence_factor=config.succ_degree_influence_factor)
+    dis_exponent_a = _map_degree_to_behavior(scaled_degrees, base_value=config.dis_base_value, degree_influence_factor=config.dis_degree_influence_factor)
 
     # 使用 np.random.power 生成 [0, 1) 区间的原始倾向值
     tran = np.random.power(tran_exponent_a, n)
@@ -152,7 +149,7 @@ def _generate_powerlaw_distributions_degree_aware(n: int, degrees: np.ndarray) -
     }
 
 
-def _generate_random_distributions(n: int, degrees: np.ndarray) -> dict:
+def _generate_random_distributions(n: int, degrees: np.ndarray, config: ExperimentConfig) -> dict:
     # n 个节点
     logging.info("===> Generating 'random' distributions...")
     tran_distribution = 0.5 + 0.2 * np.random.rand(n)
@@ -171,11 +168,11 @@ def _generate_random_distributions(n: int, degrees: np.ndarray) -> dict:
 
 
 # --- 新的主函数，用于处理与度相关的分布生成 ---
-
 def get_distribution_degree_aware(
         distribution_file: str,
         distribution_type: str,
         adj: nx.Graph,  # 直接传入图对象或邻接矩阵
+        config: ExperimentConfig
 ) -> tuple:
     """
     生成与节点度相关的概率分布。
@@ -216,7 +213,7 @@ def get_distribution_degree_aware(
 
     generator_func = generator_registry[distribution_type]
     # 将 n 和 degrees 都传递给生成函数
-    dis_dict = generator_func(n, degrees)
+    dis_dict = generator_func(n, degrees, config)
 
     logging.info(f"===> Saving newly generated distributions to: {distribution_file}")
     os.makedirs(os.path.dirname(distribution_file), exist_ok=True)
@@ -224,6 +221,7 @@ def get_distribution_degree_aware(
         pickle.dump(dis_dict, f)
 
     return tuple(dis_dict.values())
+
 
 if __name__=="__main__":
     # 1. 创建一个示例图 (例如，一个 Barabási-Albert 模型图，它具有幂律度分布)

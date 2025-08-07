@@ -18,6 +18,15 @@ class ExperimentConfig:
     num_samples: int = 50000
 
     seeds_num: int = 1
+    tran_base_value: float = 5.0
+    tran_degree_influence_factor: float = -4.5
+    succ_base_value: float = 1.5
+    succ_degree_influence_factor: float = 3.0
+    dis_base_value: float = 2.0
+    dis_degree_influence_factor: float = 2.0
+
+
+
 
     
     @property
@@ -36,4 +45,6 @@ class ExperimentConfig:
 
     def log_file(self):
         times = ",".join(str(time) for time in self.simulation_times)
-        return f"/home/wen/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/seedNum-{self.seeds_num}_simuTimes-{times}.log"
+        if self.distribution_type == "powerlaw" or self.distribution_type == "gamma" or self.distribution_type == "poisson":
+            return f"/home/wen/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/distribution-{self.distribution_type}_seedNum-{self.seeds_num}_simuTimes-{times}_s-d-t-baseValue-{self.succ_base_value, self.dis_base_value, self.tran_base_value}_s-d-t-factor-{self.succ_degree_influence_factor, self.dis_degree_influence_factor, self.tran_degree_influence_factor}.log"
+        return f"/home/wen/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/distribution-{self.distribution_type}_seedNum-{self.seeds_num}_simuTimes-{times}.log"
