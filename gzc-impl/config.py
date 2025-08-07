@@ -32,4 +32,8 @@ class ExperimentConfig:
 
     def usage_rate_file(self, m = 0):
         times = ",".join(str(time) for time in self.simulation_times)
-        return f"{self.data_prefix}/{self.data_set}/E-activated-{self.data_set}/distribution-{self.distribution_type}_simuTimes-{times}_seedNum{m}_monteCarloL-{self.monte_carlo_L}_rrNumSamples-{self.num_samples}.csv"
+        return f"{self.data_prefix}/{self.data_set}/E-activated-{self.data_set}/distribution-{self.distribution_type}_simuTimes-{times}_seedNum-{m}_monteCarloL-{self.monte_carlo_L}_rrNumSamples-{self.num_samples}.csv"
+
+    def log_file(self):
+        times = ",".join(str(time) for time in self.simulation_times)
+        return f"/home/wen/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/seedNum-{self.seeds_num}_simuTimes-{times}.log"

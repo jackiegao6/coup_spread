@@ -10,7 +10,7 @@ import time
 import ast
 import get_coupon_usage_rate_simulation
 import get_coupon_users
-
+from tools import generate_logger
 
 
 def load_experiment_data(config: ExperimentConfig):
@@ -161,7 +161,7 @@ def run_coupon_experiment(config: ExperimentConfig):
 if __name__ == '__main__':
     my_config = ExperimentConfig(
         data_set='BA-10',
-        simulation_times=[1000], #[1000, 5000]
+        simulation_times=[5000], #[1000, 5000]
         methods=['random','pageRank','ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         monte_carlo_L=15,
         distribution_type='powerlaw',# poisson gamma powerlaw random
@@ -171,6 +171,5 @@ if __name__ == '__main__':
         num_samples = 600000,
         seeds_num = 32
     )
-
-
+    generate_logger.init_logger(log_file=my_config.log_file())
     run_coupon_experiment(my_config)
