@@ -149,6 +149,63 @@ def monteCarlo_singleTime_improved(
         
     return success_vector
 
+def monteCarlo_singleTime_improved2(
+    tranProMatrix: np.ndarray,
+    initial_deliverers: list,
+    succ_distribution: np.ndarray,
+    dis_distribution: np.ndarray,
+    constantFactor_distribution: np.ndarray
+) -> np.ndarray:
+
+    n = tranProMatrix.shape[0]
+    activatedUsers = set()
+
+    # 为每个初始投放者启动一个独立的随机游走
+    for start_user in initial_deliverers:
+        current_user = start_user
+
+        # 模拟单张优惠券的随机游走过程
+        while True:
+            rand_pro = np.random.rand()
+            # 检查当前节点是否已经做出过决定
+            if current_user in activatedUsers:
+                # 做出过决定 再次接触优惠券的逻辑
+                if rand_pro < succ_distribution[current_user]:
+                    # 继续用
+                    break
+                elif rand_pro < (succ_distribution[current_user] + dis_distribution[current_user]):
+                    # 继续丢弃
+                    break
+
+            else:
+                # 首次接触优惠券的逻辑
+                if rand_pro < succ_distribution[current_user]:
+                    # 决定“使用”
+                    activatedUsers.add(current_user)
+                    # 游走在此中断，因为优惠券被使用了
+                    break
+                elif rand_pro < (succ_distribution[current_user] + dis_distribution[current_user]):
+                    # 决定“丢弃”
+                    break # 游走在此中断
+
+            # 如果没有中断，则意味着节点决定“转发”
+            next_node = _select_next_neighbor(current_user, tranProMatrix)
+
+            if next_node is None:
+                # 没有邻居可转发，游走中断
+                break
+            else:
+                # 更新当前节点，继续游走
+                current_user = next_node
+
+    # 将最终成功使用的节点集合转换为0/1向量
+    success_vector = np.zeros(n, dtype=int)
+    if activatedUsers:
+        activated_list = list(activatedUsers)
+        success_vector[activated_list] = 1
+
+    return success_vector
+
 
 def _select_next_neighbor(current_user: int, 
                           tranProMatrix: np.ndarray

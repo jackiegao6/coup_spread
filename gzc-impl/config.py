@@ -30,7 +30,6 @@ class ExperimentConfig:
     def deliverers_cache_file(self, method, m = 0):
         return f"{self.data_prefix}/{self.data_set}/seeds-with-{self.data_set}/distribution-{self.distribution_type}_{method}_seedNum-{m}.txt"
 
-   # todo 加一个均值 不用使用率的
     def usage_rate_file(self, m = 0):
         times = ",".join(str(time) for time in self.simulation_times)
-        return f"{self.data_prefix}/{self.data_set}/usageRate_{self.data_set}/distri_{self.distribution_type}-constantFactor_{self.constant_factor_distri}_monteCarloL-{self.monte_carlo_L}_testTimes-{times}_seedNum{m}_rr-num-samples-{self.num_samples}_{self.personalization}.csv"
+        return f"{self.data_prefix}/{self.data_set}/E-activated-{self.data_set}/distribution-{self.distribution_type}_simuTimes-{times}_seedNum{m}_monteCarloL-{self.monte_carlo_L}_rrNumSamples-{self.num_samples}.csv"

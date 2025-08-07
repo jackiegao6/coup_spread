@@ -160,8 +160,8 @@ def run_coupon_experiment(config: ExperimentConfig):
 
 if __name__ == '__main__':
     my_config = ExperimentConfig(
-        data_set='BA',
-        simulation_times=[50000], #[1000, 5000]
+        data_set='BA-10',
+        simulation_times=[1000], #[1000, 5000]
         methods=['random','pageRank','ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         monte_carlo_L=15,
         distribution_type='powerlaw',# poisson gamma powerlaw random
@@ -169,7 +169,7 @@ if __name__ == '__main__':
         method_type='None', # new,
 
         num_samples = 600000,
-        seeds_num = 16
+        seeds_num = 32
     )
 
 

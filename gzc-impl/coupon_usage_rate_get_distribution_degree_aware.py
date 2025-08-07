@@ -4,6 +4,7 @@ import numpy as np
 from scipy.stats import truncnorm, gamma, expon
 import logging
 import networkx as nx  # 引入 networkx 来处理图和度
+import scipy.sparse as sp
 
 
 # --- 保持不变的辅助函数 ---
@@ -58,11 +59,11 @@ def _generate_poisson_distributions_degree_aware(n: int, degrees: np.ndarray) ->
 
     # 设定场景：影响者模型 (高阶节点更爱转发，更少自己使用)
     # 转发概率：与度正相关
-    tran_tendency = _map_degree_to_behavior(scaled_degrees, base_value=2.0, degree_influence=8.0)
+    tran_tendency = _map_degree_to_behavior(scaled_degrees, base_value=2.0, degree_influence_factor=8.0)
     # 成功概率：与度负相关
-    succ_tendency = _map_degree_to_behavior(scaled_degrees, base_value=5.0, degree_influence=-4.0)
+    succ_tendency = _map_degree_to_behavior(scaled_degrees, base_value=5.0, degree_influence_factor=-4.0)
     # 丢弃概率：与度负相关 (高阶节点更活跃，更少丢弃)
-    dis_tendency = _map_degree_to_behavior(scaled_degrees, base_value=3.0, degree_influence=-2.0)
+    dis_tendency = _map_degree_to_behavior(scaled_degrees, base_value=3.0, degree_influence_factor=-2.0)
 
     # 将倾向值作为泊松分布的 lambda 参数，并加入随机性
     tran = np.random.poisson(tran_tendency, n).astype(float)
@@ -89,9 +90,9 @@ def _generate_gamma_distributions_degree_aware(n: int, degrees: np.ndarray) -> d
 
     # 设定场景：活跃用户模型 (高阶节点在各方面都更活跃)
     # 形状参数k受度影响
-    shape_tran = _map_degree_to_behavior(scaled_degrees, base_value=1.5, degree_influence=3.0)
-    shape_succ = _map_degree_to_behavior(scaled_degrees, base_value=1.0, degree_influence=2.0)
-    shape_dis = _map_degree_to_behavior(scaled_degrees, base_value=2.0, degree_influence=-1.5)
+    shape_tran = _map_degree_to_behavior(scaled_degrees, base_value=1.5, degree_influence_factor=3.0)
+    shape_succ = _map_degree_to_behavior(scaled_degrees, base_value=1.0, degree_influence_factor=2.0)
+    shape_dis = _map_degree_to_behavior(scaled_degrees, base_value=2.0, degree_influence_factor=-1.5)
 
     # 使用伽马分布生成
     tran = gamma.rvs(a=shape_tran, scale=1.5, size=n)
@@ -125,11 +126,11 @@ def _generate_powerlaw_distributions_degree_aware(n: int, degrees: np.ndarray) -
 
     # 指数 a 必须 > 0。
     # base_value 较大，degree_influence 为负，实现反向关系
-    tran_exponent_a = _map_degree_to_behavior(scaled_degrees, base_value=5.0, degree_influence=-4.5)
+    tran_exponent_a = _map_degree_to_behavior(scaled_degrees, base_value=5.0, degree_influence_factor=-4.5)
 
     # base_value 较小，degree_influence 为正，实现正向关系
-    succ_exponent_a = _map_degree_to_behavior(scaled_degrees, base_value=1.5, degree_influence=3.0)
-    dis_exponent_a = _map_degree_to_behavior(scaled_degrees, base_value=2.0, degree_influence=2.0)
+    succ_exponent_a = _map_degree_to_behavior(scaled_degrees, base_value=1.5, degree_influence_factor=3.0)
+    dis_exponent_a = _map_degree_to_behavior(scaled_degrees, base_value=2.0, degree_influence_factor=2.0)
 
     # 使用 np.random.power 生成 [0, 1) 区间的原始倾向值
     tran = np.random.power(tran_exponent_a, n)
@@ -186,6 +187,9 @@ def get_distribution_degree_aware(
     elif isinstance(adj, nx.Graph):
         n = adj.number_of_nodes()
         degrees = np.array([d for n, d in adj.degree()])
+    elif sp.issparse(adj):  # 添加对稀疏矩阵的支持
+        n = adj.shape[0]
+        degrees = np.array(adj.sum(axis=1)).flatten()
     else:
         raise TypeError("adj must be a networkx.Graph or a numpy.ndarray")
 

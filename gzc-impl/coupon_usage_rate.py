@@ -138,9 +138,9 @@ def run_evaluation(method_to_seeds: dict, config: ExperimentConfig, data: dict):
     logging.info(f"Starting evaluation with personalization: {config.personalization}")
     
     evaluation_dict = {
-        'None': get_coupon_usage_rate_simulation.simulation,
-        'firstUnused': get_coupon_usage_rate_simulation.simulation,
-        'firstDiscard': get_coupon_usage_rate_simulation.simulation,
+        'None': get_coupon_usage_rate_simulation.simulation2,
+        'firstUnused': get_coupon_usage_rate_simulation.simulation2,
+        'firstDiscard': get_coupon_usage_rate_simulation.simulation2,
     }
     
     if config.personalization not in evaluation_dict:
