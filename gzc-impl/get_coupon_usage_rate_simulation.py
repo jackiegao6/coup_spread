@@ -47,7 +47,7 @@ def simulation2(
     # 中层循环：遍历不同的方法 控制评估的算法
     for i in range(num_methods):
         method = methods[i]
-        # 获取当前种子数量对应的完整种子集
+        # 获取当前方法对应的完整种子集
         current_seed_set = seeds_list[i]
 
         logging.info(f"  Evaluating method: '{method}' with {len(current_seed_set)} seeds.")

@@ -76,7 +76,7 @@ def _run_full_simulation(
     elif personalization == 'firstDiscard':
         single_simulation_func = monteCarlo_singleTime_firstDiscard_improved
     else: # 默认或None
-        single_simulation_func = monteCarlo_singleTime_improved
+        single_simulation_func = monteCarlo_singleTime_improved2
 
     for _ in range(L):
         # 它应该返回一个(1, n)或(n,)的数组，代表此轮模拟中各节点的成功状态(0或1)
@@ -93,7 +93,7 @@ def _run_full_simulation(
     # 返回平均总影响力
     return total_influence_accumulator / L
 
-
+#deprecated
 def monteCarlo_singleTime_improved(
     tranProMatrix: np.ndarray,
     initial_deliverers: list,
@@ -149,6 +149,7 @@ def monteCarlo_singleTime_improved(
         
     return success_vector
 
+
 def monteCarlo_singleTime_improved2(
     tranProMatrix: np.ndarray,
     initial_deliverers: list,
@@ -162,6 +163,7 @@ def monteCarlo_singleTime_improved2(
 
     # 为每个初始投放者启动一个独立的随机游走
     for start_user in initial_deliverers:
+        # todo 1. root节点本身要不要判断 即 current_user = start_user.neighbor()
         current_user = start_user
 
         # 模拟单张优惠券的随机游走过程
@@ -214,10 +216,9 @@ def _select_next_neighbor(current_user: int,
     从当前节点的邻居中，根据转发概率矩阵选择下一个节点。
     """
     # 找到邻居及其对应的转发概率
-    neighbors = np.nonzero(tranProMatrix[:, current_user])[0]
+    neighbors: np.ndarray = np.nonzero(tranProMatrix[:, current_user])[0]
     
-    if len(neighbors) == 0:
-        return None 
+    if len(neighbors) == 0: return None
         
     probabilities = tranProMatrix[neighbors, current_user]
     prob_sum = np.sum(probabilities)

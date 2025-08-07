@@ -25,7 +25,8 @@ def prepare_seeds_model(config: ExperimentConfig, adj, n):
     distribution_res = gd.get_distribution_degree_aware(
         config.distribution_file(m=config.seeds_num),
         config.distribution_type,
-        adj)
+        adj,
+        config = config)
 
     succ_dist, dis_dist, tran_dist, const_factor_dist = distribution_res
 
@@ -111,12 +112,12 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
 def run_evaluation(methods_with_seeds: dict, config: ExperimentConfig, data: dict):
     logging.info(f"Starting evaluation with personalization: {config.personalization}")
 
+    #deprecated
     evaluation_dict = {
         'None': get_coupon_usage_rate_simulation.simulation2,
         'firstUnused': get_coupon_usage_rate_simulation.simulation2,
         'firstDiscard': get_coupon_usage_rate_simulation.simulation2,
     }
-
     if config.personalization not in evaluation_dict: raise ValueError(f"Unknown personalization type: {config.personalization}")
 
     usage_rate_file = config.usage_rate_file(m=config.seeds_num)
@@ -131,7 +132,7 @@ def run_evaluation(methods_with_seeds: dict, config: ExperimentConfig, data: dic
                     usage_rate_file=usage_rate_file,
                     distribution_list=data["distributions"],
                     simulation_times=config.simulation_times,
-                    single_sim_func=get_coupon_users.monteCarlo_singleTime_improved,
+                    single_sim_func=get_coupon_users.monteCarlo_singleTime_improved2,
                     seed_num=config.seeds_num)
     logging.info(f"Evaluation finished. Results saved to {usage_rate_file}")
 
@@ -169,7 +170,7 @@ if __name__ == '__main__':
         method_type='None', # new,
 
         num_samples = 600000,
-        seeds_num = 32
+        seeds_num = 64 # 32 64 128 256 512
     )
     generate_logger.init_logger(log_file=my_config.log_file())
     run_coupon_experiment(my_config)
