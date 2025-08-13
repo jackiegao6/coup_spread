@@ -170,7 +170,7 @@ if __name__ == '__main__':
         method_type='None', # new,
 
         num_samples = 600000,
-        seeds_num = 65 # 32 64 128 256 512
+        seeds_num = 66 # 32 64 128 256 512
     )
     generate_logger.init_logger(log_file=my_config.log_file())
     run_coupon_experiment(my_config)
