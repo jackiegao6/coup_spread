@@ -9,7 +9,10 @@ def evaluate_seed_set(
     num_simulations: int,
     tran_matrix: np.ndarray,
     distributions: tuple
-) -> float:
+) -> tuple: # (mean, variance)
+
+    # 创建一个列表来存储每一次模拟的结果
+    all_simulation_results = []
 
     total_activated_users_by_seeds = 0
     succ_dist, dis_dist, _, const_factor_dist = distributions
@@ -22,11 +25,12 @@ def evaluate_seed_set(
             dis_dist,
             const_factor_dist
         )
-        single_activated_users_by_seeds = np.sum(success_vector)
-        total_activated_users_by_seeds += single_activated_users_by_seeds
-    
-    E_activated_users_by_all_seeds = total_activated_users_by_seeds / num_simulations
-    return E_activated_users_by_all_seeds
+        single_activated_users  = np.sum(success_vector)
+        all_simulation_results.append(single_activated_users)
+
+    E_activated_users = np.mean(all_simulation_results)
+    Var_activated_users = np.var(all_simulation_results)
+    return E_activated_users, Var_activated_users
 
 
 def simulation2(
@@ -39,7 +43,8 @@ def simulation2(
     single_sim_func, # 传入具体的单次模拟函数，如 monteCarlo_singleTime_improved
     seed_num: int
 ):
-    logging.info(f"--- New Evaluation Run ---\n")
+    # 评估函数
+    logging.info(f"--- New Evaluation Run ---")
     logging.info(f"Simulation times for evaluation points: {simulation_times}\n")
 
     num_methods = len(methods)
@@ -55,7 +60,7 @@ def simulation2(
         for num_sims in simulation_times: #[50000, 100000] 注意这里是 in
             logging.info(f"    Running {num_sims} simulations...")
 
-            E_activated_users_by_all_seeds = evaluate_seed_set(
+            E_activated_users, Var_activated_users = evaluate_seed_set(
                 seed_list=current_seed_set,
                 simulation_function=single_sim_func,
                 num_simulations=num_sims,
@@ -63,67 +68,20 @@ def simulation2(
                 distributions=distribution_list
             )
 
-            logging.info(f"    Result: E_activated_users_by_all_seeds = {E_activated_users_by_all_seeds:.2f}")
+            std_dev = np.sqrt(Var_activated_users)  # Standard Deviation, 标准差
+            logging.info(f"    Result: E[Users] = {E_activated_users:.4f}, Var[Users] = {Var_activated_users:.4f}, Std_Dev = {std_dev:.4f}")
 
-            # 将这个方法在所有评估时间点的结果写入文件
             file_exists = os.path.exists(usage_rate_file)
             if not file_exists: os.makedirs(os.path.dirname(usage_rate_file), exist_ok=True)
 
-            df = pd.DataFrame({"method": [method], "seed_num": [seed_num], "num_sims": [num_sims], "E_activated_users": [f"{E_activated_users_by_all_seeds:.4f}"]})
-            df.to_csv(usage_rate_file, mode='a', header= not file_exists, index=False, encoding='utf-8-sig')
+            df = pd.DataFrame({
+                "method": [method],
+                "seed_num": [seed_num],
+                "num_sims": [num_sims],
+                "E_activated_users": [E_activated_users],  # 保持为浮点数
+                "variance": [Var_activated_users],
+                "std_deviation": [std_dev]
+            })
 
-
-#deprecated
-def simulation(
-    methods: list,
-    method_deliverers: list,
-    init_tran_matrix: np.ndarray,
-    usage_rate_file: str,
-    distribution_list: tuple,
-    seed_num_list: list, # deprecated
-    simulation_times: list,
-    single_sim_func # 传入具体的单次模拟函数，如 monteCarlo_singleTime_improved
-):
-    logging.info(f"--- New Evaluation Run ---\n")
-    logging.info(f"Simulation times for evaluation points: {simulation_times}\n")
-
-    num_methods = len(methods)
-
-    # 外层循环：遍历不同的种子数量 控制评估的种子集大小
-    for seed_num in seed_num_list:
-        logging.info(f"--- Evaluating for seed number: {seed_num} ---")
-
-        # 中层循环：遍历不同的方法 控制评估的算法
-        for i in range(num_methods):
-            method = methods[i]
-            # 获取当前种子数量对应的完整种子集
-            current_seed_set = method_deliverers[i][:seed_num]
-
-            logging.info(f"  Evaluating method: '{method}' with {len(current_seed_set)} seeds.")
-
-            usage_rates_at_times = []
-
-            # 内层循环： 控制评估的精度（模拟次数）
-            for num_sims in simulation_times:
-                logging.info(f"    Running {num_sims} simulations...")
-
-                avg_influence = evaluate_seed_set(
-                    seed_set=current_seed_set,
-                    simulation_function=single_sim_func,
-                    num_simulations=num_sims,
-                    tran_matrix=init_tran_matrix,
-                    distributions=distribution_list
-                )
-
-                # 计算使用率 (平均影响力 / 种子数)
-                usage_rate = avg_influence / seed_num if seed_num > 0 else 0
-
-                logging.info(f"    Result: Avg. Influence = {avg_influence:.2f}, Usage Rate = {usage_rate:.4f}")
-
-                # 将这个方法在所有评估时间点的结果写入文件
-                file_exists = os.path.exists(usage_rate_file)
-                if not file_exists:
-                    os.makedirs(os.path.dirname(usage_rate_file), exist_ok=True)
-
-                df = pd.DataFrame({"method": [method], "seed_num": [seed_num], "num_sims": [num_sims], "rate": [f"{usage_rate:.4f}"]})
-                df.to_csv(usage_rate_file, mode='a', header= not file_exists, index=False, encoding='utf-8-sig')
+            # to_csv 会自动处理浮点数格式
+            df.to_csv(usage_rate_file, mode='a', header=not file_exists, index=False, encoding='utf-8-sig')

@@ -181,7 +181,6 @@ def deliverers_1_neighbor(succ_distribution,init_tranProMatrix,m) -> list:
         
     return [node for node, value in selected_nodes_with_values]
 
-
 def _create_enhanced_tran_matrix(
     base_matrix: np.ndarray,
     succ_dist: np.ndarray,
@@ -219,7 +218,6 @@ def _create_enhanced_tran_matrix(
     np.clip(enhanced_matrix, 0, 1.0, out=enhanced_matrix)
     
     return enhanced_matrix
-
 
 def select_deliverers_theory_improved(
     m: int,
@@ -311,7 +309,7 @@ def _generate_single_rr_set(
                 visited.add(predecessor)
                 
                 # 3. 以传播概率 p 进行“反向穿越”
-                edge_prob = graph.edges[predecessor, current_node].get('p', 0.1) # 默认概率0.1
+                edge_prob = graph.edges[predecessor, current_node].get('p', graph.nodes[current_node].get('randomP'))
                 if random.random() < edge_prob:
                     # 如果成功，则将前驱节点加入样本和队列
                     rr_set.add(predecessor)
@@ -333,7 +331,7 @@ def deliverers_ris_coverage(
     adj, # 原始邻接矩阵，用于确定图的结构
     tranProMatrix, # 包含边特定概率的转移矩阵
     m: int,
-    num_samples: int = 50000 
+    num_samples: int = 50000
 ) -> list:
     print("--- Running: Reverse Reachable Set (RIS) Coverage ---")
 
@@ -341,17 +339,21 @@ def deliverers_ris_coverage(
         adj = sp.csr_matrix(adj)
 
     n = adj.shape[0]
-    
+
     G = nx.from_scipy_sparse_array(adj, create_using=nx.DiGraph)
-    
+
     num_edges_processed = 0
+
+    for node in G.nodes():
+        G.nodes[node]['randomP'] = random.random()
+
     for u, v in G.edges():
         probability = tranProMatrix[v, u]
-        
+
         G.edges[u, v]['p'] = probability
         num_edges_processed += 1
-        
-    print(f"图构建完成，共处理了 {num_edges_processed} 条边。")
+
+    print(f"图构建完成，把{num_edges_processed}多条边，赋予了相应的概率值")
     
     rr_sets = _generate_rr_sets(n, G, num_samples)
     
@@ -407,18 +409,11 @@ if __name__ == '__main__':
     users = []
     initial_tran_distribution = np.array([0.001, 0.5, 0.9, 0.2, 0.7, 0.8, 0.5, 0.9, 0.2, 0.7])
 
-    tranProMatrix, neighbor_having = single_deliverer.getTranProMatrix(adj,initial_tran_distribution)
+    tranProMatrix = single_deliverer.getTranProMatrix(adj,initial_tran_distribution)
 
-
-    deliverers1 = deliverers_monteCarlo(3, tranProMatrix, succ_distribution=use_pro,
-                               dis_distribution=dis_pro,
-                               constantFactor_distribution=constantFactor,
-                               L=5,
-                               personalization=users)
-    print(deliverers1)
 
     deliverers = deliverers_ris_coverage(adj=adj,
-                                         m=3,
+                                         m=7,
                                          tranProMatrix=tranProMatrix
                                          )
     print(deliverers)

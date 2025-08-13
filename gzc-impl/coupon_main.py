@@ -161,7 +161,7 @@ def run_coupon_experiment(config: ExperimentConfig):
 
 if __name__ == '__main__':
     my_config = ExperimentConfig(
-        data_set='BA-10',
+        data_set='Twitter',
         simulation_times=[5000], #[1000, 5000]
         methods=['random','pageRank','ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         monte_carlo_L=15,
@@ -170,7 +170,7 @@ if __name__ == '__main__':
         method_type='None', # new,
 
         num_samples = 600000,
-        seeds_num = 64 # 32 64 128 256 512
+        seeds_num = 65 # 32 64 128 256 512
     )
     generate_logger.init_logger(log_file=my_config.log_file())
     run_coupon_experiment(my_config)

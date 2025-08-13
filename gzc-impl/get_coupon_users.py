@@ -72,9 +72,9 @@ def _run_full_simulation(
 
     # 根据个性化策略选择正确的模拟函数
     if personalization == 'firstUnused':
-        single_simulation_func = monteCarlo_singleTime_firstUnused_improved
+        single_simulation_func = monteCarlo_singleTime_improved2
     elif personalization == 'firstDiscard':
-        single_simulation_func = monteCarlo_singleTime_firstDiscard_improved
+        single_simulation_func = monteCarlo_singleTime_improved2
     else: # 默认或None
         single_simulation_func = monteCarlo_singleTime_improved2
 
@@ -93,63 +93,6 @@ def _run_full_simulation(
     # 返回平均总影响力
     return total_influence_accumulator / L
 
-#deprecated
-def monteCarlo_singleTime_improved(
-    tranProMatrix: np.ndarray,
-    initial_deliverers: list,
-    succ_distribution: np.ndarray,
-    dis_distribution: np.ndarray,
-    constantFactor_distribution: np.ndarray
-) -> np.ndarray:
-    n = tranProMatrix.shape[0]
-    users_useAndDis = set()
-    
-    # 为每个初始投放者启动一个独立的随机游走
-    for start_user in initial_deliverers:
-        current_user = start_user
-        
-        # 模拟单张优惠券的随机游走过程
-        while True:
-            rand_pro = np.random.rand()
-            # 检查当前节点是否已经做出过决定
-            if current_user in users_useAndDis:
-                # 做出过决定 再次接触优惠券的逻辑
-                # 免疫/饱和效应：节点再次收到后更容易使用或丢弃
-                if rand_pro < (dis_distribution[current_user] + 
-                              constantFactor_distribution[current_user] * succ_distribution[current_user]):
-                    break # 游走在此中断
-            else:
-                # 首次接触优惠券的逻辑
-                if rand_pro < succ_distribution[current_user]:
-                    # 决定“使用”
-                    users_useAndDis.add(current_user)
-                    # 游走在此中断，因为优惠券被使用了
-                    break 
-                elif rand_pro < (succ_distribution[current_user] + dis_distribution[current_user]):
-                    # 决定“丢弃”
-                    # todo gzc: 丢弃不算成功使用 吸收态
-                    # users_useAndDis.add(current_user) # 即使丢弃，也算“处理过”
-                    break # 游走在此中断
-            
-            # 如果没有中断，则意味着节点决定“转发”
-            next_node = _select_next_neighbor(current_user, tranProMatrix)
-            
-            if next_node is None:
-                # 没有邻居可转发，游走中断
-                break
-            else:
-                # 更新当前节点，继续游走
-                current_user = next_node
-
-    # 将最终成功使用的节点集合转换为0/1向量
-    success_vector = np.zeros(n, dtype=int)
-    if users_useAndDis: # 如果集合不为空
-        activated_list = list(users_useAndDis)
-        success_vector[activated_list] = 1
-        
-    return success_vector
-
-
 def monteCarlo_singleTime_improved2(
     tranProMatrix: np.ndarray,
     initial_deliverers: list,
@@ -163,7 +106,7 @@ def monteCarlo_singleTime_improved2(
 
     # 为每个初始投放者启动一个独立的随机游走
     for start_user in initial_deliverers:
-        # todo 1. root节点本身要不要判断 即 current_user = start_user.neighbor()
+
         current_user = start_user
 
         # 模拟单张优惠券的随机游走过程
@@ -255,11 +198,11 @@ def monteCarlo_singleTime_firstDiscard_improved(
     # 使用集合(set)来高效地管理不同状态的节点
     successful_users = set()  # 记录首次“使用”的节点
     first_discarders = set()  # 记录首次“丢弃”的节点
-    
+
     # 为每个初始投放者启动一个独立的随机游走
     for start_node in initial_deliverers:
         current_node = start_node
-        
+
         # 模拟单张优惠券的随机游走过程
         while True:
             # 检查节点是否已经被处理过（无论是使用还是首次丢弃）
@@ -267,7 +210,7 @@ def monteCarlo_singleTime_firstDiscard_improved(
                 # 再次接触的逻辑
                 rand_pro = np.random.rand()
                 # 再次接触后决定丢弃
-                if rand_pro < (dis_distribution[current_node] + 
+                if rand_pro < (dis_distribution[current_node] +
                               constantFactor_distribution[current_node] * succ_distribution[current_node]):
                     # 原始代码在这里有特殊逻辑：如果再次接触后丢弃，并且之前不是首次丢弃者，
                     # 把它加入firstdiscard列表。我们在这里也模拟这个行为。
@@ -280,16 +223,16 @@ def monteCarlo_singleTime_firstDiscard_improved(
                 if rand_pro < succ_distribution[current_node]:
                     # 决定“使用”
                     successful_users.add(current_node)
-                    break 
+                    break
                 elif rand_pro < (succ_distribution[current_node] + dis_distribution[current_node]):
                     # 决定“丢弃”
                     first_discarders.add(current_node)
                     break
                 # 否则，节点决定“转发”，游走继续
-            
+
             # 转发逻辑
             next_node = _select_next_neighbor(current_node, tranProMatrix)
-            
+
             if next_node is None:
                 # 无处可去，游走中断
                 break
@@ -299,13 +242,13 @@ def monteCarlo_singleTime_firstDiscard_improved(
 
     # 根据模型假设，成功用户是首次使用者和首次丢弃者的并集
     final_activated_nodes = successful_users.union(first_discarders)
-    
+
     # 将最终成功用户的集合转换为0/1向量
     success_vector = np.zeros(n, dtype=int)
     if final_activated_nodes:
         activated_list = list(final_activated_nodes)
         success_vector[activated_list] = 1
-        
+
     return success_vector
 
 def monteCarlo_singleTime_firstUnused_improved(
@@ -330,37 +273,37 @@ def monteCarlo_singleTime_firstUnused_improved(
     n = tranProMatrix.shape[0]
     # 使用集合(set)来高效存储所有接触过优惠券的节点
     contacted_nodes = set()
-    
+
     # 为每个初始投放者启动一个独立的随机游走
     for start_node in initial_deliverers:
         current_node = start_node
-        
+
         # 模拟单张优惠券的随机游走过程
         while True:
             # 检查当前节点是否已经接触过优惠券
             if current_node in contacted_nodes:
                 # 再次接触的逻辑
                 rand_pro = np.random.rand()
-                if rand_pro < (dis_distribution[current_node] + 
+                if rand_pro < (dis_distribution[current_node] +
                               constantFactor_distribution[current_node] * succ_distribution[current_node]):
                     break # 游走在此中断
             else:
                 # 首次接触的逻辑
                 # 无论做出何种决定，该节点都算“被接触过”
                 contacted_nodes.add(current_node)
-                
+
                 rand_pro = np.random.rand()
                 if rand_pro < succ_distribution[current_node]:
                     # 决定“使用”，游走中断
-                    break 
+                    break
                 elif rand_pro < (succ_distribution[current_node] + dis_distribution[current_node]):
                     # 决定“丢弃”，游走中断
-                    break 
+                    break
                 # 否则，节点决定“转发”，游走继续
-            
+
             # 转发逻辑
             next_node = _select_next_neighbor(current_node, tranProMatrix)
-            
+
             if next_node is None:
                 # 无处可去，游走中断
                 break
@@ -373,7 +316,7 @@ def monteCarlo_singleTime_firstUnused_improved(
     if contacted_nodes:
         contacted_list = list(contacted_nodes)
         success_vector[contacted_list] = 1
-        
+
     return success_vector
 
 
