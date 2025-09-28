@@ -6,9 +6,9 @@ import logging
 import networkx as nx  # 引入 networkx 来处理图和度
 import scipy.sparse as sp
 from config import ExperimentConfig
+from typing import Dict
 
 
-# --- 保持不变的辅助函数 ---
 def _normalize_triplet(a: np.ndarray, b: np.ndarray, c: np.ndarray) -> tuple:
     total = a + b + c
     out_a, out_b, out_c = np.zeros_like(a), np.zeros_like(b), np.zeros_like(c)
@@ -27,25 +27,30 @@ def _min_max_scale(v: np.ndarray) -> np.ndarray:
     return (v - min_val) / range_val
 
 
-# --- 新增的核心映射函数 ---
 def _map_degree_to_behavior(
         scaled_degrees: np.ndarray,
         base_value: float,
-        degree_influence_factor: float
+        degree_influence_factor: float,
+        min_value: float = 1e-6
 ) -> np.ndarray:
     """
-    将缩放后的度映射到一个行为倾向值上。
+    将缩放后的度映射为行为倾向参数，用于后续分布的生成。
+
     Args:
-        scaled_degrees: 经过对数或其它方式缩放后的度向量。
-        base_value: 基础概率 (用于低度节点)。
-        degree_influence_factor: 度的影响系数 (正相关或负相关)。
+        scaled_degrees (np.ndarray): 缩放后的度向量 (通常 ∈ [0, 1])。
+        base_value (float): 基础值 (低度节点的初始倾向)。
+        degree_influence_factor (float): 度的影响系数，正值表示正相关，负值表示负相关。
+        min_value (float, optional): 行为倾向的下限，避免 0 或负数导致无效分布参数。
+
     Returns:
-        一个代表行为倾向的向量。
+        np.ndarray: 行为倾向参数数组 (>= min_value)。
     """
+
     # 计算基础倾向值
     behavior_tendency = base_value + degree_influence_factor * scaled_degrees
-    # 将结果裁剪到(0, inf)以作为后续随机分布的参数（如lambda或scale）
-    return np.clip(behavior_tendency, 1e-6, None)
+
+    # 将结果裁剪到(0, inf)以作为后续随机分布的参数
+    return np.clip(behavior_tendency, min_value, None)
 
 
 def _generate_poisson_distributions_degree_aware(n: int, degrees: np.ndarray, config: ExperimentConfig) -> dict:
@@ -108,34 +113,60 @@ def _generate_gamma_distributions_degree_aware(n: int, degrees: np.ndarray, conf
     }
 
 
-def _generate_powerlaw_distributions_degree_aware(n: int, degrees: np.ndarray, config: ExperimentConfig) -> dict:
+def _generate_powerlaw_distributions_degree_aware(
+    n: int,
+    degrees: np.ndarray,
+    config: "ExperimentConfig",
+) -> Dict[str, np.ndarray]:
     """
-    使用幂律分布生成原始倾向值，然后归一化。
     将节点的度映射到幂律分布的指数 a 上。
-    """
-    logging.info("===> Generating 'powerlaw' distributions (degree-aware)...")
+        使用幂律分布生成与节点度相关的分布，并进行归一化。
 
+    P(X=x)∝x^−α ,α>1
+
+    Parameters
+    ----------
+    n : int
+        节点数
+    degrees : np.ndarray
+        每个节点的度
+    config : ExperimentConfig
+        实验配置，需包含 base_value 和 degree_influence_factor
+    rng : np.random.Generator, optional
+        随机数生成器，默认为 np.random.default_rng()
+
+    Returns
+    -------
+    dict
+        包含 succ, dis, tran, const_factor 四种分布
+    """
+    logging.info("===> 使用幂律分布生成四种分布")
+    rng = config.rng
+
+
+    # 将度数缩放一下
     scaled_degrees = _min_max_scale(np.log1p(degrees))
 
-    # 定义影响者模型：
-    # 转发(tran): 度越高，指数a越小，生成值越倾向于1。
-    # 成功(succ) & 丢弃(dis): 度越高，指数a越大，生成值越倾向于0。
+    # todo 定义影响者模型：度数高 意味着 转发概率大 吸收概率小
+    # 转发(tran): 度越高，指数a越小，生成的值越倾向于1。
+    # 成功(succ) & 丢弃(dis): 度越高，指数a越大，生成的值越倾向于0。
 
     # 指数 a 必须 > 0。
-    # base_value 较大，degree_influence 为负，实现反向关系
-    tran_exponent_a = _map_degree_to_behavior(scaled_degrees, base_value=config.tran_base_value, degree_influence_factor=config.tran_degree_influence_factor)
+    # degree_influence 为负，实现反向关系
+    tran_a_vector = _map_degree_to_behavior(scaled_degrees, base_value=config.tran_base_value, degree_influence_factor=config.tran_degree_influence_factor)
 
-    # base_value 较小，degree_influence 为正，实现正向关系
-    succ_exponent_a = _map_degree_to_behavior(scaled_degrees, base_value=config.succ_base_value, degree_influence_factor=config.succ_degree_influence_factor)
-    dis_exponent_a = _map_degree_to_behavior(scaled_degrees, base_value=config.dis_base_value, degree_influence_factor=config.dis_degree_influence_factor)
+    # degree_influence 为正，实现正向关系
+    succ_a_vector = _map_degree_to_behavior(scaled_degrees, base_value=config.succ_base_value, degree_influence_factor=config.succ_degree_influence_factor)
+    dis_a_vector = _map_degree_to_behavior(scaled_degrees, base_value=config.dis_base_value, degree_influence_factor=config.dis_degree_influence_factor)
 
     # 使用 np.random.power 生成 [0, 1) 区间的原始倾向值
-    tran = np.random.power(tran_exponent_a, n)
-    succ = np.random.power(succ_exponent_a, n)
-    dis = np.random.power(dis_exponent_a, n)
+    # 传入：a指数向量 + 节点数量
+    tran = rng.power(tran_a_vector, n)
+    succ = rng.power(succ_a_vector, n)
+    dis = rng.power(dis_a_vector, n)
 
     # 常数因子可以继续使用其他分布
-    const = gamma.rvs(a=2, scale=1, size=n)
+    const = gamma.rvs(a=2, scale=1, size=n, random_state=rng)
 
     # 归一化原始倾向值，使其成为概率
     succ_norm, dis_norm, tran_norm = _normalize_triplet(succ, dis, tran)
@@ -172,12 +203,13 @@ def get_distribution_degree_aware(
         distribution_file: str,
         distribution_type: str,
         adj: nx.Graph,  # 直接传入图对象或邻接矩阵
-        config: ExperimentConfig
+        config: ExperimentConfig,
 ) -> tuple:
     """
-    生成与节点度相关的概率分布。
+    生成与节点度相关的概率分布
     """
-    # 从图或矩阵中获取节点数和度向量
+
+    # 读取矩阵：从图或矩阵中获取节点数和度向量
     if isinstance(adj, np.ndarray):
         n = adj.shape[0]
         degrees = adj.sum(axis=1)
@@ -188,37 +220,40 @@ def get_distribution_degree_aware(
         n = adj.shape[0]
         degrees = np.array(adj.sum(axis=1)).flatten()
     else:
-        raise TypeError("adj must be a networkx.Graph or a numpy.ndarray")
+        raise TypeError("矩阵类型不支持")
 
-    # 缓存逻辑保持不变
+
+
+    # 先找缓存
     if os.path.exists(distribution_file):
-        logging.info(f"===> Loading degree-aware distributions from cache: {distribution_file}")
+        logging.info(f"复用概率分布 文件位置: {distribution_file}")
         with open(distribution_file, 'rb') as f:
             dis_dict = pickle.load(f)
         return tuple(dis_dict.values())
 
-    logging.info(f"===> Cache not found. Generating new degree-aware distributions of type '{distribution_type}'.")
+    logging.info(f"首次生成度相关概率分布 分布类型: '{distribution_type}'.")
 
-    # 使用新的、与度相关的生成函数注册表
+
+    # 生成函数注册表
     generator_registry = {
         'poisson': _generate_poisson_distributions_degree_aware,
         'gamma': _generate_gamma_distributions_degree_aware,
-        'powerlaw': _generate_powerlaw_distributions_degree_aware,  # 新增
+        'powerlaw': _generate_powerlaw_distributions_degree_aware,
         'random': _generate_random_distributions
         # 可以按同样模式添加 'normal', 'exponential' 等
     }
 
     if distribution_type not in generator_registry:
-        raise ValueError(f"Unknown distribution type for degree-aware generation: '{distribution_type}'.")
+        raise ValueError(f"该分布类型暂不支持: '{distribution_type}'.")
 
     generator_func = generator_registry[distribution_type]
     # 将 n 和 degrees 都传递给生成函数
     dis_dict = generator_func(n, degrees, config)
 
-    logging.info(f"===> Saving newly generated distributions to: {distribution_file}")
     os.makedirs(os.path.dirname(distribution_file), exist_ok=True)
     with open(distribution_file, 'wb') as f:
         pickle.dump(dis_dict, f)
+    logging.info(f"保存概率分布 文件位置: {distribution_file}")
 
     return tuple(dis_dict.values())
 

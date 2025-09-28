@@ -1,0 +1,64 @@
+2025-09-28 16:16:27,396 - INFO - 加载数据集: Twitter
+2025-09-28 16:16:27,451 - INFO - ===> Cache not found. Generating new degree-aware distributions of type 'powerlaw'.
+2025-09-28 16:16:27,452 - INFO - ===> Generating 'powerlaw' distributions (degree-aware)...
+2025-09-28 16:16:27,472 - INFO - ===> Saving newly generated distributions to: /home/wen/pythonspace/data-test/Twitter/distribution-in-Twitter/distribution-powerlaw_seedNum-32.pkl
+2025-09-28 16:16:52,510 - INFO - ===> Cache not found. Calculating seed sets...
+2025-09-28 16:16:52,511 - INFO - ===> Running method: random
+2025-09-28 16:16:52,513 - INFO - ===> Method random finished in 0.00 seconds.
+2025-09-28 16:16:52,514 - INFO - ===> Cache not found. Calculating seed sets...
+2025-09-28 16:16:52,515 - INFO - ===> Running method: pageRank
+2025-09-28 16:16:55,369 - INFO - ===> Method pageRank finished in 2.85 seconds.
+2025-09-28 16:16:55,370 - INFO - ===> Cache not found. Calculating seed sets...
+2025-09-28 16:16:55,370 - INFO - ===> Running method: ris_coverage
+2025-09-28 16:20:19,825 - INFO - 加载数据集: Twitter
+2025-09-28 16:20:19,828 - INFO - ===> Loading degree-aware distributions from cache: /home/wen/pythonspace/data-test/Twitter/distribution-in-Twitter/distribution-powerlaw_seedNum-32.pkl
+2025-09-28 16:20:27,561 - INFO - ===> Loading seed sets from cache: /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_random_seedNum-32.txt
+2025-09-28 16:20:27,563 - INFO - ===> Loading seed sets from cache: /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_pageRank_seedNum-32.txt
+2025-09-28 16:20:27,565 - INFO - ===> Cache not found. Calculating seed sets...
+2025-09-28 16:20:27,565 - INFO - ===> Running method: ris_coverage
+2025-09-28 16:22:42,184 - INFO - ===> 正在加载数据集: Twitter
+2025-09-28 16:22:42,186 - INFO - ===> Loading degree-aware distributions from cache: /home/wen/pythonspace/data-test/Twitter/distribution-in-Twitter/distribution-powerlaw_seedNum-32.pkl
+2025-09-28 16:22:48,477 - INFO - ===> Loading seed sets from cache: /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_random_seedNum-32.txt
+2025-09-28 16:22:48,478 - INFO - ===> Loading seed sets from cache: /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_pageRank_seedNum-32.txt
+2025-09-28 16:22:48,478 - INFO - ===> Cache not found. Calculating seed sets...
+2025-09-28 16:22:48,478 - INFO - ===> Running method: ris_coverage
+2025-09-28 16:25:11,656 - INFO - ===> 正在加载数据集: Twitter
+2025-09-28 16:25:11,659 - INFO - ===> Loading degree-aware distributions from cache: /home/wen/pythonspace/data-test/Twitter/distribution-in-Twitter/distribution-powerlaw_seedNum-32.pkl
+2025-09-28 16:25:16,639 - INFO - ===> Loading seed sets from cache: /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_random_seedNum-32.txt
+2025-09-28 16:25:16,640 - INFO - ===> Loading seed sets from cache: /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_pageRank_seedNum-32.txt
+2025-09-28 16:25:16,640 - INFO - ===> Cache not found. Calculating seed sets...
+2025-09-28 16:25:16,640 - INFO - ===> Running method: ris_coverage
+2025-09-28 16:30:46,139 - INFO - ===> 正在加载数据集: Twitter
+2025-09-28 16:30:46,143 - INFO - ===> Loading degree-aware distributions from cache: /home/wen/pythonspace/data-test/Twitter/distribution-in-Twitter/distribution-powerlaw_seedNum-32.pkl
+2025-09-28 16:30:51,604 - INFO - ===> Loading seed sets from cache: /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_random_seedNum-32.txt
+2025-09-28 16:30:51,605 - INFO - ===> Loading seed sets from cache: /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_pageRank_seedNum-32.txt
+2025-09-28 16:30:51,606 - INFO - ===> Cache not found. Calculating seed sets...
+2025-09-28 16:30:51,606 - INFO - ===> Running method: ris_coverage
+2025-09-28 16:33:42,155 - INFO - ===> 正在加载数据集: Twitter
+2025-09-28 16:33:42,157 - INFO - ===> Loading degree-aware distributions from cache: /home/wen/pythonspace/data-test/Twitter/distribution-in-Twitter/distribution-powerlaw_seedNum-32.pkl
+2025-09-28 16:33:46,934 - INFO - ===> Loading seed sets from cache: /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_random_seedNum-32.txt
+2025-09-28 16:33:46,935 - INFO - ===> Loading seed sets from cache: /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_pageRank_seedNum-32.txt
+2025-09-28 16:33:46,935 - INFO - ===> Cache not found. Calculating seed sets...
+2025-09-28 16:33:46,935 - INFO - ===> Running method: ris_coverage
+2025-09-28 16:48:54,634 - INFO - ===> 正在加载数据集: Twitter
+2025-09-28 16:48:54,637 - INFO - ===> Loading degree-aware distributions from cache: /home/wen/pythonspace/data-test/Twitter/distribution-in-Twitter/distribution-powerlaw_seedNum-32.pkl
+2025-09-28 16:49:00,249 - INFO - ===> Loading seed sets from cache: /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_random_seedNum-32.txt
+2025-09-28 16:49:00,251 - INFO - ===> Loading seed sets from cache: /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_pageRank_seedNum-32.txt
+2025-09-28 16:49:00,251 - INFO - ===> Cache not found. Calculating seed sets...
+2025-09-28 16:49:00,251 - INFO - ===> Running method: ris_coverage
+2025-09-28 16:49:18,820 - INFO - ===> Method ris_coverage finished in 18.57 seconds.
+2025-09-28 16:49:18,821 - INFO - Starting evaluation with personalization: None
+2025-09-28 16:49:18,821 - INFO - --- New Evaluation Run ---
+2025-09-28 16:49:18,821 - INFO - Simulation times for evaluation points: [5000]
+
+2025-09-28 16:49:18,821 - INFO - --- Evaluating for seed number: 32 ---
+2025-09-28 16:49:18,822 - INFO -   Evaluating method: 'random' with 32 seeds.
+2025-09-28 16:49:18,822 - INFO -     Running 5000 simulations...
+2025-09-28 16:50:34,988 - INFO -     Result: E[Users] = 14.7518, Var[Users] = 7.5478, Std_Dev = 2.7473
+2025-09-28 16:50:35,163 - INFO -   Evaluating method: 'pageRank' with 32 seeds.
+2025-09-28 16:50:35,163 - INFO -     Running 5000 simulations...
+2025-09-28 16:51:18,325 - INFO -     Result: E[Users] = 16.4544, Var[Users] = 7.9863, Std_Dev = 2.8260
+2025-09-28 16:51:18,328 - INFO -   Evaluating method: 'ris_coverage' with 32 seeds.
+2025-09-28 16:51:18,328 - INFO -     Running 5000 simulations...
+2025-09-28 16:52:41,641 - INFO -     Result: E[Users] = 16.1910, Var[Users] = 7.8117, Std_Dev = 2.7949
+2025-09-28 16:52:41,645 - INFO - Evaluation finished. Results saved to /home/wen/pythonspace/data-test/Twitter/E-activated-Twitter/distribution-powerlaw_simuTimes-5000_seedNum-32_monteCarloL-15_rrNumSamples-600000.csv

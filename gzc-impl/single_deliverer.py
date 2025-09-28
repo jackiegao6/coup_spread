@@ -3,26 +3,37 @@ import networkx as nx
 import copy
 
 
-def getTranProMatrix(adj, tran_distribution):
+def getTranProMatrix(adj, tran_distribution: np.ndarray) -> np.ndarray:
     """
-    :param adj: 原始的图
-    :param tran_distribution: 每个节点的转发概率
-    :return: 返回转移概率矩阵 tranProMatrix[i, j] 代表了优惠券从节点 j 成功转发到节点 i 的概率
+    根据邻接矩阵和节点转发概率，生成转移概率矩阵。
+
+    Args:
+        adj (np.ndarray | sp.spmatrix): 图的邻接矩阵（稠密或稀疏）。
+        tran_distribution (np.ndarray): 每个节点的转发概率向量，形状 (n,)。
+
+    Returns:
+        np.ndarray: 转移概率矩阵 M，M[i, j] 表示节点 j 向节点 i 成功转发的概率。
     """
+
     if not isinstance(adj, np.ndarray):
         A_graph = adj.toarray().astype(float)
     else:
         A_graph = adj.astype(float)
 
+    # 保证分布是 1D 向量
     tran_distribution_list = np.array(tran_distribution).flatten()
-    D = np.sum(A_graph, axis=0)  # 计算每个节点的度
+
+    # 每个节点的度 (出度)
+    D = np.sum(A_graph, axis=0)
+
     prob_per_neighbor = np.zeros_like(D, dtype=float)
     non_isolated_nodes = D > 0
 
     # 仅对非孤立节点计算其到每个邻居的转发概率
     prob_per_neighbor[non_isolated_nodes] = tran_distribution_list[non_isolated_nodes] / D[non_isolated_nodes]
-    init_tran_matrix = A_graph * prob_per_neighbor
-    return init_tran_matrix
+
+    tran_matrix = A_graph * prob_per_neighbor
+    return tran_matrix
 
 
 def getBestSingleDeliverer(tranProMatrix, succ_distribution, users_useAndDis):

@@ -1,7 +1,7 @@
 from config import ExperimentConfig
 import logging
 import pickle
-from typing import List
+from typing import List, Dict, Any
 import coupon_usage_rate_get_distribution_degree_aware as gd
 import single_deliverer
 import os
@@ -11,17 +11,38 @@ import ast
 import get_coupon_usage_rate_simulation
 import get_coupon_users
 from tools import generate_logger
+from pathlib import Path
+import numpy as np
 
 
-def load_experiment_data(config: ExperimentConfig):
-    logging.info(f"===> 正在加载数据集: {config.data_set}")
-    with open(config.adj_file, 'rb') as f:
-        adj = pickle.load(f)
-    n = adj.shape[0]
-    return {"adj": adj, "n": n}
+def load_experiment_data(config: "ExperimentConfig") -> Dict[str, Any]:
+    """
+    :param config: 根据配置文件 单纯加载数据集
+    :return: 返回邻接矩阵+度数
+    """
+    logging.info("加载数据集: %s", config.data_set)
+
+    adj_path = Path(config.adj_file)
+    if not adj_path.exists():
+        raise FileNotFoundError(f"路径错误: {adj_path}")
+
+    with adj_path.open("rb") as f:
+        try:
+            adj = pickle.load(f)
+        except Exception as e:
+            raise ValueError(f"文件加载错误 {adj_path}") from e
+
+    return {"adj": adj, "n": adj.shape[0]}
 
 
-def prepare_seeds_model(config: ExperimentConfig, adj, n):
+def load_contribution_and_tran_matrix(config: "ExperimentConfig", adj, n: int) -> Dict[str, Any]:
+    """
+    根据每个节点的度生成不同的三个分布 比如通过幂律分布
+    可以控制参数a
+    通过 config中的 degree_influence_factor 联合度数 控制a大小
+
+    :return: 转移分布、接收分布、拒绝分布、行为分布
+    """
     distribution_res = gd.get_distribution_degree_aware(
         config.distribution_file(m=config.seeds_num),
         config.distribution_type,
@@ -30,12 +51,12 @@ def prepare_seeds_model(config: ExperimentConfig, adj, n):
 
     succ_dist, dis_dist, tran_dist, const_factor_dist = distribution_res
 
-    init_tran_matrix = single_deliverer.getTranProMatrix(adj, tran_dist)
+    tran_matrix = single_deliverer.getTranProMatrix(adj, tran_dist)
 
     return {
         "adj": adj,
         "distributions": distribution_res,
-        "init_tran_matrix": init_tran_matrix,
+        "init_tran_matrix": tran_matrix,
         "n": n
     }
 
@@ -145,7 +166,7 @@ def run_coupon_experiment(config: ExperimentConfig):
     adj = adj_and_n["adj"]
     n = adj_and_n["n"]
 
-    experiment_data = prepare_seeds_model(config=config, adj=adj, n=n)
+    experiment_data = load_contribution_and_tran_matrix(config=config, adj=adj, n=n)
 
     # 2. 获取种子集
     get_seeds_methods = config.methods
@@ -170,7 +191,13 @@ if __name__ == '__main__':
         method_type='None', # new,
 
         num_samples = 600000,
-        seeds_num = 32 # 32 64 128 256 512
+        seeds_num = 16, # 32 64 128 256 512
+
+        tran_degree_influence_factor = -10.0,
+        succ_degree_influence_factor = 10.0,
+        dis_degree_influence_factor = 10.0,
+
+        rng= np.random.default_rng(1)
     )
     generate_logger.init_logger(log_file=my_config.log_file())
     run_coupon_experiment(my_config)

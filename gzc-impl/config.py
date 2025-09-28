@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import numpy as np
 
 @dataclass
 class ExperimentConfig:
@@ -18,12 +19,14 @@ class ExperimentConfig:
     num_samples: int = 50000
 
     seeds_num: int = 1
-    tran_base_value: float = 5.0
+    tran_base_value: float = 1.0
     tran_degree_influence_factor: float = -4.5
-    succ_base_value: float = 1.5
+    succ_base_value: float = 1.0
     succ_degree_influence_factor: float = 3.0
-    dis_base_value: float = 2.0
+    dis_base_value: float = 1.0
     dis_degree_influence_factor: float = 2.0
+
+    rng: np.random.Generator = np.random.default_rng(1)
 
 
 
