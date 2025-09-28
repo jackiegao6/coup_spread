@@ -79,7 +79,7 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
                                                                            personalization=config.personalization),
         'random': lambda: get_coupon_deliverers.deliverers_random(data["n"], m),  # 基线方法
         'degreeTopM': lambda: get_coupon_deliverers.deliverers_degreeTopM(data["adj"], m),  # 基线方法
-        'pageRank': lambda: get_coupon_deliverers.deliverers_pageRank(data["adj"], m),
+        'pageRank': lambda: get_coupon_deliverers.deliverers_pageRank(data["adj"], m), # 基线方法
         'succPro': lambda: get_coupon_deliverers.deliverers_succPro(succ_distribution=data['distributions'][0], m=m),
         '1_neighbor': lambda: get_coupon_deliverers.deliverers_1_neighbor(succ_distribution=data['distributions'][0],
                                                                           init_tranProMatrix=data['init_tran_matrix'],
@@ -92,16 +92,17 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
         ),
     }
 
+
     methods_with_seeds = {}
     for method in methods:
         if method not in selector_dict:
-            logging.warning(f"===> Method '{method}' not found in registry. Skipping.")
+            logging.warning(f"'{method}' 暂未支持这种种子选择算法")
             continue
 
         deliverers_cache_file = config.deliverers_cache_file(method=method, m=config.seeds_num)
 
         if os.path.exists(deliverers_cache_file):
-            logging.info(f"===> Loading seed sets from cache: {config.deliverers_cache_file(method=method, m=config.seeds_num)}")
+            logging.info(f"从当前位置 读取种子集 {config.deliverers_cache_file(method=method, m=config.seeds_num)}")
 
             with open(deliverers_cache_file, 'r') as file:
                 for line in file:
@@ -110,28 +111,33 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
 
             print(methods_with_seeds)
             continue
-        logging.info("===> Cache not found. Calculating seed sets...")
+
+        logging.info(f"首次生成种子集 {method}")
+
 
         start_time = time.time()
-        logging.info(f"===> Running method: {method}")
+        logging.info(f"执行当前算法开始: {method}")
 
         seeds = selector_dict[method]()
         methods_with_seeds[method] = seeds
 
         end_time = time.time()
         cost_time = end_time - start_time
-        logging.info(f"===> Method {method} finished in {cost_time:.2f} seconds.")
+        logging.info(f"当前用时 {cost_time:.2f} 秒")
 
         os.makedirs(os.path.dirname(deliverers_cache_file), exist_ok=True)
         with open(deliverers_cache_file, 'a+') as file:
+            # todo 增加一下列数
+            logging.info(f"将种子集 写入位置: {config.deliverers_cache_file(method=method, m=config.seeds_num)}")
             for key, value in methods_with_seeds.items():
                 file.write(f'{key}:{value}\n')
 
     return methods_with_seeds
 
 
+
 def run_evaluation(methods_with_seeds: dict, config: ExperimentConfig, data: dict):
-    logging.info(f"Starting evaluation with personalization: {config.personalization}")
+    logging.info(f"评估种子集: {config.personalization}")
 
     #deprecated
     evaluation_dict = {
@@ -139,6 +145,7 @@ def run_evaluation(methods_with_seeds: dict, config: ExperimentConfig, data: dic
         'firstUnused': get_coupon_usage_rate_simulation.simulation2,
         'firstDiscard': get_coupon_usage_rate_simulation.simulation2,
     }
+
     if config.personalization not in evaluation_dict: raise ValueError(f"Unknown personalization type: {config.personalization}")
 
     usage_rate_file = config.usage_rate_file(m=config.seeds_num)
@@ -154,8 +161,9 @@ def run_evaluation(methods_with_seeds: dict, config: ExperimentConfig, data: dic
                     distribution_list=data["distributions"],
                     simulation_times=config.simulation_times,
                     single_sim_func=get_coupon_users.monteCarlo_singleTime_improved2,
-                    seed_num=config.seeds_num)
-    logging.info(f"Evaluation finished. Results saved to {usage_rate_file}")
+                    seed_num=config.seeds_num,
+                    config=config)
+    logging.info(f"保存评估文件至: {usage_rate_file}")
 
 
 def run_coupon_experiment(config: ExperimentConfig):
@@ -181,6 +189,7 @@ def run_coupon_experiment(config: ExperimentConfig):
 
 
 if __name__ == '__main__':
+    # todo 后续改为命令行传参
     my_config = ExperimentConfig(
         data_set='Twitter',
         simulation_times=[5000], #[1000, 5000]
@@ -191,7 +200,7 @@ if __name__ == '__main__':
         method_type='None', # new,
 
         num_samples = 600000,
-        seeds_num = 16, # 32 64 128 256 512
+        seeds_num = 64, # 32 64 128 256 512
 
         tran_degree_influence_factor = -10.0,
         succ_degree_influence_factor = 10.0,

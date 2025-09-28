@@ -2,6 +2,7 @@ import numpy as np
 import logging
 import pandas as pd
 import os
+from config import ExperimentConfig
 
 def evaluate_seed_set(
     seed_list: list,
@@ -41,14 +42,16 @@ def simulation2(
     distribution_list: tuple,
     simulation_times: list,
     single_sim_func, # 传入具体的单次模拟函数，如 monteCarlo_singleTime_improved
-    seed_num: int
+    seed_num: int,
+    config: ExperimentConfig
 ):
     # 评估函数
-    logging.info(f"--- New Evaluation Run ---")
-    logging.info(f"Simulation times for evaluation points: {simulation_times}\n")
+    logging.info(f"评估函数开始")
+    logging.info(f"当前模拟次数: {simulation_times}\n")
 
     num_methods = len(methods)
-    logging.info(f"--- Evaluating for seed number: {seed_num} ---")
+    logging.info(f"当前评估种子数: {seed_num} ---")
+
     # 中层循环：遍历不同的方法 控制评估的算法
     for i in range(num_methods):
         method = methods[i]
@@ -80,7 +83,13 @@ def simulation2(
                 "num_sims": [num_sims],
                 "E_activated_users": [E_activated_users],  # 保持为浮点数
                 "variance": [Var_activated_users],
-                "std_deviation": [std_dev]
+                "std_deviation": [std_dev],
+                "tran_base_value": config.tran_base_value,
+                "tran_degree_influence_factor": config.tran_degree_influence_factor,
+                "succ_base_value": config.succ_base_value,
+                "succ_degree_influence_factor": config.succ_degree_influence_factor,
+                "dis_base_value": config.dis_base_value,
+                "dis_degree_influence_factor": config.dis_degree_influence_factor
             })
 
             # to_csv 会自动处理浮点数格式
