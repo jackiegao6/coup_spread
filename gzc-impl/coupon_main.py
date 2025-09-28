@@ -5,11 +5,11 @@ from typing import List, Dict, Any
 import coupon_usage_rate_get_distribution_degree_aware as gd
 import single_deliverer
 import os
-import get_coupon_deliverers
+import get_seeds
 import time
 import ast
-import get_coupon_usage_rate_simulation
-import get_coupon_users
+import simulation
+import simulation_algo
 from tools import generate_logger
 from pathlib import Path
 import numpy as np
@@ -67,9 +67,9 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
     m = config.seeds_num
 
     selector_dict = {
-        # 'theroy': lambda: get_coupon_deliverers.deliverers_theroy(
+        # 'theroy': lambda: get_seeds.deliverers_theroy(
         #     data["n"], m, data["init_tran_matrix"], *data["distributions"], config.personalization, data["D"]),
-        'monterCarlo': lambda: get_coupon_deliverers.deliverers_monteCarlo(m=m,
+        'monterCarlo': lambda: get_seeds.deliverers_monteCarlo(m=m,
                                                                            init_tranProMatrix=data["init_tran_matrix"],
                                                                            succ_distribution=data["distributions"][0],
                                                                            dis_distribution=data["distributions"][1],
@@ -77,14 +77,14 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
                                                                            data["distributions"][3],
                                                                            L=config.monte_carlo_L,
                                                                            personalization=config.personalization),
-        'random': lambda: get_coupon_deliverers.deliverers_random(data["n"], m),  # 基线方法
-        'degreeTopM': lambda: get_coupon_deliverers.deliverers_degreeTopM(data["adj"], m),  # 基线方法
-        'pageRank': lambda: get_coupon_deliverers.deliverers_pageRank(data["adj"], m), # 基线方法
-        'succPro': lambda: get_coupon_deliverers.deliverers_succPro(succ_distribution=data['distributions'][0], m=m),
-        '1_neighbor': lambda: get_coupon_deliverers.deliverers_1_neighbor(succ_distribution=data['distributions'][0],
+        'random': lambda: get_seeds.deliverers_random(data["n"], m),  # 基线方法
+        'degreeTopM': lambda: get_seeds.deliverers_degreeTopM(data["adj"], m),  # 基线方法
+        'pageRank': lambda: get_seeds.deliverers_pageRank(data["adj"], m), # 基线方法
+        'succPro': lambda: get_seeds.deliverers_succPro(succ_distribution=data['distributions'][0], m=m),
+        '1_neighbor': lambda: get_seeds.deliverers_1_neighbor(succ_distribution=data['distributions'][0],
                                                                           init_tranProMatrix=data['init_tran_matrix'],
                                                                           m=m),
-        'ris_coverage': lambda: get_coupon_deliverers.deliverers_ris_coverage(
+        'ris_coverage': lambda: get_seeds.deliverers_ris_coverage(
             adj=data["adj"],
             tranProMatrix=data["init_tran_matrix"],
             m=m,
@@ -141,9 +141,9 @@ def run_evaluation(methods_with_seeds: dict, config: ExperimentConfig, data: dic
 
     #deprecated
     evaluation_dict = {
-        'None': get_coupon_usage_rate_simulation.simulation2,
-        'firstUnused': get_coupon_usage_rate_simulation.simulation2,
-        'firstDiscard': get_coupon_usage_rate_simulation.simulation2,
+        'None': simulation.simulation2,
+        'firstUnused': simulation.simulation2,
+        'firstDiscard': simulation.simulation2,
     }
 
     if config.personalization not in evaluation_dict: raise ValueError(f"Unknown personalization type: {config.personalization}")
@@ -154,13 +154,18 @@ def run_evaluation(methods_with_seeds: dict, config: ExperimentConfig, data: dic
     methods = list(methods_with_seeds.keys())
     seeds = list(methods_with_seeds.values())
 
+    single_coupon_trans_process = {
+        'AgainReJudge': simulation_algo.monteCarlo_singleTime_improved2,
+        'AgainContinue': simulation_algo.monteCarlo_singleTime_improved2_AgainContinue
+    }
+
     evaluation_func(methods=methods,
                     seeds_list=seeds,
                     init_tran_matrix=data["init_tran_matrix"],
                     usage_rate_file=usage_rate_file,
                     distribution_list=data["distributions"],
                     simulation_times=config.simulation_times,
-                    single_sim_func=get_coupon_users.monteCarlo_singleTime_improved2,
+                    single_sim_func=single_coupon_trans_process[config.single_sim_func],
                     seed_num=config.seeds_num,
                     config=config)
     logging.info(f"保存评估文件至: {usage_rate_file}")
@@ -192,7 +197,7 @@ if __name__ == '__main__':
     # todo 后续改为命令行传参
     my_config = ExperimentConfig(
         data_set='Twitter',
-        simulation_times=[5000], #[1000, 5000]
+        simulation_times=[1000], #[1000, 5000]
         methods=['random','pageRank','ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         monte_carlo_L=15,
         distribution_type='powerlaw',# poisson gamma powerlaw random
@@ -206,7 +211,10 @@ if __name__ == '__main__':
         succ_degree_influence_factor = 10.0,
         dis_degree_influence_factor = 10.0,
 
-        rng= np.random.default_rng(1)
+        rng= np.random.default_rng(1),
+
+        single_sim_func = 'AgainContinue'
     )
+
     generate_logger.init_logger(log_file=my_config.log_file())
     run_coupon_experiment(my_config)

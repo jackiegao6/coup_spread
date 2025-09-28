@@ -310,7 +310,8 @@ def _generate_single_rr_set(
                 
                 # 3. 以传播概率 p 进行“反向穿越”
                 edge_prob = graph.edges[predecessor, current_node].get('p', 0.1) # 每条边的p属性的默认值
-                if graph.nodes[current_node].get('randomP') < edge_prob: # todo gzc : 检查一下其他逻辑需不需要这个值
+                # todo 每一次都要重新穿越
+                if random.random() < edge_prob:
                     # 如果成功，则将前驱节点加入样本和队列
                     rr_set.add(predecessor)
                     queue.append(predecessor)
@@ -390,6 +391,7 @@ def deliverers_ris_coverage(
 
     print(f"\n种子集合: {selected_seeds}\n")
     return selected_seeds
+
 
 if __name__ == '__main__':
 

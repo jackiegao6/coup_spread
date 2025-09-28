@@ -28,6 +28,8 @@ class ExperimentConfig:
 
     rng: np.random.Generator = np.random.default_rng(1)# 保证复现性
 
+    single_sim_func: str = 'AgainContinue' # AgainReJudge 、 AgainContinue
+
 
 
 
@@ -47,7 +49,7 @@ class ExperimentConfig:
         times = ",".join(str(time) for time in self.simulation_times)
         # todo 后续改为追加文件
         if self.distribution_type == 'powerlaw':
-            return f"{self.data_prefix}/{self.data_set}/E-activated-{self.data_set}/distribution-{self.distribution_type}/tsd_{self.tran_degree_influence_factor}-{self.succ_degree_influence_factor}-{self.dis_degree_influence_factor}/simuTimes-{times}_seedNum-{m}_monteCarloL-{self.monte_carlo_L}_rrNumSamples-{self.num_samples}.csv"
+            return f"{self.data_prefix}/{self.data_set}/E-activated-{self.data_set}/distribution-{self.distribution_type}/tsd_{self.tran_degree_influence_factor}-{self.succ_degree_influence_factor}-{self.dis_degree_influence_factor}/single_sim_func-{self.single_sim_func}/simuTimes-{times}_seedNum-{m}_monteCarloL-{self.monte_carlo_L}_single_sim_func-{self.single_sim_func}_rrNumSamples-{self.num_samples}.csv"
         return f"{self.data_prefix}/{self.data_set}/E-activated-{self.data_set}/distribution-{self.distribution_type}_simuTimes-{times}_seedNum-{m}_monteCarloL-{self.monte_carlo_L}_rrNumSamples-{self.num_samples}.csv"
 
 
