@@ -197,7 +197,7 @@ if __name__ == '__main__':
     # todo 后续改为命令行传参
     my_config = ExperimentConfig(
         data_set='Twitter',
-        simulation_times=[1000], #[1000, 5000]
+        simulation_times=[100], #[1000, 5000]
         methods=['random','pageRank','ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         monte_carlo_L=15,
         distribution_type='powerlaw',# poisson gamma powerlaw random
@@ -205,7 +205,7 @@ if __name__ == '__main__':
         method_type='None', # new,
 
         num_samples = 600000,
-        seeds_num = 64, # 32 64 128 256 512
+        seeds_num = 32, # 32 64 128 256 512
 
         tran_degree_influence_factor = -10.0,
         succ_degree_influence_factor = 10.0,

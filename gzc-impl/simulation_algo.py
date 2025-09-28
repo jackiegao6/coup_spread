@@ -160,7 +160,8 @@ def monteCarlo_singleTime_improved2_AgainContinue(
 ) -> np.ndarray:
 
     n = tranProMatrix.shape[0]
-    activatedUsers = set()
+    # todo 上来就把所有种子节点 加入已访问的节点列表
+    activatedUsers = set(initial_deliverers)
 
     # 为每个初始投放者启动一个独立的随机游走
     for start_user in initial_deliverers:
