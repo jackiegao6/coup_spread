@@ -199,18 +199,18 @@ if __name__ == '__main__':
     # todo 后续改为命令行传参
     my_config = ExperimentConfig(
         data_set='Twitter',
-        simulation_times=[1], #[1000, 5000]
-        # methods=['random','pageRank','ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
-        methods=['pageRank'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
+        simulation_times=[10], #[1000, 5000]
+        methods=['random','degreeTopM','ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
+        # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         monte_carlo_L=15,
         distribution_type='powerlaw',# poisson gamma powerlaw random
         personalization='None',# firstUnused
         method_type='None', # new,
 
         num_samples = 600000,
-        seeds_num = 15, # 32 64 128 256 512
+        seeds_num = 16, # 32 64 128 256 512
 
-        tran_degree_influence_factor = -10.0,
+        tran_degree_influence_factor = 10.0,
         succ_degree_influence_factor = 10.0,
         dis_degree_influence_factor = 10.0,
 

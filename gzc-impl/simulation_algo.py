@@ -169,7 +169,6 @@ def monteCarlo_singleTime_improved2_AgainContinue(
 
     # 为每个初始投放者启动一个独立的随机游走
     for start_user in initial_deliverers:
-        logging.info(f"start_user {start_user}")
         current_user = start_user
 
         # 模拟单张优惠券的随机游走过程
@@ -178,7 +177,6 @@ def monteCarlo_singleTime_improved2_AgainContinue(
 
             # 检查当前节点是否已经做出过决定
             if current_user not in activatedUsers:
-                logging.info(f"current_user {current_user}")
                 # 首次接触优惠券的逻辑
                 if rand_pro < succ_distribution[current_user]:
                     # 决定“使用”
@@ -192,9 +190,9 @@ def monteCarlo_singleTime_improved2_AgainContinue(
 
             # 做出过决定 再次接触优惠券的逻辑 直接转发
             # 如果没有中断，则意味着节点决定“转发”
-            logging.info(f"current_user 2 {current_user}")
+            # logging.info(f"current_user 2 {current_user}")
             next_node = _select_next_neighbor(current_user, tranProMatrix)
-            logging.info(f"next_node {next_node}")
+            # logging.info(f"next_node {next_node}")
 
             if next_node is None:
                 # 没有邻居可转发，游走中断
@@ -226,7 +224,6 @@ def _select_next_neighbor(
 
     # 找到邻居及其对应的转发概率
     neighbors = np.flatnonzero(tranProMatrix[:, current_user])
-    logging.info(f"neighbors {neighbors}")
     if neighbors.size == 0:
         return None
 

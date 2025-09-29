@@ -152,10 +152,9 @@ def _generate_powerlaw_distributions_degree_aware(
     # 成功(succ) & 丢弃(dis): 度越高，指数a越大，生成的值越倾向于0。
 
     # 指数 a 必须 > 0。
-    # degree_influence 为负，实现反向关系
-    tran_a_vector = _map_degree_to_behavior(scaled_degrees, base_value=config.tran_base_value, degree_influence_factor=config.tran_degree_influence_factor)
-
     # degree_influence 为正，实现正向关系
+    #todo 幂律分布的α参数 和度数 的关系 生成的概率又应该是什么
+    tran_a_vector = _map_degree_to_behavior(scaled_degrees, base_value=config.tran_base_value, degree_influence_factor=config.tran_degree_influence_factor)
     succ_a_vector = _map_degree_to_behavior(scaled_degrees, base_value=config.succ_base_value, degree_influence_factor=config.succ_degree_influence_factor)
     dis_a_vector = _map_degree_to_behavior(scaled_degrees, base_value=config.dis_base_value, degree_influence_factor=config.dis_degree_influence_factor)
 
