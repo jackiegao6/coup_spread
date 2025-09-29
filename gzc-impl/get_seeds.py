@@ -134,6 +134,56 @@ def deliverers_pageRank(adj, m: int, tranProMatrix) -> list:
 
     return [node for node, score in top_m_nodes]
 
+
+def deliverers_pageRank2(adj, m: int, tranProMatrix) -> list:
+    """
+    依据实际转移概率 (tranProMatrix) 来选 PageRank Top-m，
+    保证选出的节点在 tranProMatrix 中有出概率 (out_prob > 0)。
+    """
+    logging.info("--- Running: PageRank (on tranProMatrix) Top M ---")
+
+
+    # 确保 tranProMatrix 是 (n x n)，tranProMatrix[i,j] 表示 j -> i 的概率
+    # networkx 需要 A[u,v] 表示 u->v 的权重，因此传入它的是 tranProMatrix.T
+    if sp.issparse(tranProMatrix):
+        B = tranProMatrix.T.tocsr()
+        G = nx.from_scipy_sparse_array(B, create_using=nx.DiGraph)
+    else:
+        B = np.asarray(tranProMatrix).T
+        G = nx.from_numpy_array(B, create_using=nx.DiGraph)
+
+    # 计算 PageRank
+    pagerank_scores = nx.pagerank(G, weight='weight')
+
+    # 计算每个节点在 tranProMatrix 中的出概率（列和）
+    if sp.issparse(tranProMatrix):
+        out_prob = np.array(tranProMatrix.sum(axis=0)).ravel()
+    else:
+        out_prob = np.asarray(tranProMatrix).sum(axis=0)
+
+
+    # 在有出概率的节点中按 pagerank 排序并取前 m
+    ranked = sorted(pagerank_scores.items(), key=lambda x: x[1], reverse=True)
+    selected = []
+    for node, score in ranked:
+        if out_prob[node] > 0:
+            selected.append(node)
+            if len(selected) >= m:
+                break
+
+    # 如果不足 m，补上出度最多的节点（作为回退）
+    if len(selected) < m:
+        logging.warning("PageRank-selected nodes with out_prob>0 fewer than m, fallback to out-prob sorting")
+        candidates = np.argsort(-out_prob)  # indices sorted by descending out_prob
+        for node in candidates:
+            if node not in selected and out_prob[node] > 0:
+                selected.append(int(node))
+                if len(selected) >= m:
+                    break
+
+    logging.info("Selected PageRank seeds: %s", selected)
+    return selected
+
 def deliverers_succPro(m: int, succ_distribution: np.ndarray) -> list:
     """
     选择自身成功使用概率最高的 m 个节点。

@@ -79,7 +79,7 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
                                                                            personalization=config.personalization),
         'random': lambda: get_seeds.deliverers_random(data["n"], m),  # 基线方法
         'degreeTopM': lambda: get_seeds.deliverers_degreeTopM(data["adj"], m),  # 基线方法
-        'pageRank': lambda: get_seeds.deliverers_pageRank(adj=data["adj"],
+        'pageRank': lambda: get_seeds.deliverers_pageRank2(adj=data["adj"],
                                                           m=m,
                                                           tranProMatrix=data["init_tran_matrix"]), # 基线方法
         'succPro': lambda: get_seeds.deliverers_succPro(succ_distribution=data['distributions'][0], m=m),
@@ -208,7 +208,7 @@ if __name__ == '__main__':
         method_type='None', # new,
 
         num_samples = 600000,
-        seeds_num = 7, # 32 64 128 256 512
+        seeds_num = 15, # 32 64 128 256 512
 
         tran_degree_influence_factor = -10.0,
         succ_degree_influence_factor = 10.0,
