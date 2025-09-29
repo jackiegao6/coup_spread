@@ -79,7 +79,9 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
                                                                            personalization=config.personalization),
         'random': lambda: get_seeds.deliverers_random(data["n"], m),  # 基线方法
         'degreeTopM': lambda: get_seeds.deliverers_degreeTopM(data["adj"], m),  # 基线方法
-        'pageRank': lambda: get_seeds.deliverers_pageRank(data["adj"], m), # 基线方法
+        'pageRank': lambda: get_seeds.deliverers_pageRank(adj=data["adj"],
+                                                          m=m,
+                                                          tranProMatrix=data["init_tran_matrix"]), # 基线方法
         'succPro': lambda: get_seeds.deliverers_succPro(succ_distribution=data['distributions'][0], m=m),
         '1_neighbor': lambda: get_seeds.deliverers_1_neighbor(succ_distribution=data['distributions'][0],
                                                                           init_tranProMatrix=data['init_tran_matrix'],
@@ -197,15 +199,16 @@ if __name__ == '__main__':
     # todo 后续改为命令行传参
     my_config = ExperimentConfig(
         data_set='Twitter',
-        simulation_times=[10], #[1000, 5000]
-        methods=['random','pageRank','ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
+        simulation_times=[1], #[1000, 5000]
+        # methods=['random','pageRank','ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
+        methods=['pageRank'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         monte_carlo_L=15,
         distribution_type='powerlaw',# poisson gamma powerlaw random
         personalization='None',# firstUnused
         method_type='None', # new,
 
         num_samples = 600000,
-        seeds_num = 32, # 32 64 128 256 512
+        seeds_num = 7, # 32 64 128 256 512
 
         tran_degree_influence_factor = -10.0,
         succ_degree_influence_factor = 10.0,
@@ -213,7 +216,7 @@ if __name__ == '__main__':
 
         rng= np.random.default_rng(1),
 
-        single_sim_func = 'AgainReJudge'# AgainReJudge 、 AgainContinue
+        single_sim_func = 'AgainContinue'# AgainReJudge 、 AgainContinue
     )
 
     generate_logger.init_logger(log_file=my_config.log_file())

@@ -104,12 +104,12 @@ def deliverers_degreeTopM(adj, m: int) -> list:
         
     return [node for node, value in selected_nodes_with_values] # 保持原始返回类型
 
-def deliverers_pageRank(adj, m: int) -> list:
+def deliverers_pageRank(adj, m: int, tranProMatrix) -> list:
     """
     选择 PageRank 分数最高的 m 个节点。
     """
-    print("--- Running: PageRank Top M ---")
-    print("依据: 选择 PageRank 分数最高的节点（综合考虑数量和质量）。")
+    logging.info("--- Running: PageRank Top M ---")
+    logging.info("依据: 选择 PageRank 分数最高的节点（综合考虑数量和质量）。")
     
     # from_scipy_sparse_array 在新版 networkx 中是推荐用法
     # 如果 adj 是对称的，可以用 nx.Graph，如果是有向的，用 nx.DiGraph
@@ -118,18 +118,20 @@ def deliverers_pageRank(adj, m: int) -> list:
     G = nx.from_scipy_sparse_array(adj, create_using=nx.DiGraph)
 
     # 计算 PageRank
-    pagerank_scores = nx.pagerank(G)
+    pagerank_scores = nx.pagerank(G.reverse())
     
     # 对字典按值进行排序
-    sorted_nodes = sorted(pagerank_scores.items(), key=lambda item: item[1], reverse=True)
+    top_m_nodes = sorted(pagerank_scores.items(), key=lambda item: item[1], reverse=True)[:m]
     
-    top_m_nodes = sorted_nodes[:m]
-    
-    print("选择的 Top M 节点及其 PageRank 分数:")
+    logging.info("选择的 Top M 节点及其 PageRank 分数:")
     for node, score in top_m_nodes:
-        print(f"  - 节点 {node}: PageRank = {score:.4f}")
-    print("")
-        
+        logging.info(f"  - 节点 {node}: PageRank = {score:.4f}")
+    logging.info("")
+
+    out_degree = tranProMatrix.sum(axis=0)
+    for node,score in top_m_nodes:
+        logging.info(f"node={node}, out_degree={out_degree[node]}")
+
     return [node for node, score in top_m_nodes]
 
 def deliverers_succPro(m: int, succ_distribution: np.ndarray) -> list:

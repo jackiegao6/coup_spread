@@ -1,3 +1,5 @@
+from typing import Optional
+
 import numpy as np
 import logging
 import single_deliverer
@@ -167,15 +169,16 @@ def monteCarlo_singleTime_improved2_AgainContinue(
 
     # 为每个初始投放者启动一个独立的随机游走
     for start_user in initial_deliverers:
-
+        logging.info(f"start_user {start_user}")
         current_user = start_user
 
         # 模拟单张优惠券的随机游走过程
         while True:
             rand_pro = np.random.rand()
-            # 检查当前节点是否已经做出过决定
 
+            # 检查当前节点是否已经做出过决定
             if current_user not in activatedUsers:
+                logging.info(f"current_user {current_user}")
                 # 首次接触优惠券的逻辑
                 if rand_pro < succ_distribution[current_user]:
                     # 决定“使用”
@@ -189,7 +192,9 @@ def monteCarlo_singleTime_improved2_AgainContinue(
 
             # 做出过决定 再次接触优惠券的逻辑 直接转发
             # 如果没有中断，则意味着节点决定“转发”
+            logging.info(f"current_user 2 {current_user}")
             next_node = _select_next_neighbor(current_user, tranProMatrix)
+            logging.info(f"next_node {next_node}")
 
             if next_node is None:
                 # 没有邻居可转发，游走中断
@@ -206,17 +211,26 @@ def monteCarlo_singleTime_improved2_AgainContinue(
     return success_vector
 
 
-def _select_next_neighbor(current_user: int, 
-                          tranProMatrix: np.ndarray
-                          ) -> int:
+def _select_next_neighbor(
+    current_user: int,
+    tranProMatrix: np.ndarray
+) -> Optional[int]:
     """
     从当前节点的邻居中，根据转发概率矩阵选择下一个节点。
+    Args:
+        current_user: 当前节点编号
+        tranProMatrix: 转移概率矩阵 (n x n)，tranProMatrix[i, j] 表示 j -> i 的转发概率
+    Returns:
+        邻居节点编号，若无邻居则返回 None
     """
+
     # 找到邻居及其对应的转发概率
-    neighbors: np.ndarray = np.nonzero(tranProMatrix[:, current_user])[0]
-    
-    if len(neighbors) == 0: return None
-        
+    neighbors = np.flatnonzero(tranProMatrix[:, current_user])
+    logging.info(f"neighbors {neighbors}")
+    if neighbors.size == 0:
+        return None
+
+
     probabilities = tranProMatrix[neighbors, current_user]
     prob_sum = np.sum(probabilities)
     
@@ -228,6 +242,7 @@ def _select_next_neighbor(current_user: int,
     normalized_probs = probabilities / prob_sum
     return np.random.choice(neighbors, p=normalized_probs)
 
+#deprecated
 def monteCarlo_singleTime_firstDiscard_improved(
     tranProMatrix: np.ndarray,
     initial_deliverers: list,
@@ -305,6 +320,7 @@ def monteCarlo_singleTime_firstDiscard_improved(
 
     return success_vector
 
+#deprecated
 def monteCarlo_singleTime_firstUnused_improved(
     tranProMatrix: np.ndarray,
     initial_deliverers: list,
