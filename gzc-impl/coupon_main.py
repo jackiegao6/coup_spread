@@ -208,7 +208,7 @@ if __name__ == '__main__':
         method_type='None', # new,
 
         num_samples = 600000,
-        seeds_num = 16, # 32 64 128 256 512
+        seeds_num = 256, # 32 64 128 256 512
 
         tran_degree_influence_factor = 10.0,
         succ_degree_influence_factor = 10.0,
