@@ -197,7 +197,7 @@ if __name__ == '__main__':
     # todo 后续改为命令行传参
     my_config = ExperimentConfig(
         data_set='Twitter',
-        simulation_times=[100], #[1000, 5000]
+        simulation_times=[10], #[1000, 5000]
         methods=['random','pageRank','ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         monte_carlo_L=15,
         distribution_type='powerlaw',# poisson gamma powerlaw random
@@ -213,7 +213,7 @@ if __name__ == '__main__':
 
         rng= np.random.default_rng(1),
 
-        single_sim_func = 'AgainContinue'
+        single_sim_func = 'AgainReJudge'# AgainReJudge 、 AgainContinue
     )
 
     generate_logger.init_logger(log_file=my_config.log_file())

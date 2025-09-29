@@ -102,7 +102,9 @@ def monteCarlo_singleTime_improved2(
 ) -> np.ndarray:
 
     n = tranProMatrix.shape[0]
-    activatedUsers = set()
+    activatedUsers = set(initial_deliverers)
+    activated_list = []
+
 
     # 为每个初始投放者启动一个独立的随机游走
     for start_user in initial_deliverers:
@@ -127,6 +129,7 @@ def monteCarlo_singleTime_improved2(
                 if rand_pro < succ_distribution[current_user]:
                     # 决定“使用”
                     activatedUsers.add(current_user)
+                    activated_list.append(current_user)
                     # 游走在此中断，因为优惠券被使用了
                     break
                 elif rand_pro < (succ_distribution[current_user] + dis_distribution[current_user]):
@@ -145,9 +148,7 @@ def monteCarlo_singleTime_improved2(
 
     # 将最终成功使用的节点集合转换为0/1向量
     success_vector = np.zeros(n, dtype=int)
-    if activatedUsers:
-        activated_list = list(activatedUsers)
-        success_vector[activated_list] = 1
+    success_vector[activated_list] = 1
 
     return success_vector
 
@@ -162,6 +163,7 @@ def monteCarlo_singleTime_improved2_AgainContinue(
     n = tranProMatrix.shape[0]
     # todo 上来就把所有种子节点 加入已访问的节点列表
     activatedUsers = set(initial_deliverers)
+    activated_list = []
 
     # 为每个初始投放者启动一个独立的随机游走
     for start_user in initial_deliverers:
@@ -178,6 +180,7 @@ def monteCarlo_singleTime_improved2_AgainContinue(
                 if rand_pro < succ_distribution[current_user]:
                     # 决定“使用”
                     activatedUsers.add(current_user)
+                    activated_list.append(current_user)
                     # 游走在此中断，因为优惠券被使用了
                     break
                 elif rand_pro < (succ_distribution[current_user] + dis_distribution[current_user]):
@@ -197,9 +200,8 @@ def monteCarlo_singleTime_improved2_AgainContinue(
 
     # 将最终成功使用的节点集合转换为0/1向量
     success_vector = np.zeros(n, dtype=int)
-    if activatedUsers:
-        activated_list = list(activatedUsers)
-        success_vector[activated_list] = 1
+
+    success_vector[activated_list] = 1
 
     return success_vector
 
