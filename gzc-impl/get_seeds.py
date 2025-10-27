@@ -341,7 +341,7 @@ def _generate_single_rr_set(
     graph: nx.DiGraph
 ) -> set:
 
-    # 1. 在整个网络中随机选择一个起始节点
+    # 1. 在整个网络中随机选择一个起始节点 **起始节点可以重复**
     start_node = random.randrange(n)
     
     rr_set = {start_node}
@@ -376,6 +376,9 @@ def _generate_rr_sets(
     graph: nx.DiGraph, 
     num_RR: int
 ) -> list:
+    '''
+    生成 num_RR 个rr-set
+    '''
     print(f"--- generating numbers of {num_RR} (RR-Sets) ---")
     return [_generate_single_rr_set(n, graph) for _ in range(num_RR)]
 
@@ -407,11 +410,11 @@ def deliverers_ris_coverage(
         num_edges_processed += 1
 
     print(f"图构建完成，把{num_edges_processed}多条边，赋予了相应的概率值")
-    
+
     rr_sets = _generate_rr_sets(n, G, num_samples)
-    
+
     selected_seeds = []
-    
+
     # 创建一个从节点到其所在RR-Set索引的映射
     node_to_rr_indices = defaultdict(list)
     for i, rr_set in enumerate(rr_sets):
@@ -419,13 +422,13 @@ def deliverers_ris_coverage(
             node_to_rr_indices[node].append(i)
 
     is_rr_set_covered = np.zeros(num_samples, dtype=bool)# 计算边际增益
-    
+
     for i in range(m):
         candidate_gains = defaultdict(int)
         for node_id, rr_indices in node_to_rr_indices.items():
             if node_id in selected_seeds:
                 continue
-            
+
             gain = np.sum(~is_rr_set_covered[rr_indices])# 计算这个节点覆盖的RR-Set数量
             candidate_gains[node_id] = gain
 
@@ -435,10 +438,10 @@ def deliverers_ris_coverage(
 
         best_candidate = max(candidate_gains, key=candidate_gains.get)
         selected_seeds.append(best_candidate)
-        
+
         for rr_index in node_to_rr_indices[best_candidate]:
             is_rr_set_covered[rr_index] = True
-            
+
         print(f"  - 第 {i+1} 个种子: 节点 {best_candidate} (新增覆盖了 {candidate_gains[best_candidate]} 个 RR-Set)")
 
     print(f"\n种子集合: {selected_seeds}\n")
