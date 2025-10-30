@@ -18,7 +18,8 @@ def evaluate_seed_set(
     total_activated_users_by_seeds = 0
     succ_dist, dis_dist, _, const_factor_dist = distributions
 
-    for _ in range(num_simulations):
+    for i in range(num_simulations):
+        logging.info(f"\t\t当前模拟轮次: {i}")
         success_vector = simulation_function(
             tran_matrix,
             seed_list,

@@ -1,0 +1,31 @@
+2025-10-30 17:36:46,622 - INFO - 加载数据集: Twitter
+2025-10-30 17:36:46,625 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-10-30 17:36:46,625 - INFO - ===> 使用幂律分布生成四种分布
+2025-10-30 17:36:46,636 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Twitter/distribution-in-Twitter/distribution-powerlaw_seedNum-32.pkl
+2025-10-30 17:36:55,457 - INFO - 首次生成种子集 random
+2025-10-30 17:36:55,457 - INFO - 执行当前算法开始: random
+2025-10-30 17:36:55,458 - INFO - 当前用时 0.00 秒
+2025-10-30 17:36:55,458 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_random_seedNum-32.txt
+2025-10-30 17:36:55,458 - INFO - 首次生成种子集 degreeTopM
+2025-10-30 17:36:55,458 - INFO - 执行当前算法开始: degreeTopM
+2025-10-30 17:36:55,461 - INFO - 当前用时 0.00 秒
+2025-10-30 17:36:55,461 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_degreeTopM_seedNum-32.txt
+2025-10-30 17:36:55,461 - INFO - 首次生成种子集 ris_coverage
+2025-10-30 17:36:55,461 - INFO - 执行当前算法开始: ris_coverage
+2025-10-30 17:37:11,901 - INFO - 当前用时 16.44 秒
+2025-10-30 17:37:11,902 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_ris_coverage_seedNum-32.txt
+2025-10-30 17:37:11,902 - INFO - 评估种子集: None
+2025-10-30 17:37:11,902 - INFO - 评估函数开始
+2025-10-30 17:37:11,902 - INFO - 当前模拟次数: [10]
+
+2025-10-30 17:37:11,902 - INFO - 当前评估种子数: 32 ---
+2025-10-30 17:37:11,902 - INFO -   Evaluating method: 'random' with 32 seeds.
+2025-10-30 17:37:11,902 - INFO -     Running 10 simulations...
+2025-10-30 17:37:12,768 - INFO -     Result: E[Users] = 16.6000, Var[Users] = 7.6400, Std_Dev = 2.7641
+2025-10-30 17:37:12,775 - INFO -   Evaluating method: 'degreeTopM' with 32 seeds.
+2025-10-30 17:37:12,775 - INFO -     Running 10 simulations...
+2025-10-30 17:37:13,153 - INFO -     Result: E[Users] = 16.1000, Var[Users] = 3.0900, Std_Dev = 1.7578
+2025-10-30 17:37:13,155 - INFO -   Evaluating method: 'ris_coverage' with 32 seeds.
+2025-10-30 17:37:13,155 - INFO -     Running 10 simulations...
+2025-10-30 17:37:13,498 - INFO -     Result: E[Users] = 16.4000, Var[Users] = 8.2400, Std_Dev = 2.8705
+2025-10-30 17:37:13,499 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Twitter/E-activated-Twitter/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainContinue/simuTimes-10_seedNum-32_monteCarloL-15_single_sim_func-AgainContinue_rrNumSamples-600000.csv

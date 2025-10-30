@@ -1,0 +1,12 @@
+2025-10-30 22:44:22,354 - INFO - 加载数据集: Twitter
+2025-10-30 22:44:22,357 - INFO - 复用概率分布 文件位置: /home/wen/pythonspace/data-test/Twitter/distribution-in-Twitter/distribution-powerlaw_seedNum-2048.pkl
+2025-10-30 22:44:30,758 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_random_seedNum-2048.txt
+2025-10-30 22:44:30,765 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_degreeTopM_seedNum-2048.txt
+2025-10-30 22:44:30,774 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/Twitter/seeds-with-Twitter/distribution-powerlaw_ris_coverage_seedNum-2048.txt
+2025-10-30 22:44:30,785 - INFO - 评估种子集: None
+2025-10-30 22:44:30,785 - INFO - 评估函数开始
+2025-10-30 22:44:30,785 - INFO - 当前模拟次数: [20]
+
+2025-10-30 22:44:30,786 - INFO - 当前评估种子数: 2048 ---
+2025-10-30 22:44:30,786 - INFO -   Evaluating method: 'random' with 2048 seeds.
+2025-10-30 22:44:30,786 - INFO -     Running 20 simulations...

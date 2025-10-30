@@ -196,28 +196,35 @@ def run_coupon_experiment(config: ExperimentConfig):
 
 
 if __name__ == '__main__':
-    # todo 后续改为命令行传参
+
     my_config = ExperimentConfig(
         data_set='Twitter',
-        simulation_times=[10], #[1000, 5000]
-        methods=['random','degreeTopM','ris_coverage'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
+        simulation_times=[3],  # [1000, 5000]
+        methods=['random', 'degreeTopM', 'ris_coverage'],
+        # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         monte_carlo_L=15,
-        distribution_type='powerlaw',# poisson gamma powerlaw random
-        personalization='None',# firstUnused
-        method_type='None', # new,
+        distribution_type='powerlaw',  # poisson gamma powerlaw random
+        personalization='None',  # firstUnused
+        method_type='None',  # new,
 
-        num_samples = 600000,
-        seeds_num = 256, # 32 64 128 256 512
+        num_samples=600000,
+        # seeds_num=num,  # 32 64 128 256 512
 
-        tran_degree_influence_factor = 10.0,
-        succ_degree_influence_factor = 10.0,
-        dis_degree_influence_factor = 10.0,
+        tran_degree_influence_factor=10.0,
+        succ_degree_influence_factor=10.0,
+        dis_degree_influence_factor=10.0,
 
-        rng= np.random.default_rng(1),
+        rng=np.random.default_rng(1),
 
-        single_sim_func = 'AgainContinue'# AgainReJudge 、 AgainContinue
+        single_sim_func='AgainContinue'  # AgainReJudge 、 AgainContinue
     )
 
-    generate_logger.init_logger(log_file=my_config.log_file())
-    run_coupon_experiment(my_config)
+    # 外循环 控制种子个数
+    for num in range(1,5):
+
+        # todo 后续改为命令行传参
+        my_config.seeds_num = num
+
+        generate_logger.init_logger(log_file=my_config.log_file())
+        run_coupon_experiment(my_config)
