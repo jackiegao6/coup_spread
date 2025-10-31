@@ -30,9 +30,6 @@ class ExperimentConfig:
 
     single_sim_func: str = 'AgainContinue' # AgainReJudge 、 AgainContinue
 
-
-
-
     
     @property
     def adj_file(self):

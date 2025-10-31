@@ -13,6 +13,7 @@ import simulation_algo
 from tools import generate_logger
 from pathlib import Path
 import numpy as np
+import argparse
 
 
 def load_experiment_data(config: "ExperimentConfig") -> Dict[str, Any]:
@@ -195,11 +196,20 @@ def run_coupon_experiment(config: ExperimentConfig):
     run_evaluation(methods_with_seeds, config, experiment_data)
 
 
+# python coupon_main.py --start 2000 --end 6000 --step 1000
 if __name__ == '__main__':
+
+    # ✅ 新增命令行参数
+    parser = argparse.ArgumentParser(description="Run coupon experiment with range of seeds_num.")
+    parser.add_argument('--start', type=int, default=2100, help='起始 seeds_num')
+    parser.add_argument('--end', type=int, default=50000, help='结束 seeds_num（不包含）')
+    parser.add_argument('--step', type=int, default=500, help='步长')
+    args = parser.parse_args()
+
 
     my_config = ExperimentConfig(
         data_set='Twitter',
-        simulation_times=[3],  # [1000, 5000]
+        simulation_times=[5],  # [1000, 5000]
         methods=['random', 'degreeTopM', 'ris_coverage'],
         # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
@@ -221,10 +231,7 @@ if __name__ == '__main__':
     )
 
     # 外循环 控制种子个数
-    for num in range(1,5):
-
-        # todo 后续改为命令行传参
+    for num in range(args.start, args.end, args.step):
         my_config.seeds_num = num
-
         generate_logger.init_logger(log_file=my_config.log_file())
         run_coupon_experiment(my_config)
