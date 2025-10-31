@@ -104,12 +104,14 @@ def monteCarlo_singleTime_improved2(
 ) -> np.ndarray:
 
     n = tranProMatrix.shape[0]
-    activatedUsers = set(initial_deliverers)
+    activatedUsers = set()
     activated_list = []
 
 
     # 为每个初始投放者启动一个独立的随机游走
     for start_user in initial_deliverers:
+        logging.info(f"\t\t\t当前模拟的起始节点: {start_user}")
+
 
         current_user = start_user
 
@@ -163,12 +165,13 @@ def monteCarlo_singleTime_improved2_AgainContinue(
 ) -> np.ndarray:
 
     n = tranProMatrix.shape[0]
-    # todo 上来就把所有种子节点 加入已访问的节点列表
-    activatedUsers = set(initial_deliverers)
+    # todo 上来就把所有种子节点 加入已访问的节点列表 非也 done
+    activatedUsers = set()
     activated_list = []
 
     # 为每个初始投放者启动一个独立的随机游走
     for start_user in initial_deliverers:
+        # logging.info(f"\t\t\t当前模拟的起始节点: {start_user}")
         current_user = start_user
 
         # 模拟单张优惠券的随机游走过程

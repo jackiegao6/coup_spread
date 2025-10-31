@@ -196,7 +196,14 @@ def run_coupon_experiment(config: ExperimentConfig):
     run_evaluation(methods_with_seeds, config, experiment_data)
 
 
-# python coupon_main.py --start 2000 --end 6000 --step 1000
+#  python coupon_main.py --start 2300 --end 3000 --step 300 done
+#  python coupon_main.py --start 3000 --end 4000 --step 300 done
+#  python coupon_main.py --start 4000 --end 5000 --step 400 done
+#  python coupon_main.py --start 5000 --end 6000 --step 300
+#  python coupon_main.py --start 6000 --end 7000 --step 500
+#  python coupon_main.py --start 8000 --end 9000 --step 500
+#  python coupon_main.py --start 10000 --end 11000 --step 500
+
 if __name__ == '__main__':
 
     # ✅ 新增命令行参数
@@ -227,7 +234,7 @@ if __name__ == '__main__':
 
         rng=np.random.default_rng(1),
 
-        single_sim_func='AgainContinue'  # AgainReJudge 、 AgainContinue
+        single_sim_func='AgainReJudge'  # AgainReJudge 、 AgainContinue
     )
 
     # 外循环 控制种子个数
@@ -235,3 +242,4 @@ if __name__ == '__main__':
         my_config.seeds_num = num
         generate_logger.init_logger(log_file=my_config.log_file())
         run_coupon_experiment(my_config)
+    print("done!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!\n")

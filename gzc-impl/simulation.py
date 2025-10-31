@@ -61,7 +61,7 @@ def simulation2(
 
         logging.info(f"  Evaluating method: '{method}' with {len(current_seed_set)} seeds.")
         # 内层循环： 控制评估的精度（模拟次数）
-        for num_sims in simulation_times: #[50000, 100000] 注意这里是 in
+        for num_sims in simulation_times: #[5] 注意这里是 in
             logging.info(f"    Running {num_sims} simulations...")
 
             E_activated_users, Var_activated_users = evaluate_seed_set(
