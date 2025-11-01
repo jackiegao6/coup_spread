@@ -217,7 +217,7 @@ if __name__ == '__main__':
 
 
     my_config = ExperimentConfig(
-        data_set='Twitter',
+        data_set='facebook', # Twitter
         simulation_times=[5],  # [1000, 5000]
         methods=['random', 'degreeTopM', 'ris_coverage'],
         # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']

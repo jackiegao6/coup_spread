@@ -1,0 +1,18 @@
+2025-11-01 17:53:58,518 - INFO - 加载数据集: facebook
+2025-11-01 17:53:58,521 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-01 17:53:58,521 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-01 17:53:58,525 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/facebook/distribution-in-facebook/distribution-powerlaw_seedNum-5000.pkl
+2025-11-01 17:53:58,678 - INFO - 首次生成种子集 random
+2025-11-01 17:53:58,678 - INFO - 执行当前算法开始: random
+2025-11-01 17:54:10,770 - INFO - 加载数据集: facebook
+2025-11-01 17:54:10,774 - INFO - 复用概率分布 文件位置: /home/wen/pythonspace/data-test/facebook/distribution-in-facebook/distribution-powerlaw_seedNum-5000.pkl
+2025-11-01 17:54:10,929 - INFO - 首次生成种子集 random
+2025-11-01 17:54:10,929 - INFO - 执行当前算法开始: random
+2025-11-01 19:26:10,232 - INFO - 加载数据集: facebook
+2025-11-01 19:26:10,235 - INFO - 复用概率分布 文件位置: /home/wen/pythonspace/data-test/facebook/distribution-in-facebook/distribution-powerlaw_seedNum-5000.pkl
+2025-11-01 19:26:10,389 - INFO - 首次生成种子集 random
+2025-11-01 19:26:10,390 - INFO - 执行当前算法开始: random
+2025-11-01 19:26:18,845 - INFO - 加载数据集: facebook
+2025-11-01 19:26:18,849 - INFO - 复用概率分布 文件位置: /home/wen/pythonspace/data-test/facebook/distribution-in-facebook/distribution-powerlaw_seedNum-5000.pkl
+2025-11-01 19:26:18,995 - INFO - 首次生成种子集 random
+2025-11-01 19:26:18,995 - INFO - 执行当前算法开始: random

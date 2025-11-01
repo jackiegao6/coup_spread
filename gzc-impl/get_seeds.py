@@ -70,14 +70,16 @@ def deliverers_monteCarlo(
 
 
 def deliverers_random(n: int, m: int) -> list:
-    """
-    随机选择 m 个节点。
-    """
     print("--- Running: Random ---")
+    print(f"*****数据集节点总数: {n}*****")
     print(f"依据: 完全随机选择。")
+    print(f"[Debug] n = {n}, m = {m}")
+    if m > n:
+        raise ValueError(f"m={m} 不能大于 n={n}")
     selected_nodes = random.sample(range(n), k=m)
     print(f"选择了 {m} 个节点: {selected_nodes}\n")
-    return selected_nodes # 随机选择没有评价值，只返回节点列表
+    return selected_nodes
+
 
 def deliverers_degreeTopM(adj, m: int) -> list:
     """
