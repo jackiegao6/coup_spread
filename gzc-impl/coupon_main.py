@@ -200,9 +200,11 @@ def run_coupon_experiment(config: ExperimentConfig):
 #  python coupon_main.py --start 3000 --end 4000 --step 300 done
 #  python coupon_main.py --start 4000 --end 5000 --step 400 done
 #  python coupon_main.py --start 5000 --end 6000 --step 300
-#  python coupon_main.py --start 6000 --end 7000 --step 500
+#  python coupon_main.py --start 6000 --end 7000 --step 500 done
 #  python coupon_main.py --start 8000 --end 9000 --step 500
 #  python coupon_main.py --start 10000 --end 11000 --step 500
+#  python coupon_main.py --start 11000 --end 13000 --step 1000
+
 
 if __name__ == '__main__':
 
