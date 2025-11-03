@@ -30,28 +30,30 @@ class ExperimentConfig:
 
     single_sim_func: str = 'AgainContinue' # AgainReJudge 、 AgainContinue
 
+    version: str = 'v0'
+
     
     @property
     def adj_file(self):
         return f"{self.data_prefix}/datasets/{self.data_set}-adj.pkl"
 
     def distribution_file(self, m = 0):
-        return f"{self.data_prefix}/{self.data_set}/distribution-in-{self.data_set}/distribution-{self.distribution_type}_seedNum-{m}.pkl"
+        return f"{self.data_prefix}/{self.data_set}/{self.version}/distribution-in-{self.data_set}/distribution-{self.distribution_type}_seedNum-{m}.pkl"
 
     def deliverers_cache_file(self, method, m = 0):
-        return f"{self.data_prefix}/{self.data_set}/seeds-with-{self.data_set}/distribution-{self.distribution_type}_{method}_seedNum-{m}.txt"
+        return f"{self.data_prefix}/{self.data_set}/{self.version}/seeds-with-{self.data_set}/distribution-{self.distribution_type}_{method}_seedNum-{m}.txt"
 
 
     def usage_rate_file(self, m = 0):
         times = ",".join(str(time) for time in self.simulation_times)
         # todo 后续改为追加文件
         if self.distribution_type == 'powerlaw':
-            return f"{self.data_prefix}/{self.data_set}/E-activated-{self.data_set}/distribution-{self.distribution_type}/tsd_{self.tran_degree_influence_factor}-{self.succ_degree_influence_factor}-{self.dis_degree_influence_factor}/single_sim_func-{self.single_sim_func}/simuTimes-{times}_seedNum-{m}_monteCarloL-{self.monte_carlo_L}_single_sim_func-{self.single_sim_func}_rrNumSamples-{self.num_samples}.csv"
-        return f"{self.data_prefix}/{self.data_set}/E-activated-{self.data_set}/distribution-{self.distribution_type}_simuTimes-{times}_seedNum-{m}_monteCarloL-{self.monte_carlo_L}_rrNumSamples-{self.num_samples}.csv"
+            return f"{self.data_prefix}/{self.data_set}/{self.version}/E-activated-{self.data_set}/distribution-{self.distribution_type}/tsd_{self.tran_degree_influence_factor}-{self.succ_degree_influence_factor}-{self.dis_degree_influence_factor}/single_sim_func-{self.single_sim_func}/simuTimes-{times}_seedNum-{m}_monteCarloL-{self.monte_carlo_L}_single_sim_func-{self.single_sim_func}_rrNumSamples-{self.num_samples}.csv"
+        return f"{self.data_prefix}/{self.data_set}/{self.version}/E-activated-{self.data_set}/distribution-{self.distribution_type}_simuTimes-{times}_seedNum-{m}_monteCarloL-{self.monte_carlo_L}_rrNumSamples-{self.num_samples}.csv"
 
 
     def log_file(self):
         times = ",".join(str(time) for time in self.simulation_times)
         if self.distribution_type == "powerlaw" or self.distribution_type == "gamma" or self.distribution_type == "poisson":
-            return f"/home/wen/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/distribution-{self.distribution_type}_seedNum-{self.seeds_num}_simuTimes-{times}_t-s-d-baseValue-{self.tran_base_value, self.succ_base_value, self.dis_base_value}_t-s-d-factor-{self.tran_degree_influence_factor, self.succ_degree_influence_factor, self.dis_degree_influence_factor}.log"
-        return f"/home/wen/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/distribution-{self.distribution_type}_seedNum-{self.seeds_num}_simuTimes-{times}.log"
+            return f"/home/wen/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/{self.version}/distribution-{self.distribution_type}_seedNum-{self.seeds_num}_simuTimes-{times}_t-s-d-baseValue-{self.tran_base_value, self.succ_base_value, self.dis_base_value}_t-s-d-factor-{self.tran_degree_influence_factor, self.succ_degree_influence_factor, self.dis_degree_influence_factor}.log"
+        return f"/home/wen/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/{self.version}/distribution-{self.distribution_type}_seedNum-{self.seeds_num}_simuTimes-{times}.log"

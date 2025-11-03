@@ -236,7 +236,8 @@ if __name__ == '__main__':
 
         rng=np.random.default_rng(1),
 
-        single_sim_func='AgainReJudge'  # AgainReJudge 、 AgainContinue
+        single_sim_func='AgainReJudge',  # AgainReJudge 、 AgainContinue
+        version='2025-11-03'
     )
 
     # 外循环 控制种子个数
