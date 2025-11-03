@@ -1,0 +1,6 @@
+2025-11-02 15:14:40,612 - INFO - 加载数据集: Amherst
+2025-11-02 15:14:40,616 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-02 15:14:40,616 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-02 15:14:40,618 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Amherst/distribution-in-Amherst/distribution-powerlaw_seedNum-3000.pkl
+2025-11-02 15:14:40,669 - INFO - 首次生成种子集 random
+2025-11-02 15:14:40,669 - INFO - 执行当前算法开始: random

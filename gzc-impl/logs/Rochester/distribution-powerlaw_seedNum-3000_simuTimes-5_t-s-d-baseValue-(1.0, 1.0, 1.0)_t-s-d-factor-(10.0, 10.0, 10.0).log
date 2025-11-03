@@ -1,0 +1,184 @@
+2025-11-02 21:16:01,990 - INFO - 加载数据集: Rochester
+2025-11-02 21:16:01,995 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-02 21:16:01,995 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-02 21:16:01,998 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Rochester/distribution-in-Rochester/distribution-powerlaw_seedNum-3000.pkl
+2025-11-02 21:16:02,204 - INFO - 首次生成种子集 random
+2025-11-02 21:16:02,204 - INFO - 执行当前算法开始: random
+2025-11-02 21:16:02,221 - INFO - 当前用时 0.02 秒
+2025-11-02 21:16:02,221 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Rochester/seeds-with-Rochester/distribution-powerlaw_random_seedNum-3000.txt
+2025-11-02 21:16:02,222 - INFO - 首次生成种子集 degreeTopM
+2025-11-02 21:16:02,222 - INFO - 执行当前算法开始: degreeTopM
+2025-11-02 21:16:02,258 - INFO - 当前用时 0.04 秒
+2025-11-02 21:16:02,258 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Rochester/seeds-with-Rochester/distribution-powerlaw_degreeTopM_seedNum-3000.txt
+2025-11-02 21:16:02,260 - INFO - 首次生成种子集 ris_coverage
+2025-11-02 21:16:02,260 - INFO - 执行当前算法开始: ris_coverage
+2025-11-02 21:28:08,029 - INFO - 当前用时 725.77 秒
+2025-11-02 21:28:08,029 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Rochester/seeds-with-Rochester/distribution-powerlaw_ris_coverage_seedNum-3000.txt
+2025-11-02 21:28:08,032 - INFO - 评估种子集: None
+2025-11-02 21:28:08,032 - INFO - 评估函数开始
+2025-11-02 21:28:08,032 - INFO - 当前模拟次数: [5]
+
+2025-11-02 21:28:08,032 - INFO - 当前评估种子数: 3000 ---
+2025-11-02 21:28:08,032 - INFO -   Evaluating method: 'random' with 3000 seeds.
+2025-11-02 21:28:08,032 - INFO -     Running 5 simulations...
+2025-11-02 21:28:08,032 - INFO - 		当前模拟轮次: 0
+2025-11-02 21:28:08,224 - INFO - 		当前模拟轮次: 1
+2025-11-02 21:28:08,411 - INFO - 		当前模拟轮次: 2
+2025-11-02 21:28:08,589 - INFO - 		当前模拟轮次: 3
+2025-11-02 21:28:08,768 - INFO - 		当前模拟轮次: 4
+2025-11-02 21:28:08,956 - INFO -     Result: E[Users] = 1349.2000, Var[Users] = 809.3600, Std_Dev = 28.4493
+2025-11-02 21:28:08,962 - INFO -   Evaluating method: 'degreeTopM' with 3000 seeds.
+2025-11-02 21:28:08,962 - INFO -     Running 5 simulations...
+2025-11-02 21:28:08,962 - INFO - 		当前模拟轮次: 0
+2025-11-02 21:28:09,144 - INFO - 		当前模拟轮次: 1
+2025-11-02 21:28:09,329 - INFO - 		当前模拟轮次: 2
+2025-11-02 21:28:09,515 - INFO - 		当前模拟轮次: 3
+2025-11-02 21:28:09,712 - INFO - 		当前模拟轮次: 4
+2025-11-02 21:28:09,907 - INFO -     Result: E[Users] = 1310.8000, Var[Users] = 704.1600, Std_Dev = 26.5360
+2025-11-02 21:28:09,908 - INFO -   Evaluating method: 'ris_coverage' with 3000 seeds.
+2025-11-02 21:28:09,908 - INFO -     Running 5 simulations...
+2025-11-02 21:28:09,908 - INFO - 		当前模拟轮次: 0
+2025-11-02 21:28:10,092 - INFO - 		当前模拟轮次: 1
+2025-11-02 21:28:10,274 - INFO - 		当前模拟轮次: 2
+2025-11-02 21:28:10,462 - INFO - 		当前模拟轮次: 3
+2025-11-02 21:28:10,649 - INFO - 		当前模拟轮次: 4
+2025-11-02 21:28:10,832 - INFO -     Result: E[Users] = 1401.0000, Var[Users] = 984.4000, Std_Dev = 31.3751
+2025-11-02 21:28:10,834 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Rochester/E-activated-Rochester/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-3000_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-600000.csv
+2025-11-02 21:28:10,836 - INFO - 加载数据集: Rochester
+2025-11-02 21:28:10,838 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-02 21:28:10,839 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-02 21:28:10,842 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Rochester/distribution-in-Rochester/distribution-powerlaw_seedNum-3500.pkl
+2025-11-02 21:28:11,042 - INFO - 首次生成种子集 random
+2025-11-02 21:28:11,042 - INFO - 执行当前算法开始: random
+2025-11-02 21:28:11,052 - INFO - 当前用时 0.01 秒
+2025-11-02 21:28:11,052 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Rochester/seeds-with-Rochester/distribution-powerlaw_random_seedNum-3500.txt
+2025-11-02 21:28:11,052 - INFO - 首次生成种子集 degreeTopM
+2025-11-02 21:28:11,052 - INFO - 执行当前算法开始: degreeTopM
+2025-11-02 21:28:11,109 - INFO - 当前用时 0.06 秒
+2025-11-02 21:28:11,109 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Rochester/seeds-with-Rochester/distribution-powerlaw_degreeTopM_seedNum-3500.txt
+2025-11-02 21:28:11,112 - INFO - 首次生成种子集 ris_coverage
+2025-11-02 21:28:11,112 - INFO - 执行当前算法开始: ris_coverage
+2025-11-02 21:41:38,642 - INFO - 当前用时 807.53 秒
+2025-11-02 21:41:38,643 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Rochester/seeds-with-Rochester/distribution-powerlaw_ris_coverage_seedNum-3500.txt
+2025-11-02 21:41:38,646 - INFO - 评估种子集: None
+2025-11-02 21:41:38,646 - INFO - 评估函数开始
+2025-11-02 21:41:38,646 - INFO - 当前模拟次数: [5]
+
+2025-11-02 21:41:38,646 - INFO - 当前评估种子数: 3500 ---
+2025-11-02 21:41:38,646 - INFO -   Evaluating method: 'random' with 3500 seeds.
+2025-11-02 21:41:38,646 - INFO -     Running 5 simulations...
+2025-11-02 21:41:38,646 - INFO - 		当前模拟轮次: 0
+2025-11-02 21:41:38,865 - INFO - 		当前模拟轮次: 1
+2025-11-02 21:41:39,070 - INFO - 		当前模拟轮次: 2
+2025-11-02 21:41:39,284 - INFO - 		当前模拟轮次: 3
+2025-11-02 21:41:39,492 - INFO - 		当前模拟轮次: 4
+2025-11-02 21:41:39,711 - INFO -     Result: E[Users] = 1565.6000, Var[Users] = 563.4400, Std_Dev = 23.7369
+2025-11-02 21:41:39,714 - INFO -   Evaluating method: 'degreeTopM' with 3500 seeds.
+2025-11-02 21:41:39,714 - INFO -     Running 5 simulations...
+2025-11-02 21:41:39,714 - INFO - 		当前模拟轮次: 0
+2025-11-02 21:41:39,925 - INFO - 		当前模拟轮次: 1
+2025-11-02 21:41:40,139 - INFO - 		当前模拟轮次: 2
+2025-11-02 21:41:40,351 - INFO - 		当前模拟轮次: 3
+2025-11-02 21:41:40,564 - INFO - 		当前模拟轮次: 4
+2025-11-02 21:41:40,776 - INFO -     Result: E[Users] = 1543.6000, Var[Users] = 1935.0400, Std_Dev = 43.9891
+2025-11-02 21:41:40,778 - INFO -   Evaluating method: 'ris_coverage' with 3500 seeds.
+2025-11-02 21:41:40,778 - INFO -     Running 5 simulations...
+2025-11-02 21:41:40,778 - INFO - 		当前模拟轮次: 0
+2025-11-02 21:41:40,986 - INFO - 		当前模拟轮次: 1
+2025-11-02 21:41:41,188 - INFO - 		当前模拟轮次: 2
+2025-11-02 21:41:41,391 - INFO - 		当前模拟轮次: 3
+2025-11-02 21:41:41,608 - INFO - 		当前模拟轮次: 4
+2025-11-02 21:41:41,810 - INFO -     Result: E[Users] = 1586.4000, Var[Users] = 905.8400, Std_Dev = 30.0972
+2025-11-02 21:41:41,812 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Rochester/E-activated-Rochester/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-3500_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-600000.csv
+2025-11-02 21:41:41,814 - INFO - 加载数据集: Rochester
+2025-11-02 21:41:41,817 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-02 21:41:41,817 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-02 21:41:41,820 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Rochester/distribution-in-Rochester/distribution-powerlaw_seedNum-4000.pkl
+2025-11-02 21:41:42,020 - INFO - 首次生成种子集 random
+2025-11-02 21:41:42,020 - INFO - 执行当前算法开始: random
+2025-11-02 21:41:42,044 - INFO - 当前用时 0.02 秒
+2025-11-02 21:41:42,045 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Rochester/seeds-with-Rochester/distribution-powerlaw_random_seedNum-4000.txt
+2025-11-02 21:41:42,045 - INFO - 首次生成种子集 degreeTopM
+2025-11-02 21:41:42,046 - INFO - 执行当前算法开始: degreeTopM
+2025-11-02 21:41:42,092 - INFO - 当前用时 0.05 秒
+2025-11-02 21:41:42,092 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Rochester/seeds-with-Rochester/distribution-powerlaw_degreeTopM_seedNum-4000.txt
+2025-11-02 21:41:42,096 - INFO - 首次生成种子集 ris_coverage
+2025-11-02 21:41:42,096 - INFO - 执行当前算法开始: ris_coverage
+2025-11-02 21:56:28,831 - INFO - 当前用时 886.73 秒
+2025-11-02 21:56:28,832 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Rochester/seeds-with-Rochester/distribution-powerlaw_ris_coverage_seedNum-4000.txt
+2025-11-02 21:56:28,835 - INFO - 评估种子集: None
+2025-11-02 21:56:28,835 - INFO - 评估函数开始
+2025-11-02 21:56:28,835 - INFO - 当前模拟次数: [5]
+
+2025-11-02 21:56:28,835 - INFO - 当前评估种子数: 4000 ---
+2025-11-02 21:56:28,835 - INFO -   Evaluating method: 'random' with 4000 seeds.
+2025-11-02 21:56:28,835 - INFO -     Running 5 simulations...
+2025-11-02 21:56:28,835 - INFO - 		当前模拟轮次: 0
+2025-11-02 21:56:29,064 - INFO - 		当前模拟轮次: 1
+2025-11-02 21:56:29,313 - INFO - 		当前模拟轮次: 2
+2025-11-02 21:56:29,547 - INFO - 		当前模拟轮次: 3
+2025-11-02 21:56:29,799 - INFO - 		当前模拟轮次: 4
+2025-11-02 21:56:30,070 - INFO -     Result: E[Users] = 1749.8000, Var[Users] = 844.9600, Std_Dev = 29.0682
+2025-11-02 21:56:30,074 - INFO -   Evaluating method: 'degreeTopM' with 4000 seeds.
+2025-11-02 21:56:30,075 - INFO -     Running 5 simulations...
+2025-11-02 21:56:30,075 - INFO - 		当前模拟轮次: 0
+2025-11-02 21:56:30,404 - INFO - 		当前模拟轮次: 1
+2025-11-02 21:56:30,657 - INFO - 		当前模拟轮次: 2
+2025-11-02 21:56:30,896 - INFO - 		当前模拟轮次: 3
+2025-11-02 21:56:31,146 - INFO - 		当前模拟轮次: 4
+2025-11-02 21:56:31,391 - INFO -     Result: E[Users] = 1722.6000, Var[Users] = 248.2400, Std_Dev = 15.7556
+2025-11-02 21:56:31,392 - INFO -   Evaluating method: 'ris_coverage' with 4000 seeds.
+2025-11-02 21:56:31,392 - INFO -     Running 5 simulations...
+2025-11-02 21:56:31,393 - INFO - 		当前模拟轮次: 0
+2025-11-02 21:56:31,627 - INFO - 		当前模拟轮次: 1
+2025-11-02 21:56:31,868 - INFO - 		当前模拟轮次: 2
+2025-11-02 21:56:32,091 - INFO - 		当前模拟轮次: 3
+2025-11-02 21:56:32,348 - INFO - 		当前模拟轮次: 4
+2025-11-02 21:56:32,591 - INFO -     Result: E[Users] = 1776.2000, Var[Users] = 545.7600, Std_Dev = 23.3615
+2025-11-02 21:56:32,592 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Rochester/E-activated-Rochester/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-4000_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-600000.csv
+2025-11-02 21:56:32,594 - INFO - 加载数据集: Rochester
+2025-11-02 21:56:32,598 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-02 21:56:32,598 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-02 21:56:32,600 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Rochester/distribution-in-Rochester/distribution-powerlaw_seedNum-4500.pkl
+2025-11-02 21:56:32,801 - INFO - 首次生成种子集 random
+2025-11-02 21:56:32,801 - INFO - 执行当前算法开始: random
+2025-11-02 21:56:32,826 - INFO - 当前用时 0.02 秒
+2025-11-02 21:56:32,826 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Rochester/seeds-with-Rochester/distribution-powerlaw_random_seedNum-4500.txt
+2025-11-02 21:56:32,827 - INFO - 首次生成种子集 degreeTopM
+2025-11-02 21:56:32,827 - INFO - 执行当前算法开始: degreeTopM
+2025-11-02 21:56:32,897 - INFO - 当前用时 0.07 秒
+2025-11-02 21:56:32,898 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Rochester/seeds-with-Rochester/distribution-powerlaw_degreeTopM_seedNum-4500.txt
+2025-11-02 21:56:32,900 - INFO - 首次生成种子集 ris_coverage
+2025-11-02 21:56:32,900 - INFO - 执行当前算法开始: ris_coverage
+2025-11-02 22:12:45,785 - INFO - 当前用时 972.88 秒
+2025-11-02 22:12:45,786 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Rochester/seeds-with-Rochester/distribution-powerlaw_ris_coverage_seedNum-4500.txt
+2025-11-02 22:12:45,791 - INFO - 评估种子集: None
+2025-11-02 22:12:45,791 - INFO - 评估函数开始
+2025-11-02 22:12:45,791 - INFO - 当前模拟次数: [5]
+
+2025-11-02 22:12:45,791 - INFO - 当前评估种子数: 4500 ---
+2025-11-02 22:12:45,791 - INFO -   Evaluating method: 'random' with 4500 seeds.
+2025-11-02 22:12:45,791 - INFO -     Running 5 simulations...
+2025-11-02 22:12:45,791 - INFO - 		当前模拟轮次: 0
+2025-11-02 22:12:46,065 - INFO - 		当前模拟轮次: 1
+2025-11-02 22:12:46,309 - INFO - 		当前模拟轮次: 2
+2025-11-02 22:12:46,564 - INFO - 		当前模拟轮次: 3
+2025-11-02 22:12:46,818 - INFO - 		当前模拟轮次: 4
+2025-11-02 22:12:47,097 - INFO -     Result: E[Users] = 1956.6000, Var[Users] = 1267.4400, Std_Dev = 35.6011
+2025-11-02 22:12:47,100 - INFO -   Evaluating method: 'degreeTopM' with 4500 seeds.
+2025-11-02 22:12:47,101 - INFO -     Running 5 simulations...
+2025-11-02 22:12:47,101 - INFO - 		当前模拟轮次: 0
+2025-11-02 22:12:47,352 - INFO - 		当前模拟轮次: 1
+2025-11-02 22:12:47,604 - INFO - 		当前模拟轮次: 2
+2025-11-02 22:12:47,857 - INFO - 		当前模拟轮次: 3
+2025-11-02 22:12:48,097 - INFO - 		当前模拟轮次: 4
+2025-11-02 22:12:48,371 - INFO -     Result: E[Users] = 1944.8000, Var[Users] = 1684.9600, Std_Dev = 41.0483
+2025-11-02 22:12:48,373 - INFO -   Evaluating method: 'ris_coverage' with 4500 seeds.
+2025-11-02 22:12:48,373 - INFO -     Running 5 simulations...
+2025-11-02 22:12:48,373 - INFO - 		当前模拟轮次: 0
+2025-11-02 22:12:48,644 - INFO - 		当前模拟轮次: 1
+2025-11-02 22:12:48,893 - INFO - 		当前模拟轮次: 2
+2025-11-02 22:12:49,143 - INFO - 		当前模拟轮次: 3
+2025-11-02 22:12:49,396 - INFO - 		当前模拟轮次: 4
+2025-11-02 22:12:49,662 - INFO -     Result: E[Users] = 1939.4000, Var[Users] = 934.6400, Std_Dev = 30.5719
+2025-11-02 22:12:49,664 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Rochester/E-activated-Rochester/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-4500_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-600000.csv

@@ -110,7 +110,7 @@ def monteCarlo_singleTime_improved2(
 
     # 为每个初始投放者启动一个独立的随机游走
     for start_user in initial_deliverers:
-        logging.info(f"\t\t\t当前模拟的起始节点: {start_user}")
+        # logging.info(f"\t\t\t当前模拟的起始节点: {start_user}")
 
 
         current_user = start_user

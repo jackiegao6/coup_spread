@@ -1,0 +1,184 @@
+2025-11-02 16:35:44,675 - INFO - 加载数据集: Wellesley
+2025-11-02 16:35:44,678 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-02 16:35:44,678 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-02 16:35:44,680 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Wellesley/distribution-in-Wellesley/distribution-powerlaw_seedNum-200.pkl
+2025-11-02 16:35:44,763 - INFO - 首次生成种子集 random
+2025-11-02 16:35:44,763 - INFO - 执行当前算法开始: random
+2025-11-02 16:35:44,764 - INFO - 当前用时 0.00 秒
+2025-11-02 16:35:44,764 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Wellesley/seeds-with-Wellesley/distribution-powerlaw_random_seedNum-200.txt
+2025-11-02 16:35:44,764 - INFO - 首次生成种子集 degreeTopM
+2025-11-02 16:35:44,764 - INFO - 执行当前算法开始: degreeTopM
+2025-11-02 16:35:44,767 - INFO - 当前用时 0.00 秒
+2025-11-02 16:35:44,767 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Wellesley/seeds-with-Wellesley/distribution-powerlaw_degreeTopM_seedNum-200.txt
+2025-11-02 16:35:44,767 - INFO - 首次生成种子集 ris_coverage
+2025-11-02 16:35:44,767 - INFO - 执行当前算法开始: ris_coverage
+2025-11-02 16:38:32,988 - INFO - 当前用时 168.22 秒
+2025-11-02 16:38:32,988 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Wellesley/seeds-with-Wellesley/distribution-powerlaw_ris_coverage_seedNum-200.txt
+2025-11-02 16:38:32,989 - INFO - 评估种子集: None
+2025-11-02 16:38:32,989 - INFO - 评估函数开始
+2025-11-02 16:38:32,989 - INFO - 当前模拟次数: [5]
+
+2025-11-02 16:38:32,989 - INFO - 当前评估种子数: 200 ---
+2025-11-02 16:38:32,989 - INFO -   Evaluating method: 'random' with 200 seeds.
+2025-11-02 16:38:32,989 - INFO -     Running 5 simulations...
+2025-11-02 16:38:32,989 - INFO - 		当前模拟轮次: 0
+2025-11-02 16:38:33,002 - INFO - 		当前模拟轮次: 1
+2025-11-02 16:38:33,012 - INFO - 		当前模拟轮次: 2
+2025-11-02 16:38:33,021 - INFO - 		当前模拟轮次: 3
+2025-11-02 16:38:33,030 - INFO - 		当前模拟轮次: 4
+2025-11-02 16:38:33,039 - INFO -     Result: E[Users] = 101.8000, Var[Users] = 108.9600, Std_Dev = 10.4384
+2025-11-02 16:38:33,043 - INFO -   Evaluating method: 'degreeTopM' with 200 seeds.
+2025-11-02 16:38:33,043 - INFO -     Running 5 simulations...
+2025-11-02 16:38:33,043 - INFO - 		当前模拟轮次: 0
+2025-11-02 16:38:33,052 - INFO - 		当前模拟轮次: 1
+2025-11-02 16:38:33,063 - INFO - 		当前模拟轮次: 2
+2025-11-02 16:38:33,072 - INFO - 		当前模拟轮次: 3
+2025-11-02 16:38:33,080 - INFO - 		当前模拟轮次: 4
+2025-11-02 16:38:33,091 - INFO -     Result: E[Users] = 95.2000, Var[Users] = 16.9600, Std_Dev = 4.1183
+2025-11-02 16:38:33,092 - INFO -   Evaluating method: 'ris_coverage' with 200 seeds.
+2025-11-02 16:38:33,092 - INFO -     Running 5 simulations...
+2025-11-02 16:38:33,092 - INFO - 		当前模拟轮次: 0
+2025-11-02 16:38:33,105 - INFO - 		当前模拟轮次: 1
+2025-11-02 16:38:33,116 - INFO - 		当前模拟轮次: 2
+2025-11-02 16:38:33,126 - INFO - 		当前模拟轮次: 3
+2025-11-02 16:38:33,137 - INFO - 		当前模拟轮次: 4
+2025-11-02 16:38:33,147 - INFO -     Result: E[Users] = 102.2000, Var[Users] = 40.5600, Std_Dev = 6.3687
+2025-11-02 16:38:33,149 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Wellesley/E-activated-Wellesley/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-200_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-600000.csv
+2025-11-02 16:38:33,149 - INFO - 加载数据集: Wellesley
+2025-11-02 16:38:33,151 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-02 16:38:33,151 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-02 16:38:33,153 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Wellesley/distribution-in-Wellesley/distribution-powerlaw_seedNum-400.pkl
+2025-11-02 16:38:33,239 - INFO - 首次生成种子集 random
+2025-11-02 16:38:33,239 - INFO - 执行当前算法开始: random
+2025-11-02 16:38:33,240 - INFO - 当前用时 0.00 秒
+2025-11-02 16:38:33,240 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Wellesley/seeds-with-Wellesley/distribution-powerlaw_random_seedNum-400.txt
+2025-11-02 16:38:33,240 - INFO - 首次生成种子集 degreeTopM
+2025-11-02 16:38:33,240 - INFO - 执行当前算法开始: degreeTopM
+2025-11-02 16:38:33,243 - INFO - 当前用时 0.00 秒
+2025-11-02 16:38:33,243 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Wellesley/seeds-with-Wellesley/distribution-powerlaw_degreeTopM_seedNum-400.txt
+2025-11-02 16:38:33,243 - INFO - 首次生成种子集 ris_coverage
+2025-11-02 16:38:33,243 - INFO - 执行当前算法开始: ris_coverage
+2025-11-02 16:41:43,703 - INFO - 当前用时 190.46 秒
+2025-11-02 16:41:43,703 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Wellesley/seeds-with-Wellesley/distribution-powerlaw_ris_coverage_seedNum-400.txt
+2025-11-02 16:41:43,704 - INFO - 评估种子集: None
+2025-11-02 16:41:43,704 - INFO - 评估函数开始
+2025-11-02 16:41:43,704 - INFO - 当前模拟次数: [5]
+
+2025-11-02 16:41:43,704 - INFO - 当前评估种子数: 400 ---
+2025-11-02 16:41:43,704 - INFO -   Evaluating method: 'random' with 400 seeds.
+2025-11-02 16:41:43,704 - INFO -     Running 5 simulations...
+2025-11-02 16:41:43,704 - INFO - 		当前模拟轮次: 0
+2025-11-02 16:41:43,724 - INFO - 		当前模拟轮次: 1
+2025-11-02 16:41:43,745 - INFO - 		当前模拟轮次: 2
+2025-11-02 16:41:43,763 - INFO - 		当前模拟轮次: 3
+2025-11-02 16:41:43,781 - INFO - 		当前模拟轮次: 4
+2025-11-02 16:41:43,800 - INFO -     Result: E[Users] = 198.0000, Var[Users] = 44.8000, Std_Dev = 6.6933
+2025-11-02 16:41:43,802 - INFO -   Evaluating method: 'degreeTopM' with 400 seeds.
+2025-11-02 16:41:43,802 - INFO -     Running 5 simulations...
+2025-11-02 16:41:43,802 - INFO - 		当前模拟轮次: 0
+2025-11-02 16:41:43,824 - INFO - 		当前模拟轮次: 1
+2025-11-02 16:41:43,841 - INFO - 		当前模拟轮次: 2
+2025-11-02 16:41:43,863 - INFO - 		当前模拟轮次: 3
+2025-11-02 16:41:43,886 - INFO - 		当前模拟轮次: 4
+2025-11-02 16:41:43,902 - INFO -     Result: E[Users] = 188.2000, Var[Users] = 69.3600, Std_Dev = 8.3283
+2025-11-02 16:41:43,903 - INFO -   Evaluating method: 'ris_coverage' with 400 seeds.
+2025-11-02 16:41:43,903 - INFO -     Running 5 simulations...
+2025-11-02 16:41:43,903 - INFO - 		当前模拟轮次: 0
+2025-11-02 16:41:43,928 - INFO - 		当前模拟轮次: 1
+2025-11-02 16:41:43,948 - INFO - 		当前模拟轮次: 2
+2025-11-02 16:41:43,967 - INFO - 		当前模拟轮次: 3
+2025-11-02 16:41:43,988 - INFO - 		当前模拟轮次: 4
+2025-11-02 16:41:44,011 - INFO -     Result: E[Users] = 206.4000, Var[Users] = 65.4400, Std_Dev = 8.0895
+2025-11-02 16:41:44,013 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Wellesley/E-activated-Wellesley/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-400_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-600000.csv
+2025-11-02 16:41:44,014 - INFO - 加载数据集: Wellesley
+2025-11-02 16:41:44,015 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-02 16:41:44,015 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-02 16:41:44,018 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Wellesley/distribution-in-Wellesley/distribution-powerlaw_seedNum-600.pkl
+2025-11-02 16:41:44,118 - INFO - 首次生成种子集 random
+2025-11-02 16:41:44,118 - INFO - 执行当前算法开始: random
+2025-11-02 16:41:44,119 - INFO - 当前用时 0.00 秒
+2025-11-02 16:41:44,120 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Wellesley/seeds-with-Wellesley/distribution-powerlaw_random_seedNum-600.txt
+2025-11-02 16:41:44,120 - INFO - 首次生成种子集 degreeTopM
+2025-11-02 16:41:44,120 - INFO - 执行当前算法开始: degreeTopM
+2025-11-02 16:41:44,126 - INFO - 当前用时 0.01 秒
+2025-11-02 16:41:44,126 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Wellesley/seeds-with-Wellesley/distribution-powerlaw_degreeTopM_seedNum-600.txt
+2025-11-02 16:41:44,127 - INFO - 首次生成种子集 ris_coverage
+2025-11-02 16:41:44,127 - INFO - 执行当前算法开始: ris_coverage
+2025-11-02 16:45:16,344 - INFO - 当前用时 212.22 秒
+2025-11-02 16:45:16,345 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Wellesley/seeds-with-Wellesley/distribution-powerlaw_ris_coverage_seedNum-600.txt
+2025-11-02 16:45:16,346 - INFO - 评估种子集: None
+2025-11-02 16:45:16,346 - INFO - 评估函数开始
+2025-11-02 16:45:16,346 - INFO - 当前模拟次数: [5]
+
+2025-11-02 16:45:16,346 - INFO - 当前评估种子数: 600 ---
+2025-11-02 16:45:16,346 - INFO -   Evaluating method: 'random' with 600 seeds.
+2025-11-02 16:45:16,346 - INFO -     Running 5 simulations...
+2025-11-02 16:45:16,346 - INFO - 		当前模拟轮次: 0
+2025-11-02 16:45:16,376 - INFO - 		当前模拟轮次: 1
+2025-11-02 16:45:16,403 - INFO - 		当前模拟轮次: 2
+2025-11-02 16:45:16,431 - INFO - 		当前模拟轮次: 3
+2025-11-02 16:45:16,465 - INFO - 		当前模拟轮次: 4
+2025-11-02 16:45:16,492 - INFO -     Result: E[Users] = 295.8000, Var[Users] = 179.3600, Std_Dev = 13.3925
+2025-11-02 16:45:16,495 - INFO -   Evaluating method: 'degreeTopM' with 600 seeds.
+2025-11-02 16:45:16,495 - INFO -     Running 5 simulations...
+2025-11-02 16:45:16,495 - INFO - 		当前模拟轮次: 0
+2025-11-02 16:45:16,522 - INFO - 		当前模拟轮次: 1
+2025-11-02 16:45:16,545 - INFO - 		当前模拟轮次: 2
+2025-11-02 16:45:16,571 - INFO - 		当前模拟轮次: 3
+2025-11-02 16:45:16,594 - INFO - 		当前模拟轮次: 4
+2025-11-02 16:45:16,623 - INFO -     Result: E[Users] = 282.2000, Var[Users] = 46.9600, Std_Dev = 6.8527
+2025-11-02 16:45:16,625 - INFO -   Evaluating method: 'ris_coverage' with 600 seeds.
+2025-11-02 16:45:16,625 - INFO -     Running 5 simulations...
+2025-11-02 16:45:16,625 - INFO - 		当前模拟轮次: 0
+2025-11-02 16:45:16,656 - INFO - 		当前模拟轮次: 1
+2025-11-02 16:45:16,682 - INFO - 		当前模拟轮次: 2
+2025-11-02 16:45:16,713 - INFO - 		当前模拟轮次: 3
+2025-11-02 16:45:16,745 - INFO - 		当前模拟轮次: 4
+2025-11-02 16:45:16,773 - INFO -     Result: E[Users] = 297.4000, Var[Users] = 69.0400, Std_Dev = 8.3090
+2025-11-02 16:45:16,774 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Wellesley/E-activated-Wellesley/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-600_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-600000.csv
+2025-11-02 16:45:16,775 - INFO - 加载数据集: Wellesley
+2025-11-02 16:45:16,777 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-02 16:45:16,777 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-02 16:45:16,779 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Wellesley/distribution-in-Wellesley/distribution-powerlaw_seedNum-800.pkl
+2025-11-02 16:45:16,865 - INFO - 首次生成种子集 random
+2025-11-02 16:45:16,865 - INFO - 执行当前算法开始: random
+2025-11-02 16:45:16,866 - INFO - 当前用时 0.00 秒
+2025-11-02 16:45:16,866 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Wellesley/seeds-with-Wellesley/distribution-powerlaw_random_seedNum-800.txt
+2025-11-02 16:45:16,866 - INFO - 首次生成种子集 degreeTopM
+2025-11-02 16:45:16,866 - INFO - 执行当前算法开始: degreeTopM
+2025-11-02 16:45:16,879 - INFO - 当前用时 0.01 秒
+2025-11-02 16:45:16,880 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Wellesley/seeds-with-Wellesley/distribution-powerlaw_degreeTopM_seedNum-800.txt
+2025-11-02 16:45:16,880 - INFO - 首次生成种子集 ris_coverage
+2025-11-02 16:45:16,880 - INFO - 执行当前算法开始: ris_coverage
+2025-11-02 16:49:01,098 - INFO - 当前用时 224.22 秒
+2025-11-02 16:49:01,099 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Wellesley/seeds-with-Wellesley/distribution-powerlaw_ris_coverage_seedNum-800.txt
+2025-11-02 16:49:01,099 - INFO - 评估种子集: None
+2025-11-02 16:49:01,100 - INFO - 评估函数开始
+2025-11-02 16:49:01,100 - INFO - 当前模拟次数: [5]
+
+2025-11-02 16:49:01,100 - INFO - 当前评估种子数: 800 ---
+2025-11-02 16:49:01,100 - INFO -   Evaluating method: 'random' with 800 seeds.
+2025-11-02 16:49:01,100 - INFO -     Running 5 simulations...
+2025-11-02 16:49:01,100 - INFO - 		当前模拟轮次: 0
+2025-11-02 16:49:01,141 - INFO - 		当前模拟轮次: 1
+2025-11-02 16:49:01,173 - INFO - 		当前模拟轮次: 2
+2025-11-02 16:49:01,209 - INFO - 		当前模拟轮次: 3
+2025-11-02 16:49:01,239 - INFO - 		当前模拟轮次: 4
+2025-11-02 16:49:01,270 - INFO -     Result: E[Users] = 387.6000, Var[Users] = 33.8400, Std_Dev = 5.8172
+2025-11-02 16:49:01,273 - INFO -   Evaluating method: 'degreeTopM' with 800 seeds.
+2025-11-02 16:49:01,274 - INFO -     Running 5 simulations...
+2025-11-02 16:49:01,274 - INFO - 		当前模拟轮次: 0
+2025-11-02 16:49:01,306 - INFO - 		当前模拟轮次: 1
+2025-11-02 16:49:01,339 - INFO - 		当前模拟轮次: 2
+2025-11-02 16:49:01,375 - INFO - 		当前模拟轮次: 3
+2025-11-02 16:49:01,410 - INFO - 		当前模拟轮次: 4
+2025-11-02 16:49:01,447 - INFO -     Result: E[Users] = 369.8000, Var[Users] = 175.3600, Std_Dev = 13.2424
+2025-11-02 16:49:01,448 - INFO -   Evaluating method: 'ris_coverage' with 800 seeds.
+2025-11-02 16:49:01,448 - INFO -     Running 5 simulations...
+2025-11-02 16:49:01,448 - INFO - 		当前模拟轮次: 0
+2025-11-02 16:49:01,489 - INFO - 		当前模拟轮次: 1
+2025-11-02 16:49:01,524 - INFO - 		当前模拟轮次: 2
+2025-11-02 16:49:01,563 - INFO - 		当前模拟轮次: 3
+2025-11-02 16:49:01,598 - INFO - 		当前模拟轮次: 4
+2025-11-02 16:49:01,635 - INFO -     Result: E[Users] = 387.0000, Var[Users] = 78.8000, Std_Dev = 8.8769
+2025-11-02 16:49:01,636 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Wellesley/E-activated-Wellesley/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-800_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-600000.csv

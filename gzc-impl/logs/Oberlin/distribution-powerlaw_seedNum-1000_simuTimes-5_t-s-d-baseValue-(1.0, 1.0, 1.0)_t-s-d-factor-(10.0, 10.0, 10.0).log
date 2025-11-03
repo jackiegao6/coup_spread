@@ -1,0 +1,322 @@
+2025-11-03 14:44:27,643 - INFO - 加载数据集: Oberlin
+2025-11-03 14:44:27,646 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-03 14:44:27,646 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-03 14:44:27,648 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Oberlin/distribution-in-Oberlin/distribution-powerlaw_seedNum-1000.pkl
+2025-11-03 14:44:27,732 - INFO - 首次生成种子集 random
+2025-11-03 14:44:27,732 - INFO - 执行当前算法开始: random
+2025-11-03 14:44:27,733 - INFO - 当前用时 0.00 秒
+2025-11-03 14:44:27,733 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_random_seedNum-1000.txt
+2025-11-03 14:44:27,733 - INFO - 首次生成种子集 degreeTopM
+2025-11-03 14:44:27,733 - INFO - 执行当前算法开始: degreeTopM
+2025-11-03 14:44:27,759 - INFO - 当前用时 0.03 秒
+2025-11-03 14:44:27,759 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_degreeTopM_seedNum-1000.txt
+2025-11-03 14:44:27,760 - INFO - 首次生成种子集 ris_coverage
+2025-11-03 14:44:27,760 - INFO - 执行当前算法开始: ris_coverage
+2025-11-03 14:48:32,699 - INFO - 当前用时 244.94 秒
+2025-11-03 14:48:32,700 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_ris_coverage_seedNum-1000.txt
+2025-11-03 14:48:32,701 - INFO - 评估种子集: None
+2025-11-03 14:48:32,702 - INFO - 评估函数开始
+2025-11-03 14:48:32,702 - INFO - 当前模拟次数: [5]
+
+2025-11-03 14:48:32,702 - INFO - 当前评估种子数: 1000 ---
+2025-11-03 14:48:32,702 - INFO -   Evaluating method: 'random' with 1000 seeds.
+2025-11-03 14:48:32,702 - INFO -     Running 5 simulations...
+2025-11-03 14:48:32,702 - INFO - 		当前模拟轮次: 0
+2025-11-03 14:48:32,754 - INFO - 		当前模拟轮次: 1
+2025-11-03 14:48:32,798 - INFO - 		当前模拟轮次: 2
+2025-11-03 14:48:32,839 - INFO - 		当前模拟轮次: 3
+2025-11-03 14:48:32,886 - INFO - 		当前模拟轮次: 4
+2025-11-03 14:48:32,930 - INFO -     Result: E[Users] = 470.6000, Var[Users] = 294.6400, Std_Dev = 17.1651
+2025-11-03 14:48:32,936 - INFO -   Evaluating method: 'degreeTopM' with 1000 seeds.
+2025-11-03 14:48:32,936 - INFO -     Running 5 simulations...
+2025-11-03 14:48:32,936 - INFO - 		当前模拟轮次: 0
+2025-11-03 14:48:32,977 - INFO - 		当前模拟轮次: 1
+2025-11-03 14:48:33,020 - INFO - 		当前模拟轮次: 2
+2025-11-03 14:48:33,064 - INFO - 		当前模拟轮次: 3
+2025-11-03 14:48:33,111 - INFO - 		当前模拟轮次: 4
+2025-11-03 14:48:33,154 - INFO -     Result: E[Users] = 455.0000, Var[Users] = 181.2000, Std_Dev = 13.4611
+2025-11-03 14:48:33,155 - INFO -   Evaluating method: 'ris_coverage' with 1000 seeds.
+2025-11-03 14:48:33,155 - INFO -     Running 5 simulations...
+2025-11-03 14:48:33,155 - INFO - 		当前模拟轮次: 0
+2025-11-03 14:48:33,198 - INFO - 		当前模拟轮次: 1
+2025-11-03 14:48:33,242 - INFO - 		当前模拟轮次: 2
+2025-11-03 14:48:33,286 - INFO - 		当前模拟轮次: 3
+2025-11-03 14:48:33,332 - INFO - 		当前模拟轮次: 4
+2025-11-03 14:48:33,379 - INFO -     Result: E[Users] = 489.8000, Var[Users] = 314.1600, Std_Dev = 17.7246
+2025-11-03 14:48:33,380 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Oberlin/E-activated-Oberlin/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-1000_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-600000.csv
+2025-11-03 14:48:33,381 - INFO - 加载数据集: Oberlin
+2025-11-03 14:48:33,383 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-03 14:48:33,383 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-03 14:48:33,385 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Oberlin/distribution-in-Oberlin/distribution-powerlaw_seedNum-1300.pkl
+2025-11-03 14:48:33,467 - INFO - 首次生成种子集 random
+2025-11-03 14:48:33,467 - INFO - 执行当前算法开始: random
+2025-11-03 14:48:33,468 - INFO - 当前用时 0.00 秒
+2025-11-03 14:48:33,468 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_random_seedNum-1300.txt
+2025-11-03 14:48:33,468 - INFO - 首次生成种子集 degreeTopM
+2025-11-03 14:48:33,468 - INFO - 执行当前算法开始: degreeTopM
+2025-11-03 14:48:33,498 - INFO - 当前用时 0.03 秒
+2025-11-03 14:48:33,498 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_degreeTopM_seedNum-1300.txt
+2025-11-03 14:48:33,500 - INFO - 首次生成种子集 ris_coverage
+2025-11-03 14:48:33,500 - INFO - 执行当前算法开始: ris_coverage
+2025-11-03 14:53:14,612 - INFO - 当前用时 281.11 秒
+2025-11-03 14:53:14,613 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_ris_coverage_seedNum-1300.txt
+2025-11-03 14:53:14,614 - INFO - 评估种子集: None
+2025-11-03 14:53:14,614 - INFO - 评估函数开始
+2025-11-03 14:53:14,614 - INFO - 当前模拟次数: [5]
+
+2025-11-03 14:53:14,614 - INFO - 当前评估种子数: 1300 ---
+2025-11-03 14:53:14,614 - INFO -   Evaluating method: 'random' with 1300 seeds.
+2025-11-03 14:53:14,614 - INFO -     Running 5 simulations...
+2025-11-03 14:53:14,614 - INFO - 		当前模拟轮次: 0
+2025-11-03 14:53:14,672 - INFO - 		当前模拟轮次: 1
+2025-11-03 14:53:14,736 - INFO - 		当前模拟轮次: 2
+2025-11-03 14:53:14,791 - INFO - 		当前模拟轮次: 3
+2025-11-03 14:53:14,845 - INFO - 		当前模拟轮次: 4
+2025-11-03 14:53:14,905 - INFO -     Result: E[Users] = 604.2000, Var[Users] = 239.7600, Std_Dev = 15.4842
+2025-11-03 14:53:14,908 - INFO -   Evaluating method: 'degreeTopM' with 1300 seeds.
+2025-11-03 14:53:14,908 - INFO -     Running 5 simulations...
+2025-11-03 14:53:14,908 - INFO - 		当前模拟轮次: 0
+2025-11-03 14:53:14,965 - INFO - 		当前模拟轮次: 1
+2025-11-03 14:53:15,024 - INFO - 		当前模拟轮次: 2
+2025-11-03 14:53:15,077 - INFO - 		当前模拟轮次: 3
+2025-11-03 14:53:15,134 - INFO - 		当前模拟轮次: 4
+2025-11-03 14:53:15,192 - INFO -     Result: E[Users] = 595.2000, Var[Users] = 54.1600, Std_Dev = 7.3593
+2025-11-03 14:53:15,194 - INFO -   Evaluating method: 'ris_coverage' with 1300 seeds.
+2025-11-03 14:53:15,194 - INFO -     Running 5 simulations...
+2025-11-03 14:53:15,194 - INFO - 		当前模拟轮次: 0
+2025-11-03 14:53:15,250 - INFO - 		当前模拟轮次: 1
+2025-11-03 14:53:15,312 - INFO - 		当前模拟轮次: 2
+2025-11-03 14:53:15,369 - INFO - 		当前模拟轮次: 3
+2025-11-03 14:53:15,424 - INFO - 		当前模拟轮次: 4
+2025-11-03 14:53:15,485 - INFO -     Result: E[Users] = 620.2000, Var[Users] = 443.7600, Std_Dev = 21.0656
+2025-11-03 14:53:15,486 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Oberlin/E-activated-Oberlin/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-1300_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-600000.csv
+2025-11-03 14:53:15,487 - INFO - 加载数据集: Oberlin
+2025-11-03 14:53:15,489 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-03 14:53:15,489 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-03 14:53:15,491 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Oberlin/distribution-in-Oberlin/distribution-powerlaw_seedNum-1600.pkl
+2025-11-03 14:53:15,572 - INFO - 首次生成种子集 random
+2025-11-03 14:53:15,572 - INFO - 执行当前算法开始: random
+2025-11-03 14:53:15,574 - INFO - 当前用时 0.00 秒
+2025-11-03 14:53:15,574 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_random_seedNum-1600.txt
+2025-11-03 14:53:15,574 - INFO - 首次生成种子集 degreeTopM
+2025-11-03 14:53:15,574 - INFO - 执行当前算法开始: degreeTopM
+2025-11-03 14:53:15,613 - INFO - 当前用时 0.04 秒
+2025-11-03 14:53:15,614 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_degreeTopM_seedNum-1600.txt
+2025-11-03 14:53:15,616 - INFO - 首次生成种子集 ris_coverage
+2025-11-03 14:53:15,616 - INFO - 执行当前算法开始: ris_coverage
+2025-11-03 14:58:27,179 - INFO - 当前用时 311.56 秒
+2025-11-03 14:58:27,180 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_ris_coverage_seedNum-1600.txt
+2025-11-03 14:58:27,181 - INFO - 评估种子集: None
+2025-11-03 14:58:27,181 - INFO - 评估函数开始
+2025-11-03 14:58:27,181 - INFO - 当前模拟次数: [5]
+
+2025-11-03 14:58:27,181 - INFO - 当前评估种子数: 1600 ---
+2025-11-03 14:58:27,181 - INFO -   Evaluating method: 'random' with 1600 seeds.
+2025-11-03 14:58:27,181 - INFO -     Running 5 simulations...
+2025-11-03 14:58:27,182 - INFO - 		当前模拟轮次: 0
+2025-11-03 14:58:27,254 - INFO - 		当前模拟轮次: 1
+2025-11-03 14:58:27,318 - INFO - 		当前模拟轮次: 2
+2025-11-03 14:58:27,382 - INFO - 		当前模拟轮次: 3
+2025-11-03 14:58:27,451 - INFO - 		当前模拟轮次: 4
+2025-11-03 14:58:27,513 - INFO -     Result: E[Users] = 744.4000, Var[Users] = 105.8400, Std_Dev = 10.2879
+2025-11-03 14:58:27,516 - INFO -   Evaluating method: 'degreeTopM' with 1600 seeds.
+2025-11-03 14:58:27,516 - INFO -     Running 5 simulations...
+2025-11-03 14:58:27,517 - INFO - 		当前模拟轮次: 0
+2025-11-03 14:58:27,584 - INFO - 		当前模拟轮次: 1
+2025-11-03 14:58:27,652 - INFO - 		当前模拟轮次: 2
+2025-11-03 14:58:27,721 - INFO - 		当前模拟轮次: 3
+2025-11-03 14:58:27,783 - INFO - 		当前模拟轮次: 4
+2025-11-03 14:58:27,854 - INFO -     Result: E[Users] = 714.0000, Var[Users] = 161.2000, Std_Dev = 12.6965
+2025-11-03 14:58:27,855 - INFO -   Evaluating method: 'ris_coverage' with 1600 seeds.
+2025-11-03 14:58:27,856 - INFO -     Running 5 simulations...
+2025-11-03 14:58:27,856 - INFO - 		当前模拟轮次: 0
+2025-11-03 14:58:27,927 - INFO - 		当前模拟轮次: 1
+2025-11-03 14:58:28,000 - INFO - 		当前模拟轮次: 2
+2025-11-03 14:58:28,066 - INFO - 		当前模拟轮次: 3
+2025-11-03 14:58:28,134 - INFO - 		当前模拟轮次: 4
+2025-11-03 14:58:28,204 - INFO -     Result: E[Users] = 759.6000, Var[Users] = 9.4400, Std_Dev = 3.0725
+2025-11-03 14:58:28,208 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Oberlin/E-activated-Oberlin/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-1600_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-600000.csv
+2025-11-03 14:58:28,209 - INFO - 加载数据集: Oberlin
+2025-11-03 14:58:28,210 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-03 14:58:28,211 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-03 14:58:28,213 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Oberlin/distribution-in-Oberlin/distribution-powerlaw_seedNum-1900.pkl
+2025-11-03 14:58:28,292 - INFO - 首次生成种子集 random
+2025-11-03 14:58:28,292 - INFO - 执行当前算法开始: random
+2025-11-03 14:58:28,293 - INFO - 当前用时 0.00 秒
+2025-11-03 14:58:28,294 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_random_seedNum-1900.txt
+2025-11-03 14:58:28,294 - INFO - 首次生成种子集 degreeTopM
+2025-11-03 14:58:28,294 - INFO - 执行当前算法开始: degreeTopM
+2025-11-03 14:58:28,334 - INFO - 当前用时 0.04 秒
+2025-11-03 14:58:28,335 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_degreeTopM_seedNum-1900.txt
+2025-11-03 14:58:28,337 - INFO - 首次生成种子集 ris_coverage
+2025-11-03 14:58:28,338 - INFO - 执行当前算法开始: ris_coverage
+2025-11-03 15:03:45,891 - INFO - 当前用时 317.55 秒
+2025-11-03 15:03:45,892 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_ris_coverage_seedNum-1900.txt
+2025-11-03 15:03:45,894 - INFO - 评估种子集: None
+2025-11-03 15:03:45,894 - INFO - 评估函数开始
+2025-11-03 15:03:45,894 - INFO - 当前模拟次数: [5]
+
+2025-11-03 15:03:45,894 - INFO - 当前评估种子数: 1900 ---
+2025-11-03 15:03:45,894 - INFO -   Evaluating method: 'random' with 1900 seeds.
+2025-11-03 15:03:45,894 - INFO -     Running 5 simulations...
+2025-11-03 15:03:45,894 - INFO - 		当前模拟轮次: 0
+2025-11-03 15:03:45,975 - INFO - 		当前模拟轮次: 1
+2025-11-03 15:03:46,055 - INFO - 		当前模拟轮次: 2
+2025-11-03 15:03:46,130 - INFO - 		当前模拟轮次: 3
+2025-11-03 15:03:46,203 - INFO - 		当前模拟轮次: 4
+2025-11-03 15:03:46,282 - INFO -     Result: E[Users] = 859.0000, Var[Users] = 107.2000, Std_Dev = 10.3537
+2025-11-03 15:03:46,285 - INFO -   Evaluating method: 'degreeTopM' with 1900 seeds.
+2025-11-03 15:03:46,285 - INFO -     Running 5 simulations...
+2025-11-03 15:03:46,285 - INFO - 		当前模拟轮次: 0
+2025-11-03 15:03:46,369 - INFO - 		当前模拟轮次: 1
+2025-11-03 15:03:46,448 - INFO - 		当前模拟轮次: 2
+2025-11-03 15:03:46,526 - INFO - 		当前模拟轮次: 3
+2025-11-03 15:03:46,607 - INFO - 		当前模拟轮次: 4
+2025-11-03 15:03:46,691 - INFO -     Result: E[Users] = 844.0000, Var[Users] = 564.8000, Std_Dev = 23.7655
+2025-11-03 15:03:46,693 - INFO -   Evaluating method: 'ris_coverage' with 1900 seeds.
+2025-11-03 15:03:46,693 - INFO -     Running 5 simulations...
+2025-11-03 15:03:46,693 - INFO - 		当前模拟轮次: 0
+2025-11-03 15:03:46,772 - INFO - 		当前模拟轮次: 1
+2025-11-03 15:03:46,847 - INFO - 		当前模拟轮次: 2
+2025-11-03 15:03:46,934 - INFO - 		当前模拟轮次: 3
+2025-11-03 15:03:47,015 - INFO - 		当前模拟轮次: 4
+2025-11-03 15:03:47,096 - INFO -     Result: E[Users] = 906.8000, Var[Users] = 934.9600, Std_Dev = 30.5771
+2025-11-03 15:03:47,098 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Oberlin/E-activated-Oberlin/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-1900_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-600000.csv
+2025-11-03 15:03:47,099 - INFO - 加载数据集: Oberlin
+2025-11-03 15:03:47,101 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-03 15:03:47,101 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-03 15:03:47,103 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Oberlin/distribution-in-Oberlin/distribution-powerlaw_seedNum-2200.pkl
+2025-11-03 15:03:47,184 - INFO - 首次生成种子集 random
+2025-11-03 15:03:47,184 - INFO - 执行当前算法开始: random
+2025-11-03 15:03:47,186 - INFO - 当前用时 0.00 秒
+2025-11-03 15:03:47,186 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_random_seedNum-2200.txt
+2025-11-03 15:03:47,186 - INFO - 首次生成种子集 degreeTopM
+2025-11-03 15:03:47,186 - INFO - 执行当前算法开始: degreeTopM
+2025-11-03 15:03:47,228 - INFO - 当前用时 0.04 秒
+2025-11-03 15:03:47,228 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_degreeTopM_seedNum-2200.txt
+2025-11-03 15:03:47,230 - INFO - 首次生成种子集 ris_coverage
+2025-11-03 15:03:47,231 - INFO - 执行当前算法开始: ris_coverage
+2025-11-03 15:09:26,351 - INFO - 当前用时 339.12 秒
+2025-11-03 15:09:26,352 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_ris_coverage_seedNum-2200.txt
+2025-11-03 15:09:26,353 - INFO - 评估种子集: None
+2025-11-03 15:09:26,354 - INFO - 评估函数开始
+2025-11-03 15:09:26,354 - INFO - 当前模拟次数: [5]
+
+2025-11-03 15:09:26,354 - INFO - 当前评估种子数: 2200 ---
+2025-11-03 15:09:26,354 - INFO -   Evaluating method: 'random' with 2200 seeds.
+2025-11-03 15:09:26,354 - INFO -     Running 5 simulations...
+2025-11-03 15:09:26,354 - INFO - 		当前模拟轮次: 0
+2025-11-03 15:09:26,451 - INFO - 		当前模拟轮次: 1
+2025-11-03 15:09:26,542 - INFO - 		当前模拟轮次: 2
+2025-11-03 15:09:26,639 - INFO - 		当前模拟轮次: 3
+2025-11-03 15:09:26,729 - INFO - 		当前模拟轮次: 4
+2025-11-03 15:09:26,820 - INFO -     Result: E[Users] = 992.2000, Var[Users] = 524.9600, Std_Dev = 22.9120
+2025-11-03 15:09:26,823 - INFO -   Evaluating method: 'degreeTopM' with 2200 seeds.
+2025-11-03 15:09:26,824 - INFO -     Running 5 simulations...
+2025-11-03 15:09:26,824 - INFO - 		当前模拟轮次: 0
+2025-11-03 15:09:26,919 - INFO - 		当前模拟轮次: 1
+2025-11-03 15:09:27,001 - INFO - 		当前模拟轮次: 2
+2025-11-03 15:09:27,089 - INFO - 		当前模拟轮次: 3
+2025-11-03 15:09:27,183 - INFO - 		当前模拟轮次: 4
+2025-11-03 15:09:27,275 - INFO -     Result: E[Users] = 967.8000, Var[Users] = 350.1600, Std_Dev = 18.7126
+2025-11-03 15:09:27,276 - INFO -   Evaluating method: 'ris_coverage' with 2200 seeds.
+2025-11-03 15:09:27,276 - INFO -     Running 5 simulations...
+2025-11-03 15:09:27,276 - INFO - 		当前模拟轮次: 0
+2025-11-03 15:09:27,361 - INFO - 		当前模拟轮次: 1
+2025-11-03 15:09:27,455 - INFO - 		当前模拟轮次: 2
+2025-11-03 15:09:27,551 - INFO - 		当前模拟轮次: 3
+2025-11-03 15:09:27,644 - INFO - 		当前模拟轮次: 4
+2025-11-03 15:09:27,736 - INFO -     Result: E[Users] = 1012.4000, Var[Users] = 129.4400, Std_Dev = 11.3772
+2025-11-03 15:09:27,737 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Oberlin/E-activated-Oberlin/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-2200_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-600000.csv
+2025-11-03 15:09:27,738 - INFO - 加载数据集: Oberlin
+2025-11-03 15:09:27,740 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-03 15:09:27,740 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-03 15:09:27,742 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Oberlin/distribution-in-Oberlin/distribution-powerlaw_seedNum-2500.pkl
+2025-11-03 15:09:27,823 - INFO - 首次生成种子集 random
+2025-11-03 15:09:27,823 - INFO - 执行当前算法开始: random
+2025-11-03 15:09:27,832 - INFO - 当前用时 0.01 秒
+2025-11-03 15:09:27,833 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_random_seedNum-2500.txt
+2025-11-03 15:09:27,833 - INFO - 首次生成种子集 degreeTopM
+2025-11-03 15:09:27,833 - INFO - 执行当前算法开始: degreeTopM
+2025-11-03 15:09:27,879 - INFO - 当前用时 0.05 秒
+2025-11-03 15:09:27,879 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_degreeTopM_seedNum-2500.txt
+2025-11-03 15:09:27,884 - INFO - 首次生成种子集 ris_coverage
+2025-11-03 15:09:27,884 - INFO - 执行当前算法开始: ris_coverage
+2025-11-03 15:15:34,074 - INFO - 当前用时 366.19 秒
+2025-11-03 15:15:34,075 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_ris_coverage_seedNum-2500.txt
+2025-11-03 15:15:34,077 - INFO - 评估种子集: None
+2025-11-03 15:15:34,077 - INFO - 评估函数开始
+2025-11-03 15:15:34,077 - INFO - 当前模拟次数: [5]
+
+2025-11-03 15:15:34,077 - INFO - 当前评估种子数: 2500 ---
+2025-11-03 15:15:34,077 - INFO -   Evaluating method: 'random' with 2500 seeds.
+2025-11-03 15:15:34,077 - INFO -     Running 5 simulations...
+2025-11-03 15:15:34,077 - INFO - 		当前模拟轮次: 0
+2025-11-03 15:15:34,188 - INFO - 		当前模拟轮次: 1
+2025-11-03 15:15:34,300 - INFO - 		当前模拟轮次: 2
+2025-11-03 15:15:34,408 - INFO - 		当前模拟轮次: 3
+2025-11-03 15:15:34,514 - INFO - 		当前模拟轮次: 4
+2025-11-03 15:15:34,620 - INFO -     Result: E[Users] = 1085.4000, Var[Users] = 847.8400, Std_Dev = 29.1177
+2025-11-03 15:15:34,624 - INFO -   Evaluating method: 'degreeTopM' with 2500 seeds.
+2025-11-03 15:15:34,624 - INFO -     Running 5 simulations...
+2025-11-03 15:15:34,624 - INFO - 		当前模拟轮次: 0
+2025-11-03 15:15:34,729 - INFO - 		当前模拟轮次: 1
+2025-11-03 15:15:34,834 - INFO - 		当前模拟轮次: 2
+2025-11-03 15:15:34,945 - INFO - 		当前模拟轮次: 3
+2025-11-03 15:15:35,054 - INFO - 		当前模拟轮次: 4
+2025-11-03 15:15:35,159 - INFO -     Result: E[Users] = 1087.6000, Var[Users] = 81.8400, Std_Dev = 9.0465
+2025-11-03 15:15:35,161 - INFO -   Evaluating method: 'ris_coverage' with 2500 seeds.
+2025-11-03 15:15:35,161 - INFO -     Running 5 simulations...
+2025-11-03 15:15:35,161 - INFO - 		当前模拟轮次: 0
+2025-11-03 15:15:35,269 - INFO - 		当前模拟轮次: 1
+2025-11-03 15:15:35,386 - INFO - 		当前模拟轮次: 2
+2025-11-03 15:15:35,493 - INFO - 		当前模拟轮次: 3
+2025-11-03 15:15:35,599 - INFO - 		当前模拟轮次: 4
+2025-11-03 15:15:35,702 - INFO -     Result: E[Users] = 1122.6000, Var[Users] = 42.6400, Std_Dev = 6.5299
+2025-11-03 15:15:35,703 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Oberlin/E-activated-Oberlin/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-2500_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-600000.csv
+2025-11-03 15:15:35,704 - INFO - 加载数据集: Oberlin
+2025-11-03 15:15:35,706 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-03 15:15:35,707 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-03 15:15:35,709 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Oberlin/distribution-in-Oberlin/distribution-powerlaw_seedNum-2800.pkl
+2025-11-03 15:15:35,788 - INFO - 首次生成种子集 random
+2025-11-03 15:15:35,788 - INFO - 执行当前算法开始: random
+2025-11-03 15:15:35,790 - INFO - 当前用时 0.00 秒
+2025-11-03 15:15:35,790 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_random_seedNum-2800.txt
+2025-11-03 15:15:35,791 - INFO - 首次生成种子集 degreeTopM
+2025-11-03 15:15:35,791 - INFO - 执行当前算法开始: degreeTopM
+2025-11-03 15:15:35,846 - INFO - 当前用时 0.06 秒
+2025-11-03 15:15:35,846 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_degreeTopM_seedNum-2800.txt
+2025-11-03 15:15:35,849 - INFO - 首次生成种子集 ris_coverage
+2025-11-03 15:15:35,849 - INFO - 执行当前算法开始: ris_coverage
+2025-11-03 15:22:11,369 - INFO - 当前用时 395.52 秒
+2025-11-03 15:22:11,370 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Oberlin/seeds-with-Oberlin/distribution-powerlaw_ris_coverage_seedNum-2800.txt
+2025-11-03 15:22:11,372 - INFO - 评估种子集: None
+2025-11-03 15:22:11,373 - INFO - 评估函数开始
+2025-11-03 15:22:11,373 - INFO - 当前模拟次数: [5]
+
+2025-11-03 15:22:11,373 - INFO - 当前评估种子数: 2800 ---
+2025-11-03 15:22:11,373 - INFO -   Evaluating method: 'random' with 2800 seeds.
+2025-11-03 15:22:11,373 - INFO -     Running 5 simulations...
+2025-11-03 15:22:11,373 - INFO - 		当前模拟轮次: 0
+2025-11-03 15:22:11,496 - INFO - 		当前模拟轮次: 1
+2025-11-03 15:22:11,613 - INFO - 		当前模拟轮次: 2
+2025-11-03 15:22:11,737 - INFO - 		当前模拟轮次: 3
+2025-11-03 15:22:11,851 - INFO - 		当前模拟轮次: 4
+2025-11-03 15:22:11,974 - INFO -     Result: E[Users] = 1215.0000, Var[Users] = 272.4000, Std_Dev = 16.5045
+2025-11-03 15:22:11,978 - INFO -   Evaluating method: 'degreeTopM' with 2800 seeds.
+2025-11-03 15:22:11,978 - INFO -     Running 5 simulations...
+2025-11-03 15:22:11,978 - INFO - 		当前模拟轮次: 0
+2025-11-03 15:22:12,090 - INFO - 		当前模拟轮次: 1
+2025-11-03 15:22:12,204 - INFO - 		当前模拟轮次: 2
+2025-11-03 15:22:12,330 - INFO - 		当前模拟轮次: 3
+2025-11-03 15:22:12,449 - INFO - 		当前模拟轮次: 4
+2025-11-03 15:22:12,569 - INFO -     Result: E[Users] = 1192.6000, Var[Users] = 158.2400, Std_Dev = 12.5793
+2025-11-03 15:22:12,571 - INFO -   Evaluating method: 'ris_coverage' with 2800 seeds.
+2025-11-03 15:22:12,571 - INFO -     Running 5 simulations...
+2025-11-03 15:22:12,571 - INFO - 		当前模拟轮次: 0
+2025-11-03 15:22:12,690 - INFO - 		当前模拟轮次: 1
+2025-11-03 15:22:12,805 - INFO - 		当前模拟轮次: 2
+2025-11-03 15:22:12,926 - INFO - 		当前模拟轮次: 3
+2025-11-03 15:22:13,046 - INFO - 		当前模拟轮次: 4
+2025-11-03 15:22:13,167 - INFO -     Result: E[Users] = 1236.6000, Var[Users] = 491.8400, Std_Dev = 22.1775
+2025-11-03 15:22:13,169 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Oberlin/E-activated-Oberlin/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-2800_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-600000.csv

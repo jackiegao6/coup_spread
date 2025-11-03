@@ -1,0 +1,6 @@
+2025-11-02 16:36:13,161 - INFO - 加载数据集: Wellesley
+2025-11-02 16:36:13,165 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-02 16:36:13,165 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-02 16:36:13,167 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Wellesley/distribution-in-Wellesley/distribution-powerlaw_seedNum-3000.pkl
+2025-11-02 16:36:13,254 - INFO - 首次生成种子集 random
+2025-11-02 16:36:13,254 - INFO - 执行当前算法开始: random
