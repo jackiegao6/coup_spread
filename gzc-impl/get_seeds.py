@@ -100,7 +100,6 @@ def deliverers_degreeTopM(adj, m: int) -> list:
     selected_nodes_with_values = []
     for index in top_m_indexes:
         value = degrees[index]
-        print(f"  - 节点 {index}: 度数 = {int(value)}")
         selected_nodes_with_values.append((index, value))
     print("") # 打印一个空行
         
@@ -340,17 +339,17 @@ def select_deliverers_theory_improved(
 
 def _generate_single_rr_set(
     n: int, 
-    graph: nx.DiGraph
+    graph: nx.DiGraph,
+    default_p: float = 0.1
 ) -> set:
 
     # 1. 在整个网络中随机选择一个起始节点 **起始节点可以重复**
-    start_node = random.randrange(n)
-    
+    start_node = random.choice(list(graph.nodes))
+
     rr_set = {start_node}
     queue = [start_node]
-    
-    # 使用 visited 集合来防止在一次生成中重复访问同一个节点
-    visited = {start_node}
+    visited = {start_node} # 使用 visited 集合来防止在一次生成中重复访问同一个节点
+
 
     head = 0
     while head < len(queue):
@@ -363,34 +362,90 @@ def _generate_single_rr_set(
                 visited.add(predecessor)
                 
                 # 3. 以传播概率 p 进行“反向穿越”
-                edge_prob = graph.edges[predecessor, current_node].get('p', 0.1) # 每条边的p属性的默认值
-                # todo 每一次都要重新穿越
-                if random.random() < edge_prob:
+                edge_prob = graph.edges[predecessor, current_node].get('p', default_p)
+                if random.random() < edge_prob:  # 每一次都要重新穿越
                     # 如果成功，则将前驱节点加入样本和队列
                     rr_set.add(predecessor)
                     queue.append(predecessor)
                     
     return rr_set
 
+def _generate_single_rr_set2(graph: nx.DiGraph, default_p=0.1):
+    """
+    生成基于反向传播的多路径 RR 集
+    每条路径可包含重复节点（来自不同路径），但单路径内部不允许自环。
+    """
+    start_node = random.choice(list(graph.nodes))
+    rr_set = set([start_node])
+    rr_paths = []  # 保存所有路径（list[list[int]]）
+
+    def dfs(current_node, path):
+        # path 是当前路径
+        for predecessor in graph.predecessors(current_node):
+            edge_prob = graph.edges[predecessor, current_node].get('p', default_p)
+            if random.random() < edge_prob:
+                # 形成新路径（必须拷贝，否则回溯时会污染）
+                new_path = path + [predecessor]
+                rr_paths.append(new_path)
+                rr_set.add(predecessor)
+
+                # 如果出现环，则停止当前分支
+                if predecessor in path:
+                    continue
+                dfs(predecessor, new_path)
+
+    dfs(start_node, [start_node])
+    return rr_set, rr_paths
+
+def _generate_single_rr_set3(
+    n: int,
+    graph: nx.DiGraph,
+    default_p: float = 0.1,
+    max_depth: int = 10
+) -> set:
+    """
+    生成基于反向传播的多路径 RR 集
+    每条路径可包含重复节点（来自不同路径），但单路径内部不允许自环。
+    """
+    start_node = random.choice(list(graph.nodes))
+    rr_set = set([start_node])
+    rr_paths = []  # 保存所有路径（list[list[int]]）
+
+    def dfs(current_node, path, depth):
+        if depth > max_depth:
+            return
+        for predecessor in graph.predecessors(current_node):
+            edge_prob = graph.edges[predecessor, current_node].get('p', default_p)
+            if random.random() < edge_prob:
+                new_path = path + [predecessor]
+                rr_paths.append(new_path)
+                rr_set.add(predecessor)
+                dfs(predecessor, new_path, depth + 1)
+
+    dfs(start_node, [start_node], 0)
+    return rr_set
+
 
 def _generate_rr_sets(
-    n: int, 
-    graph: nx.DiGraph, 
+    n: int,
+    graph: nx.DiGraph,
     num_RR: int
 ) -> list:
     '''
     生成 num_RR 个rr-set
     '''
     print(f"--- generating numbers of {num_RR} (RR-Sets) ---")
-    return [_generate_single_rr_set(n, graph) for _ in range(num_RR)]
+    return [_generate_single_rr_set3(n, graph) for _ in range(num_RR)]
 
 
 def deliverers_ris_coverage(
-    adj, # 原始邻接矩阵，用于确定图的结构
-    tranProMatrix, # 包含边特定概率的转移矩阵
-    m: int,
-    num_samples: int = 50000
+    adj,            # 原始邻接矩阵，用于确定图的结构
+    tranProMatrix,  # 包含边特定概率的转移矩阵
+    seeds_num: int,
+    num_samples: int = 100
 ) -> list:
+
+    # 1. 读图
     print("--- Running: Reverse Reachable Set (RIS) Coverage ---")
 
     if isinstance(adj, np.ndarray):
@@ -402,30 +457,103 @@ def deliverers_ris_coverage(
 
     num_edges_processed = 0
 
+    # 2. 生成r值 供后续使用
     for node in G.nodes():
         G.nodes[node]['randomP'] = random.random()
 
+    # 3. 各个边的传播阈值
     for u, v in G.edges():
         probability = tranProMatrix[v, u]
 
         G.edges[u, v]['p'] = probability
         num_edges_processed += 1
-
     print(f"图构建完成，把{num_edges_processed}多条边，赋予了相应的概率值")
 
-    rr_sets = _generate_rr_sets(n, G, num_samples)
+    # 4. 采样num_samples次 最后有这么多个rr-set
+    rr_sets = _generate_rr_sets(n, G, num_RR=num_samples) # rr_sets: [{2},{9},{1,2,4,5},{7},{7},{1,2}]]
+
 
     selected_seeds = []
 
-    # 创建一个从节点到其所在RR-Set索引的映射
+    # 5. 创建一个从节点到其所在RR-Set索引的映射 （每个节点 对应多少个rr-set 越多证明越能传播到这）
     node_to_rr_indices = defaultdict(list)
     for i, rr_set in enumerate(rr_sets):
         for node in rr_set:
             node_to_rr_indices[node].append(i)
 
     is_rr_set_covered = np.zeros(num_samples, dtype=bool)# 计算边际增益
+    # 6. 选seeds_num多个种子
+    for i in range(seeds_num):
+        candidate_gains = defaultdict(int)
+        for node_id, rr_indices in node_to_rr_indices.items():
+            if node_id in selected_seeds:
+                continue
 
-    for i in range(m):
+            gain = np.sum(~is_rr_set_covered[rr_indices])# 计算这个节点覆盖的RR-Set数量
+            candidate_gains[node_id] = gain
+
+        if not candidate_gains:
+            print("no more uncovered nodes, process finish!")
+            break
+
+        best_candidate = max(candidate_gains, key=candidate_gains.get)
+        selected_seeds.append(best_candidate)
+
+        # node_to_rr_indices 保存的是每个节点对应的rr-set列表 这里会把种子节点所有对应的rr-set 置为true 目的是为了后来的节点不能再用这些rr-set了
+        for rr_index in node_to_rr_indices[best_candidate]:
+            is_rr_set_covered[rr_index] = True
+
+        print(f"  - 第 {i+1} 个种子: 节点 {best_candidate} (覆盖了 {candidate_gains[best_candidate]} 个 RR-Set)")
+
+    print(f"\n种子集合: {selected_seeds}\n")
+    return selected_seeds
+
+
+def deliverers_ris_coverage2(
+    adj,            # 原始邻接矩阵，用于确定图的结构
+    tranProMatrix,  # 包含边特定概率的转移矩阵
+    seeds_num: int,
+    num_samples: int = 100
+) -> list:
+
+    # 1. 读图
+    print("--- Running: Reverse Reachable Set (RIS) Coverage ---")
+
+    if isinstance(adj, np.ndarray):
+        adj = sp.csr_matrix(adj)
+
+    n = adj.shape[0]
+
+    G = nx.from_scipy_sparse_array(adj, create_using=nx.DiGraph)
+
+    num_edges_processed = 0
+
+    # 2. 生成r值 供后续使用
+    for node in G.nodes():
+        G.nodes[node]['randomP'] = random.random()
+
+    # 3. 各个边的传播阈值
+    for u, v in G.edges():
+        probability = tranProMatrix[v, u]
+
+        G.edges[u, v]['p'] = probability
+        num_edges_processed += 1
+    print(f"图构建完成，把{num_edges_processed}多条边，赋予了相应的概率值")
+
+    # 4. 采样num_samples次 最后有这么多个rr-set
+    rr_sets = _generate_rr_sets(n, G, num_RR=num_samples) # rr_sets: [{2},{9},{1,2,4,5},{7},{7},{1,2}]]
+
+    selected_seeds = []
+
+    # 5. 创建一个从节点到其所在RR-Set索引的映射 （每个节点 对应多少个rr-set 越多证明越能传播到这）
+    node_to_rr_indices = defaultdict(list)
+    for i, rr_set in enumerate(rr_sets):
+        for node in rr_set:
+            node_to_rr_indices[node].append(i)
+
+    is_rr_set_covered = np.zeros(num_samples, dtype=bool)# 计算边际增益
+    # 6. 选seeds_num多个种子
+    for i in range(seeds_num):
         candidate_gains = defaultdict(int)
         for node_id, rr_indices in node_to_rr_indices.items():
             if node_id in selected_seeds:
@@ -444,7 +572,7 @@ def deliverers_ris_coverage(
         for rr_index in node_to_rr_indices[best_candidate]:
             is_rr_set_covered[rr_index] = True
 
-        print(f"  - 第 {i+1} 个种子: 节点 {best_candidate} (新增覆盖了 {candidate_gains[best_candidate]} 个 RR-Set)")
+        print(f"  - 第 {i+1} 个种子: 节点 {best_candidate} (覆盖了 {candidate_gains[best_candidate]} 个 RR-Set)")
 
     print(f"\n种子集合: {selected_seeds}\n")
     return selected_seeds
@@ -472,7 +600,7 @@ if __name__ == '__main__':
 
 
     deliverers = deliverers_ris_coverage(adj=adj,
-                                         m=7,
+                                         seeds_num=3,
                                          tranProMatrix=tranProMatrix
                                          )
     print(deliverers)

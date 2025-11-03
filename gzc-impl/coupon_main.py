@@ -90,7 +90,7 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
         'ris_coverage': lambda: get_seeds.deliverers_ris_coverage(
             adj=data["adj"],
             tranProMatrix=data["init_tran_matrix"],
-            m=m,
+            seeds_num=m,
             num_samples=config.num_samples  # 通过 config 对象来配置
         ),
     }
@@ -217,7 +217,7 @@ if __name__ == '__main__':
 
 
     my_config = ExperimentConfig(
-        data_set='Oberlin', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
+        data_set='Twitter', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
         simulation_times=[5],  # [1000, 5000]
         methods=['random', 'degreeTopM', 'ris_coverage'],
         # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
@@ -227,7 +227,7 @@ if __name__ == '__main__':
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=600000,
+        num_samples=1000000,
         # seeds_num=num,  # 32 64 128 256 512
 
         tran_degree_influence_factor=10.0,
