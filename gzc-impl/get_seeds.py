@@ -370,34 +370,7 @@ def _generate_single_rr_set(
                     
     return rr_set
 
-def _generate_single_rr_set2(graph: nx.DiGraph, default_p=0.1):
-    """
-    生成基于反向传播的多路径 RR 集
-    每条路径可包含重复节点（来自不同路径），但单路径内部不允许自环。
-    """
-    start_node = random.choice(list(graph.nodes))
-    rr_set = set([start_node])
-    rr_paths = []  # 保存所有路径（list[list[int]]）
-
-    def dfs(current_node, path):
-        # path 是当前路径
-        for predecessor in graph.predecessors(current_node):
-            edge_prob = graph.edges[predecessor, current_node].get('p', default_p)
-            if random.random() < edge_prob:
-                # 形成新路径（必须拷贝，否则回溯时会污染）
-                new_path = path + [predecessor]
-                rr_paths.append(new_path)
-                rr_set.add(predecessor)
-
-                # 如果出现环，则停止当前分支
-                if predecessor in path:
-                    continue
-                dfs(predecessor, new_path)
-
-    dfs(start_node, [start_node])
-    return rr_set, rr_paths
-
-def _generate_single_rr_set3(
+def _generate_single_rr_set_CopyPath(
     n: int,
     graph: nx.DiGraph,
     default_p: float = 0.1,
@@ -435,7 +408,7 @@ def _generate_rr_sets(
     生成 num_RR 个rr-set
     '''
     print(f"--- generating numbers of {num_RR} (RR-Sets) ---")
-    return [_generate_single_rr_set3(n, graph) for _ in range(num_RR)]
+    return [_generate_single_rr_set_CopyPath(n, graph) for _ in range(num_RR)]
 
 
 def deliverers_ris_coverage(
@@ -509,7 +482,7 @@ def deliverers_ris_coverage(
     return selected_seeds
 
 
-def deliverers_ris_coverage2(
+def deliverers_ris_coverage_SumSort(
     adj,            # 原始邻接矩阵，用于确定图的结构
     tranProMatrix,  # 包含边特定概率的转移矩阵
     seeds_num: int,
@@ -569,8 +542,8 @@ def deliverers_ris_coverage2(
         best_candidate = max(candidate_gains, key=candidate_gains.get)
         selected_seeds.append(best_candidate)
 
-        for rr_index in node_to_rr_indices[best_candidate]:
-            is_rr_set_covered[rr_index] = True
+        # for rr_index in node_to_rr_indices[best_candidate]:
+        #     is_rr_set_covered[rr_index] = True
 
         print(f"  - 第 {i+1} 个种子: 节点 {best_candidate} (覆盖了 {candidate_gains[best_candidate]} 个 RR-Set)")
 

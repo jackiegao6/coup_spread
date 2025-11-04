@@ -93,6 +93,12 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
             seeds_num=m,
             num_samples=config.num_samples  # 通过 config 对象来配置
         ),
+        'ris_coverage_SumSort': lambda: get_seeds.deliverers_ris_coverage_SumSort(
+            adj=data["adj"],
+            tranProMatrix=data["init_tran_matrix"],
+            seeds_num=m,
+            num_samples=config.num_samples  # 通过 config 对象来配置
+        ),
     }
 
 
@@ -216,10 +222,13 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
 
+ # todo ris_coverage方法确定一下
+    #todo 具体的这个评估函数确定一下
+    # todo 评估的逻辑 （券的数量和种子数量的对应关系）确定一下
     my_config = ExperimentConfig(
         data_set='Twitter', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
         simulation_times=[5],  # [1000, 5000]
-        methods=['random', 'degreeTopM', 'ris_coverage'],
+        methods=['random', 'degreeTopM', 'ris_coverage', 'ris_coverage_SumSort'],
         # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         monte_carlo_L=15,
@@ -237,7 +246,7 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainReJudge',  # AgainReJudge 、 AgainContinue
-        version='2025-11-03'
+        version='2025-11-04-ris_coverage_SumSort'
     )
 
     # 外循环 控制种子个数

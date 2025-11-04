@@ -165,7 +165,6 @@ def monteCarlo_singleTime_improved2_AgainContinue(
 ) -> np.ndarray:
 
     n = tranProMatrix.shape[0]
-    # todo 上来就把所有种子节点 加入已访问的节点列表 非也 done
     activatedUsers = set()
     activated_list = []
 
@@ -191,11 +190,8 @@ def monteCarlo_singleTime_improved2_AgainContinue(
                     # 决定“丢弃”
                     break # 游走在此中断
 
-            # 做出过决定 再次接触优惠券的逻辑 直接转发
-            # 如果没有中断，则意味着节点决定“转发”
-            # logging.info(f"current_user 2 {current_user}")
+            # 做出过决定 再次接触优惠券的逻辑 直接转发 || 如果没有中断，则意味着节点决定“转发”
             next_node = _select_next_neighbor(current_user, tranProMatrix)
-            # logging.info(f"next_node {next_node}")
 
             if next_node is None:
                 # 没有邻居可转发，游走中断
@@ -203,6 +199,7 @@ def monteCarlo_singleTime_improved2_AgainContinue(
             else:
                 # 更新当前节点，继续游走
                 current_user = next_node
+
 
     # 将最终成功使用的节点集合转换为0/1向量
     success_vector = np.zeros(n, dtype=int)
