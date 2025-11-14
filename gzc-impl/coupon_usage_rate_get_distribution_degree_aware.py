@@ -197,7 +197,6 @@ def _generate_random_distributions(n: int, degrees: np.ndarray, config: Experime
     }
 
 
-# --- 新的主函数，用于处理与度相关的分布生成 ---
 def get_distribution_degree_aware(
         distribution_file: str,
         distribution_type: str,

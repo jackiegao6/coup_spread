@@ -163,6 +163,9 @@ def monteCarlo_singleTime_improved2_AgainContinue(
     dis_distribution: np.ndarray,
     constantFactor_distribution: np.ndarray
 ) -> np.ndarray:
+    '''
+    简单实现 纯全局变量实现
+    '''
 
     n = tranProMatrix.shape[0]
     activatedUsers = set()
