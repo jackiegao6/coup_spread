@@ -4,7 +4,7 @@ import pickle
 from typing import List, Dict, Any
 import coupon_usage_rate_get_distribution_degree_aware as gd
 import single_deliverer
-import rr_set_new_new_new
+import SSR_method
 import os
 import get_seeds
 import time
@@ -221,63 +221,26 @@ def run_coupon_experiment(config: ExperimentConfig):
 #  python coupon_main.py --start 11000 --end 13000 --step 1000
 
 
-# if __name__ == '__main__':
-#
-#     # ✅ 新增命令行参数
-#     parser = argparse.ArgumentParser(description="Run coupon experiment with range of seeds_num.")
-#     parser.add_argument('--start', type=int, default=2100, help='起始 seeds_num')
-#     parser.add_argument('--end', type=int, default=50000, help='结束 seeds_num（不包含）')
-#     parser.add_argument('--step', type=int, default=500, help='步长')
-#     args = parser.parse_args()
-#
-#  # todo ris_coverage方法确定一下
-#     #todo 具体的这个评估函数确定一下
-#     # todo 评估的逻辑 （券的数量和种子数量的对应关系）确定一下
-#     my_config = ExperimentConfig(
-#         data_set='Twitter', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
-#         simulation_times=[5],  # [1000, 5000]
-#         # methods=['random', 'degreeTopM', 'ris_coverage', 'ris_coverage_SumSort'],
-#         # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
-#         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
-#         methods=['random', 'ris_coverage'],
-#         monte_carlo_L=2,
-#         distribution_type='powerlaw',  # poisson gamma powerlaw random
-#         personalization='None',  # firstUnused
-#         method_type='None',  # new,
-#
-#         num_samples=100,
-#         # seeds_num=num,  # 32 64 128 256 512
-#
-#         tran_degree_influence_factor=10.0,
-#         succ_degree_influence_factor=10.0,
-#         dis_degree_influence_factor=10.0,
-#
-#         rng=np.random.default_rng(1),
-#
-#         single_sim_func='AgainContinue',  # AgainReJudge 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)
-#         version='2025-11-14'
-#     )
-#
-#     # 外循环 控制种子个数
-#     for num in range(args.start, args.end, args.step):
-#         my_config.seeds_num = num
-#         generate_logger.init_logger(log_file=my_config.log_file())
-#         run_coupon_experiment(my_config)
-#     print("done!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!\n")
-
 if __name__ == '__main__':
 
-    # todo ris_coverage方法确定一下
+    # ✅ 新增命令行参数
+    parser = argparse.ArgumentParser(description="Run coupon experiment with range of seeds_num.")
+    parser.add_argument('--start', type=int, default=2100, help='起始 seeds_num')
+    parser.add_argument('--end', type=int, default=50000, help='结束 seeds_num（不包含）')
+    parser.add_argument('--step', type=int, default=500, help='步长')
+    args = parser.parse_args()
+
+ # todo ris_coverage方法确定一下
     #todo 具体的这个评估函数确定一下
     # todo 评估的逻辑 （券的数量和种子数量的对应关系）确定一下
     my_config = ExperimentConfig(
-        data_set='students', # students Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
+        data_set='Twitter', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
         simulation_times=[3],  # [1000, 5000]
         # methods=['random', 'degreeTopM', 'ris_coverage', 'ris_coverage_SumSort'],
         # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
-        methods=['random', 'ris_coverage'],
-        # monte_carlo_L=3,
+        methods=['random', 'degreeTopM','ris_coverage'],
+        # monte_carlo_L=2,
         distribution_type='powerlaw',  # poisson gamma powerlaw random
         personalization='None',  # firstUnused
         method_type='None',  # new,
@@ -296,7 +259,43 @@ if __name__ == '__main__':
     )
 
     # 外循环 控制种子个数
-    my_config.seeds_num = 50
-    generate_logger.init_logger(log_file=my_config.log_file())
-    run_coupon_experiment(my_config)
+    for num in range(args.start, args.end, args.step):
+        my_config.seeds_num = num
+        generate_logger.init_logger(log_file=my_config.log_file())
+        run_coupon_experiment(my_config)
     print("done!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!\n")
+
+# if __name__ == '__main__':
+#
+#     # todo ris_coverage方法确定一下
+#     #todo 具体的这个评估函数确定一下
+#     # todo 评估的逻辑 （券的数量和种子数量的对应关系）确定一下
+#     my_config = ExperimentConfig(
+#         data_set='Twitter', # students Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
+#         simulation_times=[3],  # [1000, 5000]
+#         # methods=['random', 'degreeTopM', 'ris_coverage', 'ris_coverage_SumSort'],
+#         # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
+#         methods=['random', 'ris_coverage'],
+#         # monte_carlo_L=3,
+#         distribution_type='powerlaw',  # poisson gamma powerlaw random
+#         personalization='None',  # firstUnused
+#         method_type='None',  # new,
+#
+#         num_samples=100000,
+#         # seeds_num=num,  # 32 64 128 256 512
+#
+#         tran_degree_influence_factor=10.0,
+#         succ_degree_influence_factor=10.0,
+#         dis_degree_influence_factor=10.0,
+#
+#         rng=np.random.default_rng(1),
+#
+#         single_sim_func='AgainContinue',  # AgainReJudge 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)
+#         version='2025-11-14'
+#     )
+#
+#     # 外循环 控制种子个数
+#     my_config.seeds_num = 100
+#     generate_logger.init_logger(log_file=my_config.log_file())
+#     run_coupon_experiment(my_config)
+#     print("done!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!\n")

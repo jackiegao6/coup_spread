@@ -3,24 +3,33 @@ import time
 from multiprocessing import Pool, cpu_count
 from collections import defaultdict
 from typing import List, Dict, Set, Tuple, Any
-
-# 导入您接口所需的库
 import numpy as np
 import scipy.sparse as sp
 
-
-# ==============================================================================
-# 核心实现：CouponInfluenceMaximizer 类 (来自我们之前的讨论)
-# 这部分是内部逻辑，将被下面的接口函数调用。
-# ==============================================================================
-
+# 一次完整的SSR抽样过程
 def run_single_ssr_generation(args: Tuple) -> List[Set[int]]:
-    """并行工作单元，无需修改。"""
+    """
+    Args:
+        args: 一个元组，包含 (nodes, reversed_graph, alpha, k)
+              nodes (List[int]): 所有节点的列表。
+              reversed_graph (Dict[int, Dict[int, float]]): 反向图。
+              alpha (Dict[int, float]): 节点的领券概率。
+              k (int): 优惠券的数量。
+
+    Returns:
+        List[Set[int]]: 一个SSR，即包含k个RR-set的列表。
+    """
     nodes, reversed_graph, alpha, k = args
+
+    # 1. 随机采样一个节点 v
     root_node_v = random.choice(nodes)
-    ssr = []
+    ssr = [] # 当前采样节点的 SSR，包含k个rr-set
+
+    # 2. 为k张券生成k 个RR-set
     for _ in range(k):
+        # 检查v是否会领取这张券
         if random.random() <= alpha[root_node_v]:
+            # 如果领券，则通过反向BFS生成RR-set
             rr_set = {root_node_v}
             queue = [root_node_v]
             head = 0
@@ -28,24 +37,27 @@ def run_single_ssr_generation(args: Tuple) -> List[Set[int]]:
                 current_node = queue[head]
                 head += 1
                 for in_neighbor, probability in reversed_graph.get(current_node, {}).items():
-                    if in_neighbor not in rr_set and random.random() <= probability:
-                        rr_set.add(in_neighbor)
-                        queue.append(in_neighbor)
+                    if in_neighbor not in rr_set:
+                        # 模拟边(in_neighbor -> current_node)的激活
+                        if random.random() <= probability:
+                            rr_set.add(in_neighbor)
+                            queue.append(in_neighbor)
             ssr.append(rr_set)
         else:
+            # 否则，此券的RR-set为空
             ssr.append(set())
     return ssr
 
 
 class CouponInfluenceMaximizer:
     """
-    核心实现类，封装了所有复杂逻辑。
-    它的 __init__ 方法被修改为可以直接接收 adj 和 tranProMatrix。
+    使用反向可达集(RR-set)方法，寻找k个种子节点以最大化优惠券激活数。
+    支持并行化生成RR-set。
     """
 
     def __init__(self, adj: sp.csr_matrix, tranProMatrix: np.ndarray, alpha: Dict[int, float], k: int):
-        self.k = k
-        self.alpha = alpha
+        self.k = k # 优惠券（种子节点）的数量。
+        self.alpha = alpha # 每个节点的领券概率。
 
         # 直接从 adj 获取节点信息
         self.num_nodes = adj.shape[0]
@@ -54,10 +66,10 @@ class CouponInfluenceMaximizer:
         # 使用 tranProMatrix 构建反向图
         self.reversed_graph = self._build_reversed_graph(adj, tranProMatrix)
         self.all_ssrs: List[List[Set[int]]] = []
-        print(f"图已初始化，包含 {self.num_nodes} 个节点，将选择 {k} 个种子。")
+        print(f"图初始化完成，包含 {self.num_nodes} 个节点，选择 {k} 个种子。")
 
     def _build_reversed_graph(self, adj: sp.csr_matrix, tranProMatrix: np.ndarray) -> Dict[int, Dict[int, float]]:
-        """根据 adj 和 tranProMatrix 构建反向图字典。"""
+        """根据 adj 和 tranProMatrix 构建反向图 利用二维数组"""
         reversed_graph = defaultdict(dict)
         rows, cols = adj.nonzero()
         num_edges_processed = 0
@@ -70,49 +82,56 @@ class CouponInfluenceMaximizer:
         print(f"反向图构建完成，处理了 {num_edges_processed} 条边。")
         return dict(reversed_graph)
 
-    def generate_rr_sets_parallel(self, N: int, workers: int = -1):
-        if N <= 0: raise ValueError("抽样次数N必须为正整数。")
-        if workers == -1: workers = 8
-        print(f"\n开始生成 {N} 组SSR样本，使用 {workers} 个并行进程...")
+    def generate_rr_sets_parallel(self, N: int, workers: int = 8):
+        #默认8个核跑
+
+        print(f"\n采样次数: {N}, 开始生成 {N} 组SSR，使用 {workers} 个并行进程...")
         start_time = time.time()
         args_list = [(self.nodes, self.reversed_graph, self.alpha, self.k) for _ in range(N)]
         with Pool(processes=workers) as pool:
             results = pool.map(run_single_ssr_generation, args_list)
         self.all_ssrs = results
         end_time = time.time()
-        print(f"SSR样本生成完毕。耗时: {end_time - start_time:.2f} 秒。")
+        print(f"{N} 个SSR生成完毕。耗时: {end_time - start_time:.2f} 秒。")
 
     def select_seeds_new(self) -> Tuple[List[int], float]:
-        """最新的种子选择策略，无需修改。"""
-        if not self.all_ssrs: raise RuntimeError("请先调用 generate_rr_sets_parallel()。")
-        print("\n开始选择最优的种子节点 (新策略)...")
+        """
+        按列（优惠券）依次选择种子（边际增益）（种子节点不能重复）
+        """
+        print("\n开始选择最优的种子节点 ...")
         start_time = time.time()
+        # 1. 构建倒排索引
         inverted_index = defaultdict(list)
         for ssr_idx, ssr in enumerate(self.all_ssrs):
             for coupon_j, rr_set in enumerate(ssr):
                 for node in rr_set:
+                    # 每个node对应哪个（第i个SSR，第j张券）
                     inverted_index[node].append((ssr_idx, coupon_j))
 
+        # 2. 贪心选择k个不重复的种子
         selected_seeds = []
-        covered_ssr_indices = set()
-        for i in range(self.k):
-            coupon_to_assign = i
+        covered_ssr_indices = set()  # 记录已覆盖的SSR（行）
+        for i in range(self.k): # 外层循环：迭代k次，为每张优惠券（每一列）选择一个种子
+            
+            coupon_to_assign = i # 当前要分配的优惠券列索引
             max_marginal_gain = -1
             best_candidate_node = None
+
+            # 内层循环：遍历所有节点，寻找当前列的最佳种子
             for node in self.nodes:
-                if node in selected_seeds: continue
+                if node in selected_seeds:
+                    continue # # 种子不能重复
+
+                # 1.找到该节点在当前优惠券列中出现的所有SSR
                 ssrs_for_this_combo = {
                     ssr_idx for (ssr_idx, coupon_j) in inverted_index.get(node, [])
                     if coupon_j == coupon_to_assign
                 }
+                # 计算边际增益
                 marginal_gain = len(ssrs_for_this_combo - covered_ssr_indices)
                 if marginal_gain > max_marginal_gain:
                     max_marginal_gain = marginal_gain
                     best_candidate_node = node
-
-            if best_candidate_node is None:
-                print(f"警告：为券 {coupon_to_assign + 1} 选择种子时无增益。")
-                break
 
             selected_seeds.append(best_candidate_node)
             print(f"  - 第 {i + 1}/{self.k} 个种子 (为券 {coupon_to_assign + 1}): "
@@ -128,10 +147,6 @@ class CouponInfluenceMaximizer:
         print(f"种子节点选择完毕。耗时: {end_time - start_time:.2f} 秒。")
         return selected_seeds, estimated_influence
 
-
-# ==============================================================================
-# 您的接口函数：现在它是一个调用核心实现的包装器
-# ==============================================================================
 def deliverers_ris_coverage(
         adj: sp.csr_matrix,  # 原始邻接矩阵
         tranProMatrix: np.ndarray,  # 转移概率矩阵
@@ -140,9 +155,6 @@ def deliverers_ris_coverage(
         alpha: Dict[int, float] = None  # 新增一个可选参数alpha
 ) -> list:
     """
-    使用多优惠券并行RIS模型计算影响力最大的种子节点。
-    此函数封装了CouponInfluenceMaximizer类的复杂逻辑，以匹配原始接口。
-
     Args:
         adj (sp.csr_matrix): 邻接矩阵。
         tranProMatrix (np.ndarray): 转移概率矩阵, tranProMatrix[v, u] = p(u->v)。
@@ -154,12 +166,9 @@ def deliverers_ris_coverage(
     Returns:
         list: 包含k个最优种子节点ID的列表。
     """
-    print("--- 正在运行新版 deliverers_ris_coverage (多优惠券并行模型) ---")
-
-    # 1. 处理缺失的 alpha 参数
+    # 1. 处理缺失的 alpha 参数（test）
     if alpha is None:
         num_nodes = adj.shape[0]
-        print(f"警告: 未提供 alpha (节点领券概率)。将为所有 {num_nodes} 个节点使用默认值 0.1。")
         alpha = {node: 0.1 for node in range(num_nodes)}
 
     # 2. 实例化核心实现类
@@ -181,10 +190,6 @@ def deliverers_ris_coverage(
     print(f"最终选择的种子集: {selected_seeds}\n")
     return selected_seeds
 
-
-# ==========================
-# 主执行模块：演示如何调用您的接口
-# ==========================
 if __name__ == "__main__":
 
     # 1. 准备和您接口一致的输入数据
