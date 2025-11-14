@@ -25,7 +25,7 @@ def run_single_ssr_generation(args: Tuple) -> List[Set[int]]:
             queue = [root_node_v]
             head = 0
             while head < len(queue):
-                current_node = queue[head];
+                current_node = queue[head]
                 head += 1
                 for in_neighbor, probability in reversed_graph.get(current_node, {}).items():
                     if in_neighbor not in rr_set and random.random() <= probability:
@@ -72,7 +72,7 @@ class CouponInfluenceMaximizer:
 
     def generate_rr_sets_parallel(self, N: int, workers: int = -1):
         if N <= 0: raise ValueError("抽样次数N必须为正整数。")
-        if workers == -1: workers = cpu_count()
+        if workers == -1: workers = 8
         print(f"\n开始生成 {N} 组SSR样本，使用 {workers} 个并行进程...")
         start_time = time.time()
         args_list = [(self.nodes, self.reversed_graph, self.alpha, self.k) for _ in range(N)]
@@ -132,7 +132,6 @@ class CouponInfluenceMaximizer:
 # ==============================================================================
 # 您的接口函数：现在它是一个调用核心实现的包装器
 # ==============================================================================
-
 def deliverers_ris_coverage(
         adj: sp.csr_matrix,  # 原始邻接矩阵
         tranProMatrix: np.ndarray,  # 转移概率矩阵
@@ -189,9 +188,9 @@ def deliverers_ris_coverage(
 if __name__ == "__main__":
 
     # 1. 准备和您接口一致的输入数据
-    NUM_NODES = 50
-    SEEDS_TO_SELECT = 5
-    NUM_SAMPLES_FOR_RUN = 20000
+    NUM_NODES = 500
+    SEEDS_TO_SELECT = 10
+    NUM_SAMPLES_FOR_RUN = 200
 
     adj_matrix = sp.lil_matrix((NUM_NODES, NUM_NODES))
     trans_prob_matrix = np.zeros((NUM_NODES, NUM_NODES))

@@ -271,18 +271,18 @@ if __name__ == '__main__':
     #todo 具体的这个评估函数确定一下
     # todo 评估的逻辑 （券的数量和种子数量的对应关系）确定一下
     my_config = ExperimentConfig(
-        data_set='Twitter', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
-        simulation_times=[5],  # [1000, 5000]
+        data_set='students', # students Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
+        simulation_times=[3],  # [1000, 5000]
         # methods=['random', 'degreeTopM', 'ris_coverage', 'ris_coverage_SumSort'],
         # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         methods=['random', 'ris_coverage'],
-        monte_carlo_L=2,
+        # monte_carlo_L=3,
         distribution_type='powerlaw',  # poisson gamma powerlaw random
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=100,
+        num_samples=100000,
         # seeds_num=num,  # 32 64 128 256 512
 
         tran_degree_influence_factor=10.0,
@@ -296,7 +296,7 @@ if __name__ == '__main__':
     )
 
     # 外循环 控制种子个数
-    my_config.seeds_num = 13
+    my_config.seeds_num = 50
     generate_logger.init_logger(log_file=my_config.log_file())
     run_coupon_experiment(my_config)
     print("done!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!\n")
