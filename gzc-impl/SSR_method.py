@@ -5,6 +5,8 @@ from collections import defaultdict
 from typing import List, Dict, Set, Tuple, Any
 import numpy as np
 import scipy.sparse as sp
+import logging
+
 
 # 一次完整的SSR抽样过程
 def run_single_ssr_generation(args: Tuple) -> List[Set[int]]:
@@ -50,10 +52,6 @@ def run_single_ssr_generation(args: Tuple) -> List[Set[int]]:
 
 
 class CouponInfluenceMaximizer:
-    """
-    使用反向可达集(RR-set)方法，寻找k个种子节点以最大化优惠券激活数。
-    支持并行化生成RR-set。
-    """
 
     def __init__(self, adj: sp.csr_matrix, tranProMatrix: np.ndarray, alpha: Dict[int, float], k: int):
         self.k = k # 优惠券（种子节点）的数量。
@@ -66,7 +64,7 @@ class CouponInfluenceMaximizer:
         # 使用 tranProMatrix 构建反向图
         self.reversed_graph = self._build_reversed_graph(adj, tranProMatrix)
         self.all_ssrs: List[List[Set[int]]] = []
-        print(f"图初始化完成，包含 {self.num_nodes} 个节点，选择 {k} 个种子。")
+        logging.info(f"图初始化完成，包含 {self.num_nodes} 个节点，选择 {k} 个种子。")
 
     def _build_reversed_graph(self, adj: sp.csr_matrix, tranProMatrix: np.ndarray) -> Dict[int, Dict[int, float]]:
         """根据 adj 和 tranProMatrix 构建反向图 利用二维数组"""
@@ -79,26 +77,25 @@ class CouponInfluenceMaximizer:
             if probability > 0:
                 reversed_graph[v][u] = probability
                 num_edges_processed += 1
-        print(f"反向图构建完成，处理了 {num_edges_processed} 条边。")
+        logging.info(f"反向图构建完成，处理了 {num_edges_processed} 条边。")
         return dict(reversed_graph)
 
-    def generate_rr_sets_parallel(self, N: int, workers: int = 8):
-        #默认8个核跑
+    def generate_rr_sets_parallel(self, N: int, workers: int = 2):
 
-        print(f"\n采样次数: {N}, 开始生成 {N} 组SSR，使用 {workers} 个并行进程...")
+        logging.info(f"\n采样次数: {N}, 开始生成 {N} 组SSR，使用 {workers} 个并行进程...")
         start_time = time.time()
         args_list = [(self.nodes, self.reversed_graph, self.alpha, self.k) for _ in range(N)]
         with Pool(processes=workers) as pool:
             results = pool.map(run_single_ssr_generation, args_list)
         self.all_ssrs = results
         end_time = time.time()
-        print(f"{N} 个SSR生成完毕。耗时: {end_time - start_time:.2f} 秒。")
+        logging.info(f"{N} 个SSR生成完毕。耗时: {end_time - start_time:.2f} 秒。")
 
     def select_seeds_new(self) -> Tuple[List[int], float]:
         """
         按列（优惠券）依次选择种子（边际增益）（种子节点不能重复）
         """
-        print("\n开始选择最优的种子节点 ...")
+        logging.info("\n开始选择最优的种子节点 ...")
         start_time = time.time()
         # 1. 构建倒排索引
         inverted_index = defaultdict(list)
@@ -144,7 +141,7 @@ class CouponInfluenceMaximizer:
 
         estimated_influence = (len(covered_ssr_indices) / len(self.all_ssrs)) * self.num_nodes
         end_time = time.time()
-        print(f"种子节点选择完毕。耗时: {end_time - start_time:.2f} 秒。")
+        logging.info(f"种子节点选择完毕。耗时: {end_time - start_time:.2f} 秒。")
         return selected_seeds, estimated_influence
 
 def deliverers_ris_coverage(
@@ -172,7 +169,6 @@ def deliverers_ris_coverage(
         alpha = {node: 0.1 for node in range(num_nodes)}
 
     # 2. 实例化核心实现类
-    # 参数直接映射: seeds_num -> k
     maximizer = CouponInfluenceMaximizer(
         adj=adj,
         tranProMatrix=tranProMatrix,
@@ -181,18 +177,16 @@ def deliverers_ris_coverage(
     )
 
     # 3. 执行核心逻辑
-    # 参数直接映射: num_samples -> N
     maximizer.generate_rr_sets_parallel(N=num_samples)
     selected_seeds, estimated_influence = maximizer.select_seeds_new()
 
-    # 4. 格式化并返回输出
     print(f"\n估算的最大影响力: {estimated_influence:.2f}")
-    print(f"最终选择的种子集: {selected_seeds}\n")
+    logging.info(f"最终选择的种子集: {selected_seeds}\n")
     return selected_seeds
 
 if __name__ == "__main__":
 
-    # 1. 准备和您接口一致的输入数据
+
     NUM_NODES = 500
     SEEDS_TO_SELECT = 10
     NUM_SAMPLES_FOR_RUN = 200
@@ -209,7 +203,7 @@ if __name__ == "__main__":
 
     adj_matrix_csr = adj_matrix.tocsr()
 
-    # 3. 提供自定义的alpha值
+
     custom_alpha_probs = {node: random.uniform(0.05, 0.3) for node in range(NUM_NODES)}
     seeds2 = deliverers_ris_coverage(
         adj=adj_matrix_csr,

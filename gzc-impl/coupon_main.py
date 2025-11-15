@@ -26,7 +26,7 @@ def load_experiment_data(config: "ExperimentConfig") -> Dict[str, Any]:
 
     adj_path = Path(config.adj_file)
     if not adj_path.exists():
-        raise FileNotFoundError(f"路径错误: {adj_path}")
+        raise FileNotFoundError(f"路径错误 {adj_path}")
 
     with adj_path.open("rb") as f:
         try:
@@ -95,7 +95,7 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
         '1_neighbor': lambda: get_seeds.deliverers_1_neighbor(succ_distribution=data['distributions'][0],
                                                                           init_tranProMatrix=data['init_tran_matrix'],
                                                                           m=m),
-        'ris_coverage': lambda: rr_set_new_new_new.deliverers_ris_coverage(
+        'ris_coverage': lambda: SSR_method.deliverers_ris_coverage(
             adj=data["adj"],
             tranProMatrix=data["init_tran_matrix"],
             seeds_num=m,
@@ -223,20 +223,15 @@ def run_coupon_experiment(config: ExperimentConfig):
 
 if __name__ == '__main__':
 
-    # ✅ 新增命令行参数
     parser = argparse.ArgumentParser(description="Run coupon experiment with range of seeds_num.")
     parser.add_argument('--start', type=int, default=2100, help='起始 seeds_num')
     parser.add_argument('--end', type=int, default=50000, help='结束 seeds_num（不包含）')
     parser.add_argument('--step', type=int, default=500, help='步长')
     args = parser.parse_args()
 
- # todo ris_coverage方法确定一下
-    #todo 具体的这个评估函数确定一下
-    # todo 评估的逻辑 （券的数量和种子数量的对应关系）确定一下
     my_config = ExperimentConfig(
         data_set='Twitter', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
         simulation_times=[3],  # [1000, 5000]
-        # methods=['random', 'degreeTopM', 'ris_coverage', 'ris_coverage_SumSort'],
         # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         methods=['random', 'degreeTopM','ris_coverage'],
@@ -245,7 +240,7 @@ if __name__ == '__main__':
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=100000,
+        num_samples=200000,
         # seeds_num=num,  # 32 64 128 256 512
 
         tran_degree_influence_factor=10.0,
@@ -267,9 +262,6 @@ if __name__ == '__main__':
 
 # if __name__ == '__main__':
 #
-#     # todo ris_coverage方法确定一下
-#     #todo 具体的这个评估函数确定一下
-#     # todo 评估的逻辑 （券的数量和种子数量的对应关系）确定一下
 #     my_config = ExperimentConfig(
 #         data_set='Twitter', # students Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
 #         simulation_times=[3],  # [1000, 5000]
