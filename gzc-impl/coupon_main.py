@@ -240,7 +240,7 @@ if __name__ == '__main__':
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=200000,
+        num_samples=100000,
         # seeds_num=num,  # 32 64 128 256 512
 
         tran_degree_influence_factor=10.0,

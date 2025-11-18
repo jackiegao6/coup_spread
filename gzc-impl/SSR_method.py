@@ -53,6 +53,7 @@ def run_single_ssr_generation(args: Tuple) -> List[Set[int]]:
 
 class CouponInfluenceMaximizer:
 
+
     def __init__(self, adj: sp.csr_matrix, tranProMatrix: np.ndarray, alpha: Dict[int, float], k: int):
         self.k = k # 优惠券（种子节点）的数量。
         self.alpha = alpha # 每个节点的领券概率。
