@@ -34,6 +34,7 @@ def deliverers_alpha_sort(
     # 2. 降序排序 按照元组的第二个元素（即alpha值）进行排序
     alpha_items.sort(key=lambda item: item[1], reverse=True)
     print(f"{len(alpha_items)} 个节点的alpha值降序排序 done")
+    print(f"==============>> {alpha_items[:10]}")
 
     # 3. 提取排序后前k个元组
     selected_items = alpha_items[:seeds_num]

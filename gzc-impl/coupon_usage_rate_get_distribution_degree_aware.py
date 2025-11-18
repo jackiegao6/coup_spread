@@ -125,24 +125,16 @@ def _generate_powerlaw_distributions_degree_aware(
     P(X=x)∝x^−α ,α>1
 
     Parameters
-    ----------
-    n : int
-        节点数
-    degrees : np.ndarray
-        每个节点的度
-    config : ExperimentConfig
-        实验配置，需包含 base_value 和 degree_influence_factor
-    rng : np.random.Generator, optional
-        随机数生成器，默认为 np.random.default_rng()
+    n : int 节点数
+    degrees : np.ndarray 每个节点的度
+    config : ExperimentConfig 实验配置，需包含 base_value 和 degree_influence_factor
+    rng : np.random.Generator, optional 随机数生成器，默认为 np.random.default_rng()
 
     Returns
-    -------
-    dict
         包含 succ, dis, tran, const_factor 四种分布
     """
     logging.info("===> 使用幂律分布生成四种分布")
     rng = config.rng
-
 
     # 将度数缩放一下
     scaled_degrees = _min_max_scale(np.log1p(degrees))
@@ -181,11 +173,12 @@ def _generate_powerlaw_distributions_degree_aware(
 
 def _generate_random_distributions(n: int, degrees: np.ndarray, config: ExperimentConfig) -> dict:
     # n 个节点
-    logging.info("===> Generating 'random' distributions...")
-    tran_distribution = 0.5 + 0.2 * np.random.rand(n)
-    succ_distribution = np.random.uniform(0.2, 0.3, n)
-    dis_distribution = 1.0 - tran_distribution - succ_distribution  # 确保和为1
-    np.clip(dis_distribution, 0, None, out=dis_distribution)  # 确保计算出的丢弃概率不会因为浮点数误差而变成负数
+    logging.info("===> Generating 'Dirichlet' distributions...")
+    prob = np.random.dirichlet([5, 3, 1], size=n)  # 参数可调形状
+
+    tran_distribution = np.round(prob[:, 0], 7)
+    succ_distribution = np.round(prob[:, 1], 7)
+    dis_distribution = np.round(prob[:, 2], 7)
 
     constantFactor_distribution = np.ones(n, dtype=float)
 
