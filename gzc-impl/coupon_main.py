@@ -240,7 +240,7 @@ if __name__ == '__main__':
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=100000,
+        num_samples=100,
         # seeds_num=num,  # 32 64 128 256 512
 
         tran_degree_influence_factor=10.0,
@@ -250,7 +250,7 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainContinue',  # AgainReJudge 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)
-        version='2025-11-14'
+        version='2025-11-18-test'
     )
 
     # 外循环 控制种子个数
@@ -259,6 +259,7 @@ if __name__ == '__main__':
         generate_logger.init_logger(log_file=my_config.log_file())
         run_coupon_experiment(my_config)
     print("done!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!\n")
+
 
 # if __name__ == '__main__':
 #

@@ -12,16 +12,16 @@ import logging
 def run_single_ssr_generation(args: Tuple) -> List[Set[int]]:
     """
     Args:
-        args: 一个元组，包含 (nodes, reversed_graph, alpha, k)
+        args: 一个元组，包含 (nodes, in_neighbors_array, alpha, k)
               nodes (List[int]): 所有节点的列表。
-              reversed_graph (Dict[int, Dict[int, float]]): 反向图。
+              in_neighbors_array (Dict[int, Dict[int, float]]): 反向图。
               alpha (Dict[int, float]): 节点的领券概率。
               k (int): 优惠券的数量。
 
     Returns:
         List[Set[int]]: 一个SSR，即包含k个RR-set的列表。
     """
-    nodes, reversed_graph, alpha, k = args
+    nodes, in_neighbors_array, alpha, k = args
 
     # 1. 随机采样一个节点 v
     root_node_v = random.choice(nodes)
@@ -38,7 +38,7 @@ def run_single_ssr_generation(args: Tuple) -> List[Set[int]]:
             while head < len(queue):
                 current_node = queue[head]
                 head += 1
-                for in_neighbor, probability in reversed_graph.get(current_node, {}).items():
+                for in_neighbor, probability in in_neighbors_array.get(current_node, {}).items():
                     if in_neighbor not in rr_set:
                         # 模拟边(in_neighbor -> current_node)的激活
                         if random.random() <= probability:
@@ -63,29 +63,29 @@ class CouponInfluenceMaximizer:
         self.nodes = list(range(self.num_nodes))
 
         # 使用 tranProMatrix 构建反向图
-        self.reversed_graph = self._build_reversed_graph(adj, tranProMatrix)
+        self.in_neighbors_array = self._build_in_neighbors_array(adj, tranProMatrix)
         self.all_ssrs: List[List[Set[int]]] = []
         logging.info(f"图初始化完成，包含 {self.num_nodes} 个节点，选择 {k} 个种子。")
 
-    def _build_reversed_graph(self, adj: sp.csr_matrix, tranProMatrix: np.ndarray) -> Dict[int, Dict[int, float]]:
+    def _build_in_neighbors_array(self, adj: sp.csr_matrix, tranProMatrix: np.ndarray) -> Dict[int, Dict[int, float]]:
         """根据 adj 和 tranProMatrix 构建反向图 利用二维数组"""
-        reversed_graph = defaultdict(dict)
+        in_neighbors_array = defaultdict(dict)
         rows, cols = adj.nonzero()
         num_edges_processed = 0
         for u, v in zip(rows, cols):
             # tranProMatrix[v, u] 存储的是 u->v 的概率
             probability = tranProMatrix[v, u]
             if probability > 0:
-                reversed_graph[v][u] = probability
+                in_neighbors_array[v][u] = probability
                 num_edges_processed += 1
         logging.info(f"反向图构建完成，处理了 {num_edges_processed} 条边。")
-        return dict(reversed_graph)
+        return dict(in_neighbors_array)
 
     def generate_rr_sets_parallel(self, N: int, workers: int = 2):
 
         logging.info(f"\n采样次数: {N}, 开始生成 {N} 组SSR，使用 {workers} 个并行进程...")
         start_time = time.time()
-        args_list = [(self.nodes, self.reversed_graph, self.alpha, self.k) for _ in range(N)]
+        args_list = [(self.nodes, self.in_neighbors_array, self.alpha, self.k) for _ in range(N)]
         with Pool(processes=workers) as pool:
             results = pool.map(run_single_ssr_generation, args_list)
         self.all_ssrs = results
