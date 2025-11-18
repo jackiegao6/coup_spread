@@ -12,7 +12,7 @@ from typing import List, Set, Tuple
 # 一次完整的SSR抽样过程
 def run_single_ssr_generation3(
         args: Tuple,
-        max_path_length: int = 100
+        max_path_length: int = 10000
 ) -> List[Set[int]]:
     """
     根据新要求，通过生成独立的反向路径来构建RR-set。
@@ -36,23 +36,23 @@ def run_single_ssr_generation3(
         # 检查v是否会领取这张券
         if random.random() <= alpha[root_node_v]:
 
-            # 1. 使用高效的双端队列 (deque) 来管理当前正在扩展的路径
-            path_queue = deque([[root_node_v]])
+            # 1. deque 管理当前正在扩展的路径
+            path_deque = deque([[root_node_v]])
 
-            # 2. 初始化一个列表，专门用来存储最终的“叶子路径”
-            leaf_paths = []
+            # 2. 当有一个路径到达终点时 触发更新rr-set（不显式保存所有已到达终点的路径）
+            final_rr_set = set()
 
-            while path_queue:
-                current_path = path_queue.popleft()
+            while path_deque:
+                current_path = path_deque.popleft()
                 leaf_node = current_path[-1]
 
-                # 安全阀：如果路径太长，则将其视为叶子路径，不再扩展
+                # 如果路径太长，视为到达终点，不再扩展
                 if len(current_path) >= max_path_length:
-                    leaf_paths.append(current_path)
+                    final_rr_set.update(current_path)
                     continue
 
                 # 标志位，用于判断当前路径是否成功扩展过
-                was_extended = False
+                extended_flag = False
 
                 # 遍历末端节点的所有入邻居
                 for in_neighbor, probability in in_neighbors_array.get(leaf_node, {}).items():
@@ -61,21 +61,13 @@ def run_single_ssr_generation3(
                         if random.random() <= probability:
                             # 如果成功，创建一条新路径并加入队列
                             new_path = current_path + [in_neighbor]
-                            path_queue.append(new_path)
+                            path_deque.append(new_path)
                             # 标记当前路径已被成功扩展
-                            was_extended = True
+                            extended_flag = True
 
-                # 3. 关键优化：如果当前路径遍历完所有邻居后都未能扩展，
-                #    说明它是一条“叶子路径”，我们将其保留。
-                if not was_extended:
-                    leaf_paths.append(current_path)
-
-            # 4. 最终只合并所有“叶子路径”中的节点。
-            #    由于任何非叶子路径都是某条叶子路径的前缀，
-            #    所以这样做可以得到与之前完全相同的结果，但内存占用大大减少。
-            final_rr_set = set()
-            for path in leaf_paths:
-                final_rr_set.update(path)
+                # 3. 如果当前路径遍历完所有入度后都未能扩展，说明该路径到了终点，将其保存
+                if not extended_flag:
+                    final_rr_set.update(current_path)
 
             ssr.append(final_rr_set)
 
