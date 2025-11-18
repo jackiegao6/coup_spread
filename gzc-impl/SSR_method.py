@@ -6,10 +6,161 @@ from typing import List, Dict, Set, Tuple, Any
 import numpy as np
 import scipy.sparse as sp
 import logging
+from collections import deque
+from typing import List, Set, Tuple
+
+# 一次完整的SSR抽样过程
+def run_single_ssr_generation3(
+        args: Tuple,
+        max_path_length: int = 100
+) -> List[Set[int]]:
+    """
+    根据新要求，通过生成独立的反向路径来构建RR-set。
+    **此版本经过内存优化，只存储无法再扩展的“叶子”路径。**
+
+    Args:
+        args: 一个元组，包含 (nodes, in_neighbors_array, alpha, k)
+        max_path_length (int): 为防止无限循环，限制单条路径的最大深度。
+
+    Returns:
+        List[Set[int]]: 一个SSR，即包含k个RR-set的列表。
+    """
+    nodes, in_neighbors_array, alpha, k = args
+
+    # 1. 随机采样一个节点 v
+    root_node_v = random.choice(nodes)
+    ssr = []  # 当前采样节点的 SSR，包含k个rr-set
+
+    # 2. 为k张券生成k 个RR-set
+    for _ in range(k):
+        # 检查v是否会领取这张券
+        if random.random() <= alpha[root_node_v]:
+
+            # 1. 使用高效的双端队列 (deque) 来管理当前正在扩展的路径
+            path_queue = deque([[root_node_v]])
+
+            # 2. 初始化一个列表，专门用来存储最终的“叶子路径”
+            leaf_paths = []
+
+            while path_queue:
+                current_path = path_queue.popleft()
+                leaf_node = current_path[-1]
+
+                # 安全阀：如果路径太长，则将其视为叶子路径，不再扩展
+                if len(current_path) >= max_path_length:
+                    leaf_paths.append(current_path)
+                    continue
+
+                # 标志位，用于判断当前路径是否成功扩展过
+                was_extended = False
+
+                # 遍历末端节点的所有入邻居
+                for in_neighbor, probability in in_neighbors_array.get(leaf_node, {}).items():
+                    if in_neighbor not in current_path:
+                        # 模拟边(in_neighbor -> leaf_node)的激活
+                        if random.random() <= probability:
+                            # 如果成功，创建一条新路径并加入队列
+                            new_path = current_path + [in_neighbor]
+                            path_queue.append(new_path)
+                            # 标记当前路径已被成功扩展
+                            was_extended = True
+
+                # 3. 关键优化：如果当前路径遍历完所有邻居后都未能扩展，
+                #    说明它是一条“叶子路径”，我们将其保留。
+                if not was_extended:
+                    leaf_paths.append(current_path)
+
+            # 4. 最终只合并所有“叶子路径”中的节点。
+            #    由于任何非叶子路径都是某条叶子路径的前缀，
+            #    所以这样做可以得到与之前完全相同的结果，但内存占用大大减少。
+            final_rr_set = set()
+            for path in leaf_paths:
+                final_rr_set.update(path)
+
+            ssr.append(final_rr_set)
+
+        else:
+            # 否则，此券的RR-set为空
+            ssr.append(set())
+
+    return ssr
 
 
 # 一次完整的SSR抽样过程
-def run_single_ssr_generation(args: Tuple) -> List[Set[int]]:
+def run_single_ssr_generation2(
+        args: Tuple,
+        max_path_length: int = 100
+) -> List[Set[int]]:
+    """
+    Args:
+        args: 一个元组，包含 (nodes, in_neighbors_array, alpha, k, max_path_length)
+              nodes (List[int]): 所有节点的列表。
+              in_neighbors_array (Dict[int, Dict[int, float]]): 反向图。
+              alpha (Dict[int, float]): 节点的领券概率。
+              k (int): 优惠券的数量。
+              max_path_length (int): 为防止无限循环，限制单条路径的最大深度。
+
+    Returns:
+        List[Set[int]]: 一个SSR，即包含k个RR-set的列表。
+    """
+    nodes, in_neighbors_array, alpha, k = args
+
+    # 1. 随机采样一个节点 v
+    root_node_v = random.choice(nodes)
+    ssr = []  # 当前采样节点的 SSR，包含k个rr-set
+
+    # 2. 为k张券生成k 个RR-set
+    for _ in range(k):
+        # 检查v是否会领取这张券
+        if random.random() <= alpha[root_node_v]:
+
+            # 1. 初始化一个列表来保存所有成功生成的反向路径
+            all_paths = []
+
+            # 2. 使用一个队列来进行非递归的路径展开，队列中每个元素是一条路径
+            #    初始时，队列中只有一条仅包含根节点的路径
+            path_queue = [[root_node_v]]
+
+            head = 0
+            while head < len(path_queue):
+                current_path = path_queue[head]
+                head += 1
+
+                # 当前路径的末端节点，是我们下一步要“反向”扩展的节点
+                leaf_node = current_path[-1]
+
+                # 安全阀：如果路径太长，则停止在这条路径上继续探索
+                if len(current_path) > max_path_length:
+                    continue
+
+                # 遍历末端节点的所有入邻居（即反向图中的邻居）
+                for in_neighbor, probability in in_neighbors_array.get(leaf_node, {}).items():
+                    # 3. 关键改动：我们不再检查 in_neighbor 是否在全局 rr_set 中，
+                    #    而是只检查它是否已经存在于“当前路径”中，以防止单路径内的死循环 (e.g., A->B->A)。
+                    if in_neighbor not in current_path:
+                        # 模拟边(in_neighbor -> leaf_node)的激活
+                        if random.random() <= probability:
+                            # 如果成功，创建一条新路径，并将其加入队列等待继续扩展
+                            new_path = current_path + [in_neighbor]
+                            path_queue.append(new_path)
+
+            # 4. 此时 path_queue 中保存了所有从根节点出发的、成功的、雪花状的反向路径
+            #    将所有路径中的节点合并，得到最终的RR-set
+            final_rr_set = set()
+            for path in path_queue:
+                final_rr_set.update(path)
+
+            ssr.append(final_rr_set)
+
+        else:
+            # 否则，此券的RR-set为空
+            ssr.append(set())
+
+    return ssr
+
+
+# 一次完整的SSR抽样过程
+def run_single_ssr_generation1(args: Tuple) -> List[Set[int]]:
     """
     Args:
         args: 一个元组，包含 (nodes, in_neighbors_array, alpha, k)
@@ -51,6 +202,7 @@ def run_single_ssr_generation(args: Tuple) -> List[Set[int]]:
     return ssr
 
 
+
 class CouponInfluenceMaximizer:
 
 
@@ -87,7 +239,8 @@ class CouponInfluenceMaximizer:
         start_time = time.time()
         args_list = [(self.nodes, self.in_neighbors_array, self.alpha, self.k) for _ in range(N)]
         with Pool(processes=workers) as pool:
-            results = pool.map(run_single_ssr_generation, args_list)
+            # todo 在这里选取生成SSR的方法
+            results = pool.map(run_single_ssr_generation3, args_list)
         self.all_ssrs = results
         end_time = time.time()
         logging.info(f"{N} 个SSR生成完毕。耗时: {end_time - start_time:.2f} 秒。")
@@ -188,17 +341,17 @@ def deliverers_ris_coverage(
 if __name__ == "__main__":
 
 
-    NUM_NODES = 500
-    SEEDS_TO_SELECT = 10
-    NUM_SAMPLES_FOR_RUN = 200
+    NUM_NODES = 13
+    SEEDS_TO_SELECT = 3
+    NUM_SAMPLES_FOR_RUN = 30
 
     adj_matrix = sp.lil_matrix((NUM_NODES, NUM_NODES))
     trans_prob_matrix = np.zeros((NUM_NODES, NUM_NODES))
-    p_edge = 0.1
+    p_edge = 0.8
     for i in range(NUM_NODES):
         for j in range(NUM_NODES):
             if i != j and random.random() < p_edge:
-                prob = random.uniform(0.01, 0.1)
+                prob = random.uniform(0.4, 0.6)
                 adj_matrix[i, j] = 1
                 trans_prob_matrix[j, i] = prob
 
