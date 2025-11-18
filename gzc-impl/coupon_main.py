@@ -5,6 +5,7 @@ from typing import List, Dict, Any
 import coupon_usage_rate_get_distribution_degree_aware as gd
 import single_deliverer
 import SSR_method
+import NEW_base_method
 import os
 import get_seeds
 import time
@@ -70,10 +71,10 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
 
     num_nodes = data["adj"].shape[0]
     succ_dis = data["distributions"][0] #ndarray:{23362} [0.33116881 0.40606414 ...]
-    print("num_nodes =", num_nodes)
-    print("len(succ_dis) =", len(succ_dis))
+    p_dis = data["distributions"][2]
 
     alpha = {node: succ_dis[node] for node in range(len(succ_dis))}
+    trans = {node: p_dis[node] for node in range(len(p_dis))}
 
     selector_dict = {
         # 'theroy': lambda: get_seeds.deliverers_theroy(
@@ -102,11 +103,18 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
             num_samples=config.num_samples,  # 通过 config 对象来配置
             alpha=alpha
         ),
-        'ris_coverage_SumSort': lambda: get_seeds.deliverers_ris_coverage_SumSort(
+        'alpha_sort': lambda: NEW_base_method.deliverers_alpha_sort(
             adj=data["adj"],
             tranProMatrix=data["init_tran_matrix"],
             seeds_num=m,
-            num_samples=config.num_samples  # 通过 config 对象来配置
+            alpha=alpha
+        ),
+        'importance_sort': lambda: NEW_base_method.deliverers_importance_sort(
+            adj=data["adj"],
+            tranProMatrix=data["init_tran_matrix"],
+            seeds_num=m,
+            alpha=alpha,
+            trans=trans
         ),
     }
 
@@ -232,15 +240,14 @@ if __name__ == '__main__':
     my_config = ExperimentConfig(
         data_set='Twitter', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
         simulation_times=[3],  # [1000, 5000]
-        # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
-        methods=['random', 'degreeTopM','ris_coverage'],
+        methods=['random', 'degreeTopM', 'alpha_sort', 'importance_sort', 'ris_coverage'],
         # monte_carlo_L=2,
         distribution_type='powerlaw',  # poisson gamma powerlaw random
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=100,
+        num_samples=100000,
         # seeds_num=num,  # 32 64 128 256 512
 
         tran_degree_influence_factor=10.0,
@@ -250,7 +257,7 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainContinue',  # AgainReJudge 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)
-        version='2025-11-18-test'
+        version='2025-11-18'
     )
 
     # 外循环 控制种子个数
