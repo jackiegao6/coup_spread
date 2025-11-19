@@ -13,6 +13,10 @@ def getTranProMatrix(adj, tran_distribution: np.ndarray) -> np.ndarray:
 
     Returns:
         np.ndarray: 转移概率矩阵 M，M[i, j] 表示节点 j 向节点 i 成功转发的概率。
+
+    M[i, j] = 1 表示 j → i 这条边存在（j 指向 i）
+    axis=0（列求和） axis=1（行求和）
+
     """
 
     if not isinstance(adj, np.ndarray):

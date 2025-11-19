@@ -220,14 +220,6 @@ def run_coupon_experiment(config: ExperimentConfig):
 
 
 #  python coupon_main.py --start 2300 --end 3000 --step 300 done
-#  python coupon_main.py --start 3000 --end 4000 --step 300 done
-#  python coupon_main.py --start 4000 --end 5000 --step 400 done
-#  python coupon_main.py --start 5000 --end 6000 --step 300
-#  python coupon_main.py --start 6000 --end 7000 --step 500 done
-#  python coupon_main.py --start 8000 --end 9000 --step 500
-#  python coupon_main.py --start 10000 --end 11000 --step 500
-#  python coupon_main.py --start 11000 --end 13000 --step 1000
-
 
 if __name__ == '__main__':
 
@@ -257,7 +249,7 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainContinue',  # AgainReJudge 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)
-        version='2025-11-18-random-511'
+        version='2025-11-18-random-533-new'
     )
 
     # 外循环 控制种子个数

@@ -119,7 +119,7 @@ def _generate_powerlaw_distributions_degree_aware(n: int, degrees: np.ndarray, c
 def _generate_random_distributions(n: int, degrees: np.ndarray, config: ExperimentConfig) -> dict:
     # todo 设置分布参数
     logging.info("===> Generating 'Dirichlet' distributions...")
-    prob = np.random.dirichlet([5, 1, 1], size=n)
+    prob = np.random.dirichlet([5, 3, 3], size=n)
 
     tran_distribution = np.round(prob[:, 0], 7)
     succ_distribution = np.round(prob[:, 1], 7)
