@@ -113,18 +113,80 @@ def _generate_gamma_distributions_degree_aware(n: int, degrees: np.ndarray, conf
     }
 
 
-def _generate_powerlaw_distributions_degree_aware(n: int, degrees: np.ndarray, config: "ExperimentConfig",) -> Dict[str, np.ndarray]: """ 将节点的度映射到幂律分布的指数 a 上。 使用幂律分布生成与节点度相关的分布，并进行归一化。 P(X=x)∝x^−α ,α>1 Parameters n : int 节点数 degrees : np.ndarray 每个节点的度 config : ExperimentConfig 实验配置，需包含 base_value 和 degree_influence_factor rng : np.random.Generator, optional 随机数生成器，默认为 np.random.default_rng() Returns 包含 succ, dis, tran, const_factor 四种分布 """; logging.info("===> 使用幂律分布生成四种分布"); rng = config.rng  # 将度数缩放一下 scaled_degrees = _min_max_scale(np.log1p(degrees)) # todo 定义影响者模型：度数高 意味着 转发概率大 吸收概率小 转发(tran): 度越高，指数a越小，生成的值越倾向于1。 成功(succ) & 丢弃(dis): 度越高，指数a越大，生成的值越倾向于0。 指数 a 必须 > 0。 degree_influence 为正，实现正向关系#todo 幂律分布的α参数 和度数 的关系 生成的概率又应该是什么 tran_a_vector = _map_degree_to_behavior(scaled_degrees, base_value=config.tran_base_value, degree_influence_factor=config.tran_degree_influence_factor); succ_a_vector = _map_degree_to_behavior(scaled_degrees, base_value=config.succ_base_value, degree_influence_factor=config.succ_degree_influence_factor); dis_a_vector = _map_degree_to_behavior(scaled_degrees, base_value=config.dis_base_value, degree_influence_factor=config.dis_degree_influence_factor) # 使用 np.random.power 生成 [0, 1) 区间的原始倾向值 传入：a指数向量 + 节点数量 tran = rng.power(tran_a_vector, n); succ = rng.power(succ_a_vector, n); dis = rng.power(dis_a_vector, n) # 常数因子可以继续使用其他分布 const = gamma.rvs(a=2, scale=1, size=n, random_state=rng) # 归一化原始倾向值，使其成为概率 succ_norm, dis_norm, tran_norm = _normalize_triplet(succ, dis, tran); const_norm = _min_max_scale(const) return {'succ_distribution': succ_norm, 'dis_distribution': dis_norm, 'tran_distribution': tran_norm, 'constantFactor_distribution': const_norm}
+def _generate_powerlaw_distributions_degree_aware(
+        n: int,
+        degrees: np.ndarray,
+        config: "ExperimentConfig",
+) -> Dict[str, np.ndarray]:
+
+    """
+    生成与节点度数相关的、呈幂律分布的三种行为概率。
+    1. 每个行为（接受、抛弃、转发）的“基础潜力”与节点的度数成幂函数关系。
+       potential = (degree + 1)^gamma
+       - gamma > 0: 度数越高的节点，潜力越大（正相关）。
+       - gamma < 0: (degree+1)^gamma 会随着 degree 的增加而减小，建立负相关关系
+            degree_exponent_succ = -0.1，意味着度数越高的节点 不太可能亲自 接受信息，更倾向于传递信息
+    """
+    logging.info("===> Generating 'Power-law Degree-Aware' distributions...")
+
+    rng = config.rng
+    gamma_succ = config.succ_degree_influence_factor
+    gamma_dis = config.dis_degree_influence_factor
+    gamma_tran = config.tran_degree_influence_factor
+    random_factor = config.randomness_factor# 随机扰动因子
+
+    # 避免度数为0的节点产生问题
+    degrees_smoothed = degrees.astype(float) + 1.0
+
+    # 根据幂函数计算每个行为的潜力 -> 概率
+    succ_potential = np.power(degrees_smoothed, gamma_succ)
+    dis_potential = np.power(degrees_smoothed, gamma_dis)
+    tran_potential = np.power(degrees_smoothed, gamma_tran)
+
+    # 为每个节点的每个潜力值乘随机扰动因子
+    succ_potential *= np.random.uniform(1 - random_factor, 1 + random_factor, size=n)
+    dis_potential *= np.random.uniform(1 - random_factor, 1 + random_factor, size=n)
+    tran_potential *= np.random.uniform(1 - random_factor, 1 + random_factor, size=n)
+
+    # 确保>0
+    succ_potential = np.maximum(succ_potential, 1e-9)
+    dis_potential = np.maximum(dis_potential, 1e-9)
+    tran_potential = np.maximum(tran_potential, 1e-9)
+
+    # 归一化
+    potentials = np.vstack([succ_potential, dis_potential, tran_potential]).T  # (n, 3)
+    total_potential_per_node = potentials.sum(axis=1, keepdims=True)
+    normalized_probs = potentials / total_potential_per_node
+    succ_norm = normalized_probs[:, 0]
+    dis_norm = normalized_probs[:, 1]
+    tran_norm = normalized_probs[:, 2]
+
+    # 常数因子可以继续使用其他分布
+    const = gamma.rvs(a=2, scale=1, size=n, random_state=rng)
+    const_norm = _min_max_scale(const)
+
+    return {
+        'succ_distribution': succ_norm,
+        'dis_distribution': dis_norm,
+        'tran_distribution': tran_norm,
+        'constantFactor_distribution': const_norm
+    }
 
 
-def _generate_random_distributions(n: int, degrees: np.ndarray, config: ExperimentConfig) -> dict:
-    # todo 设置分布参数
-    logging.info("===> Generating 'Dirichlet' distributions...")
-    prob = np.random.dirichlet([5, 3, 3], size=n)
+def _generate_random_distributions(
+        n: int,
+        degrees: np.ndarray,
+        config: ExperimentConfig  # 使用字典代替类，更通用
+) -> Dict[str, np.ndarray]:
+    # 从配置中读取狄利克雷分布的alpha参数 [2,2,5]
+    dirichlet_alpha = config.random_dirichlet
+    logging.info(f"===> Generating 'Dirichlet' distributions with alpha={dirichlet_alpha}...")
 
-    tran_distribution = np.round(prob[:, 0], 7)
-    succ_distribution = np.round(prob[:, 1], 7)
-    dis_distribution = np.round(prob[:, 2], 7)
+    prob = np.random.dirichlet(dirichlet_alpha, size=n)
 
+    succ_distribution = np.round(prob[:, 0], 7)
+    dis_distribution = np.round(prob[:, 1], 7)
+    tran_distribution = np.round(prob[:, 2], 7)
     constantFactor_distribution = np.ones(n, dtype=float)
 
     return {

@@ -85,13 +85,13 @@ def simulation2(
                 "E_activated_users": [E_activated_users],  # 保持为浮点数
                 "variance": [Var_activated_users],
                 "std_deviation": [std_dev],
-                "tran_base_value": config.tran_base_value,
-                "tran_degree_influence_factor": config.tran_degree_influence_factor,
-                "succ_base_value": config.succ_base_value,
-                "succ_degree_influence_factor": config.succ_degree_influence_factor,
-                "dis_base_value": config.dis_base_value,
-                "dis_degree_influence_factor": config.dis_degree_influence_factor
+                # "succ_base_value": config.succ_base_value,
+                "degree_exponent_succ": config.succ_degree_influence_factor,
+                # "dis_base_value": config.dis_base_value,
+                "degree_exponent_dis": config.dis_degree_influence_factor,
+                # "tran_base_value": config.tran_base_value,
+                "degree_exponent_tran": config.tran_degree_influence_factor
             })
 
             # to_csv 会自动处理浮点数格式
-            df.to_csv(usage_rate_file, mode='a', header=not file_exists, index=False, encoding='utf-8-sig')
+            df.to_csv(usage_rate_file, mode='a+', header=not file_exists, index=False, encoding='utf-8-sig')

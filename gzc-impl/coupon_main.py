@@ -220,7 +220,6 @@ def run_coupon_experiment(config: ExperimentConfig):
 
 
 #  python coupon_main.py --start 2300 --end 3000 --step 300 done
-
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Run coupon experiment with range of seeds_num.")
@@ -235,21 +234,21 @@ if __name__ == '__main__':
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         methods=['random', 'degreeTopM', 'alpha_sort', 'importance_sort', 'ris_coverage'],
         # monte_carlo_L=2,
-        distribution_type='random',  # random poisson gamma powerlaw
+        distribution_type='powerlaw',  # powerlaw random poisson gamma
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
         num_samples=100000,
         # seeds_num=num,  # 32 64 128 256 512
-
-        tran_degree_influence_factor=10.0,
-        succ_degree_influence_factor=10.0,
-        dis_degree_influence_factor=10.0,
+        succ_degree_influence_factor= -0.1,
+        dis_degree_influence_factor= -0.3,
+        tran_degree_influence_factor= 0.5,
 
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainContinue',  # AgainReJudge 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)
-        version='2025-11-18-random-533-new'
+        version='2025-11-20-powerlaw',
+        random_dirichlet=[2,2,5]
     )
 
     # 外循环 控制种子个数

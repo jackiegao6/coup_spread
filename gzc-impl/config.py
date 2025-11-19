@@ -19,18 +19,21 @@ class ExperimentConfig:
     num_samples: int = 50000
 
     seeds_num: int = 1
-    tran_base_value: float = 1.0
-    tran_degree_influence_factor: float = -4.5
     succ_base_value: float = 1.0
-    succ_degree_influence_factor: float = 3.0
+    succ_degree_influence_factor: float = -0.1
     dis_base_value: float = 1.0
-    dis_degree_influence_factor: float = 2.0
+    dis_degree_influence_factor: float = -0.3
+    tran_base_value: float = 1.0
+    tran_degree_influence_factor: float = 0.5
+    randomness_factor: float = 0.1
 
-    rng: np.random.Generator = np.random.default_rng(1)# 保证复现性
+    rng: np.random.Generator = np.random.default_rng(1)
 
-    single_sim_func: str = 'AgainContinue' # AgainReJudge 、 AgainContinue
+    single_sim_func: str = 'AgainContinue' # AgainContinue | AgainReJudge
 
     version: str = 'v0'
+
+    random_dirichlet: list = None
 
     
     @property
@@ -46,7 +49,6 @@ class ExperimentConfig:
 
     def usage_rate_file(self, m = 0):
         times = ",".join(str(time) for time in self.simulation_times)
-        # todo 后续改为追加文件
         if self.distribution_type == 'powerlaw':
             return f"{self.data_prefix}/{self.data_set}/{self.version}/E-activated-{self.data_set}/distribution-{self.distribution_type}/tsd_{self.tran_degree_influence_factor}-{self.succ_degree_influence_factor}-{self.dis_degree_influence_factor}/single_sim_func-{self.single_sim_func}/simuTimes-{times}_seedNum-{m}_monteCarloL-{self.monte_carlo_L}_single_sim_func-{self.single_sim_func}_rrNumSamples-{self.num_samples}.csv"
         return f"{self.data_prefix}/{self.data_set}/{self.version}/E-activated-{self.data_set}/distribution-{self.distribution_type}_simuTimes-{times}_seedNum-{m}_monteCarloL-{self.monte_carlo_L}_rrNumSamples-{self.num_samples}.csv"
