@@ -257,7 +257,7 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainContinue',  # AgainReJudge 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)
-        version='2025-11-18-random'
+        version='2025-11-18-random-511'
     )
 
     # 外循环 控制种子个数
