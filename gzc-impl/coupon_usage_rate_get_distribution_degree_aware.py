@@ -196,6 +196,47 @@ def _generate_random_distributions(
         'constantFactor_distribution': constantFactor_distribution
     }
 
+def _generate_powerlaw_distributions_degree_aware_old(
+    n: int,
+    degrees: np.ndarray,
+    config: "ExperimentConfig",
+) -> Dict[str, np.ndarray]:
+
+    logging.info("===> 使用幂律分布生成四种分布")
+    rng = config.rng
+
+    # 将度数缩放一下
+    scaled_degrees = _min_max_scale(np.log1p(degrees))
+
+    # 转发(tran): 度越高，指数a越小，生成的值越倾向于1。
+    # 成功(succ) & 丢弃(dis): 度越高，指数a越大，生成的值越倾向于0。
+
+    # 指数 a 必须 > 0。
+    # degree_influence 为正，实现正向关系
+    tran_a_vector = _map_degree_to_behavior(scaled_degrees, base_value=config.tran_base_value, degree_influence_factor=config.tran_degree_influence_factor)
+    succ_a_vector = _map_degree_to_behavior(scaled_degrees, base_value=config.succ_base_value, degree_influence_factor=config.succ_degree_influence_factor)
+    dis_a_vector = _map_degree_to_behavior(scaled_degrees, base_value=config.dis_base_value, degree_influence_factor=config.dis_degree_influence_factor)
+
+    # 使用 np.random.power 生成 [0, 1) 区间的原始倾向值
+    # 传入：a指数向量 + 节点数量
+    tran = rng.power(tran_a_vector, n)
+    succ = rng.power(succ_a_vector, n)
+    dis = rng.power(dis_a_vector, n)
+
+    # 常数因子可以继续使用其他分布
+    const = gamma.rvs(a=2, scale=1, size=n, random_state=rng)
+
+    # 归一化原始倾向值，使其成为概率
+    succ_norm, dis_norm, tran_norm = _normalize_triplet(succ, dis, tran)
+    const_norm = _min_max_scale(const)
+
+    return {
+        'succ_distribution': succ_norm,
+        'dis_distribution': dis_norm,
+        'tran_distribution': tran_norm,
+        'constantFactor_distribution': const_norm
+    }
+
 
 def get_distribution_degree_aware(
         distribution_file: str,
@@ -237,6 +278,7 @@ def get_distribution_degree_aware(
         'poisson': _generate_poisson_distributions_degree_aware,
         'gamma': _generate_gamma_distributions_degree_aware,
         'powerlaw': _generate_powerlaw_distributions_degree_aware,
+        'powerlaw-old': _generate_powerlaw_distributions_degree_aware_old,
         'random': _generate_random_distributions
         # 可以按同样模式添加 'normal', 'exponential' 等
     }

@@ -40,11 +40,12 @@ class ExperimentConfig:
     def adj_file(self):
         return f"{self.data_prefix}/datasets/{self.data_set}-adj.pkl"
 
+    # 当种子数和分布参数相同时 采用相同的概率分布
     def distribution_file(self, m = 0):
         return f"{self.data_prefix}/{self.data_set}/{self.version}/distribution-in-{self.data_set}/distribution-{self.distribution_type}_seedNum-{m}.pkl"
 
     def deliverers_cache_file(self, method, m = 0):
-        return f"{self.data_prefix}/{self.data_set}/{self.version}/seeds-with-{self.data_set}/distribution-{self.distribution_type}_{method}_seedNum-{m}.txt"
+        return f"{self.data_prefix}/{self.data_set}/{self.version}/seeds-with-{self.data_set}/{self.distribution_type}_{method}_seedNum-{m}_SSRNum-{self.num_samples}.txt"
 
 
     def usage_rate_file(self, m = 0):
@@ -57,5 +58,5 @@ class ExperimentConfig:
     def log_file(self):
         times = ",".join(str(time) for time in self.simulation_times)
         if self.distribution_type == "powerlaw" or self.distribution_type == "gamma" or self.distribution_type == "poisson":
-            return f"/home/wen/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/{self.version}/distribution-{self.distribution_type}_seedNum-{self.seeds_num}_simuTimes-{times}_t-s-d-baseValue-{self.tran_base_value, self.succ_base_value, self.dis_base_value}_t-s-d-factor-{self.tran_degree_influence_factor, self.succ_degree_influence_factor, self.dis_degree_influence_factor}.log"
-        return f"/home/wen/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/{self.version}/distribution-{self.distribution_type}_seedNum-{self.seeds_num}_simuTimes-{times}.log"
+            return f"/home/wen/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/{self.version}/{self.distribution_type}_SSRNum-{self.num_samples}-_seedNum-{self.seeds_num}_simuTimes-{times}_t-s-d-baseValue-{self.tran_base_value, self.succ_base_value, self.dis_base_value}_t-s-d-factor-{self.tran_degree_influence_factor, self.succ_degree_influence_factor, self.dis_degree_influence_factor}.log"
+        return f"/home/wen/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/{self.version}/{self.distribution_type}_SSRNum-{self.num_samples}-_seedNum-{self.seeds_num}_simuTimes-{times}.log"
