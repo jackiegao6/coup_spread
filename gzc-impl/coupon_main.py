@@ -223,14 +223,14 @@ def run_coupon_experiment(config: ExperimentConfig):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Run coupon experiment with range of seeds_num.")
-    parser.add_argument('--start', type=int, default=2100, help='起始 seeds_num')
-    parser.add_argument('--end', type=int, default=50000, help='结束 seeds_num（不包含）')
+    parser.add_argument('--start', type=int, default=3, help='起始 seeds_num')
+    parser.add_argument('--end', type=int, default=10, help='结束 seeds_num（不包含）')
     parser.add_argument('--step', type=int, default=500, help='步长')
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
-        data_set='Twitter', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
-        simulation_times=[5],  # [1000, 5000]
+        data_set='facebook', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
+        simulation_times=[500],  # [1000, 5000]
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         methods=['random', 'degreeTopM', 'alpha_sort', 'importance_sort', 'ris_coverage'],
         # monte_carlo_L=2,
@@ -238,16 +238,16 @@ if __name__ == '__main__':
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=180000,
+        num_samples=120000,
         # seeds_num=num,  # 32 64 128 256 512
-        succ_degree_influence_factor= -0.05,
-        dis_degree_influence_factor= -0.5,
-        tran_degree_influence_factor= 0.2,
+        succ_degree_influence_factor= 0.1,
+        dis_degree_influence_factor= 0.02,
+        tran_degree_influence_factor= 0.1,
 
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainContinue',  # AgainReJudge 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)
-        version='2025-11-20-powerlaw-n',
+        version='2025-11-21',
         random_dirichlet=[2,2,5]
     )
 

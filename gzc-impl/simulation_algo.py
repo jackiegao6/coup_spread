@@ -107,11 +107,7 @@ def monteCarlo_singleTime_improved2(
     activatedUsers = set()
     activated_list = []
 
-
-    # 为每个初始投放者启动一个独立的随机游走
-    for start_user in initial_deliverers:
-        # logging.info(f"\t\t\t当前模拟的起始节点: {start_user}")
-
+    for start_user in initial_deliverers: # 为每个初始投放者启动一个独立的随机游走
 
         current_user = start_user
 
@@ -127,6 +123,8 @@ def monteCarlo_singleTime_improved2(
                 elif rand_pro < (succ_distribution[current_user] + dis_distribution[current_user]):
                     # 继续丢弃
                     break
+                else:
+                    continue
 
             else:
                 # 首次接触优惠券的逻辑
@@ -222,14 +220,12 @@ def _select_next_neighbor(
         current_user: 当前节点编号
         tranProMatrix: 转移概率矩阵 (n x n)，tranProMatrix[i, j] 表示 j -> i 的转发概率
     Returns:
-        邻居节点编号，若无邻居则返回 None
+        邻居节点编号
     """
-
     # 找到邻居及其对应的转发概率
     neighbors = np.flatnonzero(tranProMatrix[:, current_user])
     if neighbors.size == 0:
         return None
-
 
     probabilities = tranProMatrix[neighbors, current_user]
     prob_sum = np.sum(probabilities)

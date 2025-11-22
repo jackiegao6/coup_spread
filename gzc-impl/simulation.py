@@ -19,7 +19,7 @@ def evaluate_seed_set(
     succ_dist, dis_dist, _, const_factor_dist = distributions
 
     for i in range(num_simulations):
-        logging.info(f"\t\t当前模拟轮次: {i}")
+        print(f"\t\t当前模拟轮次: {i}")
         success_vector = simulation_function(
             tran_matrix,
             seed_list,
