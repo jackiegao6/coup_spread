@@ -234,21 +234,21 @@ if __name__ == '__main__':
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         methods=['random', 'degreeTopM', 'alpha_sort', 'importance_sort', 'ris_coverage'],
         # monte_carlo_L=2,
-        distribution_type='powerlaw',  # powerlaw powerlaw-old random poisson gamma
+        distribution_type='random',  # powerlaw powerlaw-old random poisson gamma
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
         num_samples=120000,
         # seeds_num=num,  # 32 64 128 256 512
-        succ_degree_influence_factor= 0.1,
-        dis_degree_influence_factor= 0.02,
-        tran_degree_influence_factor= 0.1,
+        succ_degree_influence_factor= 0.2,
+        dis_degree_influence_factor= 0.1,
+        tran_degree_influence_factor= 0.7,
 
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainContinue',  # AgainReJudge 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)
-        version='2025-11-21',
-        random_dirichlet=[2,2,5]
+        version='2025-11-23',
+        random_dirichlet=[1,1,18]
     )
 
     # 外循环 控制种子个数

@@ -73,8 +73,8 @@ if __name__ == "__main__":
     # 定义配置
     config_example = {
         'degree_exponent_succ': 0.1,  # 度数越高，越不倾向于“接受”
-        'degree_exponent_dis': 0.1,  # 度数越高，略微不倾向于“抛弃”
-        'degree_exponent_tran': 0.1,  # 度数越高，越倾向于“转发”
+        'degree_exponent_dis': 0.2,  # 度数越高，略微不倾向于“抛弃”
+        'degree_exponent_tran': 0.7,  # 度数越高，越倾向于“转发”
         'randomness_factor': 0.1  # 10%的随机扰动
     }
 

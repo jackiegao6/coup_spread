@@ -173,6 +173,51 @@ class CouponInfluenceMaximizer:
         logging.info(f"种子节点选择完毕。耗时: {end_time - start_time:.2f} 秒。")
         return selected_seeds, estimated_influence
 
+    def select_seeds_new_new(self) -> Tuple[List[int], float]:
+        logging.info("\n开始选择最优的种子节点 (Standard Greedy) ...")
+
+        # 1. 扁平化 RR-sets: 记录每个节点覆盖了哪些 (ssr_idx, coupon_idx)
+        # node_coverage[u] = set( (0,0), (0,1), (5,2)... )
+        node_coverage = defaultdict(set)
+        total_elements_count = 0
+
+        for ssr_idx, ssr in enumerate(self.all_ssrs):
+            for coupon_j, rr_set in enumerate(ssr):
+                element_id = (ssr_idx, coupon_j)  # 这是一个需要被覆盖的唯一事件
+                total_elements_count += 1
+                for node in rr_set:
+                    node_coverage[node].add(element_id)
+
+        selected_seeds = []
+        covered_elements = set()
+
+        # 2. 标准贪心选择
+        for i in range(self.k):
+            max_gain = -1
+            best_node = -1
+
+            # 寻找能覆盖最多“未覆盖元素”的节点
+            for node in self.nodes:
+                if node in selected_seeds:
+                    continue
+
+                # 增益 = 该节点覆盖的集合 - 已经被覆盖的集合
+                gain = len(node_coverage[node] - covered_elements)
+
+                if gain > max_gain:
+                    max_gain = gain
+                    best_node = node
+
+            if best_node != -1:
+                selected_seeds.append(best_node)
+                covered_elements.update(node_coverage[best_node])
+                print(f"  - 选出第 {i + 1} 个种子: {best_node}, 边际增益: {max_gain}")
+            else:
+                break
+
+        estimated_influence = (len(covered_elements) / total_elements_count) * self.num_nodes * self.k  # 粗略估算
+        return selected_seeds, estimated_influence
+
 def deliverers_ris_coverage(
         adj: sp.csr_matrix,  # 原始邻接矩阵
         tranProMatrix: np.ndarray,  # 转移概率矩阵
@@ -207,7 +252,7 @@ def deliverers_ris_coverage(
 
     # 3. 执行核心逻辑
     maximizer.generate_rr_sets_parallel(N=num_samples)
-    selected_seeds, estimated_influence = maximizer.select_seeds_new()
+    selected_seeds, estimated_influence = maximizer.select_seeds_new_new()
 
     print(f"\n估算的最大影响力: {estimated_influence:.2f}")
     logging.info(f"最终选择的种子集: {selected_seeds}\n")

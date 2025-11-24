@@ -95,6 +95,7 @@ def _run_full_simulation(
     # 返回平均总影响力
     return total_influence_accumulator / L
 
+# AgainReJudge
 def monteCarlo_singleTime_improved2(
     tranProMatrix: np.ndarray,
     initial_deliverers: list,
