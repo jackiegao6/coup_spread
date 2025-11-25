@@ -25,7 +25,7 @@ class ExperimentConfig:
     dis_degree_influence_factor: float = -0.3
     tran_base_value: float = 1.0
     tran_degree_influence_factor: float = 0.5
-    randomness_factor: float = 0.1
+    randomness_factor: float = 0.2
 
     rng: np.random.Generator = np.random.default_rng(1)
 

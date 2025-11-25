@@ -113,6 +113,66 @@ def _generate_gamma_distributions_degree_aware(n: int, degrees: np.ndarray, conf
     }
 
 
+def _generate_powerlaw_distributions_degree_aware_new(
+        n: int,
+        degrees: np.ndarray,
+        config: "ExperimentConfig",
+) -> Dict[str, np.ndarray]:
+    logging.info("===> Generating 'Influencer Model' (Power-law) distributions...")
+
+    rng = config.rng
+    # 读取配置
+    gamma_succ = config.succ_degree_influence_factor # 强负相关
+    gamma_dis = config.dis_degree_influence_factor # 强正相关
+    gamma_tran = config.tran_degree_influence_factor
+
+    # 平滑度数
+    degrees_smoothed = degrees.astype(float) + 1.0
+
+    # 1. 计算 Succ (接收概率) - 度数越高，Succ 越急剧下降
+    # 归一化度数到 [0, 1]
+    deg_norm = (degrees_smoothed - degrees_smoothed.min()) / (degrees_smoothed.max() - degrees_smoothed.min())
+    # 使用反向幂函数：Base prob * (1 - deg_norm)^alpha
+    # 边缘节点接近 Base，大V接近 0
+    base_succ_prob = 0.3  # 普通人最高 30% 概率领券
+    succ_raw = base_succ_prob * np.power((1.0 - deg_norm), 2.0)  # 2.0次幂衰减
+
+    # 2. 计算 Tran (转发概率) - 度数越高，Tran 越高
+    # 大V 接近 0.95，边缘节点 接近 0.1
+    base_tran_prob = 0.95
+    min_tran_prob = 0.1
+    tran_raw = min_tran_prob + (base_tran_prob - min_tran_prob) * np.power(deg_norm, 0.5)
+
+    # 3. 计算 Dis (丢弃概率)
+    # 剩余的概率分配给 Dis，或者设定一个基础值
+    # 为了简单，先生成 Succ 和 Tran，Dis = 1 - Succ - Tran (如果不为负)
+    # 但为了更稳健，我们生成三个势能然后归一化
+
+    # 重新构建势能：
+    potential_succ = succ_raw
+    potential_tran = tran_raw
+    # 丢弃势能设为一个较小的常数，或者稍微随度数变化
+    potential_dis = np.full(n, 0.05)
+
+    # 加入随机扰动
+    r_factor = config.randomness_factor
+    potential_succ *= rng.uniform(1 - r_factor, 1 + r_factor, size=n)
+    potential_tran *= rng.uniform(1 - r_factor, 1 + r_factor, size=n)
+    potential_dis *= rng.uniform(1 - r_factor, 1 + r_factor, size=n)
+
+    # 堆叠并归一化
+    potentials = np.vstack([potential_succ, potential_dis, potential_tran]).T
+    total_potentials = potentials.sum(axis=1, keepdims=True)
+    probs = potentials / total_potentials
+
+    return {
+        'succ_distribution': probs[:, 0],
+        'dis_distribution': probs[:, 1],
+        'tran_distribution': probs[:, 2],
+        'constantFactor_distribution': np.ones(n)  # 简化影响因子
+    }
+
+
 def _generate_powerlaw_distributions_degree_aware(
         n: int,
         degrees: np.ndarray,
