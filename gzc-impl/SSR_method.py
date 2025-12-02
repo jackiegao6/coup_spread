@@ -9,6 +9,88 @@ import logging
 from collections import deque
 from typing import List, Set, Tuple
 
+
+# 替换 SSR_method.py 中的同名函数
+
+def run_single_ssr_generation3(
+        args: Tuple,
+        max_path_length: int = 100
+) -> List[Set[int]]:
+    """
+    修正版：使用【反向随机游走 (Reverse Random Walk)】生成 RR-set。
+    这与 Simulation 中的 "Single Token Random Walk" 逻辑保持一致。
+    """
+    nodes, in_neighbors_array, alpha, k = args
+
+    # 1. 随机采样一个节点 v (作为优惠券的最终接收者)
+    root_node_v = random.choice(nodes)
+    ssr = []
+
+    # 2. 生成 k 个 RR-set (对应 k 个种子)
+    # 实际上如果是标准 RIS，这里不需要循环 k 次，只需要生成一次。
+    # 但为了配合你的 select_seeds_new_new 逻辑 (element_id = (ssr_idx, coupon_j))，我们保持结构不变。
+
+    for _ in range(k):
+        # 1. 检查根节点是否领券 (对应 Simulation 中的 succ 判定)
+        # 如果根节点根本不领券，那反向推导没有意义，这是一个无效样本
+        if random.random() > alpha[root_node_v]:
+            ssr.append(set())
+            continue
+
+        # 2. 开始反向随机游走
+        current_rr_set = {root_node_v}
+        current_node = root_node_v
+
+        # 模拟路径回溯
+        for _ in range(max_path_length):
+            # 获取所有入邻居 (可能把券传给 current_node 的人)
+            # in_neighbors_array[v] = {u: P(u->v)}
+            predecessors_map = in_neighbors_array.get(current_node, {})
+
+            if not predecessors_map:
+                break  # 没有入度，回溯结束
+
+            candidates = list(predecessors_map.keys())
+            weights = list(predecessors_map.values())
+
+            # --- 核心逻辑修正 ---
+            # Simulation: 必定选一个邻居(归一化后)继续，除非停止。
+            # 这里我们根据 P(u->v) 的相对权重来选择“谁是父节点”。
+
+            # 计算总权重
+            total_weight = sum(weights)
+            if total_weight == 0:
+                break
+
+            # 归一化权重用于选择
+            probs = [w / total_weight for w in weights]
+
+            # 选出一个父节点 (模拟“券是从哪来的”)
+            chosen_parent = random.choices(candidates, weights=probs, k=1)[0]
+
+            # 加入 RR-set
+            current_rr_set.add(chosen_parent)
+
+            # 决定是否继续回溯 (模拟 Forward Simulation 中的 Stop 概率)
+            # 在 Forward 中，节点 u 以 P_tran(u) 的概率继续转发。
+            # 这里我们需要估计父节点是否有能力继续转发。
+            # 简单起见，或者更严谨地，我们可以查表。
+            # 但由于我们不知道父节点具体的 P_tran (除非传进来)，
+            # 鉴于 "Influencer Model" 中 P_tran 普遍较高，我们设定一个高阻尼因子。
+            # 或者直接利用 weights 的 sum (即 sum(P(u->v))) 作为近似参考，但这在反向时不准。
+
+            # 使用固定阻尼因子模拟平均转发率 (例如 0.85 或 0.9)
+            # 这比之前的 0.009 概率要合理得多。
+            if random.random() > 0.9:
+                break
+
+            # 继续回溯
+            current_node = chosen_parent
+
+        ssr.append(current_rr_set)
+
+    return ssr
+
 # 一次完整的SSR抽样过程
 def run_single_ssr_generation3(
         args: Tuple,
@@ -94,7 +176,7 @@ class CouponInfluenceMaximizer:
         self.all_ssrs: List[List[Set[int]]] = []
         logging.info(f"图初始化完成，包含 {self.num_nodes} 个节点，选择 {k} 个种子。")
 
-    def _build_in_neighbors_array(self, adj: sp.csr_matrix, tranProMatrix: np.ndarray) -> Dict[int, Dict[int, float]]:
+    def _build_in_neighbors_array_old(self, adj: sp.csr_matrix, tranProMatrix: np.ndarray) -> Dict[int, Dict[int, float]]:
         """根据 adj 和 tranProMatrix 构建反向图 利用二维数组"""
         in_neighbors_array = defaultdict(dict)
         rows, cols = adj.nonzero()
@@ -107,6 +189,36 @@ class CouponInfluenceMaximizer:
                 num_edges_processed += 1
         logging.info(f"反向图构建完成，处理了 {num_edges_processed} 条边。")
         return dict(in_neighbors_array)
+
+    def _build_in_neighbors_array(self, adj: sp.csr_matrix, tranProMatrix: np.ndarray) -> Dict[int, Dict[int, float]]:
+        """
+        构建反向图。
+        adj[u, v] = 1 代表 u -> v。
+        我们需要为 v 找到所有入邻居 u，并记录 P(u -> v)。
+        """
+        in_neighbors_array = defaultdict(dict)
+
+        # 获取所有 u -> v 的边
+        if sp.issparse(adj):
+            rows, cols = adj.nonzero()
+        else:
+            rows, cols = np.nonzero(adj)
+
+        num_edges_processed = 0
+        for u, v in zip(rows, cols):
+            # 关键修正：
+            # 我们需要的是 u 激活 v 的概率。
+            # 修正后的 getTranProMatrix 保证了 tranProMatrix[u, v] 就是 P(u->v)
+            probability = tranProMatrix[u, v]
+
+            if probability > 0:
+                # 记录 v 的入邻居是 u，概率是 probability
+                in_neighbors_array[v][u] = probability
+                num_edges_processed += 1
+
+        logging.info(f"反向图构建完成，处理了 {num_edges_processed} 条边。")
+        return dict(in_neighbors_array)
+
 
     def generate_rr_sets_parallel(self, N: int, workers: int = 2):
 

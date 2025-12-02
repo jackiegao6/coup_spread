@@ -2,8 +2,72 @@ import numpy as np
 import networkx as nx
 import copy
 
+import numpy as np
+import scipy.sparse as sp
+import copy
+
 
 def getTranProMatrix(adj, tran_distribution: np.ndarray) -> np.ndarray:
+    """
+    修正后的矩阵生成函数。
+    返回 M，其中 M[u, v] 表示 u -> v 的转移概率。
+    """
+    # 1. 确保转换为浮点型
+    if sp.issparse(adj):
+        A_graph = adj.toarray().astype(float)
+    else:
+        A_graph = adj.astype(float)
+
+    n = A_graph.shape[0]
+    tran_vec = np.array(tran_distribution).flatten()
+
+    # 2. 计算出度 (Out-Degree): axis=1 (行求和)
+    out_degree = np.sum(A_graph, axis=1)
+
+    # 3. 计算每一条边的基础概率: P(u->v) = P_tran(u) / OutDegree(u)
+    # 也就是每一行 u，都要除以 u 的出度，乘以 u 的转发率
+
+    # 避免除以 0
+    with np.errstate(divide='ignore', invalid='ignore'):
+        row_scale = tran_vec / out_degree
+        row_scale[out_degree == 0] = 0.0
+
+    # 4. 利用广播机制应用到矩阵
+    # reshape(-1, 1) 将向量转为列向量 (n, 1)，使得 A * vec 实现 "行缩放"
+    # A[u, :] * row_scale[u]
+    tran_matrix = A_graph * row_scale.reshape(-1, 1)
+
+    return tran_matrix
+
+
+def getBestSingleDeliverer(tranProMatrix, succ_distribution, users_useAndDis):
+    # 保持不变，但注意这里的 N 计算可能受矩阵转置影响
+    # 如果 tranProMatrix 现在是 P(u->v)，那么 (I - M) 的逆是正确的
+    n = tranProMatrix.shape[0]
+    I = np.eye(n)
+    curr_succ_distribution = copy.deepcopy(succ_distribution)
+
+    # 注意：如果 M[u,v] 是 u->v，那么影响力传播是 vec * M
+    try:
+        N = np.linalg.inv(I - tranProMatrix)
+    except np.linalg.LinAlgError:
+        # 如果矩阵不可逆（通常不会发生，除非有概率为1的死循环），加一点阻尼
+        N = np.linalg.inv(I - 0.999 * tranProMatrix)
+
+    # 计算期望收益
+    # 这里的数学含义：每个节点作为源点，最终流向哪里并被succ接收
+    succ_nodes_for_every_node = np.dot(N, curr_succ_distribution.T)
+    # 注意：如果是 M[u,v]=u->v, 应该看 N 的行和(加权succ)
+    # 原代码 np.dot(dist, dot(N, M)) 比较复杂，简化为直接看吸收概率:
+    # 期望收益 = (I-M)^-1 * Succ_Vector
+
+    # 简化版计算：
+    expected_rewards = np.dot(N, curr_succ_distribution)
+
+    return np.argmax(expected_rewards)
+
+
+def getTranProMatrix_old(adj, tran_distribution: np.ndarray) -> np.ndarray:
     """
     根据邻接矩阵和节点转发概率，生成转移概率矩阵。
 
@@ -40,7 +104,7 @@ def getTranProMatrix(adj, tran_distribution: np.ndarray) -> np.ndarray:
     return tran_matrix
 
 
-def getBestSingleDeliverer(tranProMatrix, succ_distribution, users_useAndDis):
+def getBestSingleDeliverer_old(tranProMatrix, succ_distribution, users_useAndDis):
     """
     寻找在当前概率模型下最佳的单个投放节点 即能带来最多优惠券使用量的初始节点
     :param tranProMatrix: 转移概率矩阵

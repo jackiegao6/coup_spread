@@ -1,0 +1,10 @@
+2025-11-14 16:19:29,716 - INFO - 加载数据集: Twitter
+2025-11-14 16:19:29,719 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-14 16:19:29,719 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-14 16:19:29,729 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Twitter/2025-11-14/distribution-in-Twitter/distribution-powerlaw_seedNum-500.pkl
+2025-11-14 16:19:34,840 - INFO - 首次生成种子集 random
+2025-11-14 16:19:34,841 - INFO - 执行当前算法开始: random
+2025-11-14 16:19:34,841 - INFO - 当前用时 0.00 秒
+2025-11-14 16:19:34,842 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-14/seeds-with-Twitter/distribution-powerlaw_random_seedNum-500.txt
+2025-11-14 16:19:34,842 - INFO - 首次生成种子集 ris_coverage
+2025-11-14 16:19:34,842 - INFO - 执行当前算法开始: ris_coverage

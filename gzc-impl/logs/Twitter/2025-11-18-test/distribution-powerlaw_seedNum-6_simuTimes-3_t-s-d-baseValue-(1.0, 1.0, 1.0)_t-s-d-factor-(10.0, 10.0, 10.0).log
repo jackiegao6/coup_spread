@@ -1,0 +1,64 @@
+2025-11-18 16:46:53,369 - INFO - 加载数据集: Twitter
+2025-11-18 16:46:53,372 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-18 16:46:53,372 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-18 16:46:53,381 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Twitter/2025-11-18-test/distribution-in-Twitter/distribution-powerlaw_seedNum-6.pkl
+2025-11-18 16:46:58,765 - INFO - 首次生成种子集 random
+2025-11-18 16:46:58,765 - INFO - 执行当前算法开始: random
+2025-11-18 16:46:58,765 - INFO - 当前用时 0.00 秒
+2025-11-18 16:46:58,765 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-18-test/seeds-with-Twitter/distribution-powerlaw_random_seedNum-6.txt
+2025-11-18 16:46:58,766 - INFO - 首次生成种子集 alpha_sort
+2025-11-18 16:46:58,766 - INFO - 执行当前算法开始: alpha_sort
+2025-11-18 16:46:58,778 - INFO - 23362 个节点的alpha值降序排序 done
+2025-11-18 16:46:58,778 - INFO - 
+选择的种子集 (按alpha排序): [15714, 4509, 4653, 13981, 5599, 16193]
+
+2025-11-18 16:46:58,779 - INFO - 当前用时 0.01 秒
+2025-11-18 16:46:58,779 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-18-test/seeds-with-Twitter/distribution-powerlaw_alpha_sort_seedNum-6.txt
+2025-11-18 16:46:58,780 - INFO - 首次生成种子集 degreeTopM
+2025-11-18 16:46:58,780 - INFO - 执行当前算法开始: degreeTopM
+2025-11-18 16:46:58,781 - INFO - 当前用时 0.00 秒
+2025-11-18 16:46:58,781 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-18-test/seeds-with-Twitter/distribution-powerlaw_degreeTopM_seedNum-6.txt
+2025-11-18 16:46:58,781 - INFO - 首次生成种子集 ris_coverage
+2025-11-18 16:46:58,781 - INFO - 执行当前算法开始: ris_coverage
+2025-11-18 16:46:58,833 - INFO - 反向图构建完成，处理了 65548 条边。
+2025-11-18 16:46:58,836 - INFO - 图初始化完成，包含 23362 个节点，选择 6 个种子。
+2025-11-18 16:46:58,836 - INFO - 
+采样次数: 100, 开始生成 100 组SSR，使用 2 个并行进程...
+2025-11-18 16:47:02,134 - INFO - 100 个SSR生成完毕。耗时: 3.30 秒。
+2025-11-18 16:47:02,135 - INFO - 
+开始选择最优的种子节点 ...
+2025-11-18 16:47:02,214 - INFO - 种子节点选择完毕。耗时: 0.08 秒。
+2025-11-18 16:47:02,214 - INFO - 最终选择的种子集: [620, 360, 972, 16029, 674, 2228]
+
+2025-11-18 16:47:02,220 - INFO - 当前用时 3.44 秒
+2025-11-18 16:47:02,220 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-18-test/seeds-with-Twitter/distribution-powerlaw_ris_coverage_seedNum-6.txt
+2025-11-18 16:47:02,221 - INFO - 评估种子集: None
+2025-11-18 16:47:02,221 - INFO - 评估函数开始
+2025-11-18 16:47:02,221 - INFO - 当前模拟次数: [3]
+
+2025-11-18 16:47:02,221 - INFO - 当前评估种子数: 6 ---
+2025-11-18 16:47:02,221 - INFO -   Evaluating method: 'random' with 6 seeds.
+2025-11-18 16:47:02,221 - INFO -     Running 3 simulations...
+2025-11-18 16:47:02,221 - INFO - 		当前模拟轮次: 0
+2025-11-18 16:47:02,221 - INFO - 		当前模拟轮次: 1
+2025-11-18 16:47:02,223 - INFO - 		当前模拟轮次: 2
+2025-11-18 16:47:02,227 - INFO -     Result: E[Users] = 2.6667, Var[Users] = 3.5556, Std_Dev = 1.8856
+2025-11-18 16:47:02,233 - INFO -   Evaluating method: 'alpha_sort' with 6 seeds.
+2025-11-18 16:47:02,233 - INFO -     Running 3 simulations...
+2025-11-18 16:47:02,233 - INFO - 		当前模拟轮次: 0
+2025-11-18 16:47:02,233 - INFO - 		当前模拟轮次: 1
+2025-11-18 16:47:02,233 - INFO - 		当前模拟轮次: 2
+2025-11-18 16:47:02,233 - INFO -     Result: E[Users] = 5.6667, Var[Users] = 0.2222, Std_Dev = 0.4714
+2025-11-18 16:47:02,235 - INFO -   Evaluating method: 'degreeTopM' with 6 seeds.
+2025-11-18 16:47:02,235 - INFO -     Running 3 simulations...
+2025-11-18 16:47:02,235 - INFO - 		当前模拟轮次: 0
+2025-11-18 16:47:02,238 - INFO - 		当前模拟轮次: 1
+2025-11-18 16:47:02,241 - INFO - 		当前模拟轮次: 2
+2025-11-18 16:47:02,241 - INFO -     Result: E[Users] = 3.6667, Var[Users] = 0.2222, Std_Dev = 0.4714
+2025-11-18 16:47:02,242 - INFO -   Evaluating method: 'ris_coverage' with 6 seeds.
+2025-11-18 16:47:02,242 - INFO -     Running 3 simulations...
+2025-11-18 16:47:02,242 - INFO - 		当前模拟轮次: 0
+2025-11-18 16:47:02,243 - INFO - 		当前模拟轮次: 1
+2025-11-18 16:47:02,244 - INFO - 		当前模拟轮次: 2
+2025-11-18 16:47:02,245 - INFO -     Result: E[Users] = 4.0000, Var[Users] = 0.6667, Std_Dev = 0.8165
+2025-11-18 16:47:02,246 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Twitter/2025-11-18-test/E-activated-Twitter/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainContinue/simuTimes-3_seedNum-6_monteCarloL-10_single_sim_func-AgainContinue_rrNumSamples-100.csv

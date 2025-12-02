@@ -212,6 +212,34 @@ def monteCarlo_singleTime_improved2_AgainContinue(
 
 
 def _select_next_neighbor(
+        current_user: int,
+        tranProMatrix: np.ndarray
+) -> Optional[int]:
+    """
+    Args:
+        current_user: 当前节点 u
+        tranProMatrix: M[u, v] 表示 u -> v 的概率
+    """
+    # 修正：现在我们应该看第 current_user 行 (u -> ?)
+    # 之前的代码看的是列 [:, current_user]，那是错误的
+
+    # 获取 current_user 这一行所有非零元素的列索引
+    neighbors = np.flatnonzero(tranProMatrix[current_user, :])
+
+    if neighbors.size == 0:
+        return None
+
+    # 获取对应的概率
+    probabilities = tranProMatrix[current_user, neighbors]
+    prob_sum = np.sum(probabilities)
+
+    if prob_sum <= 0:
+        return np.random.choice(neighbors)
+
+    normalized_probs = probabilities / prob_sum
+    return np.random.choice(neighbors, p=normalized_probs)
+
+def _select_next_neighbor_old(
     current_user: int,
     tranProMatrix: np.ndarray
 ) -> Optional[int]:

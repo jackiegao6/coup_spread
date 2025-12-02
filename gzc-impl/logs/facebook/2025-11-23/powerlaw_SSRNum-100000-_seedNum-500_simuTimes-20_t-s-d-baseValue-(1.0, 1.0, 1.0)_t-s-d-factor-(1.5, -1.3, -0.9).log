@@ -1,0 +1,28 @@
+2025-11-24 22:13:46,731 - INFO - 加载数据集: facebook
+2025-11-24 22:13:46,735 - INFO - 复用概率分布 文件位置: /home/wen/pythonspace/data-test/facebook/2025-11-23/distribution-in-facebook/distribution-powerlaw_seedNum-500.pkl
+2025-11-24 22:13:46,883 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/facebook/2025-11-23/seeds-with-facebook/powerlaw_random_seedNum-500_SSRNum-100000.txt
+2025-11-24 22:13:46,884 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/facebook/2025-11-23/seeds-with-facebook/powerlaw_degreeTopM_seedNum-500_SSRNum-100000.txt
+2025-11-24 22:13:46,886 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/facebook/2025-11-23/seeds-with-facebook/powerlaw_alpha_sort_seedNum-500_SSRNum-100000.txt
+2025-11-24 22:13:46,891 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/facebook/2025-11-23/seeds-with-facebook/powerlaw_importance_sort_seedNum-500_SSRNum-100000.txt
+2025-11-24 22:13:46,902 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/facebook/2025-11-23/seeds-with-facebook/powerlaw_ris_coverage_seedNum-500_SSRNum-100000.txt
+2025-11-24 22:13:46,907 - INFO - 评估种子集: None
+2025-11-24 22:13:46,907 - INFO - 评估函数开始
+2025-11-24 22:13:46,907 - INFO - 当前模拟次数: [20]
+
+2025-11-24 22:13:46,907 - INFO - 当前评估种子数: 500 ---
+2025-11-24 22:13:46,907 - INFO -   Evaluating method: 'random' with 500 seeds.
+2025-11-24 22:13:46,907 - INFO -     Running 20 simulations...
+2025-11-24 22:15:01,088 - INFO - 加载数据集: facebook
+2025-11-24 22:15:01,091 - INFO - 复用概率分布 文件位置: /home/wen/pythonspace/data-test/facebook/2025-11-23/distribution-in-facebook/distribution-powerlaw_seedNum-500.pkl
+2025-11-24 22:15:01,239 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/facebook/2025-11-23/seeds-with-facebook/powerlaw_random_seedNum-500_SSRNum-100000.txt
+2025-11-24 22:15:01,241 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/facebook/2025-11-23/seeds-with-facebook/powerlaw_degreeTopM_seedNum-500_SSRNum-100000.txt
+2025-11-24 22:15:01,243 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/facebook/2025-11-23/seeds-with-facebook/powerlaw_alpha_sort_seedNum-500_SSRNum-100000.txt
+2025-11-24 22:15:01,245 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/facebook/2025-11-23/seeds-with-facebook/powerlaw_importance_sort_seedNum-500_SSRNum-100000.txt
+2025-11-24 22:15:01,256 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/facebook/2025-11-23/seeds-with-facebook/powerlaw_ris_coverage_seedNum-500_SSRNum-100000.txt
+2025-11-24 22:15:01,271 - INFO - 评估种子集: None
+2025-11-24 22:15:01,271 - INFO - 评估函数开始
+2025-11-24 22:15:01,271 - INFO - 当前模拟次数: [20]
+
+2025-11-24 22:15:01,271 - INFO - 当前评估种子数: 500 ---
+2025-11-24 22:15:01,271 - INFO -   Evaluating method: 'random' with 500 seeds.
+2025-11-24 22:15:01,271 - INFO -     Running 20 simulations...

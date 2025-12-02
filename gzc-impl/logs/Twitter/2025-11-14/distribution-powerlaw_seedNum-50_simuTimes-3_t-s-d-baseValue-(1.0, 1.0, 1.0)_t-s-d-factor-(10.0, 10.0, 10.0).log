@@ -1,0 +1,30 @@
+2025-11-14 16:18:07,802 - INFO - 加载数据集: Twitter
+2025-11-14 16:18:07,804 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-14 16:18:07,804 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-14 16:18:07,814 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Twitter/2025-11-14/distribution-in-Twitter/distribution-powerlaw_seedNum-50.pkl
+2025-11-14 16:18:12,099 - INFO - 首次生成种子集 random
+2025-11-14 16:18:12,099 - INFO - 执行当前算法开始: random
+2025-11-14 16:18:12,100 - INFO - 当前用时 0.00 秒
+2025-11-14 16:18:12,100 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-14/seeds-with-Twitter/distribution-powerlaw_random_seedNum-50.txt
+2025-11-14 16:18:12,100 - INFO - 首次生成种子集 ris_coverage
+2025-11-14 16:18:12,100 - INFO - 执行当前算法开始: ris_coverage
+2025-11-14 16:18:54,078 - INFO - 当前用时 41.98 秒
+2025-11-14 16:18:54,079 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-14/seeds-with-Twitter/distribution-powerlaw_ris_coverage_seedNum-50.txt
+2025-11-14 16:18:54,081 - INFO - 评估种子集: None
+2025-11-14 16:18:54,081 - INFO - 评估函数开始
+2025-11-14 16:18:54,081 - INFO - 当前模拟次数: [3]
+
+2025-11-14 16:18:54,081 - INFO - 当前评估种子数: 50 ---
+2025-11-14 16:18:54,081 - INFO -   Evaluating method: 'random' with 50 seeds.
+2025-11-14 16:18:54,081 - INFO -     Running 3 simulations...
+2025-11-14 16:18:54,081 - INFO - 		当前模拟轮次: 0
+2025-11-14 16:18:54,768 - INFO - 		当前模拟轮次: 1
+2025-11-14 16:18:54,783 - INFO - 		当前模拟轮次: 2
+2025-11-14 16:18:54,805 - INFO -     Result: E[Users] = 24.0000, Var[Users] = 10.6667, Std_Dev = 3.2660
+2025-11-14 16:18:54,811 - INFO -   Evaluating method: 'ris_coverage' with 50 seeds.
+2025-11-14 16:18:54,811 - INFO -     Running 3 simulations...
+2025-11-14 16:18:54,811 - INFO - 		当前模拟轮次: 0
+2025-11-14 16:18:54,823 - INFO - 		当前模拟轮次: 1
+2025-11-14 16:18:54,841 - INFO - 		当前模拟轮次: 2
+2025-11-14 16:18:54,853 - INFO -     Result: E[Users] = 33.0000, Var[Users] = 4.6667, Std_Dev = 2.1602
+2025-11-14 16:18:54,855 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Twitter/2025-11-14/E-activated-Twitter/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainContinue/simuTimes-3_seedNum-50_monteCarloL-10_single_sim_func-AgainContinue_rrNumSamples-100000.csv

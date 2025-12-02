@@ -1,0 +1,76 @@
+2025-11-20 23:54:41,398 - INFO - 加载数据集: Twitter
+2025-11-20 23:54:41,642 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-20 23:54:41,642 - INFO - ===> Generating 'Power-law Degree-Aware' distributions...
+2025-11-20 23:54:41,679 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Twitter/2025-11-20-powerlaw-n/distribution-in-Twitter/distribution-powerlaw_seedNum-32.pkl
+2025-11-20 23:54:49,359 - INFO - 首次生成种子集 random
+2025-11-20 23:54:49,361 - INFO - 执行当前算法开始: random
+2025-11-20 23:54:49,364 - INFO - 当前用时 0.00 秒
+2025-11-20 23:54:49,365 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-20-powerlaw-n/seeds-with-Twitter/powerlaw_random_seedNum-32_SSRNum-150000.txt
+2025-11-20 23:54:49,366 - INFO - 首次生成种子集 degreeTopM
+2025-11-20 23:54:49,366 - INFO - 执行当前算法开始: degreeTopM
+2025-11-20 23:54:49,384 - INFO - 当前用时 0.02 秒
+2025-11-20 23:54:49,385 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-20-powerlaw-n/seeds-with-Twitter/powerlaw_degreeTopM_seedNum-32_SSRNum-150000.txt
+2025-11-20 23:54:49,385 - INFO - 首次生成种子集 alpha_sort
+2025-11-20 23:54:49,385 - INFO - 执行当前算法开始: alpha_sort
+2025-11-20 23:54:49,414 - INFO - 
+选择的种子集 (按alpha排序): [3058, 4810, 6787, 6874, 15605, 17691, 4682, 18220, 9134, 478, 6781, 5260, 937, 12778, 3294, 2193, 15245, 11480, 21038, 8025, 14316, 15842, 12504, 7300, 22165, 20898, 9288, 8588, 10757, 23282, 15246, 7458]
+
+2025-11-20 23:54:49,415 - INFO - 当前用时 0.03 秒
+2025-11-20 23:54:49,415 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-20-powerlaw-n/seeds-with-Twitter/powerlaw_alpha_sort_seedNum-32_SSRNum-150000.txt
+2025-11-20 23:54:49,415 - INFO - 首次生成种子集 importance_sort
+2025-11-20 23:54:49,415 - INFO - 执行当前算法开始: importance_sort
+2025-11-20 23:55:02,224 - INFO - 
+选择的种子集 (按Importance排序): [9603, 9627, 178, 9617, 75, 1, 38, 9623, 9, 9659, 103, 8, 9610, 9587, 9649, 9582, 81, 78, 9566, 9631, 44, 9611, 9639, 9598, 9620, 9652, 3, 9653, 9636, 9601, 9561, 9637]
+
+2025-11-20 23:55:02,226 - INFO - 当前用时 12.81 秒
+2025-11-20 23:55:02,226 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-20-powerlaw-n/seeds-with-Twitter/powerlaw_importance_sort_seedNum-32_SSRNum-150000.txt
+2025-11-20 23:55:02,226 - INFO - 首次生成种子集 ris_coverage
+2025-11-20 23:55:02,226 - INFO - 执行当前算法开始: ris_coverage
+2025-11-20 23:55:03,343 - INFO - 反向图构建完成，处理了 65548 条边。
+2025-11-20 23:55:03,345 - INFO - 图初始化完成，包含 23362 个节点，选择 32 个种子。
+2025-11-20 23:55:03,346 - INFO - 
+采样次数: 150000, 开始生成 150000 组SSR，使用 2 个并行进程...
+2025-11-20 23:55:20,224 - INFO - 150000 个SSR生成完毕。耗时: 16.88 秒。
+2025-11-20 23:55:20,244 - INFO - 
+开始选择最优的种子节点 ...
+2025-11-20 23:55:34,013 - INFO - 种子节点选择完毕。耗时: 13.77 秒。
+2025-11-20 23:55:34,181 - INFO - 最终选择的种子集: [1066, 552, 12170, 6634, 13447, 9681, 1873, 5245, 1446, 17333, 18797, 1747, 8137, 20106, 4077, 16217, 7949, 16693, 19530, 4008, 1459, 2531, 11353, 6899, 7005, 1619, 21301, 115, 14423, 587, 1907, 19795]
+
+2025-11-20 23:55:34,851 - INFO - 当前用时 32.62 秒
+2025-11-20 23:55:34,851 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-20-powerlaw-n/seeds-with-Twitter/powerlaw_ris_coverage_seedNum-32_SSRNum-150000.txt
+2025-11-20 23:55:34,854 - INFO - 评估种子集: None
+2025-11-20 23:55:34,854 - INFO - 评估函数开始
+2025-11-20 23:55:34,854 - INFO - 当前模拟次数: [3]
+
+2025-11-20 23:55:34,854 - INFO - 当前评估种子数: 32 ---
+2025-11-20 23:55:34,854 - INFO -   Evaluating method: 'random' with 32 seeds.
+2025-11-20 23:55:34,855 - INFO -     Running 3 simulations...
+2025-11-20 23:55:34,855 - INFO - 		当前模拟轮次: 0
+2025-11-20 23:55:34,942 - INFO - 		当前模拟轮次: 1
+2025-11-20 23:55:34,954 - INFO - 		当前模拟轮次: 2
+2025-11-20 23:55:34,966 - INFO -     Result: E[Users] = 17.3333, Var[Users] = 6.2222, Std_Dev = 2.4944
+2025-11-20 23:55:34,995 - INFO -   Evaluating method: 'degreeTopM' with 32 seeds.
+2025-11-20 23:55:34,995 - INFO -     Running 3 simulations...
+2025-11-20 23:55:34,996 - INFO - 		当前模拟轮次: 0
+2025-11-20 23:55:35,016 - INFO - 		当前模拟轮次: 1
+2025-11-20 23:55:35,029 - INFO - 		当前模拟轮次: 2
+2025-11-20 23:55:35,047 - INFO -     Result: E[Users] = 14.3333, Var[Users] = 4.2222, Std_Dev = 2.0548
+2025-11-20 23:55:35,049 - INFO -   Evaluating method: 'alpha_sort' with 32 seeds.
+2025-11-20 23:55:35,049 - INFO -     Running 3 simulations...
+2025-11-20 23:55:35,049 - INFO - 		当前模拟轮次: 0
+2025-11-20 23:55:35,060 - INFO - 		当前模拟轮次: 1
+2025-11-20 23:55:35,066 - INFO - 		当前模拟轮次: 2
+2025-11-20 23:55:35,075 - INFO -     Result: E[Users] = 16.3333, Var[Users] = 0.2222, Std_Dev = 0.4714
+2025-11-20 23:55:35,076 - INFO -   Evaluating method: 'importance_sort' with 32 seeds.
+2025-11-20 23:55:35,076 - INFO -     Running 3 simulations...
+2025-11-20 23:55:35,076 - INFO - 		当前模拟轮次: 0
+2025-11-20 23:55:35,080 - INFO - 		当前模拟轮次: 1
+2025-11-20 23:55:35,090 - INFO - 		当前模拟轮次: 2
+2025-11-20 23:55:35,096 - INFO -     Result: E[Users] = 12.6667, Var[Users] = 6.2222, Std_Dev = 2.4944
+2025-11-20 23:55:35,097 - INFO -   Evaluating method: 'ris_coverage' with 32 seeds.
+2025-11-20 23:55:35,097 - INFO -     Running 3 simulations...
+2025-11-20 23:55:35,097 - INFO - 		当前模拟轮次: 0
+2025-11-20 23:55:35,114 - INFO - 		当前模拟轮次: 1
+2025-11-20 23:55:35,122 - INFO - 		当前模拟轮次: 2
+2025-11-20 23:55:35,126 - INFO -     Result: E[Users] = 15.3333, Var[Users] = 3.5556, Std_Dev = 1.8856
+2025-11-20 23:55:35,128 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Twitter/2025-11-20-powerlaw-n/E-activated-Twitter/distribution-powerlaw/tsd_0.1-0.1-0.1/single_sim_func-AgainReJudge/simuTimes-3_seedNum-32_monteCarloL-10_single_sim_func-AgainReJudge_rrNumSamples-150000.csv

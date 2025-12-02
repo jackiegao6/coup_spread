@@ -1,0 +1,105 @@
+2025-11-03 18:10:08,202 - INFO - 加载数据集: Twitter
+2025-11-03 18:10:08,204 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-03 18:10:08,204 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-03 18:10:08,215 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Twitter/2025-11-03/distribution-in-Twitter/distribution-powerlaw_seedNum-7000.pkl
+2025-11-03 18:11:19,659 - INFO - 首次生成种子集 random
+2025-11-03 18:11:20,102 - INFO - 执行当前算法开始: random
+2025-11-03 18:11:22,063 - INFO - 当前用时 1.96 秒
+2025-11-03 18:11:22,200 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-03/seeds-with-Twitter/distribution-powerlaw_random_seedNum-7000.txt
+2025-11-03 18:11:22,203 - INFO - 首次生成种子集 degreeTopM
+2025-11-03 18:11:22,203 - INFO - 执行当前算法开始: degreeTopM
+2025-11-03 18:11:22,645 - INFO - 当前用时 0.44 秒
+2025-11-03 18:11:22,645 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-03/seeds-with-Twitter/distribution-powerlaw_degreeTopM_seedNum-7000.txt
+2025-11-03 18:11:22,656 - INFO - 首次生成种子集 ris_coverage
+2025-11-03 18:11:22,656 - INFO - 执行当前算法开始: ris_coverage
+2025-11-03 21:18:54,870 - INFO - 当前用时 11252.15 秒
+2025-11-03 21:18:54,987 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-03/seeds-with-Twitter/distribution-powerlaw_ris_coverage_seedNum-7000.txt
+2025-11-03 21:18:55,066 - INFO - 评估种子集: None
+2025-11-03 21:18:55,083 - INFO - 评估函数开始
+2025-11-03 21:18:55,083 - INFO - 当前模拟次数: [5]
+
+2025-11-03 21:18:55,083 - INFO - 当前评估种子数: 7000 ---
+2025-11-03 21:18:55,083 - INFO -   Evaluating method: 'random' with 7000 seeds.
+2025-11-03 21:18:55,083 - INFO -     Running 5 simulations...
+2025-11-03 21:18:55,088 - INFO - 		当前模拟轮次: 0
+2025-11-03 21:35:10,458 - INFO - 加载数据集: Twitter
+2025-11-03 21:35:10,482 - INFO - 复用概率分布 文件位置: /home/wen/pythonspace/data-test/Twitter/2025-11-03/distribution-in-Twitter/distribution-powerlaw_seedNum-7000.pkl
+2025-11-03 21:35:15,919 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/Twitter/2025-11-03/seeds-with-Twitter/distribution-powerlaw_random_seedNum-7000.txt
+2025-11-03 21:35:15,993 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/Twitter/2025-11-03/seeds-with-Twitter/distribution-powerlaw_degreeTopM_seedNum-7000.txt
+2025-11-03 21:35:16,209 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/Twitter/2025-11-03/seeds-with-Twitter/distribution-powerlaw_ris_coverage_seedNum-7000.txt
+2025-11-03 21:35:16,381 - INFO - 评估种子集: None
+2025-11-03 21:35:16,382 - INFO - 评估函数开始
+2025-11-03 21:35:16,382 - INFO - 当前模拟次数: [5]
+
+2025-11-03 21:35:16,382 - INFO - 当前评估种子数: 7000 ---
+2025-11-03 21:35:16,382 - INFO -   Evaluating method: 'random' with 7000 seeds.
+2025-11-03 21:35:16,382 - INFO -     Running 5 simulations...
+2025-11-03 21:35:16,382 - INFO - 		当前模拟轮次: 0
+2025-11-03 21:35:18,513 - INFO - 		当前模拟轮次: 1
+2025-11-03 21:35:20,648 - INFO - 		当前模拟轮次: 2
+2025-11-03 21:35:22,686 - INFO - 		当前模拟轮次: 3
+2025-11-03 21:35:24,914 - INFO - 		当前模拟轮次: 4
+2025-11-03 21:35:27,136 - INFO -     Result: E[Users] = 3011.4000, Var[Users] = 2567.0400, Std_Dev = 50.6660
+2025-11-03 21:35:27,195 - INFO -   Evaluating method: 'degreeTopM' with 7000 seeds.
+2025-11-03 21:35:27,195 - INFO -     Running 5 simulations...
+2025-11-03 21:35:27,195 - INFO - 		当前模拟轮次: 0
+2025-11-03 21:35:29,633 - INFO - 		当前模拟轮次: 1
+2025-11-03 21:35:31,808 - INFO - 		当前模拟轮次: 2
+2025-11-03 21:35:33,860 - INFO - 		当前模拟轮次: 3
+2025-11-03 21:35:35,873 - INFO - 		当前模拟轮次: 4
+2025-11-03 21:35:37,949 - INFO -     Result: E[Users] = 2854.0000, Var[Users] = 334.0000, Std_Dev = 18.2757
+2025-11-03 21:35:37,952 - INFO -   Evaluating method: 'ris_coverage' with 7000 seeds.
+2025-11-03 21:35:37,952 - INFO -     Running 5 simulations...
+2025-11-03 21:35:37,952 - INFO - 		当前模拟轮次: 0
+2025-11-03 21:35:40,375 - INFO - 		当前模拟轮次: 1
+2025-11-03 21:35:42,556 - INFO - 		当前模拟轮次: 2
+2025-11-03 21:35:44,745 - INFO - 		当前模拟轮次: 3
+2025-11-03 21:35:46,976 - INFO - 		当前模拟轮次: 4
+2025-11-03 21:35:49,126 - INFO -     Result: E[Users] = 3016.2000, Var[Users] = 1385.7600, Std_Dev = 37.2258
+2025-11-03 21:35:49,128 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Twitter/2025-11-03/E-activated-Twitter/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-7000_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-1000000.csv
+2025-11-03 21:35:49,141 - INFO - 加载数据集: Twitter
+2025-11-03 21:35:49,144 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-03 21:35:49,144 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-03 21:35:49,155 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Twitter/2025-11-03/distribution-in-Twitter/distribution-powerlaw_seedNum-7500.pkl
+2025-11-03 21:36:00,161 - INFO - 首次生成种子集 random
+2025-11-03 21:36:00,161 - INFO - 执行当前算法开始: random
+2025-11-03 21:36:00,211 - INFO - 当前用时 0.05 秒
+2025-11-03 21:36:00,212 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-03/seeds-with-Twitter/distribution-powerlaw_random_seedNum-7500.txt
+2025-11-03 21:36:00,214 - INFO - 首次生成种子集 degreeTopM
+2025-11-03 21:36:00,214 - INFO - 执行当前算法开始: degreeTopM
+2025-11-03 21:36:00,223 - INFO - 当前用时 0.01 秒
+2025-11-03 21:36:00,223 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-03/seeds-with-Twitter/distribution-powerlaw_degreeTopM_seedNum-7500.txt
+2025-11-03 21:36:00,237 - INFO - 首次生成种子集 ris_coverage
+2025-11-03 21:36:00,237 - INFO - 执行当前算法开始: ris_coverage
+2025-11-04 01:04:14,197 - INFO - 当前用时 12493.96 秒
+2025-11-04 01:04:14,226 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-03/seeds-with-Twitter/distribution-powerlaw_ris_coverage_seedNum-7500.txt
+2025-11-04 01:04:14,240 - INFO - 评估种子集: None
+2025-11-04 01:04:14,240 - INFO - 评估函数开始
+2025-11-04 01:04:14,240 - INFO - 当前模拟次数: [5]
+
+2025-11-04 01:04:14,240 - INFO - 当前评估种子数: 7500 ---
+2025-11-04 01:04:14,240 - INFO -   Evaluating method: 'random' with 7500 seeds.
+2025-11-04 01:04:14,241 - INFO -     Running 5 simulations...
+2025-11-04 01:04:14,241 - INFO - 		当前模拟轮次: 0
+2025-11-04 01:14:39,363 - INFO - 		当前模拟轮次: 1
+2025-11-04 01:14:41,671 - INFO - 		当前模拟轮次: 2
+2025-11-04 01:14:44,027 - INFO - 		当前模拟轮次: 3
+2025-11-04 01:14:46,317 - INFO - 		当前模拟轮次: 4
+2025-11-04 01:14:48,613 - INFO -     Result: E[Users] = 3183.4000, Var[Users] = 353.8400, Std_Dev = 18.8106
+2025-11-04 01:14:48,668 - INFO -   Evaluating method: 'degreeTopM' with 7500 seeds.
+2025-11-04 01:14:48,668 - INFO -     Running 5 simulations...
+2025-11-04 01:14:48,669 - INFO - 		当前模拟轮次: 0
+2025-11-04 01:14:50,819 - INFO - 		当前模拟轮次: 1
+2025-11-04 01:14:52,994 - INFO - 		当前模拟轮次: 2
+2025-11-04 01:14:55,232 - INFO - 		当前模拟轮次: 3
+2025-11-04 01:14:57,436 - INFO - 		当前模拟轮次: 4
+2025-11-04 01:14:59,615 - INFO -     Result: E[Users] = 3012.8000, Var[Users] = 619.7600, Std_Dev = 24.8950
+2025-11-04 01:14:59,619 - INFO -   Evaluating method: 'ris_coverage' with 7500 seeds.
+2025-11-04 01:14:59,619 - INFO -     Running 5 simulations...
+2025-11-04 01:14:59,619 - INFO - 		当前模拟轮次: 0
+2025-11-04 01:15:02,919 - INFO - 		当前模拟轮次: 1
+2025-11-04 01:15:06,121 - INFO - 		当前模拟轮次: 2
+2025-11-04 01:15:09,390 - INFO - 		当前模拟轮次: 3
+2025-11-04 01:15:12,559 - INFO - 		当前模拟轮次: 4
+2025-11-04 01:15:15,792 - INFO -     Result: E[Users] = 2877.0000, Var[Users] = 1026.8000, Std_Dev = 32.0437
+2025-11-04 01:15:15,794 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/Twitter/2025-11-03/E-activated-Twitter/distribution-powerlaw/tsd_10.0-10.0-10.0/single_sim_func-AgainReJudge/simuTimes-5_seedNum-7500_monteCarloL-15_single_sim_func-AgainReJudge_rrNumSamples-1000000.csv

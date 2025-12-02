@@ -1,0 +1,46 @@
+2025-11-14 17:04:34,776 - INFO - 加载数据集: Twitter
+2025-11-14 17:04:34,800 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-14 17:04:34,800 - INFO - ===> 使用幂律分布生成四种分布
+2025-11-14 17:04:34,825 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/Twitter/2025-11-14/distribution-in-Twitter/distribution-powerlaw_seedNum-1000.pkl
+2025-11-14 17:04:39,080 - INFO - 首次生成种子集 random
+2025-11-14 17:04:39,080 - INFO - 执行当前算法开始: random
+2025-11-14 17:04:39,081 - INFO - 当前用时 0.00 秒
+2025-11-14 17:04:39,081 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-14/seeds-with-Twitter/distribution-powerlaw_random_seedNum-1000.txt
+2025-11-14 17:04:39,081 - INFO - 首次生成种子集 degreeTopM
+2025-11-14 17:04:39,081 - INFO - 执行当前算法开始: degreeTopM
+2025-11-14 17:04:39,083 - INFO - 当前用时 0.00 秒
+2025-11-14 17:04:39,083 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/Twitter/2025-11-14/seeds-with-Twitter/distribution-powerlaw_degreeTopM_seedNum-1000.txt
+2025-11-14 17:04:39,084 - INFO - 首次生成种子集 ris_coverage
+2025-11-14 17:04:39,084 - INFO - 执行当前算法开始: ris_coverage
+2025-11-14 20:11:53,566 - INFO - 加载数据集: Twitter
+2025-11-14 20:11:53,616 - INFO - 复用概率分布 文件位置: /home/wen/pythonspace/data-test/Twitter/2025-11-14/distribution-in-Twitter/distribution-powerlaw_seedNum-1000.pkl
+2025-11-14 20:11:58,974 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/Twitter/2025-11-14/seeds-with-Twitter/distribution-powerlaw_random_seedNum-1000.txt
+2025-11-14 20:11:58,977 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/Twitter/2025-11-14/seeds-with-Twitter/distribution-powerlaw_degreeTopM_seedNum-1000.txt
+2025-11-14 20:11:58,989 - INFO - 首次生成种子集 ris_coverage
+2025-11-14 20:11:58,989 - INFO - 执行当前算法开始: ris_coverage
+2025-11-15 12:59:45,769 - INFO - 加载数据集: Twitter
+2025-11-15 12:59:45,822 - INFO - 复用概率分布 文件位置: /home/wen/pythonspace/data-test/Twitter/2025-11-14/distribution-in-Twitter/distribution-powerlaw_seedNum-1000.pkl
+2025-11-15 12:59:50,394 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/Twitter/2025-11-14/seeds-with-Twitter/distribution-powerlaw_random_seedNum-1000.txt
+2025-11-15 12:59:50,397 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/Twitter/2025-11-14/seeds-with-Twitter/distribution-powerlaw_degreeTopM_seedNum-1000.txt
+2025-11-15 12:59:50,414 - INFO - 首次生成种子集 ris_coverage
+2025-11-15 12:59:50,414 - INFO - 执行当前算法开始: ris_coverage
+2025-11-15 15:24:29,747 - INFO - 加载数据集: Twitter
+2025-11-15 15:24:29,818 - INFO - 复用概率分布 文件位置: /home/wen/pythonspace/data-test/Twitter/2025-11-14/distribution-in-Twitter/distribution-powerlaw_seedNum-1000.pkl
+2025-11-15 15:24:34,167 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/Twitter/2025-11-14/seeds-with-Twitter/distribution-powerlaw_random_seedNum-1000.txt
+2025-11-15 15:24:34,170 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/Twitter/2025-11-14/seeds-with-Twitter/distribution-powerlaw_degreeTopM_seedNum-1000.txt
+2025-11-15 15:24:34,187 - INFO - 首次生成种子集 ris_coverage
+2025-11-15 15:24:34,187 - INFO - 执行当前算法开始: ris_coverage
+2025-11-15 15:24:34,329 - INFO - 反向图构建完成，处理了 65548 条边。
+2025-11-15 15:24:34,331 - INFO - 图初始化完成，包含 23362 个节点，选择 1000 个种子。
+2025-11-15 15:24:34,331 - INFO - 
+采样次数: 200000, 开始生成 200000 组SSR，使用 2 个并行进程...
+2025-11-15 15:24:48,972 - INFO - 加载数据集: Twitter
+2025-11-15 15:24:48,975 - INFO - 复用概率分布 文件位置: /home/wen/pythonspace/data-test/Twitter/2025-11-14/distribution-in-Twitter/distribution-powerlaw_seedNum-1000.pkl
+2025-11-15 15:24:54,268 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/Twitter/2025-11-14/seeds-with-Twitter/distribution-powerlaw_random_seedNum-1000.txt
+2025-11-15 15:24:54,272 - INFO - 从当前位置 读取种子集 /home/wen/pythonspace/data-test/Twitter/2025-11-14/seeds-with-Twitter/distribution-powerlaw_degreeTopM_seedNum-1000.txt
+2025-11-15 15:24:54,286 - INFO - 首次生成种子集 ris_coverage
+2025-11-15 15:24:54,286 - INFO - 执行当前算法开始: ris_coverage
+2025-11-15 15:24:54,346 - INFO - 反向图构建完成，处理了 65548 条边。
+2025-11-15 15:24:54,348 - INFO - 图初始化完成，包含 23362 个节点，选择 1000 个种子。
+2025-11-15 15:24:54,348 - INFO - 
+采样次数: 100000, 开始生成 100000 组SSR，使用 2 个并行进程...

@@ -1,0 +1,62 @@
+2025-11-24 17:15:10,683 - INFO - 加载数据集: facebook
+2025-11-24 17:15:10,686 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-11-24 17:15:10,687 - INFO - ===> Generating 'Power-law Degree-Aware' distributions...
+2025-11-24 17:15:10,688 - INFO - 保存概率分布 文件位置: /home/wen/pythonspace/data-test/facebook/2025-11-23/distribution-in-facebook/distribution-powerlaw_seedNum-50.pkl
+2025-11-24 17:15:10,835 - INFO - 首次生成种子集 random
+2025-11-24 17:15:10,835 - INFO - 执行当前算法开始: random
+2025-11-24 17:15:10,835 - INFO - 当前用时 0.00 秒
+2025-11-24 17:15:10,835 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/facebook/2025-11-23/seeds-with-facebook/powerlaw_random_seedNum-50_SSRNum-100000.txt
+2025-11-24 17:15:10,835 - INFO - 首次生成种子集 degreeTopM
+2025-11-24 17:15:10,835 - INFO - 执行当前算法开始: degreeTopM
+2025-11-24 17:15:10,837 - INFO - 当前用时 0.00 秒
+2025-11-24 17:15:10,837 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/facebook/2025-11-23/seeds-with-facebook/powerlaw_degreeTopM_seedNum-50_SSRNum-100000.txt
+2025-11-24 17:15:10,837 - INFO - 首次生成种子集 alpha_sort
+2025-11-24 17:15:10,837 - INFO - 执行当前算法开始: alpha_sort
+2025-11-24 17:15:10,839 - INFO - 4039 个节点的alpha值降序排序 done
+2025-11-24 17:15:10,839 - INFO - ==============>> [(582, 0.14025806220182943), (11, 0.1398566160914047), (1319, 0.13350880288824835), (2612, 0.12941137450198528), (2575, 0.1293964485688785), (3730, 0.12819034568174859), (1696, 0.12797404483566172), (37, 0.12690837767070087), (3059, 0.1266298554126743), (2036, 0.1258813604835532)]
+2025-11-24 17:15:10,839 - INFO - 
+选择的种子集 (按alpha排序): [582, 11, 1319, 2612, 2575, 3730, 1696, 37, 3059, 2036, 1812, 4012, 2021, 3497, 3812, 3676, 210, 12, 215, 2029, 404, 3834, 74, 2711, 3603, 397, 209, 1046, 292, 1067, 631, 3435, 114, 1526, 1750, 1763, 1767, 3766, 692, 3342, 3495, 3139, 3868, 3335, 2406, 3415, 1764, 3748, 1837, 1603]
+
+2025-11-24 17:15:10,839 - INFO - 当前用时 0.00 秒
+2025-11-24 17:15:10,840 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/facebook/2025-11-23/seeds-with-facebook/powerlaw_alpha_sort_seedNum-50_SSRNum-100000.txt
+2025-11-24 17:15:10,840 - INFO - 首次生成种子集 importance_sort
+2025-11-24 17:15:10,840 - INFO - 执行当前算法开始: importance_sort
+2025-11-24 17:15:13,466 - INFO - 
+选择的种子集 (按Importance排序): [582, 11, 1319, 2612, 2575, 3730, 1696, 37, 3059, 2036, 1812, 4012, 2021, 3497, 3812, 3676, 210, 12, 215, 2029, 404, 3834, 74, 2711, 3603, 397, 209, 1046, 292, 1067, 631, 3435, 114, 1526, 1750, 1763, 1767, 3766, 692, 3342, 3495, 3139, 3868, 3335, 2406, 3415, 1764, 3748, 1837, 1603]
+
+2025-11-24 17:15:13,467 - INFO - 当前用时 2.63 秒
+2025-11-24 17:15:13,467 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/facebook/2025-11-23/seeds-with-facebook/powerlaw_importance_sort_seedNum-50_SSRNum-100000.txt
+2025-11-24 17:15:13,468 - INFO - 首次生成种子集 ris_coverage
+2025-11-24 17:15:13,468 - INFO - 执行当前算法开始: ris_coverage
+2025-11-24 17:15:13,580 - INFO - 反向图构建完成，处理了 176468 条边。
+2025-11-24 17:15:13,581 - INFO - 图初始化完成，包含 4039 个节点，选择 50 个种子。
+2025-11-24 17:15:13,581 - INFO - 
+采样次数: 100000, 开始生成 100000 组SSR，使用 2 个并行进程...
+2025-11-24 17:15:29,842 - INFO - 100000 个SSR生成完毕。耗时: 16.26 秒。
+2025-11-24 17:15:29,850 - INFO - 
+开始选择最优的种子节点 (Standard Greedy) ...
+2025-11-24 17:15:31,361 - INFO - 最终选择的种子集: [3059, 2612, 37, 1750, 1696, 1763, 4023, 1812, 3834, 1319, 74, 952, 2021, 631, 12, 3766, 1526, 11, 2575, 3415, 210, 1764, 2036, 3812, 292, 114, 1046, 2037, 4012, 215, 3868, 3676, 287, 404, 582, 3342, 3603, 3730, 42, 4010, 2711, 43, 872, 15, 1786, 605, 1837, 3195, 397, 3748]
+
+2025-11-24 17:15:32,076 - INFO - 当前用时 18.61 秒
+2025-11-24 17:15:32,076 - INFO - 将种子集 写入位置: /home/wen/pythonspace/data-test/facebook/2025-11-23/seeds-with-facebook/powerlaw_ris_coverage_seedNum-50_SSRNum-100000.txt
+2025-11-24 17:15:32,077 - INFO - 评估种子集: None
+2025-11-24 17:15:32,077 - INFO - 评估函数开始
+2025-11-24 17:15:32,077 - INFO - 当前模拟次数: [50]
+
+2025-11-24 17:15:32,077 - INFO - 当前评估种子数: 50 ---
+2025-11-24 17:15:32,077 - INFO -   Evaluating method: 'random' with 50 seeds.
+2025-11-24 17:15:32,077 - INFO -     Running 50 simulations...
+2025-11-24 17:21:09,621 - INFO -     Result: E[Users] = 16.7800, Var[Users] = 12.8916, Std_Dev = 3.5905
+2025-11-24 17:21:09,628 - INFO -   Evaluating method: 'degreeTopM' with 50 seeds.
+2025-11-24 17:21:09,628 - INFO -     Running 50 simulations...
+2025-11-24 17:28:41,487 - INFO -     Result: E[Users] = 16.3600, Var[Users] = 10.9104, Std_Dev = 3.3031
+2025-11-24 17:28:41,493 - INFO -   Evaluating method: 'alpha_sort' with 50 seeds.
+2025-11-24 17:28:41,493 - INFO -     Running 50 simulations...
+2025-11-24 17:32:28,018 - INFO -     Result: E[Users] = 16.2800, Var[Users] = 8.3216, Std_Dev = 2.8847
+2025-11-24 17:32:28,021 - INFO -   Evaluating method: 'importance_sort' with 50 seeds.
+2025-11-24 17:32:28,021 - INFO -     Running 50 simulations...
+2025-11-24 17:36:10,886 - INFO -     Result: E[Users] = 17.7200, Var[Users] = 9.4016, Std_Dev = 3.0662
+2025-11-24 17:36:10,889 - INFO -   Evaluating method: 'ris_coverage' with 50 seeds.
+2025-11-24 17:36:10,889 - INFO -     Running 50 simulations...
+2025-11-24 17:39:47,781 - INFO -     Result: E[Users] = 18.1200, Var[Users] = 9.7856, Std_Dev = 3.1282
+2025-11-24 17:39:47,785 - INFO - 保存评估文件至: /home/wen/pythonspace/data-test/facebook/2025-11-23/E-activated-facebook/distribution-powerlaw/tsd_1.5--1.3--0.9/single_sim_func-AgainContinue/simuTimes-50_seedNum-50_monteCarloL-10_single_sim_func-AgainContinue_rrNumSamples-100000.csv
