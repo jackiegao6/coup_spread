@@ -282,30 +282,30 @@ def monteCarloSimulation(tranProMatrix,indexes,L,succ_distribution,dis_distribut
     return best_next_deliverer
 
 
-if __name__ == '__main__':
-
-    G = nx.Graph()
-    G.add_nodes_from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) 
-    G.add_edges_from([(0, 2), (0, 3), (1, 2), (1, 4), (2, 4), (4,5), (4,6), (4,7),(4,8),(4,9), (5,6),(5,9)])
-    adj = nx.adjacency_matrix(G)
-
-    n = adj.shape[0]
-    use_pro = [0.01,0.2,0.3,0.4,0.3,
-               0.1,0.3,0.5,0.2,0.2]
-    dis_pro = [0.04,0.2,0.2,0.1,0.1,
-               0.4,0.3,0.2,0.1,0.3]
-    L = 5
-    constantFactor = [1,1,1,1,1,
-                      1,1,1,1,1]
-    users = []
-    initial_tran_distribution = np.array([0.001, 0.5, 0.9, 0.2, 0.7, 0.8, 0.5, 0.9, 0.2, 0.7])
-
-    tranProMatrix, neighbor_having = single_deliverer.getTranProMatrix(adj,initial_tran_distribution)
-    bestSingleDeliverer = single_deliverer.getBestSingleDeliverer(tranProMatrix,use_pro,neighbor_having)
-    indexes = [bestSingleDeliverer]
-    best_next_deliverer = monteCarloSimulation(tranProMatrix,indexes,L,
-                                               succ_distribution=use_pro,
-                                               dis_distribution=dis_pro,
-                                               constantFactor_distribution=constantFactor,
-                                               personalization=users)
-    print("best_next_deliverer is: ",best_next_deliverer)
+# if __name__ == '__main__':
+#
+#     G = nx.Graph()
+#     G.add_nodes_from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+#     G.add_edges_from([(0, 2), (0, 3), (1, 2), (1, 4), (2, 4), (4,5), (4,6), (4,7),(4,8),(4,9), (5,6),(5,9)])
+#     adj = nx.adjacency_matrix(G)
+#
+#     n = adj.shape[0]
+#     use_pro = [0.01,0.2,0.3,0.4,0.3,
+#                0.1,0.3,0.5,0.2,0.2]
+#     dis_pro = [0.04,0.2,0.2,0.1,0.1,
+#                0.4,0.3,0.2,0.1,0.3]
+#     L = 5
+#     constantFactor = [1,1,1,1,1,
+#                       1,1,1,1,1]
+#     users = []
+#     initial_tran_distribution = np.array([0.001, 0.5, 0.9, 0.2, 0.7, 0.8, 0.5, 0.9, 0.2, 0.7])
+#
+#     tranProMatrix, neighbor_having = single_deliverer.getTranProMatrix(adj,initial_tran_distribution)
+#     bestSingleDeliverer = single_deliverer.getBestSingleDeliverer(tranProMatrix,use_pro,neighbor_having)
+#     indexes = [bestSingleDeliverer]
+#     best_next_deliverer = monteCarloSimulation(tranProMatrix,indexes,L,
+#                                                succ_distribution=use_pro,
+#                                                dis_distribution=dis_pro,
+#                                                constantFactor_distribution=constantFactor,
+#                                                personalization=users)
+#     print("best_next_deliverer is: ",best_next_deliverer)

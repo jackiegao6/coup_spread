@@ -79,14 +79,14 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
     selector_dict = {
         # 'theroy': lambda: get_seeds.deliverers_theroy(
         #     data["n"], m, data["init_tran_matrix"], *data["distributions"], config.personalization, data["D"]),
-        'monterCarlo': lambda: get_seeds.deliverers_monteCarlo(m=m,
-                                                                           init_tranProMatrix=data["init_tran_matrix"],
-                                                                           succ_distribution=data["distributions"][0],
-                                                                           dis_distribution=data["distributions"][1],
-                                                                           constantFactor_distribution=
-                                                                           data["distributions"][3],
-                                                                           L=config.monte_carlo_L,
-                                                                           personalization=config.personalization),
+        # 'monterCarlo': lambda: get_seeds.deliverers_monteCarlo(m=m,
+        #                                                                    init_tranProMatrix=data["init_tran_matrix"],
+        #                                                                    succ_distribution=data["distributions"][0],
+        #                                                                    dis_distribution=data["distributions"][1],
+        #                                                                    constantFactor_distribution=
+        #                                                                    data["distributions"][3],
+        #                                                                    L=config.monte_carlo_L,
+        #                                                                    personalization=config.personalization),
         'random': lambda: get_seeds.deliverers_random(data["n"], m),  # 基线方法
         'degreeTopM': lambda: get_seeds.deliverers_degreeTopM(data["adj"], m),  # 基线方法
         'pageRank': lambda: get_seeds.deliverers_pageRank2(adj=data["adj"],
