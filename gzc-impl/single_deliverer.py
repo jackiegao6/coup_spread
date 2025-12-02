@@ -2,9 +2,7 @@ import numpy as np
 import networkx as nx
 import copy
 
-import numpy as np
 import scipy.sparse as sp
-import copy
 
 # [i,j] = i -> j
 def getTranProMatrix(adj) -> np.ndarray:
