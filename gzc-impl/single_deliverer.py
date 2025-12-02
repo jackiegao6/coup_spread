@@ -47,7 +47,7 @@ def getTranProMatrix(adj) -> np.ndarray:
     return tran_matrix_sparse.toarray()
 
 
-# deprecated
+# deprecated ============================================
 def getBestSingleDeliverer(tranProMatrix, succ_distribution, users_useAndDis):
     # 保持不变，但注意这里的 N 计算可能受矩阵转置影响
     # 如果 tranProMatrix 现在是 P(u->v)，那么 (I - M) 的逆是正确的

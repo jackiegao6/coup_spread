@@ -357,6 +357,7 @@ class CouponInfluenceMaximizer:
         logging.info(f"选种完毕。耗时: {end_time - start_time:.2f} 秒。")
         return selected_seeds, estimated_influence
 
+    #deprecated
     def select_seeds_IM(self) -> Tuple[List[int], float]:
         logging.info("\n开始选择最优的种子节点 (Standard Greedy) ...")
 

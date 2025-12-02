@@ -54,7 +54,7 @@ def load_contribution_and_tran_matrix(config: "ExperimentConfig", adj, n: int) -
 
     succ_dist, dis_dist, tran_dist, const_factor_dist = distribution_res
 
-    tran_matrix = single_deliverer.getTranProMatrix(adj, tran_dist)
+    tran_matrix = single_deliverer.getTranProMatrix(adj)
 
     return {
         "adj": adj,
@@ -219,7 +219,7 @@ def run_coupon_experiment(config: ExperimentConfig):
     run_evaluation(methods_with_seeds, config, experiment_data)
 
 
-#  python coupon_main.py --start 2300 --end 3000 --step 300 done
+#  python coupon_main.py --start 2300 --end 3000 --step 300
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Run coupon experiment with range of seeds_num.")
@@ -229,8 +229,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
-        data_set='Twitter', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
-        simulation_times=[15],  # [1000, 5000]
+        data_set='facebook', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
+        simulation_times=[5],  # [1000, 5000]
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         methods=['random', 'degreeTopM', 'alpha_sort', 'importance_sort', 'ris_coverage'],
         # monte_carlo_L=2,
@@ -247,7 +247,7 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainContinue',  # AgainReJudge 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)
-        version='2025-11-26',
+        version='2025-12-2',
         random_dirichlet=[1,1,18]
     )
 
@@ -257,36 +257,3 @@ if __name__ == '__main__':
         generate_logger.init_logger(log_file=my_config.log_file())
         run_coupon_experiment(my_config)
     print("done!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!\n")
-
-
-# if __name__ == '__main__':
-#
-#     my_config = ExperimentConfig(
-#         data_set='Twitter', # students Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
-#         simulation_times=[3],  # [1000, 5000]
-#         # methods=['random', 'degreeTopM', 'ris_coverage', 'ris_coverage_SumSort'],
-#         # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
-#         methods=['random', 'ris_coverage'],
-#         # monte_carlo_L=3,
-#         distribution_type='powerlaw',  # poisson gamma powerlaw random
-#         personalization='None',  # firstUnused
-#         method_type='None',  # new,
-#
-#         num_samples=100000,
-#         # seeds_num=num,  # 32 64 128 256 512
-#
-#         tran_degree_influence_factor=10.0,
-#         succ_degree_influence_factor=10.0,
-#         dis_degree_influence_factor=10.0,
-#
-#         rng=np.random.default_rng(1),
-#
-#         single_sim_func='AgainContinue',  # AgainReJudge 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)
-#         version='2025-11-14'
-#     )
-#
-#     # 外循环 控制种子个数
-#     my_config.seeds_num = 100
-#     generate_logger.init_logger(log_file=my_config.log_file())
-#     run_coupon_experiment(my_config)
-#     print("done!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!\n")
