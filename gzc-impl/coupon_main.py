@@ -229,7 +229,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
-        data_set='facebook', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
+        data_set='Mich', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
         simulation_times=[15],  # [1000, 5000]
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         methods=['random', 'degreeTopM', 'alpha_sort', 'importance_sort', 'ris_coverage'],
@@ -238,7 +238,7 @@ if __name__ == '__main__':
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=100000,
+        num_samples=160000,
         # seeds_num=num,  # 32 64 128 256 512
         succ_degree_influence_factor= -0.9,
         dis_degree_influence_factor= -1.3,
@@ -247,7 +247,7 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainContinue',  # AgainReJudge 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)
-        version='2025-12-2',
+        version='2025-12-3',
         random_dirichlet=[1,1,18]
     )
 
