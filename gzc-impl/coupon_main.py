@@ -101,7 +101,8 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
             tranProMatrix=data["init_tran_matrix"],
             seeds_num=m,
             num_samples=config.num_samples,  # 通过 config 对象来配置
-            alpha=alpha
+            alpha=alpha,
+            distributions = data["distributions"]
         ),
         'alpha_sort': lambda: NEW_base_method.deliverers_alpha_sort(
             adj=data["adj"],
@@ -230,7 +231,7 @@ if __name__ == '__main__':
 
     my_config = ExperimentConfig(
         data_set='Mich', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
-        simulation_times=[15],  # [1000, 5000]
+        simulation_times=[20],  # [1000, 5000]
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         methods=['random', 'degreeTopM', 'alpha_sort', 'importance_sort', 'ris_coverage'],
         # monte_carlo_L=2,
@@ -247,7 +248,7 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainContinue',  # AgainReJudge 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)
-        version='2025-12-3',
+        version='2025-12-3-newtest',
         random_dirichlet=[1,1,18]
     )
 

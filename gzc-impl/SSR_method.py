@@ -10,87 +10,6 @@ from collections import deque
 from typing import List, Set, Tuple
 
 
-# 替换 SSR_method.py 中的同名函数
-# deprecated
-def run_single_ssr_generation_IM(
-        args: Tuple,
-        max_path_length: int = 100
-) -> List[Set[int]]:
-    """
-    修正版：使用【反向随机游走 (Reverse Random Walk)】生成 RR-set。
-    这与 Simulation 中的 "Single Token Random Walk" 逻辑保持一致。
-    """
-    nodes, in_neighbors_array, alpha, k = args
-
-    # 1. 随机采样一个节点 v (作为优惠券的最终接收者)
-    root_node_v = random.choice(nodes)
-    ssr = []
-
-    # 2. 生成 k 个 RR-set (对应 k 个种子)
-    # 实际上如果是标准 RIS，这里不需要循环 k 次，只需要生成一次。
-    # 但为了配合你的 select_seeds_new_new 逻辑 (element_id = (ssr_idx, coupon_j))，我们保持结构不变。
-
-    for _ in range(k):
-        # 1. 检查根节点是否领券 (对应 Simulation 中的 succ 判定)
-        # 如果根节点根本不领券，那反向推导没有意义，这是一个无效样本
-        if random.random() > alpha[root_node_v]:
-            ssr.append(set())
-            continue
-
-        # 2. 开始反向随机游走
-        current_rr_set = {root_node_v}
-        current_node = root_node_v
-
-        # 模拟路径回溯
-        for _ in range(max_path_length):
-            # 获取所有入邻居 (可能把券传给 current_node 的人)
-            # in_neighbors_array[v] = {u: P(u->v)}
-            predecessors_map = in_neighbors_array.get(current_node, {})
-
-            if not predecessors_map:
-                break  # 没有入度，回溯结束
-
-            candidates = list(predecessors_map.keys())
-            weights = list(predecessors_map.values())
-
-            # --- 核心逻辑修正 ---
-            # Simulation: 必定选一个邻居(归一化后)继续，除非停止。
-            # 这里我们根据 P(u->v) 的相对权重来选择“谁是父节点”。
-
-            # 计算总权重
-            total_weight = sum(weights)
-            if total_weight == 0:
-                break
-
-            # 归一化权重用于选择
-            probs = [w / total_weight for w in weights]
-
-            # 选出一个父节点 (模拟“券是从哪来的”)
-            chosen_parent = random.choices(candidates, weights=probs, k=1)[0]
-
-            # 加入 RR-set
-            current_rr_set.add(chosen_parent)
-
-            # 决定是否继续回溯 (模拟 Forward Simulation 中的 Stop 概率)
-            # 在 Forward 中，节点 u 以 P_tran(u) 的概率继续转发。
-            # 这里我们需要估计父节点是否有能力继续转发。
-            # 简单起见，或者更严谨地，我们可以查表。
-            # 但由于我们不知道父节点具体的 P_tran (除非传进来)，
-            # 鉴于 "Influencer Model" 中 P_tran 普遍较高，我们设定一个高阻尼因子。
-            # 或者直接利用 weights 的 sum (即 sum(P(u->v))) 作为近似参考，但这在反向时不准。
-
-            # 使用固定阻尼因子模拟平均转发率 (例如 0.85 或 0.9)
-            # 这比之前的 0.009 概率要合理得多。
-            if random.random() > 0.9:
-                break
-
-            # 继续回溯
-            current_node = chosen_parent
-
-        ssr.append(current_rr_set)
-
-    return ssr
-
 # 一次完整的SSR抽样过程
 # deprecated
 def run_single_ssr_generation_with_path(
@@ -164,20 +83,18 @@ def run_single_ssr_generation_with_path(
 def run_single_ssr_generation_without_path(args: Tuple) -> List[Set[int]]:
     """
     基于 CSR 矩阵的高性能 RR-Set 生成器。
-    原理：反向独立级联 (Reverse IC) 模型，不再存储路径，只存储可达节点集合。
+    【核心优化】：引入“联合概率判定”，利用同一个随机数同时校验“边权重”和“邻居转发意愿”。
     """
-    # 解包参数：注意这里直接接收 CSR 的三个核心数组，避免传递整个对象带来的开销
-    num_nodes, indices, indptr, data, alpha, k = args
+    # 解包参数：包含 succ_dist 和 dis_dist
+    num_nodes, indices, indptr, data, alpha, k, succ_dist, dis_dist = args
 
-    # 1. 随机采样一个目标节点 v (我们希望覆盖的用户)
+    # 1. 随机采样一个目标节点 v
     root_node_v = random.randint(0, num_nodes - 1)
 
     ssr_list = []  # 存储 k 张券的 RR-Set
 
     for _ in range(k):
-        # 保持你的业务逻辑：先判断该节点是否有意愿(alpha)接收这张券
-        # 如果 alpha 是 dict: alpha.get(root_node_v, 0)
-        # 如果 alpha 是 list/array: alpha[root_node_v]
+        # 0. 目标节点本身的领券意愿 check
         p_accept = alpha[root_node_v] if isinstance(alpha, (list, np.ndarray)) else alpha.get(root_node_v, 0)
 
         if random.random() > p_accept:
@@ -185,40 +102,53 @@ def run_single_ssr_generation_without_path(args: Tuple) -> List[Set[int]]:
             continue
 
         # --- 开始反向 BFS 遍历 ---
-
-        # RR-Set 也就是“如果谁有了券，能传给 root_node_v”的节点集合
         rr_set = {root_node_v}
         queue = [root_node_v]  # BFS 队列
 
-        # 使用指针遍历队列
         idx = 0
         while idx < len(queue):
             curr_node = queue[idx]
             idx += 1
 
-            # 【核心优化】：直接从 CSR 结构读取入邻居
-            # 这里的 curr_node 对应矩阵的 行(Row)
-            # 因为 tranProMatrix[i, j] = j->i，所以 Row i 里的元素就是 j
+            # CSR 切片：获取所有指向 curr_node 的上游邻居 j
             start_ptr = indptr[curr_node]
             end_ptr = indptr[curr_node + 1]
 
-            # 如果没有入邻居，跳过
             if start_ptr == end_ptr:
                 continue
 
-            # 获取邻居ID和对应的概率
-            # matrix_indices 里的就是 j (源节点)
+            # neighbor_indices 里的就是 j (源节点)
             neighbor_indices = indices[start_ptr:end_ptr]
-            neighbor_probs = data[start_ptr:end_ptr]
+            edge_probs = data[start_ptr:end_ptr]  # 边 j->i 的概率 M[j, i]
 
-            # 【向量化随机判定】：一次性生成所有随机数，比循环快得多
+            # ==========================================================
+            # 【核心优化点】：实现“凭同一个随机数进行接收/转发判断”
+            # ==========================================================
+
+            # 1. 获取邻居 j 的行为分布
+            n_succ = succ_dist[neighbor_indices]
+            n_dis = dis_dist[neighbor_indices]
+
+            # 2. 计算邻居 j 的“转发意愿” (Forwarding Probability)
+            # 只有当 j 不使用(succ) 且 不丢弃(dis) 时，它才可能作为上游节点
+            n_fwd_willingness = 1.0 - n_succ - n_dis
+
+            # 边界保护：防止浮点误差导致负数
+            n_fwd_willingness = np.maximum(n_fwd_willingness, 0.0)
+
+            # 3. 计算“联合有效概率” (Joint Effective Probability)
+            # 这一步体现了“同一个随机数”的逻辑：
+            # 我们生成一个 r，它必须足够小，才能同时满足 "r < 转发意愿" 和 "r < 边概率"
+            # 数学上，这等价于 r < (边概率 * 转发意愿)
+            effective_probs = edge_probs * n_fwd_willingness
+
+            # 4. 生成随机数并判定
             rand_vals = np.random.rand(len(neighbor_indices))
 
-            # 找出成功激活的边
-            # 逻辑：如果 rand <= prob，说明反向边存在 (即 j 能够激活 curr)
-            success_mask = rand_vals <= neighbor_probs
+            # 只有当随机数小于联合概率时，才认为该邻居有效
+            success_mask = rand_vals <= effective_probs
 
-            # 得到成功反向传播的邻居
+            # 获取通过筛选的邻居
             active_neighbors = neighbor_indices[success_mask]
 
             for neighbor in active_neighbors:
@@ -232,45 +162,59 @@ def run_single_ssr_generation_without_path(args: Tuple) -> List[Set[int]]:
 
 
 class CouponInfluenceMaximizer:
+    def __init__(self,
+                 adj: sp.csr_matrix,
+                 tranProMatrix: np.ndarray,
+                 alpha: Dict[int, float],
+                 distributions: Tuple[np.ndarray, np.ndarray, Any, Any],  # 新增：接收分布元组
+                 k: int):
 
-    def __init__(self, adj: sp.csr_matrix, tranProMatrix: np.ndarray, alpha: Dict[int, float], k: int):
-        self.k = k # 优惠券（种子节点）的数量。
-        self.alpha = alpha # 每个节点的领券概率。
+        self.k = k
+        self.alpha = alpha
 
-        # 直接从 adj 获取节点信息
+        # 解包分布数据 (succ, dis, ...)
+        # 假设 distributions 顺序是 (succ, dis, constant, ...)
+        self.succ_dist = distributions[0]
+        self.dis_dist = distributions[1]
+
+        # 确保它们是 numpy array 以便 Worker 进行花式索引 (Fancy Indexing)
+        if not isinstance(self.succ_dist, np.ndarray):
+            self.succ_dist = np.array(self.succ_dist)
+        if not isinstance(self.dis_dist, np.ndarray):
+            self.dis_dist = np.array(self.dis_dist)
+
         self.num_nodes = adj.shape[0]
         self.nodes = list(range(self.num_nodes))
 
-        # tranProMatrix 转为 CSR 格式
+        # CSR 处理
         if isinstance(tranProMatrix, np.ndarray):
-            # 将稠密矩阵转为 CSR
             self.tran_matrix_csr = sp.csr_matrix(tranProMatrix)
         else:
             self.tran_matrix_csr = tranProMatrix
 
-        # 预先提取 CSR 的底层数组，方便传递给多进程，减少序列化开销
         self.csr_indices = self.tran_matrix_csr.indices
         self.csr_indptr = self.tran_matrix_csr.indptr
         self.csr_data = self.tran_matrix_csr.data
 
-        self.all_ssrs: List[List[Set[int]]] = []
-        logging.info(f"图初始化完成，节点数: {self.num_nodes}，CSR 矩阵准备就绪。")
+        self.all_ssrs = []
+        logging.info(f"图初始化完成，CSR 矩阵及概率分布准备就绪。")
 
     def generate_rr_sets_parallel(self, N: int, workers: int = 4):
         logging.info(f"\n开始生成 {N} 组 SSR (并行进程: {workers})...")
         start_time = time.time()
 
-        # 构造参数包：只传底层数组和必要参数
-        # 注意：不要传 self，否则会序列化整个类实例
+        # 构造参数包：加入 succ_dist 和 dis_dist
         args_tuple = (
             self.num_nodes,
             self.csr_indices,
             self.csr_indptr,
             self.csr_data,
             self.alpha,
-            self.k
+            self.k,
+            self.succ_dist,  # 传进去
+            self.dis_dist  # 传进去
         )
-        # 复制 N 份参数
+
         args_list = [args_tuple] * N
 
         with Pool(processes=workers) as pool:
@@ -408,7 +352,8 @@ def deliverers_ris_coverage(
         tranProMatrix: np.ndarray,  # 转移概率矩阵
         seeds_num: int,
         num_samples: int = 100,
-        alpha: Dict[int, float] = None  # 新增一个可选参数alpha
+        alpha: Dict[int, float] = None,  # 新增一个可选参数alpha
+        distributions = None
 ) -> list:
     """
     Args:
@@ -432,6 +377,7 @@ def deliverers_ris_coverage(
         adj=adj,
         tranProMatrix=tranProMatrix,
         alpha=alpha,
+        distributions = distributions,
         k=seeds_num
     )
 
