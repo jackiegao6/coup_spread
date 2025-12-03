@@ -349,7 +349,7 @@ class CouponInfluenceMaximizer:
             newly_covered = coupon_node_map[coupon_to_assign][best_node]
             covered_ssr_indices.update(newly_covered)
 
-            print(f"  - 券 {i + 1}/{self.k} 选中节点 {best_node}, 新增覆盖 {max_gain}")
+            logging.info(f"  - 券 {i + 1}/{self.k} 选中节点 {best_node}, 新增覆盖 {max_gain}")
 
         # 计算影响力
         estimated_influence = (len(covered_ssr_indices) / total_samples) * self.num_nodes

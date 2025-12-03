@@ -219,7 +219,7 @@ def run_coupon_experiment(config: ExperimentConfig):
     run_evaluation(methods_with_seeds, config, experiment_data)
 
 
-#  python coupon_main.py --start 2300 --end 3000 --step 300
+#  python coupon_main.py --start 2300 --end 3000 --step 3000
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Run coupon experiment with range of seeds_num.")
@@ -230,7 +230,7 @@ if __name__ == '__main__':
 
     my_config = ExperimentConfig(
         data_set='facebook', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
-        simulation_times=[5],  # [1000, 5000]
+        simulation_times=[15],  # [1000, 5000]
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         methods=['random', 'degreeTopM', 'alpha_sort', 'importance_sort', 'ris_coverage'],
         # monte_carlo_L=2,
@@ -240,8 +240,8 @@ if __name__ == '__main__':
 
         num_samples=100000,
         # seeds_num=num,  # 32 64 128 256 512
-        succ_degree_influence_factor= -1.3,
-        dis_degree_influence_factor= -0.9,
+        succ_degree_influence_factor= -0.9,
+        dis_degree_influence_factor= -1.3,
         tran_degree_influence_factor= 1.5,
 
         rng=np.random.default_rng(1),
