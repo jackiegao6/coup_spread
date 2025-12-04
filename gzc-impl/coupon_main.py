@@ -241,14 +241,14 @@ if __name__ == '__main__':
 
         num_samples=160000,
         # seeds_num=num,  # 32 64 128 256 512
-        succ_degree_influence_factor= -0.9,
-        dis_degree_influence_factor= -1.3,
-        tran_degree_influence_factor= 1.5,
+        succ_degree_influence_factor= -0.3,
+        dis_degree_influence_factor= -0.5,
+        tran_degree_influence_factor= 0.5,
 
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainContinue',  # AgainReJudge 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)
-        version='2025-12-3-newtest',
+        version='2025-12-3-newtest2',
         random_dirichlet=[1,1,18]
     )
 
