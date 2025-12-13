@@ -236,11 +236,11 @@ if __name__ == '__main__':
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         methods=['random', 'degreeTopM', 'alpha_sort', 'importance_sort', 'ris_coverage'],
         # monte_carlo_L=2,
-        distribution_type='powerlaw',  # powerlaw powerlaw-old random poisson gamma
+        distribution_type='random',  # powerlaw powerlaw-old random poisson gamma
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=30000,
+        num_samples=10000,
         # seeds_num=num,  # 32 64 128 256 512
         succ_degree_influence_factor= -0.6,
         dis_degree_influence_factor= -1.2,
@@ -249,8 +249,8 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainReJudge', 
-        version='2025-12-9',
-        random_dirichlet=[1,1,18]
+        version='2025-12-13-dis_up_and_succ_down_and_p_0.5',
+        random_dirichlet=[1,12,7]
     )
 
     # 外循环 控制种子个数

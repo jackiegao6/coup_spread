@@ -356,30 +356,3 @@ def get_distribution_degree_aware(
     logging.info(f"保存概率分布 文件位置: {distribution_file}")
 
     return tuple(dis_dict.values())
-
-
-if __name__=="__main__":
-    # 1. 创建一个示例图 (例如，一个 Barabási-Albert 模型图，它具有幂律度分布)
-    n_nodes = 1000
-    m_edges = 4
-    G = nx.barabasi_albert_graph(n_nodes, m_edges)
-
-    # 2. 调用新的函数，传入图 G
-    # 注意：为与度相关的分布使用不同的缓存文件！
-    succ_dist, dis_dist, tran_dist, const_dist = get_distribution_degree_aware(
-        distribution_file='/home/wen/pythonspace/coup_spread/gzc-impl/cache/poisson_dist_degree_aware.pkl',
-        distribution_type='poisson',
-        adj=G
-    )
-
-    # 3. 验证结果 (可选)
-    # 我们可以检查一下转发概率是否真的和度相关
-    degrees_array = np.array([d for n, d in G.degree()])
-    correlation = np.corrcoef(degrees_array, tran_dist)[0, 1]
-    print(f"Correlation between node degree and forwarding probability: {correlation:.4f}") # 0.5235
-    # 您应该会看到一个显著的正相关系数
-
-    # 同样可以检查成功概率
-    correlation_succ = np.corrcoef(degrees_array, succ_dist)[0, 1]
-    print(f"Correlation between node degree and success probability: {correlation_succ:.4f}") # -0.3726
-    # 在我们的 "影响者模型" 中，这里应该是一个负相关系数

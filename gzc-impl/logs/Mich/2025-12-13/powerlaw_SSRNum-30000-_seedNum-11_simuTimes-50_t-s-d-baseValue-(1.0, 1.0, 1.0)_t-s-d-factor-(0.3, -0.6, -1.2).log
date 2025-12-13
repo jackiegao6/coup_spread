@@ -1,0 +1,68 @@
+2025-12-13 14:53:08,661 - INFO - 加载数据集: Mich
+2025-12-13 14:53:08,665 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-12-13 14:53:08,665 - INFO - ===> Generating 'Power-law Degree-Aware' distributions...
+2025-12-13 14:53:08,667 - INFO - 保存概率分布 文件位置: /root/pythonspace/data-test/Mich/2025-12-13/distribution-in-Mich/distribution-powerlaw_seedNum-11.pkl
+2025-12-13 14:53:08,754 - INFO - 首次生成种子集 random
+2025-12-13 14:53:08,754 - INFO - 执行当前算法开始: random
+2025-12-13 14:53:08,754 - INFO - 当前用时 0.00 秒
+2025-12-13 14:53:08,755 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-13/seeds-with-Mich/powerlaw_random_seedNum-11_SSRNum-30000.txt
+2025-12-13 14:53:08,755 - INFO - 首次生成种子集 degreeTopM
+2025-12-13 14:53:08,755 - INFO - 执行当前算法开始: degreeTopM
+2025-12-13 14:53:08,756 - INFO - 当前用时 0.00 秒
+2025-12-13 14:53:08,757 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-13/seeds-with-Mich/powerlaw_degreeTopM_seedNum-11_SSRNum-30000.txt
+2025-12-13 14:53:08,757 - INFO - 首次生成种子集 alpha_sort
+2025-12-13 14:53:08,757 - INFO - 执行当前算法开始: alpha_sort
+2025-12-13 14:53:08,780 - INFO - 3748 个节点的alpha值降序排序 done
+2025-12-13 14:53:08,780 - INFO - ==============>> [(3738, 0.35518890284942756), (3571, 0.34337767472392655), (3237, 0.33981934216678766), (3094, 0.3386374077498199), (3736, 0.336989744141126), (2800, 0.3297302057133191), (3129, 0.3286966891870896), (3379, 0.3280483712387813), (3705, 0.3273245401926375), (3565, 0.3272003437627859)]
+2025-12-13 14:53:08,781 - INFO - 
+选择的种子集 (按alpha排序): [3738, 3571, 3237, 3094, 3736, 2800, 3129, 3379, 3705, 3565, 3343]
+
+2025-12-13 14:53:08,781 - INFO - 当前用时 0.02 秒
+2025-12-13 14:53:08,781 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-13/seeds-with-Mich/powerlaw_alpha_sort_seedNum-11_SSRNum-30000.txt
+2025-12-13 14:53:08,781 - INFO - 首次生成种子集 importance_sort
+2025-12-13 14:53:08,781 - INFO - 执行当前算法开始: importance_sort
+2025-12-13 14:53:11,024 - INFO - 
+选择的种子集 (按Importance排序): [153, 397, 360, 66, 248, 294, 412, 44, 670, 1158, 178]
+
+2025-12-13 14:53:11,025 - INFO - 当前用时 2.24 秒
+2025-12-13 14:53:11,025 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-13/seeds-with-Mich/powerlaw_importance_sort_seedNum-11_SSRNum-30000.txt
+2025-12-13 14:53:11,025 - INFO - 首次生成种子集 ris_coverage
+2025-12-13 14:53:11,025 - INFO - 执行当前算法开始: ris_coverage
+2025-12-13 14:53:11,136 - INFO - 图初始化完成，CSR 矩阵及概率分布准备就绪。
+2025-12-13 14:53:11,137 - INFO - 
+开始生成 30000 组 SSR (并行进程: 4)...
+2025-12-13 14:55:25,775 - INFO - 生成完毕。耗时: 134.64 秒。
+2025-12-13 14:55:25,775 - INFO - 
+开始选择最优种子 (Optimized Greedy) ...
+2025-12-13 14:55:36,820 - INFO -   - 券 1/11 选中节点 2140, 新增覆盖 1123
+2025-12-13 14:55:36,910 - INFO -   - 券 2/11 选中节点 0, 新增覆盖 1086
+2025-12-13 14:55:37,004 - INFO -   - 券 3/11 选中节点 3, 新增覆盖 985
+2025-12-13 14:55:37,098 - INFO -   - 券 4/11 选中节点 2, 新增覆盖 999
+2025-12-13 14:55:37,193 - INFO -   - 券 5/11 选中节点 5, 新增覆盖 916
+2025-12-13 14:55:37,278 - INFO -   - 券 6/11 选中节点 6, 新增覆盖 896
+2025-12-13 14:55:37,374 - INFO -   - 券 7/11 选中节点 361, 新增覆盖 854
+2025-12-13 14:55:37,460 - INFO -   - 券 8/11 选中节点 7, 新增覆盖 769
+2025-12-13 14:55:37,546 - INFO -   - 券 9/11 选中节点 9, 新增覆盖 748
+2025-12-13 14:55:37,632 - INFO -   - 券 10/11 选中节点 10, 新增覆盖 732
+2025-12-13 14:55:37,725 - INFO -   - 券 11/11 选中节点 13, 新增覆盖 704
+2025-12-13 14:55:37,725 - INFO - 选种完毕。耗时: 11.95 秒。
+2025-12-13 14:55:38,089 - INFO - 最终选择的种子集: [2140, 0, 3, 2, 5, 6, 361, 7, 9, 10, 13]
+
+2025-12-13 14:55:38,779 - INFO - 当前用时 147.75 秒
+2025-12-13 14:55:38,780 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-13/seeds-with-Mich/powerlaw_ris_coverage_seedNum-11_SSRNum-30000.txt
+2025-12-13 14:55:38,780 - INFO - 评估种子集: None
+2025-12-13 14:55:38,780 - INFO - 多进程评估开始，共有 5 个方法待评估...
+2025-12-13 14:55:38,780 - INFO - 启动进程池，Worker数量: 5
+2025-12-13 14:55:39,294 - INFO - [Process 2243] 开始评估方法: random, 种子数: 11
+2025-12-13 14:55:39,674 - INFO - [Process 2244] 开始评估方法: degreeTopM, 种子数: 11
+2025-12-13 14:55:40,056 - INFO - [Process 2245] 开始评估方法: alpha_sort, 种子数: 11
+2025-12-13 14:55:40,141 - INFO - [Process 2245] alpha_sort - 50 sims 完成: E=4.16
+2025-12-13 14:55:40,433 - INFO - [Process 2246] 开始评估方法: importance_sort, 种子数: 11
+2025-12-13 14:55:40,556 - INFO - [Process 2243] random - 50 sims 完成: E=8.00
+2025-12-13 14:55:40,845 - INFO - [Process 2247] 开始评估方法: ris_coverage, 种子数: 11
+2025-12-13 14:55:41,116 - INFO - [Process 2244] degreeTopM - 50 sims 完成: E=8.54
+2025-12-13 14:55:41,894 - INFO - [Process 2246] importance_sort - 50 sims 完成: E=8.30
+2025-12-13 14:55:42,195 - INFO - [Process 2247] ris_coverage - 50 sims 完成: E=8.60
+2025-12-13 14:55:42,222 - INFO - 所有进程执行完毕，开始写入数据...
+2025-12-13 14:55:42,236 - INFO - 成功写入 5 条记录至 /root/pythonspace/data-test/Mich/2025-12-13/E-activated-Mich/distribution-powerlaw/tsd_0.3--0.6--1.2/single_sim_func-AgainReJudge/simuTimes-50_monteCarloL-10_single_sim_func-AgainReJudge_rrNumSamples-30000.csv
+2025-12-13 14:55:42,237 - INFO - 保存评估文件至: /root/pythonspace/data-test/Mich/2025-12-13/E-activated-Mich/distribution-powerlaw/tsd_0.3--0.6--1.2/single_sim_func-AgainReJudge/simuTimes-50_monteCarloL-10_single_sim_func-AgainReJudge_rrNumSamples-30000.csv
