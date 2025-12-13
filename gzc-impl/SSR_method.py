@@ -10,83 +10,39 @@ from collections import deque
 from typing import List, Set, Tuple
 
 
+# ========== 全局变量存储区 ==========
+GLOBAL_DATA = {}
+
+def init_worker(num_nodes, indices, indptr, data, alpha, k, succ_dist, dis_dist):
+    """每个 worker 启动时运行，将大对象存入全局变量，避免 pickle 传输。"""
+    global GLOBAL_DATA
+    GLOBAL_DATA["num_nodes"] = num_nodes
+    GLOBAL_DATA["indices"] = indices
+    GLOBAL_DATA["indptr"] = indptr
+    GLOBAL_DATA["data"] = data
+    GLOBAL_DATA["alpha"] = alpha
+    GLOBAL_DATA["k"] = k
+    GLOBAL_DATA["succ_dist"] = succ_dist
+    GLOBAL_DATA["dis_dist"] = dis_dist
+
 # 一次完整的SSR抽样过程
-# deprecated
-def run_single_ssr_generation_with_path(
-        args: Tuple,
-        max_path_length: int = 10000
-) -> List[Set[int]]:
-    """
-    根据新要求，通过生成独立的反向路径来构建RR-set。
-    **此版本经过内存优化，只存储无法再扩展的“叶子”路径。**
-
-    Args:
-        args: 一个元组，包含 (nodes, in_neighbors_array, alpha, k)
-        max_path_length (int): 为防止无限循环，限制单条路径的最大深度。
-
-    Returns:
-        List[Set[int]]: 一个SSR，即包含k个RR-set的列表。
-    """
-    nodes, in_neighbors_array, alpha, k = args
-
-    # 1. 随机采样一个节点 v
-    root_node_v = random.choice(nodes)
-    ssr = []  # 当前采样节点的 SSR，包含k个rr-set
-
-    # 2. 为k张券生成k 个RR-set
-    for _ in range(k):
-        # 检查v是否会领取这张券
-        if random.random() <= alpha[root_node_v]:
-
-            # 1. deque 管理当前正在扩展的路径
-            path_deque = deque([[root_node_v]])
-
-            # 2. 当有一个路径到达终点时 触发更新rr-set（不显式保存所有已到达终点的路径）
-            final_rr_set = set()
-
-            while path_deque:
-                current_path = path_deque.popleft()
-                leaf_node = current_path[-1]
-
-                # 如果路径太长，视为到达终点，不再扩展
-                if len(current_path) >= max_path_length:
-                    final_rr_set.update(current_path)
-                    continue
-
-                # 标志位，用于判断当前路径是否成功扩展过
-                extended_flag = False
-
-                # 遍历末端节点的所有入邻居
-                for in_neighbor, probability in in_neighbors_array.get(leaf_node, {}).items():
-                    if in_neighbor not in current_path:
-                        # 模拟边(in_neighbor -> leaf_node)的激活
-                        if random.random() <= probability:
-                            # 如果成功，创建一条新路径并加入队列
-                            new_path = current_path + [in_neighbor]
-                            path_deque.append(new_path)
-                            # 标记当前路径已被成功扩展
-                            extended_flag = True
-
-                # 3. 如果当前路径遍历完所有入度后都未能扩展，说明该路径到了终点，将其保存
-                if not extended_flag:
-                    final_rr_set.update(current_path)
-
-            ssr.append(final_rr_set)
-
-        else:
-            # 否则，此券的RR-set为空
-            ssr.append(set())
-
-    return ssr
-
-
 def run_single_ssr_generation_without_path(args: Tuple) -> List[Set[int]]:
     """
     基于 CSR 矩阵的高性能 RR-Set 生成器。
     【核心优化】：引入“联合概率判定”，利用同一个随机数同时校验“边权重”和“邻居转发意愿”。
+
+    Worker 内部通过 GLOBAL_DATA 获取 CSR 结构与行为分布。
+    参数不再传递大对象，只传一个 task_id（无实际作用），此处只是保持 map() 结构。
     """
-    # 解包参数：包含 succ_dist 和 dis_dist
-    num_nodes, indices, indptr, data, alpha, k, succ_dist, dis_dist = args
+    GD = GLOBAL_DATA
+    num_nodes = GD["num_nodes"]
+    indices = GD["indices"]
+    indptr = GD["indptr"]
+    data = GD["data"]
+    alpha = GD["alpha"]
+    k = GD["k"]
+    succ_dist = GD["succ_dist"]
+    dis_dist = GD["dis_dist"]
 
     # 1. 随机采样一个目标节点 v
     root_node_v = random.randint(0, num_nodes - 1)
@@ -199,26 +155,43 @@ class CouponInfluenceMaximizer:
         self.all_ssrs = []
         logging.info(f"图初始化完成，CSR 矩阵及概率分布准备就绪。")
 
-    def generate_rr_sets_parallel(self, N: int, workers: int = 4):
+    
+    def generate_rr_sets_parallel(self, N: int, workers: int = 4): # 默认值改为 None
+        
+        # 1. 动态获取合理的进程数
+        # 如果用户没有指定 workers，或者指定得太离谱，自动调整为 CPU 核心数
+        if workers is None or workers > cpu_count():
+            workers = cpu_count()
+            # 在某些云环境中 cpu_count 可能很大但被限制，保险起见可以设个上限，比如 32
+            # workers = min(workers, 32) 
+        
         logging.info(f"\n开始生成 {N} 组 SSR (并行进程: {workers})...")
         start_time = time.time()
 
-        # 构造参数包：加入 succ_dist 和 dis_dist
-        args_tuple = (
-            self.num_nodes,
-            self.csr_indices,
-            self.csr_indptr,
-            self.csr_data,
-            self.alpha,
-            self.k,
-            self.succ_dist,  # 传进去
-            self.dis_dist  # 传进去
-        )
-
-        args_list = [args_tuple] * N
-
-        with Pool(processes=workers) as pool:
-            self.all_ssrs = pool.map(run_single_ssr_generation_without_path, args_list)
+        with Pool(
+            processes=workers,
+            initializer=init_worker,
+            initargs=(
+                self.num_nodes,
+                self.csr_indices,
+                self.csr_indptr,
+                self.csr_data,
+                self.alpha,
+                self.k,
+                self.succ_dist,
+                self.dis_dist,
+            )
+        ) as pool:
+            # 2. 使用 chunksize 优化任务分发
+            # 如果 N 很大（如 10000），不要让 chunksize 默认为 1，否则通信开销大
+            # 自动计算 chunksize，让每个进程分摊到合适的任务量
+            chunk_size = max(1, N // (workers * 4))
+            
+            self.all_ssrs = pool.map(
+                run_single_ssr_generation_without_path, 
+                range(N), 
+                chunksize=chunk_size
+            )
 
         end_time = time.time()
         logging.info(f"生成完毕。耗时: {end_time - start_time:.2f} 秒。")
@@ -301,52 +274,6 @@ class CouponInfluenceMaximizer:
         logging.info(f"选种完毕。耗时: {end_time - start_time:.2f} 秒。")
         return selected_seeds, estimated_influence
 
-    #deprecated
-    def select_seeds_IM(self) -> Tuple[List[int], float]:
-        logging.info("\n开始选择最优的种子节点 (Standard Greedy) ...")
-
-        # 1. 扁平化 RR-sets: 记录每个节点覆盖了哪些 (ssr_idx, coupon_idx)
-        # node_coverage[u] = set( (0,0), (0,1), (5,2)... )
-        node_coverage = defaultdict(set)
-        total_elements_count = 0
-
-        for ssr_idx, ssr in enumerate(self.all_ssrs):
-            for coupon_j, rr_set in enumerate(ssr):
-                element_id = (ssr_idx, coupon_j)  # 这是一个需要被覆盖的唯一事件
-                total_elements_count += 1
-                for node in rr_set:
-                    node_coverage[node].add(element_id)
-
-        selected_seeds = []
-        covered_elements = set()
-
-        # 2. 标准贪心选择
-        for i in range(self.k):
-            max_gain = -1
-            best_node = -1
-
-            # 寻找能覆盖最多“未覆盖元素”的节点
-            for node in self.nodes:
-                if node in selected_seeds:
-                    continue
-
-                # 增益 = 该节点覆盖的集合 - 已经被覆盖的集合
-                gain = len(node_coverage[node] - covered_elements)
-
-                if gain > max_gain:
-                    max_gain = gain
-                    best_node = node
-
-            if best_node != -1:
-                selected_seeds.append(best_node)
-                covered_elements.update(node_coverage[best_node])
-                print(f"  - 选出第 {i + 1} 个种子: {best_node}, 边际增益: {max_gain}")
-            else:
-                break
-
-        estimated_influence = (len(covered_elements) / total_elements_count) * self.num_nodes * self.k  # 粗略估算
-        return selected_seeds, estimated_influence
-
 def deliverers_ris_coverage(
         adj: sp.csr_matrix,  # 原始邻接矩阵
         tranProMatrix: np.ndarray,  # 转移概率矩阵
@@ -388,32 +315,3 @@ def deliverers_ris_coverage(
     print(f"\n估算的最大影响力: {estimated_influence:.2f}")
     logging.info(f"最终选择的种子集: {selected_seeds}\n")
     return selected_seeds
-
-if __name__ == "__main__":
-
-
-    NUM_NODES = 13
-    SEEDS_TO_SELECT = 3
-    NUM_SAMPLES_FOR_RUN = 30
-
-    adj_matrix = sp.lil_matrix((NUM_NODES, NUM_NODES))
-    trans_prob_matrix = np.zeros((NUM_NODES, NUM_NODES))
-    p_edge = 0.8
-    for i in range(NUM_NODES):
-        for j in range(NUM_NODES):
-            if i != j and random.random() < p_edge:
-                prob = random.uniform(0.4, 0.6)
-                adj_matrix[i, j] = 1
-                trans_prob_matrix[j, i] = prob
-
-    adj_matrix_csr = adj_matrix.tocsr()
-
-
-    custom_alpha_probs = {node: random.uniform(0.05, 0.3) for node in range(NUM_NODES)}
-    seeds2 = deliverers_ris_coverage(
-        adj=adj_matrix_csr,
-        tranProMatrix=trans_prob_matrix,
-        seeds_num=SEEDS_TO_SELECT,
-        num_samples=NUM_SAMPLES_FOR_RUN,
-        alpha=custom_alpha_probs
-    )

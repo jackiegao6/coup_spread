@@ -182,8 +182,7 @@ def run_evaluation(methods_with_seeds: dict, config: ExperimentConfig, data: dic
     seeds = list(methods_with_seeds.values())
 
     single_coupon_trans_process = {
-        'AgainReJudge': simulation_algo.monteCarlo_singleTime_improved2,
-        'AgainContinue': simulation_algo.monteCarlo_singleTime_improved2_AgainContinue
+        'AgainReJudge': simulation_algo.monteCarlo_singleTime_improved2
     }
 
     evaluation_func(methods=methods,
@@ -223,6 +222,8 @@ def run_coupon_experiment(config: ExperimentConfig):
 #  python coupon_main.py --start 2300 --end 3000 --step 3000
 if __name__ == '__main__':
 
+    start_time = time.time()
+
     parser = argparse.ArgumentParser(description="Run coupon experiment with range of seeds_num.")
     parser.add_argument('--start', type=int, default=3, help='起始 seeds_num')
     parser.add_argument('--end', type=int, default=10, help='结束 seeds_num（不包含）')
@@ -231,7 +232,7 @@ if __name__ == '__main__':
 
     my_config = ExperimentConfig(
         data_set='Mich', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
-        simulation_times=[20],  # [1000, 5000]
+        simulation_times=[50],  # [1000, 5000]
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         methods=['random', 'degreeTopM', 'alpha_sort', 'importance_sort', 'ris_coverage'],
         # monte_carlo_L=2,
@@ -239,16 +240,16 @@ if __name__ == '__main__':
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=160000,
+        num_samples=30000,
         # seeds_num=num,  # 32 64 128 256 512
-        succ_degree_influence_factor= -0.3,
-        dis_degree_influence_factor= -0.5,
-        tran_degree_influence_factor= 0.5,
+        succ_degree_influence_factor= -0.6,
+        dis_degree_influence_factor= -1.2,
+        tran_degree_influence_factor= 0.3,
 
         rng=np.random.default_rng(1),
 
-        single_sim_func='AgainContinue',  # AgainReJudge 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)
-        version='2025-12-3-newtest2',
+        single_sim_func='AgainReJudge', 
+        version='2025-12-9',
         random_dirichlet=[1,1,18]
     )
 
@@ -257,4 +258,6 @@ if __name__ == '__main__':
         my_config.seeds_num = num
         generate_logger.init_logger(log_file=my_config.log_file())
         run_coupon_experiment(my_config)
-    print("done!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!\n")
+
+    end_time = time.time()
+    print("done!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!\n{%d}s", (end_time - start_time))

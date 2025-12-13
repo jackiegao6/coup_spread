@@ -11,7 +11,7 @@ class ExperimentConfig:
     distribution_type: str = 'random' # poisson gamma powerlaw random
     constant_factor_distri: str = 'random' # deprecated
     personalization: str = 'None'
-    data_prefix: str = '/home/wen/pythonspace/data-test'
+    data_prefix: str = '/root/pythonspace/data-test'
     method_type: str = 'None'
 
     num_steps: int = 1 # deprecated
@@ -29,7 +29,7 @@ class ExperimentConfig:
 
     rng: np.random.Generator = np.random.default_rng(1)
 
-    single_sim_func: str = 'AgainContinue' # AgainContinue | AgainReJudge
+    single_sim_func: str = 'AgainReJudge'
 
     version: str = 'v0'
 
@@ -37,7 +37,6 @@ class ExperimentConfig:
 
     single_file_switch: bool = False
 
-    
     @property
     def adj_file(self):
         return f"{self.data_prefix}/datasets/{self.data_set}-adj.pkl"
@@ -63,5 +62,5 @@ class ExperimentConfig:
     def log_file(self):
         times = ",".join(str(time) for time in self.simulation_times)
         if self.distribution_type == "powerlaw" or self.distribution_type == "gamma" or self.distribution_type == "poisson":
-            return f"/home/wen/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/{self.version}/{self.distribution_type}_SSRNum-{self.num_samples}-_seedNum-{self.seeds_num}_simuTimes-{times}_t-s-d-baseValue-{self.tran_base_value, self.succ_base_value, self.dis_base_value}_t-s-d-factor-{self.tran_degree_influence_factor, self.succ_degree_influence_factor, self.dis_degree_influence_factor}.log"
-        return f"/home/wen/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/{self.version}/{self.distribution_type}_SSRNum-{self.num_samples}-_seedNum-{self.seeds_num}_simuTimes-{times}.log"
+            return f"/root/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/{self.version}/{self.distribution_type}_SSRNum-{self.num_samples}-_seedNum-{self.seeds_num}_simuTimes-{times}_t-s-d-baseValue-{self.tran_base_value, self.succ_base_value, self.dis_base_value}_t-s-d-factor-{self.tran_degree_influence_factor, self.succ_degree_influence_factor, self.dis_degree_influence_factor}.log"
+        return f"/root/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/{self.version}/{self.distribution_type}_SSRNum-{self.num_samples}-_seedNum-{self.seeds_num}_simuTimes-{times}.log"

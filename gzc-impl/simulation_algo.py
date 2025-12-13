@@ -7,65 +7,111 @@ import pickle
 import networkx as nx
 import random
 
-# AgainReJudge
 def monteCarlo_singleTime_improved2(
     tranProMatrix: np.ndarray,
     initial_deliverers: list,
     succ_distribution: np.ndarray,
     dis_distribution: np.ndarray,
-    constantFactor_distribution: np.ndarray
+    constantFactor_distribution: np.ndarray # 这个参数似乎没用到，保留占位
 ) -> np.ndarray:
 
     n = tranProMatrix.shape[0]
     activatedUsers = set()
 
-    for start_user in initial_deliverers: # 为每个初始投放者启动一个独立的随机游走
-
+    for start_user in initial_deliverers: 
         current_user = start_user
 
-        # 模拟单张优惠券的随机游走过程 一旦使用 || 丢弃 循环将就break
         while True:
-            rand_pro = np.random.rand()
+            # 1. 节点行为判定 (使用 / 丢弃 / 转发)
+            rand_action = np.random.rand()
             p_succ = succ_distribution[current_user]
             p_dis = dis_distribution[current_user]
-            threshold = p_succ + p_dis # 动作发生的总概率（使用+丢弃）
-
+            
+            # 行为判定阈值
             if current_user in activatedUsers:
-                # 当一个节点被激活过了 再次接触优惠券 可能会消耗掉券但不增加新激活人数
-                if rand_pro < succ_distribution[current_user]:
-                    # 继续用
-                    break
-                elif rand_pro < (succ_distribution[current_user] + dis_distribution[current_user]):
-                    # 继续丢弃
-                    break
-
+                # 已激活用户再次拿到券：
+                # 逻辑可自定义，这里假设他如果"再次使用"就消耗掉券，"丢弃"也消耗
+                if rand_action < (p_succ + p_dis):
+                    break # 券被消耗或丢弃，停止
             else:
-                # 没有被激活过的节点 接触优惠券的逻辑
-                if rand_pro < succ_distribution[current_user]:
-                    # 决定“使用”
+                # 未激活用户
+                if rand_action < p_succ:
                     activatedUsers.add(current_user)
-                    # 游走在此中断，因为优惠券被使用了
-                    break
-                elif rand_pro < (succ_distribution[current_user] + dis_distribution[current_user]):
-                    # 决定“丢弃”
-                    break # 游走在此中断
+                    break # 成功使用，券被消耗，停止
+                elif rand_action < (p_succ + p_dis):
+                    break # 丢弃，停止
 
-            # 如果没有中断，则意味着节点决定“转发”
-            remaining_prob = 1.0 - threshold
-            rescaled_rand_pro = (rand_pro - threshold) / remaining_prob
-            next_node = _select_next_neighbor_old(current_user, tranProMatrix, rescaled_rand_pro)
+            # --- 决定转发 ---
+            # 能走到这里，说明 rand_action >= p_succ + p_dis
+            # 此时需要选择下一个邻居。
+            
+            # 【重要修改】：传入一个新的随机数，用于选择邻居和判定由边导致的失败
+            rand_neighbor = np.random.rand()
+            
+            # 使用新的选择函数，它可能返回 None (表示转发失败/丢失)
+            next_node = _select_next_neighbor_lossy(current_user, tranProMatrix, rand_neighbor)
 
             if next_node is None:
-                # 没有邻居可转发，游走中断
+                # 转发失败（比如边权不够，或者是个孤立点），游走结束
                 break
             else:
-                # 更新当前节点，继续游走
                 current_user = next_node
 
-    # 将最终成功使用的节点集合转换为0/1向量
+    # 结果转换
     success_vector = np.zeros(n, dtype=int)
-    success_vector[list(activatedUsers)] = 1
+    if activatedUsers:
+        success_vector[list(activatedUsers)] = 1
+        
     return success_vector
+
+
+
+def _select_next_neighbor_lossy(
+    current_user: int,
+    tranProMatrix: np.ndarray,
+    rand_val: float
+) -> Optional[int]:
+    """
+    有损的邻居选择：
+    1. 不再强制归一化到 1.0。
+    2. 如果所有邻居的概率之和 sum < 1.0，则有 (1-sum) 的概率返回 None (丢失)。
+    3. 如果 sum > 1.0 (Hub节点)，则截断为 1.0 (必然转发)，并按权重分配。
+    """
+    neighbors = np.flatnonzero(tranProMatrix[:, current_user])
+    if neighbors.size == 0:
+        return None
+
+    # 获取原始概率 (Raw Probabilities)
+    probabilities = tranProMatrix[neighbors, current_user]
+    prob_sum = np.sum(probabilities)
+
+    if prob_sum == 0:
+        return None
+    
+    # 逻辑分叉：
+    # 情况 A: 总能量足够大 (Hub)，必然转发，按比例分配
+    if prob_sum >= 1.0:
+        normalized_probs = probabilities / prob_sum
+        # 标准轮盘赌
+        cumulative = np.cumsum(normalized_probs)
+        idx = np.searchsorted(cumulative, rand_val)
+        if idx >= len(neighbors): idx = len(neighbors) - 1
+        return neighbors[idx]
+    
+    # 情况 B: 总能量不足 (Leaf)，可能丢失
+    else:
+        # 这里不归一化 probabilities，而是直接看 rand_val 落在哪个区间
+        # 区间分布: [Neighbor1 (0.1)] [Neighbor2 (0.2)] ... [Void/Loss (1 - 0.3)]
+        
+        cumulative = np.cumsum(probabilities)
+        
+        # 如果随机数落在 累积概率 之外，说明掉进了 "丢失区"
+        if rand_val >= cumulative[-1]:
+            return None
+        
+        # 否则，选中了某个邻居
+        idx = np.searchsorted(cumulative, rand_val)
+        return neighbors[idx]
 
 
 def _select_next_neighbor_old(
@@ -101,61 +147,6 @@ def _select_next_neighbor_old(
         selected_index = len(neighbors) - 1
     return neighbors[selected_index]
 
-
-#deprecated =======================================================
-def monteCarlo_singleTime_improved2_AgainContinue(
-    tranProMatrix: np.ndarray,
-    initial_deliverers: list,
-    succ_distribution: np.ndarray,
-    dis_distribution: np.ndarray,
-    constantFactor_distribution: np.ndarray
-) -> np.ndarray:
-    '''
-    简单实现 纯全局变量实现
-    '''
-
-    n = tranProMatrix.shape[0]
-    activatedUsers = set()
-    activated_list = []
-
-    # 为每个初始投放者启动一个独立的随机游走
-    for start_user in initial_deliverers:
-        # logging.info(f"\t\t\t当前模拟的起始节点: {start_user}")
-        current_user = start_user
-
-        # 模拟单张优惠券的随机游走过程
-        while True:
-            rand_pro = np.random.rand()
-
-            # 检查当前节点是否已经做出过决定
-            if current_user not in activatedUsers:
-                # 首次接触优惠券的逻辑
-                if rand_pro < succ_distribution[current_user]:
-                    # 决定“使用”
-                    activatedUsers.add(current_user)
-                    activated_list.append(current_user)
-                    # 游走在此中断，因为优惠券被使用了
-                    break
-                elif rand_pro < (succ_distribution[current_user] + dis_distribution[current_user]):
-                    # 决定“丢弃”
-                    break # 游走在此中断
-
-            # 做出过决定 再次接触优惠券的逻辑 直接转发 || 如果没有中断，则意味着节点决定“转发”
-            next_node = _select_next_neighbor_old(current_user, tranProMatrix, rand_pro)
-
-            if next_node is None:
-                # 没有邻居可转发，游走中断
-                break
-            else:
-                # 更新当前节点，继续游走
-                current_user = next_node
-
-    # 将最终成功使用的节点集合转换为0/1向量
-    success_vector = np.zeros(n, dtype=int)
-
-    success_vector[activated_list] = 1
-
-    return success_vector
 
 def _select_next_neighbor(
         current_user: int,
