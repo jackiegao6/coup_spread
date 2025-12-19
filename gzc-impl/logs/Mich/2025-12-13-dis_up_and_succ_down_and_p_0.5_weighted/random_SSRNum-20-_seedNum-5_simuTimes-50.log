@@ -1,0 +1,75 @@
+2025-12-13 16:03:29,233 - INFO - 加载数据集: Mich
+2025-12-13 16:03:29,237 - INFO - 首次生成度相关概率分布 分布类型: 'random'.
+2025-12-13 16:03:29,237 - INFO - ===> Generating 'Dirichlet' distributions with alpha=[1, 12, 7]...
+2025-12-13 16:03:29,240 - INFO - 保存概率分布 文件位置: /root/pythonspace/data-test/Mich/2025-12-13-dis_up_and_succ_down_and_p_0.5_weighted/distribution-in-Mich/distribution-random_seedNum-5.pkl
+2025-12-13 16:03:29,337 - INFO - 首次生成种子集 random
+2025-12-13 16:03:29,337 - INFO - 执行当前算法开始: random
+2025-12-13 16:03:29,337 - INFO - 当前用时 0.00 秒
+2025-12-13 16:03:29,338 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-13-dis_up_and_succ_down_and_p_0.5_weighted/seeds-with-Mich/random_random_seedNum-5_SSRNum-20.txt
+2025-12-13 16:03:29,338 - INFO - 首次生成种子集 degreeTopM
+2025-12-13 16:03:29,338 - INFO - 执行当前算法开始: degreeTopM
+2025-12-13 16:03:29,340 - INFO - 当前用时 0.00 秒
+2025-12-13 16:03:29,340 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-13-dis_up_and_succ_down_and_p_0.5_weighted/seeds-with-Mich/random_degreeTopM_seedNum-5_SSRNum-20.txt
+2025-12-13 16:03:29,340 - INFO - 首次生成种子集 alpha_sort
+2025-12-13 16:03:29,341 - INFO - 执行当前算法开始: alpha_sort
+2025-12-13 16:03:29,374 - INFO - 3748 个节点的alpha值降序排序 done
+2025-12-13 16:03:29,375 - INFO - ==============>> [(3488, 0.3915821), (212, 0.3335314), (2431, 0.3289404), (1990, 0.3279214), (1691, 0.308338), (1987, 0.2839263), (3143, 0.2822095), (1462, 0.2742177), (2179, 0.2738885), (1532, 0.2700932)]
+2025-12-13 16:03:29,375 - INFO - 
+选择的种子集 (按alpha排序): [3488, 212, 2431, 1990, 1691]
+
+2025-12-13 16:03:29,375 - INFO - 当前用时 0.03 秒
+2025-12-13 16:03:29,375 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-13-dis_up_and_succ_down_and_p_0.5_weighted/seeds-with-Mich/random_alpha_sort_seedNum-5_SSRNum-20.txt
+2025-12-13 16:03:29,376 - INFO - 首次生成种子集 Weighted_RIS
+2025-12-13 16:03:29,376 - INFO - 执行当前算法开始: Weighted_RIS
+2025-12-13 16:03:29,598 - INFO - 图初始化完成，CSR 矩阵及概率分布准备就绪。
+2025-12-13 16:03:29,598 - INFO - 
+开始生成 20 组 SSR (并行进程: 4)...
+2025-12-13 16:03:29,839 - INFO - 生成完毕。耗时: 0.24 秒。
+2025-12-13 16:03:29,839 - INFO - 
+开始选择最优种子 (Weighted Greedy) ...
+2025-12-13 16:03:29,851 - INFO -   - 券 1 选中 0, 增益: 0.0335
+2025-12-13 16:03:29,853 - INFO -   - 券 2 选中 1, 增益: 0.1725
+2025-12-13 16:03:29,857 - INFO -   - 券 3 选中 2, 增益: 0.3619
+2025-12-13 16:03:29,860 - INFO -   - 券 4 选中 3, 增益: 0.1725
+2025-12-13 16:03:29,860 - INFO -   - 券 5 选中 -1, 增益: -1.0000
+2025-12-13 16:03:29,860 - INFO - 最终选择的种子集: [0, 1, 2, 3, -1]
+
+2025-12-13 16:03:29,861 - INFO - 当前用时 0.49 秒
+2025-12-13 16:03:29,861 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-13-dis_up_and_succ_down_and_p_0.5_weighted/seeds-with-Mich/random_Weighted_RIS_seedNum-5_SSRNum-20.txt
+2025-12-13 16:03:29,861 - INFO - 首次生成种子集 ris_coverage
+2025-12-13 16:03:29,862 - INFO - 执行当前算法开始: ris_coverage
+2025-12-13 16:03:30,080 - INFO - 图初始化完成，CSR 矩阵及概率分布准备就绪。
+2025-12-13 16:03:30,080 - INFO - 
+开始生成 20 组 SSR (并行进程: 4)...
+2025-12-13 16:03:30,232 - INFO - 生成完毕。耗时: 0.15 秒。
+2025-12-13 16:03:30,232 - INFO - 
+开始选择最优种子 (Optimized Greedy) ...
+2025-12-13 16:03:30,239 - WARNING - 券 0 无法通过反向传播到达任何节点，随机选择备选。
+2025-12-13 16:03:30,239 - INFO -   - 券 1/5 选中节点 0, 新增覆盖 0
+2025-12-13 16:03:30,249 - INFO -   - 券 2/5 选中节点 1, 新增覆盖 1
+2025-12-13 16:03:30,249 - WARNING - 券 2 无法通过反向传播到达任何节点，随机选择备选。
+2025-12-13 16:03:30,249 - INFO -   - 券 3/5 选中节点 2, 新增覆盖 0
+2025-12-13 16:03:30,249 - WARNING - 券 3 无法通过反向传播到达任何节点，随机选择备选。
+2025-12-13 16:03:30,249 - INFO -   - 券 4/5 选中节点 3, 新增覆盖 0
+2025-12-13 16:03:30,277 - INFO -   - 券 5/5 选中节点 4, 新增覆盖 2
+2025-12-13 16:03:30,277 - INFO - 选种完毕。耗时: 0.04 秒。
+2025-12-13 16:03:30,277 - INFO - 最终选择的种子集: [0, 1, 2, 3, 4]
+
+2025-12-13 16:03:30,278 - INFO - 当前用时 0.42 秒
+2025-12-13 16:03:30,278 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-13-dis_up_and_succ_down_and_p_0.5_weighted/seeds-with-Mich/random_ris_coverage_seedNum-5_SSRNum-20.txt
+2025-12-13 16:03:30,279 - INFO - 评估种子集: None
+2025-12-13 16:03:30,279 - INFO - 多进程评估开始，共有 5 个方法待评估...
+2025-12-13 16:03:30,279 - INFO - 启动进程池，Worker数量: 5
+2025-12-13 16:03:30,778 - INFO - [Process 3887] 开始评估方法: random, 种子数: 5
+2025-12-13 16:03:30,813 - INFO - [Process 3887] random - 50 sims 完成: E=0.46
+2025-12-13 16:03:31,123 - INFO - [Process 3888] 开始评估方法: degreeTopM, 种子数: 5
+2025-12-13 16:03:31,149 - INFO - [Process 3888] degreeTopM - 50 sims 完成: E=0.68
+2025-12-13 16:03:31,475 - INFO - [Process 3889] 开始评估方法: alpha_sort, 种子数: 5
+2025-12-13 16:03:31,491 - INFO - [Process 3889] alpha_sort - 50 sims 完成: E=1.80
+2025-12-13 16:03:31,833 - INFO - [Process 3890] 开始评估方法: Weighted_RIS, 种子数: 5
+2025-12-13 16:03:31,855 - INFO - [Process 3890] Weighted_RIS - 50 sims 完成: E=0.24
+2025-12-13 16:03:32,208 - INFO - [Process 3891] 开始评估方法: ris_coverage, 种子数: 5
+2025-12-13 16:03:32,230 - INFO - [Process 3891] ris_coverage - 50 sims 完成: E=0.26
+2025-12-13 16:03:32,251 - INFO - 所有进程执行完毕，开始写入数据...
+2025-12-13 16:03:32,257 - INFO - 成功写入 5 条记录至 /root/pythonspace/data-test/Mich/2025-12-13-dis_up_and_succ_down_and_p_0.5_weighted/E-activated-Mich/distribution-random_simuTimes-50_seedNum-5_monteCarloL-10_rrNumSamples-20.csv
+2025-12-13 16:03:32,258 - INFO - 保存评估文件至: /root/pythonspace/data-test/Mich/2025-12-13-dis_up_and_succ_down_and_p_0.5_weighted/E-activated-Mich/distribution-random_simuTimes-50_seedNum-5_monteCarloL-10_rrNumSamples-20.csv

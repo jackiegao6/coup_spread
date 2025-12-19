@@ -5,6 +5,7 @@ from typing import List, Dict, Any
 import coupon_usage_rate_get_distribution_degree_aware as gd
 import single_deliverer
 import SSR_method
+import Weighted_SSR_method
 import NEW_base_method
 import os
 import get_seeds
@@ -97,6 +98,14 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
                                                                           init_tranProMatrix=data['init_tran_matrix'],
                                                                           m=m),
         'ris_coverage': lambda: SSR_method.deliverers_ris_coverage(
+            adj=data["adj"],
+            tranProMatrix=data["init_tran_matrix"],
+            seeds_num=m,
+            num_samples=config.num_samples,  # 通过 config 对象来配置
+            alpha=alpha,
+            distributions = data["distributions"]
+        ),
+        'Weighted_RIS': lambda: Weighted_SSR_method.deliverers_ris_coverage(
             adj=data["adj"],
             tranProMatrix=data["init_tran_matrix"],
             seeds_num=m,
@@ -234,13 +243,13 @@ if __name__ == '__main__':
         data_set='Mich', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
         simulation_times=[50],  # [1000, 5000]
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
-        methods=['random', 'degreeTopM', 'alpha_sort', 'importance_sort', 'ris_coverage'],
+        methods=['random', 'degreeTopM', 'alpha_sort', 'Weighted_RIS', 'ris_coverage'],
         # monte_carlo_L=2,
         distribution_type='random',  # powerlaw powerlaw-old random poisson gamma
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=10000,
+        num_samples=2000,
         # seeds_num=num,  # 32 64 128 256 512
         succ_degree_influence_factor= -0.6,
         dis_degree_influence_factor= -1.2,
@@ -249,7 +258,7 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainReJudge', 
-        version='2025-12-13-dis_up_and_succ_down_and_p_0.5',
+        version='2025-12-13-dis_up_and_succ_down_and_p_0.5_weighted',
         random_dirichlet=[1,12,7]
     )
 
@@ -260,4 +269,4 @@ if __name__ == '__main__':
         run_coupon_experiment(my_config)
 
     end_time = time.time()
-    print("done!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!\n{%d}s", (end_time - start_time))
+    print(f"done!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!\n{end_time - start_time}s")
