@@ -2,10 +2,8 @@ from config import ExperimentConfig
 import logging
 import pickle
 from typing import List, Dict, Any
-import coupon_usage_rate_get_distribution_degree_aware as gd
-import single_deliverer
+import distribution as gd
 import SSR_method
-import NEW_base_method
 import os
 import get_seeds
 import time
@@ -16,6 +14,7 @@ from tools import generate_logger
 from pathlib import Path
 import numpy as np
 import argparse
+import get_trans_matrix
 
 
 def load_experiment_data(config: "ExperimentConfig") -> Dict[str, Any]:
@@ -54,7 +53,7 @@ def load_contribution_and_tran_matrix(config: "ExperimentConfig", adj, n: int) -
 
     succ_dist, dis_dist, tran_dist, const_factor_dist = distribution_res
 
-    tran_matrix = single_deliverer.getTranProMatrix(adj)
+    tran_matrix = get_trans_matrix.getTranProMatrix(adj)
 
     return {
         "adj": adj,
@@ -77,22 +76,12 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
     trans = {node: p_dis[node] for node in range(len(p_dis))}
 
     selector_dict = {
-        # 'theroy': lambda: get_seeds.deliverers_theroy(
-        #     data["n"], m, data["init_tran_matrix"], *data["distributions"], config.personalization, data["D"]),
-        # 'monterCarlo': lambda: get_seeds.deliverers_monteCarlo(m=m,
-        #                                                                    init_tranProMatrix=data["init_tran_matrix"],
-        #                                                                    succ_distribution=data["distributions"][0],
-        #                                                                    dis_distribution=data["distributions"][1],
-        #                                                                    constantFactor_distribution=
-        #                                                                    data["distributions"][3],
-        #                                                                    L=config.monte_carlo_L,
-        #                                                                    personalization=config.personalization),
+
         'random': lambda: get_seeds.deliverers_random(data["n"], m),  # 基线方法
         'degreeTopM': lambda: get_seeds.deliverers_degreeTopM(data["adj"], m),  # 基线方法
         'pageRank': lambda: get_seeds.deliverers_pageRank2(adj=data["adj"],
                                                           m=m,
                                                           tranProMatrix=data["init_tran_matrix"]), # 基线方法
-        'succPro': lambda: get_seeds.deliverers_succPro(succ_distribution=data['distributions'][0], m=m),
         '1_neighbor': lambda: get_seeds.deliverers_1_neighbor(succ_distribution=data['distributions'][0],
                                                                           init_tranProMatrix=data['init_tran_matrix'],
                                                                           m=m),
@@ -103,13 +92,13 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
             num_samples=config.num_samples,  # 通过 config 对象来配置
             alpha=alpha
         ),
-        'alpha_sort': lambda: NEW_base_method.deliverers_alpha_sort(
+        'alpha_sort': lambda: get_seeds.deliverers_alpha_sort(
             adj=data["adj"],
             tranProMatrix=data["init_tran_matrix"],
             seeds_num=m,
             alpha=alpha
         ),
-        'importance_sort': lambda: NEW_base_method.deliverers_importance_sort(
+        'importance_sort': lambda: get_seeds.deliverers_importance_sort(
             adj=data["adj"],
             tranProMatrix=data["init_tran_matrix"],
             seeds_num=m,
@@ -229,7 +218,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
-        data_set='Mich', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
+        data_set='facebook', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
         simulation_times=[15],  # [1000, 5000]
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         methods=['random', 'degreeTopM', 'alpha_sort', 'importance_sort', 'ris_coverage'],
@@ -246,9 +235,9 @@ if __name__ == '__main__':
 
         rng=np.random.default_rng(1),
 
-        single_sim_func='AgainContinue',  # AgainReJudge 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)
-        version='2025-12-3',
-        random_dirichlet=[1,1,18]
+        single_sim_func='AgainReJudge',  # AgainReJudge(采用)(接受过的用户可以再次接受) 、 AgainContinue(吸收态用户接收到券的使用概率为0)
+        version='2025-12-19-master',
+        random_dirichlet=[1,1,18] # unused
     )
 
     # 外循环 控制种子个数
