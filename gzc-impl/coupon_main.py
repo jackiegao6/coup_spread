@@ -219,7 +219,7 @@ if __name__ == '__main__':
 
     my_config = ExperimentConfig(
         data_set='facebook', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
-        simulation_times=[200],  # [1000, 5000]
+        simulation_times=[300],  # [1000, 5000]
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         methods=['random', 'degreeTopM', 'alpha_sort', 'importance_sort', 'ris_coverage'],
         # monte_carlo_L=2,
