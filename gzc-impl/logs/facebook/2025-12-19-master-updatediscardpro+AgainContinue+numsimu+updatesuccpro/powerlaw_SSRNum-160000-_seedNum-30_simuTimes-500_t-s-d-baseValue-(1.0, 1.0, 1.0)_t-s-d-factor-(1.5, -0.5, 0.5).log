@@ -1,0 +1,94 @@
+2025-12-19 17:31:26,837 - INFO - 加载数据集: facebook
+2025-12-19 17:31:26,841 - INFO - 首次生成度相关概率分布 分布类型: 'powerlaw'.
+2025-12-19 17:31:26,841 - INFO - ===> Generating 'Power-law Degree-Aware' distributions...
+2025-12-19 17:31:26,847 - INFO - 保存概率分布 文件位置: /root/pythonspace/data-test/facebook/2025-12-19-master-updatediscardpro+AgainContinue+numsimu+updatesuccpro/distribution-in-facebook/distribution-powerlaw_seedNum-30.pkl
+2025-12-19 17:31:26,933 - INFO - 首次生成种子集 random
+2025-12-19 17:31:26,933 - INFO - 执行当前算法开始: random
+2025-12-19 17:31:26,933 - INFO - 数据集节点总数:  n = 4039, m = 30
+2025-12-19 17:31:26,933 - INFO - 选择 30  [247, 1909, 37, 2305, 2082, 946, 3707, 2966, 746, 2005, 2631, 3983, 246, 2403, 764, 477, 2564, 1379, 772, 1973, 3166, 3038, 1364, 4035, 2268, 1320, 3732, 207, 34, 3996]
+
+2025-12-19 17:31:26,934 - INFO - 当前用时 0.00 秒
+2025-12-19 17:31:26,934 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/facebook/2025-12-19-master-updatediscardpro+AgainContinue+numsimu+updatesuccpro/seeds-with-facebook/powerlaw_random_seedNum-30_SSRNum-160000.txt
+2025-12-19 17:31:26,934 - INFO - 首次生成种子集 degreeTopM
+2025-12-19 17:31:26,934 - INFO - 执行当前算法开始: degreeTopM
+2025-12-19 17:31:26,934 - INFO - 依据: 选择连接数（度数）最多的节点。
+2025-12-19 17:31:26,936 - INFO - 选择的 Top M 节点及其度数:
+2025-12-19 17:31:26,936 - INFO - 
+2025-12-19 17:31:26,936 - INFO - 当前用时 0.00 秒
+2025-12-19 17:31:26,937 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/facebook/2025-12-19-master-updatediscardpro+AgainContinue+numsimu+updatesuccpro/seeds-with-facebook/powerlaw_degreeTopM_seedNum-30_SSRNum-160000.txt
+2025-12-19 17:31:26,937 - INFO - 首次生成种子集 alpha_sort
+2025-12-19 17:31:26,937 - INFO - 执行当前算法开始: alpha_sort
+2025-12-19 17:31:26,997 - INFO - 4039 个节点的alpha值降序排序 done
+2025-12-19 17:31:26,998 - INFO - ==============>> [(1046, 0.18686364410546907), (3766, 0.18260118297227934), (3335, 0.1809509295593998), (335, 0.17892685290443572), (1526, 0.17866320757653), (3834, 0.1781948289092491), (1603, 0.17713146249665998), (287, 0.17457918746481454), (582, 0.17196093112306718), (1319, 0.1718548758229069)]
+2025-12-19 17:31:26,998 - INFO - 
+选择的种子集 (按alpha排序): [1046, 3766, 3335, 335, 1526, 3834, 1603, 287, 582, 1319, 114, 4016, 1808, 1837, 2406, 1812, 3748, 3676, 692, 404, 1760, 215, 952, 3603, 2612, 4023, 1786, 18, 2754, 12]
+
+2025-12-19 17:31:26,998 - INFO - 当前用时 0.06 秒
+2025-12-19 17:31:26,998 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/facebook/2025-12-19-master-updatediscardpro+AgainContinue+numsimu+updatesuccpro/seeds-with-facebook/powerlaw_alpha_sort_seedNum-30_SSRNum-160000.txt
+2025-12-19 17:31:26,999 - INFO - 首次生成种子集 importance_sort
+2025-12-19 17:31:26,999 - INFO - 执行当前算法开始: importance_sort
+2025-12-19 17:31:31,027 - INFO - 4039 个节点的Importance值降序排序 done
+2025-12-19 17:31:31,027 - INFO - 
+选择的种子集 (按Importance排序): [1046, 3766, 3335, 335, 1526, 3834, 1603, 287, 582, 1319, 114, 4016, 1808, 1837, 2406, 1812, 3748, 3676, 692, 404, 1760, 215, 952, 3603, 2612, 4023, 1786, 18, 2754, 12]
+
+2025-12-19 17:31:31,028 - INFO - 当前用时 4.03 秒
+2025-12-19 17:31:31,028 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/facebook/2025-12-19-master-updatediscardpro+AgainContinue+numsimu+updatesuccpro/seeds-with-facebook/powerlaw_importance_sort_seedNum-30_SSRNum-160000.txt
+2025-12-19 17:31:31,028 - INFO - 首次生成种子集 ris_coverage
+2025-12-19 17:31:31,028 - INFO - 执行当前算法开始: ris_coverage
+2025-12-19 17:31:31,464 - INFO - 图初始化完成，节点数: 4039，CSR 矩阵准备就绪。
+2025-12-19 17:31:31,464 - INFO - 
+开始生成 160000 组 SSR (并行进程: 8)...
+2025-12-19 17:31:50,725 - INFO - 生成完毕。耗时: 19.26 秒。
+2025-12-19 17:31:50,727 - INFO - 
+开始选择最优种子 (Optimized Greedy) ...
+2025-12-19 17:31:51,695 - INFO -   - 券 1/30 选中节点 4013, 新增覆盖 14
+2025-12-19 17:31:51,699 - INFO -   - 券 2/30 选中节点 37, 新增覆盖 15
+2025-12-19 17:31:51,705 - INFO -   - 券 3/30 选中节点 2754, 新增覆盖 14
+2025-12-19 17:31:51,719 - INFO -   - 券 4/30 选中节点 210, 新增覆盖 12
+2025-12-19 17:31:51,739 - INFO -   - 券 5/30 选中节点 335, 新增覆盖 14
+2025-12-19 17:31:51,757 - INFO -   - 券 6/30 选中节点 4025, 新增覆盖 16
+2025-12-19 17:31:51,775 - INFO -   - 券 7/30 选中节点 3766, 新增覆盖 16
+2025-12-19 17:31:51,801 - INFO -   - 券 8/30 选中节点 1764, 新增覆盖 17
+2025-12-19 17:31:51,825 - INFO -   - 券 9/30 选中节点 3987, 新增覆盖 17
+2025-12-19 17:31:51,859 - INFO -   - 券 10/30 选中节点 2406, 新增覆盖 14
+2025-12-19 17:31:51,886 - INFO -   - 券 11/30 选中节点 3865, 新增覆盖 13
+2025-12-19 17:31:51,927 - INFO -   - 券 12/30 选中节点 1319, 新增覆盖 14
+2025-12-19 17:31:51,963 - INFO -   - 券 13/30 选中节点 4012, 新增覆盖 13
+2025-12-19 17:31:52,002 - INFO -   - 券 14/30 选中节点 1767, 新增覆盖 13
+2025-12-19 17:31:52,059 - INFO -   - 券 15/30 选中节点 397, 新增覆盖 14
+2025-12-19 17:31:52,114 - INFO -   - 券 16/30 选中节点 3435, 新增覆盖 12
+2025-12-19 17:31:52,158 - INFO -   - 券 17/30 选中节点 4016, 新增覆盖 16
+2025-12-19 17:31:52,215 - INFO -   - 券 18/30 选中节点 1046, 新增覆盖 13
+2025-12-19 17:31:52,280 - INFO -   - 券 19/30 选中节点 3603, 新增覆盖 13
+2025-12-19 17:31:52,344 - INFO -   - 券 20/30 选中节点 11, 新增覆盖 13
+2025-12-19 17:31:52,396 - INFO -   - 券 21/30 选中节点 404, 新增覆盖 12
+2025-12-19 17:31:52,469 - INFO -   - 券 22/30 选中节点 3978, 新增覆盖 11
+2025-12-19 17:31:52,529 - INFO -   - 券 23/30 选中节点 42, 新增覆盖 14
+2025-12-19 17:31:52,613 - INFO -   - 券 24/30 选中节点 114, 新增覆盖 16
+2025-12-19 17:31:52,687 - INFO -   - 券 25/30 选中节点 209, 新增覆盖 15
+2025-12-19 17:31:52,759 - INFO -   - 券 26/30 选中节点 4035, 新增覆盖 15
+2025-12-19 17:31:52,852 - INFO -   - 券 27/30 选中节点 4003, 新增覆盖 14
+2025-12-19 17:31:52,952 - INFO -   - 券 28/30 选中节点 3335, 新增覆盖 15
+2025-12-19 17:31:53,064 - INFO -   - 券 29/30 选中节点 1623, 新增覆盖 13
+2025-12-19 17:31:53,185 - INFO -   - 券 30/30 选中节点 582, 新增覆盖 13
+2025-12-19 17:31:53,186 - INFO - 选种完毕。耗时: 2.46 秒。
+2025-12-19 17:31:53,203 - INFO - 最终选择的种子集: [4013, 37, 2754, 210, 335, 4025, 3766, 1764, 3987, 2406, 3865, 1319, 4012, 1767, 397, 3435, 4016, 1046, 3603, 11, 404, 3978, 42, 114, 209, 4035, 4003, 3335, 1623, 582]
+
+2025-12-19 17:31:53,950 - INFO - 当前用时 22.92 秒
+2025-12-19 17:31:53,950 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/facebook/2025-12-19-master-updatediscardpro+AgainContinue+numsimu+updatesuccpro/seeds-with-facebook/powerlaw_ris_coverage_seedNum-30_SSRNum-160000.txt
+2025-12-19 17:31:53,951 - INFO - 评估种子集: None
+2025-12-19 17:31:53,951 - INFO - 多进程评估开始，共有 5 个方法待评估...
+2025-12-19 17:31:53,951 - INFO - 启动进程池，Worker数量: 5
+2025-12-19 17:31:55,094 - INFO - [Process 43090] 开始评估方法: random, 种子数: 30
+2025-12-19 17:31:55,923 - INFO - [Process 43091] 开始评估方法: degreeTopM, 种子数: 30
+2025-12-19 17:31:56,964 - INFO - [Process 43092] 开始评估方法: alpha_sort, 种子数: 30
+2025-12-19 17:31:58,323 - INFO - [Process 43093] 开始评估方法: importance_sort, 种子数: 30
+2025-12-19 17:31:59,409 - INFO - [Process 43094] 开始评估方法: ris_coverage, 种子数: 30
+2025-12-19 17:32:28,239 - INFO - [Process 43094] ris_coverage - 500 sims 完成: E=5.97
+2025-12-19 17:32:42,089 - INFO - [Process 43092] alpha_sort - 500 sims 完成: E=6.10
+2025-12-19 17:32:42,578 - INFO - [Process 43093] importance_sort - 500 sims 完成: E=6.10
+2025-12-19 17:33:01,150 - INFO - [Process 43090] random - 500 sims 完成: E=2.25
+2025-12-19 17:34:02,368 - INFO - [Process 43091] degreeTopM - 500 sims 完成: E=1.15
+2025-12-19 17:34:02,414 - INFO - 所有进程执行完毕，开始写入数据...
+2025-12-19 17:34:02,423 - INFO - 成功写入 5 条记录至 /root/pythonspace/data-test/facebook/2025-12-19-master-updatediscardpro+AgainContinue+numsimu+updatesuccpro/E-activated-facebook/distribution-powerlaw/tsd_1.5--0.5-0.5/single_sim_func-AgainContinue/simuTimes-500_monteCarloL-10_single_sim_func-AgainContinue_rrNumSamples-160000.csv
+2025-12-19 17:34:02,423 - INFO - 保存评估文件至: /root/pythonspace/data-test/facebook/2025-12-19-master-updatediscardpro+AgainContinue+numsimu+updatesuccpro/E-activated-facebook/distribution-powerlaw/tsd_1.5--0.5-0.5/single_sim_func-AgainContinue/simuTimes-500_monteCarloL-10_single_sim_func-AgainContinue_rrNumSamples-160000.csv

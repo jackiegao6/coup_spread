@@ -219,7 +219,7 @@ if __name__ == '__main__':
 
     my_config = ExperimentConfig(
         data_set='facebook', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
-        simulation_times=[15],  # [1000, 5000]
+        simulation_times=[200],  # [1000, 5000]
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         methods=['random', 'degreeTopM', 'alpha_sort', 'importance_sort', 'ris_coverage'],
         # monte_carlo_L=2,
@@ -229,14 +229,14 @@ if __name__ == '__main__':
 
         num_samples=160000,
         # seeds_num=num,  # 32 64 128 256 512
-        succ_degree_influence_factor= -0.9,
-        dis_degree_influence_factor= -1.3,
+        succ_degree_influence_factor= -0.5,
+        dis_degree_influence_factor= 0.5,
         tran_degree_influence_factor= 1.5,
 
         rng=np.random.default_rng(1),
 
-        single_sim_func='AgainReJudge',  # AgainReJudge(采用)(接受过的用户可以再次接受) 、 AgainContinue(吸收态用户接收到券的使用概率为0)
-        version='2025-12-19-master',
+        single_sim_func='AgainContinue',  # AgainReJudge(采用)(接受过的用户可以再次接受) 、 AgainContinue(吸收态用户接收到券的使用概率为0)
+        version='2025-12-19-master-updatediscardpro+AgainContinue+numsimu+updatesuccpro',
         random_dirichlet=[1,1,18] # unused
     )
 

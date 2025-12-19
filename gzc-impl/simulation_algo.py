@@ -103,7 +103,6 @@ def monteCarlo_singleTime_improved2(
     success_vector[list(activatedUsers)] = 1
     return success_vector
 
-# deprecated 如若使用 记得缩放概率
 def monteCarlo_singleTime_improved2_AgainContinue(
     tranProMatrix: np.ndarray,
     initial_deliverers: list,
@@ -115,20 +114,23 @@ def monteCarlo_singleTime_improved2_AgainContinue(
     如果用户已经激活，他收到新券后直接跳过“使用/丢弃”判定，必定尝试转发给邻居
     已激活用户不再拦截券，而是充当了纯粹的“中继站（Relay）”
     这种模式下，优惠券在网络中的寿命会更长，最终的总激活人数通常会显著高于第一种模式。这模拟了“自动转发”或“用户即便用过了也会顺手发给别人”的情景
+    丢掉 重复覆盖惩罚
     '''
 
     n = tranProMatrix.shape[0]
     activatedUsers = set()
-    activated_list = []
 
     # 为每个初始投放者启动一个独立的随机游走
     for start_user in initial_deliverers:
-        # logging.info(f"\t\t\t当前模拟的起始节点: {start_user}")
+
         current_user = start_user
 
         # 模拟单张优惠券的随机游走过程
         while True:
             rand_pro = np.random.rand()
+            p_succ = succ_distribution[current_user]
+            p_dis = dis_distribution[current_user]
+            threshold = p_succ + p_dis  # 动作发生的总概率（使用+丢弃）
 
             # 检查当前节点是否已经做出过决定
             if current_user not in activatedUsers:
@@ -136,15 +138,19 @@ def monteCarlo_singleTime_improved2_AgainContinue(
                 if rand_pro < succ_distribution[current_user]:
                     # 决定“使用”
                     activatedUsers.add(current_user)
-                    activated_list.append(current_user)
                     # 游走在此中断，因为优惠券被使用了
                     break
                 elif rand_pro < (succ_distribution[current_user] + dis_distribution[current_user]):
                     # 决定“丢弃”
                     break # 游走在此中断
 
+            # 如果没有中断，则意味着节点决定“转发”
+            remaining_prob = 1.0 - threshold
+
+            # 为了在转发给不同邻居时依然能公平地利用这个随机数，代码将其线性映射回了 [0, 1] 区间 在逻辑上保证了单次决策中概率空间的完整性
+            rescaled_rand_pro = (rand_pro - threshold) / remaining_prob
             # 做出过决定 再次接触优惠券的逻辑 直接转发 || 如果没有中断，则意味着节点决定“转发”
-            next_node = _select_next_neighbor_old(current_user, tranProMatrix, rand_pro)
+            next_node = _select_next_neighbor_old(current_user, tranProMatrix, rescaled_rand_pro)
 
             if next_node is None:
                 # 没有邻居可转发，游走中断
@@ -155,7 +161,5 @@ def monteCarlo_singleTime_improved2_AgainContinue(
 
     # 将最终成功使用的节点集合转换为0/1向量
     success_vector = np.zeros(n, dtype=int)
-
-    success_vector[activated_list] = 1
-
+    success_vector[list(activatedUsers)] = 1
     return success_vector
