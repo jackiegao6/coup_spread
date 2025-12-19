@@ -1,0 +1,7 @@
+2025-12-19 20:33:29,643 - INFO - 加载数据集: students
+2025-12-19 20:33:29,649 - INFO - 首次生成度相关概率分布 分布类型: 'random'.
+2025-12-19 20:33:29,649 - INFO - ===> Generating 'Dirichlet' distributions with alpha=[1, 1, 1]...
+2025-12-19 20:33:29,650 - INFO - 保存概率分布 文件位置: /root/pythonspace/data-test/students/2025-12-19-master-students/distribution-in-students/distribution-random_seedNum-100.pkl
+2025-12-19 20:33:29,653 - INFO - 首次生成种子集 random
+2025-12-19 20:33:29,653 - INFO - 执行当前算法开始: random
+2025-12-19 20:33:29,653 - INFO - 数据集节点总数:  n = 84, m = 100

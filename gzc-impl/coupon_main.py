@@ -218,16 +218,16 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
-        data_set='facebook', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin
+        data_set='students', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin students
         simulation_times=[300],  # [1000, 5000]
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         methods=['random', 'degreeTopM', 'alpha_sort', 'importance_sort', 'ris_coverage'],
         # monte_carlo_L=2,
-        distribution_type='powerlaw',  # powerlaw powerlaw-old random poisson gamma
+        distribution_type='random',  # powerlaw powerlaw-old random poisson gamma
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=160000,
+        num_samples=60000,
         # seeds_num=num,  # 32 64 128 256 512
         succ_degree_influence_factor= -0.5,
         dis_degree_influence_factor= 0.5,
@@ -236,8 +236,8 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainContinue',  # AgainReJudge(采用)(接受过的用户可以再次接受) 、 AgainContinue(吸收态用户接收到券的使用概率为0)
-        version='2025-12-19-master-updatediscardpro+AgainContinue+numsimu+updatesuccpro',
-        random_dirichlet=[1,1,18] # unused
+        version='2025-12-19-master-students',
+        random_dirichlet=[1,1,1] # unused
     )
 
     # 外循环 控制种子个数

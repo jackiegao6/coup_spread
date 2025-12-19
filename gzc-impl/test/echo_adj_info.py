@@ -74,5 +74,12 @@ if __name__ == '__main__':
         是否对称: True
         边数量: 81903
     '''
-    result = analyze_graph_from_pkl("/home/wen/pythonspace/data-test/datasets/Mich-adj.pkl")
+    # result = analyze_graph_from_pkl("/home/wen/pythonspace/data-test/datasets/Mich-adj.pkl")
+    '''
+    分析结果：
+        节点数量: 3748
+        是否对称: True
+        边数量: 81903
+    '''
+    result = analyze_graph_from_pkl("/root/pythonspace/data-test/datasets/students-adj.pkl")
 
