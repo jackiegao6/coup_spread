@@ -77,6 +77,17 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
 
     selector_dict = {
 
+        'monterCarlo': lambda: get_seeds.deliverers_monteCarlo(
+            n=data["n"],
+            m=m,
+            tranProMatrix=data["init_tran_matrix"],
+            succ_distribution=data["distributions"][0],
+            dis_distribution=data["distributions"][1],
+            constantFactor_distribution=data["distributions"][3],
+            simulation_algo_func=simulation_algo.monteCarlo_singleTime_improved2_AgainContinue, # 使用你确认的 AgainContinue
+            L=config.monte_carlo_L # 根据你的承受能力调整，4000节点设100次大概需要几分钟
+        ),
+
         'random': lambda: get_seeds.deliverers_random(data["n"], m),  # 基线方法
         'degreeTopM': lambda: get_seeds.deliverers_degreeTopM(data["adj"], m),  # 基线方法
         'pageRank': lambda: get_seeds.deliverers_pageRank2(adj=data["adj"],
@@ -218,16 +229,17 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
-        data_set='students', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin students
-        simulation_times=[300],  # [1000, 5000]
+        data_set='Mich', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin students
+        simulation_times=[500],  # [1000, 5000]
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
-        methods=['random', 'degreeTopM', 'alpha_sort', 'importance_sort', 'ris_coverage'],
-        # monte_carlo_L=2,
+        methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage', 'monterCarlo'],
+        monte_carlo_L=200,
+
         distribution_type='random',  # powerlaw powerlaw-old random poisson gamma
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=60000,
+        num_samples=80000,
         # seeds_num=num,  # 32 64 128 256 512
         succ_degree_influence_factor= -0.5,
         dis_degree_influence_factor= 0.5,
@@ -235,9 +247,9 @@ if __name__ == '__main__':
 
         rng=np.random.default_rng(1),
 
-        single_sim_func='AgainContinue',  # AgainReJudge(采用)(接受过的用户可以再次接受) 、 AgainContinue(吸收态用户接收到券的使用概率为0)
-        version='2025-12-19-master-students',
-        random_dirichlet=[1,1,1] # unused
+        single_sim_func='AgainContinue',  # AgainReJudge(接受过的用户可以再次接受) 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)(目的：不是让券的使用率最大，而是让券的尽可能地覆盖)
+        version='2025-12-21-2',
+        random_dirichlet=[100,100,100] # 期望一致 概率越大标准差越小
     )
 
     # 外循环 控制种子个数

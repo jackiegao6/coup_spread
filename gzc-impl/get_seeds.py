@@ -2,10 +2,62 @@ import logging
 import numpy as np
 import networkx as nx
 import random
-
 import scipy.sparse as sp
-from typing import List, Dict
+from typing import Dict, List, Any
 
+def deliverers_monteCarlo(
+        n: int, 
+        m: int, 
+        tranProMatrix: np.ndarray, 
+        succ_distribution: np.ndarray, 
+        dis_distribution: np.ndarray, 
+        constantFactor_distribution: np.ndarray,
+        simulation_algo_func, # 传入你的模拟函数，如 AgainContinue
+        L: int = 100          # 每个节点的模拟次数 默认100次
+) -> list:
+    """
+    蒙特卡洛模拟策略：通过模拟 L 次随机游走，计算每个节点作为种子的平均激活能力。
+    
+    Args:
+        n: 节点总数
+        m: 需要选出的种子数
+        L: 每个节点的模拟次数（L越高越准，但越慢）
+        simulation_algo_func: 之前定义的单次模拟逻辑函数
+    """
+    logging.info(f"--- Running: Monte Carlo Selection (L={L}) ---")
+    logging.info(f"依据: 对每个节点进行 {L} 次模拟实验，评估其平均激活贡献。")
+    
+    node_scores = np.zeros(n)
+    
+    # 为了加快速度，我们可以只评估一部分有潜力的节点（可选）
+    # 这里我们演示全量评估
+    for i in range(n):
+        if i % 1000 == 0:
+            logging.info(f"正在模拟评估第 {i}/{n} 个节点...")
+            
+        success_count = 0
+        for _ in range(L):
+            # 这里的 initial_deliverers 只传入当前这一个节点 [i]
+            # 返回的是一个 0/1 向量
+            res_vector = simulation_algo_func(
+                tranProMatrix, 
+                [i], 
+                succ_distribution, 
+                dis_distribution, 
+                constantFactor_distribution
+            )
+            success_count += np.sum(res_vector)
+            
+        node_scores[i] = success_count / L
+
+    # 排序获取 Top M
+    sorted_indexes = np.argsort(node_scores)[::-1]
+    selected_seeds = sorted_indexes[:m].tolist()
+    
+    logging.info(f"蒙特卡洛评估完成。最高期望激活值为: {node_scores[selected_seeds[0]]:.4f}")
+    logging.info(f"选择的种子集: {selected_seeds[:10]} ...")
+    
+    return [int(node) for node in selected_seeds]
 
 # 随机策略
 def deliverers_random(n: int, m: int) -> list:

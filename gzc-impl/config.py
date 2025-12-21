@@ -56,7 +56,7 @@ class ExperimentConfig:
                 return f"{self.data_prefix}/{self.data_set}/{self.version}/E-activated-{self.data_set}/distribution-{self.distribution_type}/tsd_{self.tran_degree_influence_factor}-{self.succ_degree_influence_factor}-{self.dis_degree_influence_factor}/single_sim_func-{self.single_sim_func}/simuTimes-{times}_seedNum-{m}_monteCarloL-{self.monte_carlo_L}_single_sim_func-{self.single_sim_func}_rrNumSamples-{self.num_samples}.csv"
             else:
                 return f"{self.data_prefix}/{self.data_set}/{self.version}/E-activated-{self.data_set}/distribution-{self.distribution_type}/tsd_{self.tran_degree_influence_factor}-{self.succ_degree_influence_factor}-{self.dis_degree_influence_factor}/single_sim_func-{self.single_sim_func}/simuTimes-{times}_monteCarloL-{self.monte_carlo_L}_single_sim_func-{self.single_sim_func}_rrNumSamples-{self.num_samples}.csv"
-        return f"{self.data_prefix}/{self.data_set}/{self.version}/E-activated-{self.data_set}/distribution-{self.distribution_type}_simuTimes-{times}_seedNum-{m}_monteCarloL-{self.monte_carlo_L}_rrNumSamples-{self.num_samples}.csv"
+        return f"{self.data_prefix}/{self.data_set}/{self.version}/E-activated-{self.data_set}/distribution-{self.distribution_type}/simuTimes-{times}_random-dirichlet-{self.random_dirichlet}_rrNumSamples-{self.num_samples}.csv"
 
 
     def log_file(self):

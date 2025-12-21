@@ -71,6 +71,7 @@ def worker_evaluate_method(
             "E_activated_users": E_activated,
             "variance": Var_activated,
             "std_deviation": std_dev,
+            "random_dirichlet": config_dict.get('random_dirichlet'),
             "degree_exponent_succ": config_dict.get('succ_degree_influence_factor'),
             "degree_exponent_dis": config_dict.get('dis_degree_influence_factor'),
             "degree_exponent_tran": config_dict.get('tran_degree_influence_factor')
