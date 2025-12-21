@@ -1,0 +1,71 @@
+2025-12-19 15:42:22,623 - INFO - 加载数据集: facebook
+2025-12-19 15:42:22,628 - INFO - 首次生成度相关概率分布 分布类型: 'random'.
+2025-12-19 15:42:22,629 - INFO - ===> Generating 'Dirichlet' distributions with alpha=[1, 12, 7]...
+2025-12-19 15:42:22,634 - INFO - 保存概率分布 文件位置: /root/pythonspace/data-test/facebook/2025-12-19-dis_up_and_succ_down_and_p_0.5_weighted/distribution-in-facebook/distribution-random_seedNum-23.pkl
+2025-12-19 15:42:22,718 - INFO - 首次生成种子集 random
+2025-12-19 15:42:22,718 - INFO - 执行当前算法开始: random
+2025-12-19 15:42:22,718 - INFO - 当前用时 0.00 秒
+2025-12-19 15:42:22,718 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/facebook/2025-12-19-dis_up_and_succ_down_and_p_0.5_weighted/seeds-with-facebook/random_random_seedNum-23_SSRNum-10000.txt
+2025-12-19 15:42:22,719 - INFO - 首次生成种子集 degreeTopM
+2025-12-19 15:42:22,719 - INFO - 执行当前算法开始: degreeTopM
+2025-12-19 15:42:22,721 - INFO - 当前用时 0.00 秒
+2025-12-19 15:42:22,721 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/facebook/2025-12-19-dis_up_and_succ_down_and_p_0.5_weighted/seeds-with-facebook/random_degreeTopM_seedNum-23_SSRNum-10000.txt
+2025-12-19 15:42:22,721 - INFO - 首次生成种子集 alpha_sort
+2025-12-19 15:42:22,721 - INFO - 执行当前算法开始: alpha_sort
+2025-12-19 15:42:22,764 - INFO - 4039 个节点的alpha值降序排序 done
+2025-12-19 15:42:22,764 - INFO - ==============>> [(517, 0.3694574), (277, 0.3470848), (1939, 0.3354427), (4016, 0.318879), (962, 0.308656), (1079, 0.2981059), (1789, 0.2979696), (52, 0.2788467), (3806, 0.2785214), (1801, 0.2766627)]
+2025-12-19 15:42:22,764 - INFO - 
+选择的种子集 (按alpha排序): [517, 277, 1939, 4016, 962, 1079, 1789, 52, 3806, 1801, 2914, 3525, 2890, 2501, 758, 3720, 269, 525, 1482, 1853, 1069, 2689, 1715]
+
+2025-12-19 15:42:22,765 - INFO - 当前用时 0.04 秒
+2025-12-19 15:42:22,765 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/facebook/2025-12-19-dis_up_and_succ_down_and_p_0.5_weighted/seeds-with-facebook/random_alpha_sort_seedNum-23_SSRNum-10000.txt
+2025-12-19 15:42:22,765 - INFO - 首次生成种子集 Weighted_RIS
+2025-12-19 15:42:22,765 - INFO - 执行当前算法开始: Weighted_RIS
+2025-12-19 15:42:23,011 - INFO - 图初始化完成，CSR 矩阵及概率分布准备就绪。
+2025-12-19 15:42:23,012 - INFO - 
+开始生成 10000 组 SSR (并行进程: 4)...
+2025-12-19 15:42:46,150 - INFO - 加载数据集: facebook
+2025-12-19 15:42:46,156 - INFO - 复用概率分布 文件位置: /root/pythonspace/data-test/facebook/2025-12-19-dis_up_and_succ_down_and_p_0.5_weighted/distribution-in-facebook/distribution-random_seedNum-23.pkl
+2025-12-19 15:42:46,238 - INFO - 从当前位置 读取种子集 /root/pythonspace/data-test/facebook/2025-12-19-dis_up_and_succ_down_and_p_0.5_weighted/seeds-with-facebook/random_random_seedNum-23_SSRNum-10000.txt
+2025-12-19 15:42:46,239 - INFO - 从当前位置 读取种子集 /root/pythonspace/data-test/facebook/2025-12-19-dis_up_and_succ_down_and_p_0.5_weighted/seeds-with-facebook/random_degreeTopM_seedNum-23_SSRNum-10000.txt
+2025-12-19 15:42:46,239 - INFO - 从当前位置 读取种子集 /root/pythonspace/data-test/facebook/2025-12-19-dis_up_and_succ_down_and_p_0.5_weighted/seeds-with-facebook/random_alpha_sort_seedNum-23_SSRNum-10000.txt
+2025-12-19 15:42:46,239 - INFO - 首次生成种子集 Weighted_RIS
+2025-12-19 15:42:46,239 - INFO - 执行当前算法开始: Weighted_RIS
+2025-12-19 15:42:46,497 - INFO - 图初始化完成，CSR 矩阵及概率分布准备就绪。
+2025-12-19 15:42:46,498 - INFO - 
+开始生成 10000 组 SSR (并行进程: 4)...
+2025-12-19 15:47:22,496 - INFO - 生成完毕。耗时: 276.00 秒。
+2025-12-19 15:47:22,498 - INFO - 
+开始选择最优种子 (Weighted Greedy) ...
+2025-12-19 15:47:44,545 - INFO -   - 券 1 选中 0, 增益: 39.7321
+2025-12-19 15:47:44,850 - INFO -   - 券 2 选中 107, 增益: 43.1580
+2025-12-19 15:47:45,194 - INFO -   - 券 3 选中 136, 增益: 43.2174
+2025-12-19 15:47:45,464 - INFO -   - 券 4 选中 348, 增益: 38.8648
+2025-12-19 15:47:45,748 - INFO -   - 券 5 选中 1321, 增益: 39.0571
+2025-12-19 15:47:46,036 - INFO -   - 券 6 选中 349, 增益: 37.7664
+2025-12-19 15:47:46,337 - INFO -   - 券 7 选中 350, 增益: 39.9172
+2025-12-19 15:47:46,663 - INFO -   - 券 8 选中 351, 增益: 42.0856
+2025-12-19 15:47:46,998 - INFO -   - 券 9 选中 1743, 增益: 42.7739
+2025-12-19 15:47:47,324 - INFO -   - 券 10 选中 352, 增益: 38.6595
+2025-12-19 15:47:47,631 - INFO -   - 券 11 选中 647, 增益: 38.5984
+2025-12-19 15:47:47,941 - INFO -   - 券 12 选中 359, 增益: 38.9739
+2025-12-19 15:47:48,227 - INFO -   - 券 13 选中 9, 增益: 41.1303
+2025-12-19 15:47:48,524 - INFO -   - 券 14 选中 25, 增益: 39.3356
+2025-12-19 15:47:48,791 - INFO -   - 券 15 选中 360, 增益: 37.2467
+2025-12-19 15:47:49,071 - INFO -   - 券 16 选中 1821, 增益: 39.6818
+2025-12-19 15:47:49,345 - INFO -   - 券 17 选中 361, 增益: 38.3693
+2025-12-19 15:47:49,620 - INFO -   - 券 18 选中 497, 增益: 39.0055
+2025-12-19 15:47:49,960 - INFO -   - 券 19 选中 26, 增益: 43.3846
+2025-12-19 15:47:50,285 - INFO -   - 券 20 选中 362, 增益: 43.6158
+2025-12-19 15:47:50,588 - INFO -   - 券 21 选中 365, 增益: 42.5690
+2025-12-19 15:47:50,898 - INFO -   - 券 22 选中 366, 增益: 42.8057
+2025-12-19 15:47:51,244 - INFO -   - 券 23 选中 363, 增益: 42.4107
+2025-12-19 15:47:51,518 - INFO - 最终选择的种子集: [0, 107, 136, 348, 1321, 349, 350, 351, 1743, 352, 647, 359, 9, 25, 360, 1821, 361, 497, 26, 362, 365, 366, 363]
+
+2025-12-19 15:47:53,416 - INFO - 当前用时 307.18 秒
+2025-12-19 15:47:53,417 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/facebook/2025-12-19-dis_up_and_succ_down_and_p_0.5_weighted/seeds-with-facebook/random_Weighted_RIS_seedNum-23_SSRNum-10000.txt
+2025-12-19 15:47:53,417 - INFO - 首次生成种子集 ris_coverage
+2025-12-19 15:47:53,417 - INFO - 执行当前算法开始: ris_coverage
+2025-12-19 15:47:53,664 - INFO - 图初始化完成，CSR 矩阵及概率分布准备就绪。
+2025-12-19 15:47:53,665 - INFO - 
+开始生成 10000 组 SSR (并行进程: 4)...
