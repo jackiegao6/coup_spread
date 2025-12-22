@@ -1,0 +1,101 @@
+2025-12-22 14:17:25,027 - INFO - 加载数据集: Mich
+2025-12-22 14:17:25,054 - INFO - 首次生成度相关概率分布 分布类型: 'random'.
+2025-12-22 14:17:25,055 - INFO - ===> Generating 'Dirichlet' distributions with alpha=[500, 500, 500]...
+2025-12-22 14:17:25,059 - INFO - 保存概率分布 文件位置: /root/pythonspace/data-test/Mich/2025-12-22/distribution-in-Mich/distribution-random_seedNum-3.pkl
+2025-12-22 14:17:25,588 - INFO - 首次生成种子集 random
+2025-12-22 14:17:25,590 - INFO - 执行当前算法开始: random
+2025-12-22 14:17:25,591 - INFO - 数据集节点总数:  n = 3748, m = 3
+2025-12-22 14:17:25,592 - INFO - 选择 3  [1953, 1640, 1855]
+
+2025-12-22 14:17:25,592 - INFO - 当前用时 0.00 秒
+2025-12-22 14:17:25,595 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-22/seeds-with-Mich/random_random_seedNum-3_SSRNum-80000.txt
+2025-12-22 14:17:25,598 - INFO - 首次生成种子集 degreeTopM
+2025-12-22 14:17:25,599 - INFO - 执行当前算法开始: degreeTopM
+2025-12-22 14:17:25,599 - INFO - 依据: 选择连接数（度数）最多的节点。
+2025-12-22 14:17:25,615 - INFO - 选择的 Top M 节点及其度数:
+2025-12-22 14:17:25,616 - INFO - 
+2025-12-22 14:17:25,616 - INFO - 当前用时 0.02 秒
+2025-12-22 14:17:25,617 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-22/seeds-with-Mich/random_degreeTopM_seedNum-3_SSRNum-80000.txt
+2025-12-22 14:17:25,618 - INFO - 首次生成种子集 pageRank
+2025-12-22 14:17:25,618 - INFO - 执行当前算法开始: pageRank
+2025-12-22 14:17:25,618 - INFO - --- Running: PageRank (on tranProMatrix) Top M ---
+2025-12-22 14:17:33,911 - INFO - Selected PageRank seeds: [153, 163, 278]
+2025-12-22 14:17:34,374 - INFO - 当前用时 8.76 秒
+2025-12-22 14:17:34,378 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-22/seeds-with-Mich/random_pageRank_seedNum-3_SSRNum-80000.txt
+2025-12-22 14:17:34,379 - INFO - 首次生成种子集 alpha_sort
+2025-12-22 14:17:34,379 - INFO - 执行当前算法开始: alpha_sort
+2025-12-22 14:17:34,385 - INFO - 3748 个节点的alpha值降序排序 done
+2025-12-22 14:17:34,385 - INFO - ==============>> [(2257, 0.3773444), (686, 0.3718826), (1310, 0.3718474), (1711, 0.3713466), (628, 0.3711249), (307, 0.3699728), (2216, 0.3693393), (286, 0.3691942), (1523, 0.3683099), (1963, 0.3675716)]
+2025-12-22 14:17:34,385 - INFO - 
+选择的种子集 (按alpha排序): [2257, 686, 1310]
+
+2025-12-22 14:17:34,385 - INFO - 当前用时 0.01 秒
+2025-12-22 14:17:34,386 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-22/seeds-with-Mich/random_alpha_sort_seedNum-3_SSRNum-80000.txt
+2025-12-22 14:17:34,386 - INFO - 首次生成种子集 importance_sort
+2025-12-22 14:17:34,386 - INFO - 执行当前算法开始: importance_sort
+2025-12-22 14:17:36,354 - INFO - 3748 个节点的Importance值降序排序 done
+2025-12-22 14:17:36,356 - INFO - 
+选择的种子集 (按Importance排序): [963, 78, 1512]
+
+2025-12-22 14:17:36,358 - INFO - 当前用时 1.97 秒
+2025-12-22 14:17:36,360 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-22/seeds-with-Mich/random_importance_sort_seedNum-3_SSRNum-80000.txt
+2025-12-22 14:17:36,361 - INFO - 首次生成种子集 ris_coverage
+2025-12-22 14:17:36,361 - INFO - 执行当前算法开始: ris_coverage
+2025-12-22 14:17:37,585 - INFO - 图初始化完成，节点数: 3748，CSR 矩阵准备就绪。
+2025-12-22 14:17:37,587 - INFO - 
+开始生成 80000 组 SSR (并行进程: 8)...
+2025-12-22 14:18:00,971 - INFO - 生成完毕。耗时: 23.38 秒。
+2025-12-22 14:18:00,980 - INFO - 
+开始选择最优种子 (Optimized Greedy) ...
+2025-12-22 14:18:04,871 - INFO -   - 券 1/3 选中节点 670, 新增覆盖 150
+2025-12-22 14:18:04,975 - INFO -   - 券 2/3 选中节点 564, 新增覆盖 149
+2025-12-22 14:18:05,084 - INFO -   - 券 3/3 选中节点 2668, 新增覆盖 143
+2025-12-22 14:18:05,085 - INFO - 选种完毕。耗时: 4.10 秒。
+2025-12-22 14:18:05,330 - INFO - 最终选择的种子集: [670, 564, 2668]
+
+2025-12-22 14:18:05,864 - INFO - 当前用时 29.50 秒
+2025-12-22 14:18:05,866 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-22/seeds-with-Mich/random_ris_coverage_seedNum-3_SSRNum-80000.txt
+2025-12-22 14:18:05,867 - INFO - 首次生成种子集 monterCarlo
+2025-12-22 14:18:05,867 - INFO - 执行当前算法开始: monterCarlo
+2025-12-22 14:18:05,867 - INFO - --- Running: Monte Carlo Selection (L=200) ---
+2025-12-22 14:18:05,867 - INFO - 依据: 对每个节点进行 200 次模拟实验，评估其平均激活贡献。
+2025-12-22 14:18:05,868 - INFO - 正在模拟评估第 0/3748 个节点...
+2025-12-22 14:18:12,922 - INFO - 正在模拟评估第 1000/3748 个节点...
+2025-12-22 14:18:21,285 - INFO - 正在模拟评估第 2000/3748 个节点...
+2025-12-22 14:18:28,781 - INFO - 正在模拟评估第 3000/3748 个节点...
+2025-12-22 14:18:34,380 - INFO - 蒙特卡洛评估完成。最高期望激活值为: 0.6250
+2025-12-22 14:18:34,381 - INFO - 选择的种子集: [3059, 2955, 918] ...
+2025-12-22 14:18:34,381 - INFO - 当前用时 28.51 秒
+2025-12-22 14:18:34,382 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-22/seeds-with-Mich/random_monterCarlo_seedNum-3_SSRNum-80000.txt
+2025-12-22 14:18:34,383 - INFO - 首次生成种子集 monterCarlo_spread
+2025-12-22 14:18:34,383 - INFO - 执行当前算法开始: monterCarlo_spread
+2025-12-22 14:18:34,383 - INFO - --- Running: Monte Carlo Spread-Aware (L=200) ---
+2025-12-22 14:18:34,383 - INFO - 正在评估节点传播能力: 0/3748...
+2025-12-22 14:18:40,698 - INFO - 正在评估节点传播能力: 1000/3748...
+2025-12-22 14:18:47,138 - INFO - 正在评估节点传播能力: 2000/3748...
+2025-12-22 14:18:53,207 - INFO - 正在评估节点传播能力: 3000/3748...
+2025-12-22 14:18:57,454 - INFO - 评估完成。最高触达得分: 1.74
+2025-12-22 14:18:57,454 - INFO - 当前用时 23.07 秒
+2025-12-22 14:18:57,455 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/Mich/2025-12-22/seeds-with-Mich/random_monterCarlo_spread_seedNum-3_SSRNum-80000.txt
+2025-12-22 14:18:57,457 - INFO - 评估种子集: None
+2025-12-22 14:18:57,457 - INFO - 多进程评估开始，共有 8 个方法待评估...
+2025-12-22 14:18:57,457 - INFO - 启动进程池，Worker数量: 8
+2025-12-22 14:18:59,697 - INFO - [Process 7828] 开始评估方法: random, 种子数: 3
+2025-12-22 14:18:59,800 - INFO - [Process 7828] random - 500 sims 完成: E=1.48
+2025-12-22 14:19:02,784 - INFO - [Process 7829] 开始评估方法: degreeTopM, 种子数: 3
+2025-12-22 14:19:02,925 - INFO - [Process 7829] degreeTopM - 500 sims 完成: E=1.51
+2025-12-22 14:19:06,277 - INFO - [Process 7830] 开始评估方法: pageRank, 种子数: 3
+2025-12-22 14:19:06,376 - INFO - [Process 7830] pageRank - 500 sims 完成: E=1.51
+2025-12-22 14:19:08,041 - INFO - [Process 7831] 开始评估方法: alpha_sort, 种子数: 3
+2025-12-22 14:19:08,125 - INFO - [Process 7831] alpha_sort - 500 sims 完成: E=1.58
+2025-12-22 14:19:09,680 - INFO - [Process 7832] 开始评估方法: importance_sort, 种子数: 3
+2025-12-22 14:19:09,780 - INFO - [Process 7832] importance_sort - 500 sims 完成: E=1.57
+2025-12-22 14:19:11,321 - INFO - [Process 7833] 开始评估方法: ris_coverage, 种子数: 3
+2025-12-22 14:19:11,415 - INFO - [Process 7833] ris_coverage - 500 sims 完成: E=1.49
+2025-12-22 14:19:13,163 - INFO - [Process 7834] 开始评估方法: monterCarlo, 种子数: 3
+2025-12-22 14:19:13,248 - INFO - [Process 7834] monterCarlo - 500 sims 完成: E=1.54
+2025-12-22 14:19:14,738 - INFO - [Process 7835] 开始评估方法: monterCarlo_spread, 种子数: 3
+2025-12-22 14:19:14,814 - INFO - [Process 7835] monterCarlo_spread - 500 sims 完成: E=1.49
+2025-12-22 14:19:14,878 - INFO - 所有进程执行完毕，开始写入数据...
+2025-12-22 14:19:14,897 - INFO - 成功写入 8 条记录至 /root/pythonspace/data-test/Mich/2025-12-22/E-activated-Mich/distribution-random/simuTimes-500_random-dirichlet-[500, 500, 500]_rrNumSamples-80000.csv
+2025-12-22 14:19:14,898 - INFO - 保存评估文件至: /root/pythonspace/data-test/Mich/2025-12-22/E-activated-Mich/distribution-random/simuTimes-500_random-dirichlet-[500, 500, 500]_rrNumSamples-80000.csv
