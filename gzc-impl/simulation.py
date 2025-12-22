@@ -98,6 +98,7 @@ def simulation2(
     # 1. 准备多进程参数
     # 将 config 转为 dict，确保安全序列化
     config_dict = {
+        'random_dirichlet': config.random_dirichlet,
         'succ_degree_influence_factor': config.succ_degree_influence_factor,
         'dis_degree_influence_factor': config.dis_degree_influence_factor,
         'tran_degree_influence_factor': config.tran_degree_influence_factor

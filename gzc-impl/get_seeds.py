@@ -266,3 +266,77 @@ def deliverers_1_neighbor(succ_distribution,init_tranProMatrix,m) -> list:
     logging.info("")
         
     return [node for node, value in selected_nodes_with_values]
+
+
+def deliverers_monteCarlo_spread_aware(
+        n: int, 
+        m: int, 
+        tranProMatrix: np.ndarray, 
+        succ_distribution: np.ndarray, 
+        dis_distribution: np.ndarray, 
+        constantFactor_distribution: np.ndarray,
+        simulation_algo_func, # 传入你的模拟函数，如 AgainContinue
+        L: int = 100          # 每个节点的模拟次数 默认100次
+) -> List[int]:
+    """
+    基于传播潜力的蒙特卡洛策略 (Propagation-Focused MC)
+    
+    核心逻辑：使用 AgainContinue 模拟，计算每个种子能产生的【平均触达覆盖数】。
+    """
+    logging.info(f"--- Running: Monte Carlo Spread-Aware (L={L}) ---")
+    
+    # 存储每个节点的传播得分
+    spread_scores = np.zeros(n)
+
+    # 预先处理邻居索引，加速模拟过程
+    # 注意：如果 n 很大，可以只对度数 > 0 的节点进行评估
+    for seed_candidate in range(n):
+        if seed_candidate % 1000 == 0:
+            logging.info(f"正在评估节点传播能力: {seed_candidate}/{n}...")
+
+        total_reach_count = 0
+        
+        for _ in range(L):
+            # --- 模拟单次随机游走 (AgainContinue 逻辑) ---
+            current_user = seed_candidate
+            visited_nodes = {current_user} # 记录这张券走过的所有人
+            
+            while True:
+                rand_pro = np.random.rand()
+                p_succ = succ_distribution[current_user]
+                p_dis = dis_distribution[current_user]
+                
+                # 判定：是【使用】还是【丢弃】
+                # 在传播潜力评估中，我们关注它在“终止”前能走多远
+                if rand_pro < (p_succ + p_dis):
+                    # 券在这里被核销或扔掉，游走终止
+                    break
+                
+                # 否则判定为【转发】
+                # 寻找下一个邻居
+                neighbors = np.flatnonzero(tranProMatrix[:, current_user])
+                if neighbors.size == 0:
+                    break # 死胡同
+                
+                # 简单实现：按转发概率选下一个
+                probs = tranProMatrix[neighbors, current_user]
+                probs /= np.sum(probs)
+                current_user = np.random.choice(neighbors, p=probs)
+                
+                visited_nodes.add(current_user)
+                
+                # 防止由于逻辑问题导致无限循环（TTL 保护）
+                if len(visited_nodes) > 1000: 
+                    break
+            
+            total_reach_count += len(visited_nodes)
+        
+        # 该节点的得分 = 平均每张券能让多少人“看到”
+        spread_scores[seed_candidate] = total_reach_count / L
+
+    # 按传播得分降序排列
+    sorted_indexes = np.argsort(spread_scores)[::-1]
+    selected_seeds = sorted_indexes[:m].tolist()
+    
+    logging.info(f"评估完成。最高触达得分: {spread_scores[selected_seeds[0]]:.2f}")
+    return [int(node) for node in selected_seeds]

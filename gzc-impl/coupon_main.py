@@ -84,7 +84,17 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
             succ_distribution=data["distributions"][0],
             dis_distribution=data["distributions"][1],
             constantFactor_distribution=data["distributions"][3],
-            simulation_algo_func=simulation_algo.monteCarlo_singleTime_improved2_AgainContinue, # 使用你确认的 AgainContinue
+            simulation_algo_func=simulation_algo.monteCarlo_singleTime_improved2, # 使用你确认的 AgainContinue
+            L=config.monte_carlo_L # 根据你的承受能力调整，4000节点设100次大概需要几分钟
+        ),
+        'monterCarlo_spread': lambda: get_seeds.deliverers_monteCarlo_spread_aware(
+            n=data["n"],
+            m=m,
+            tranProMatrix=data["init_tran_matrix"],
+            succ_distribution=data["distributions"][0],
+            dis_distribution=data["distributions"][1],
+            constantFactor_distribution=data["distributions"][3],
+            simulation_algo_func=simulation_algo.monteCarlo_singleTime_improved2, # 使用你确认的 AgainContinue
             L=config.monte_carlo_L # 根据你的承受能力调整，4000节点设100次大概需要几分钟
         ),
 
@@ -232,7 +242,8 @@ if __name__ == '__main__':
         data_set='Mich', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin students
         simulation_times=[500],  # [1000, 5000]
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
-        methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage', 'monterCarlo'],
+        methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage', 'monterCarlo','monterCarlo_spread'],
+
         monte_carlo_L=200,
 
         distribution_type='random',  # powerlaw powerlaw-old random poisson gamma
@@ -247,9 +258,9 @@ if __name__ == '__main__':
 
         rng=np.random.default_rng(1),
 
-        single_sim_func='AgainContinue',  # AgainReJudge(接受过的用户可以再次接受) 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)(目的：不是让券的使用率最大，而是让券的尽可能地覆盖)
-        version='2025-12-21-2',
-        random_dirichlet=[100,100,100] # 期望一致 概率越大标准差越小
+        single_sim_func='AgainReJudge',  # AgainReJudge(接受过的用户可以再次接受) 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)(目的：不是让券的使用率最大，而是让券的尽可能地覆盖)
+        version='2025-12-22',
+        random_dirichlet=[500,500,500] # 期望一致 概率越大标准差越小
     )
 
     # 外循环 控制种子个数
