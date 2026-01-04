@@ -4,60 +4,173 @@ import networkx as nx
 import random
 import scipy.sparse as sp
 from typing import Dict, List, Any
+import time
 
-def deliverers_monteCarlo(
+def deliverers_monteCarlo_greedy_standard(
         n: int, 
         m: int, 
         tranProMatrix: np.ndarray, 
         succ_distribution: np.ndarray, 
         dis_distribution: np.ndarray, 
-        constantFactor_distribution: np.ndarray,
-        simulation_algo_func, # 传入你的模拟函数，如 AgainContinue
-        L: int = 100          # 每个节点的模拟次数 默认100次
+        simulation_algo_func, # 传入 AgainContinue 那个函数
+        simulation_times: int = 100 # 运行一百次
 ) -> list:
     """
-    蒙特卡洛模拟策略：通过模拟 L 次随机游走，计算每个节点作为种子的平均激活能力。
-    
-    Args:
-        n: 节点总数
-        m: 需要选出的种子数
-        L: 每个节点的模拟次数（L越高越准，但越慢）
-        simulation_algo_func: 之前定义的单次模拟逻辑函数
+    标准贪心蒙特卡洛策略 (Naive Greedy with Monte Carlo)
     """
-    logging.info(f"--- Running: Monte Carlo Selection (L={L}) ---")
-    logging.info(f"依据: 对每个节点进行 {L} 次模拟实验，评估其平均激活贡献。")
+    logging.info(f"--- Running: Standard Greedy Monte Carlo (Sims={simulation_times}) ---")
     
-    node_scores = np.zeros(n)
+    selected_seeds = []
+    current_spread = 0.0 # 当前种子集能覆盖的平均人数
     
-    # 为了加快速度，我们可以只评估一部分有潜力的节点（可选）
-    # 这里我们演示全量评估
-    for i in range(n):
-        if i % 1000 == 0:
-            logging.info(f"正在模拟评估第 {i}/{n} 个节点...")
+    # 候选节点集合 (初始为所有节点)
+    candidate_nodes = list(range(n))
+    
+    # --- 第一层循环：我们要选 m 个种子 ---
+    for k in range(m):
+        start_time = time.time()
+        best_node = -1
+        max_marginal_gain = -1.0
+        
+        # --- 第二层循环：遍历所有剩下的节点，看把谁加入集合最好 ---
+        # 这一步非常慢！如果是 4000 个节点，第1轮要跑 4000 次评估
+        for node in candidate_nodes:
             
-        success_count = 0
-        for _ in range(L):
-            # 这里的 initial_deliverers 只传入当前这一个节点 [i]
-            # 返回的是一个 0/1 向量
-            res_vector = simulation_algo_func(
-                tranProMatrix, 
-                [i], 
-                succ_distribution, 
-                dis_distribution, 
-                constantFactor_distribution
-            )
-            success_count += np.sum(res_vector)
+            # 构造临时种子集 S_t + {node}
+            temp_seeds = selected_seeds + [node]
             
-        node_scores[i] = success_count / L
+            # --- 第三层循环：运行 100 次蒙特卡洛，求平均覆盖数 ---
+            total_activated = 0
+            for _ in range(simulation_times):
+                # 运行一次模拟
+                res_vector = simulation_algo_func(
+                    tranProMatrix, 
+                    temp_seeds, # 传入合并后的种子集
+                    succ_distribution, 
+                    dis_distribution, 
+                    None # constantFactor 暂时不用
+                )
+                # 统计激活总数 (注意：这里要根据你的模拟函数返回是 0/1 向量还是列表来调整)
+                total_activated += np.sum(res_vector) 
+            
+            # 计算加入该节点后的期望总覆盖数
+            avg_spread = total_activated / simulation_times
+            
+            # 计算边际增益 (Marginal Gain) = 新的总覆盖 - 旧的总覆盖
+            gain = avg_spread - current_spread
+            
+            if gain > max_marginal_gain:
+                max_marginal_gain = gain
+                best_node = node
+        
+        # --- 选定本轮最佳节点 ---
+        if best_node != -1:
+            selected_seeds.append(best_node)
+            candidate_nodes.remove(best_node) # 从候选集中移除
+            current_spread += max_marginal_gain # 更新当前的基准覆盖数
+            
+            # 打印日志，看看进度
+            cost_time = time.time() - start_time
+            logging.info(f"Step {k+1}/{m}: 选中节点 {best_node}, 增益 {max_marginal_gain:.2f}, 当前总覆盖 {current_spread:.2f} (耗时 {cost_time:.1f}s)")
+        else:
+            logging.warning("没有节点能带来正增益，提前结束。")
+            break
+            
+    return selected_seeds
 
-    # 排序获取 Top M
-    sorted_indexes = np.argsort(node_scores)[::-1]
-    selected_seeds = sorted_indexes[:m].tolist()
+def deliverers_monteCarlo_CELF(
+        n: int, 
+        m: int, 
+        tranProMatrix: np.ndarray, 
+        succ_distribution: np.ndarray, 
+        dis_distribution: np.ndarray, 
+        simulation_algo_func, 
+        simulation_times: int = 100
+) -> list:
+    """
+    CELF (Lazy Forward) 优化的贪心蒙特卡洛策略。
+    逻辑上等同于导师要求的贪心算法，但速度快几个数量级。
+    """
+    logging.info(f"--- Running: CELF Greedy Monte Carlo (Sims={simulation_times}) ---")
     
-    logging.info(f"蒙特卡洛评估完成。最高期望激活值为: {node_scores[selected_seeds[0]]:.4f}")
-    logging.info(f"选择的种子集: {selected_seeds[:10]} ...")
+    # 辅助函数：计算特定种子集的平均影响力
+    def compute_spread(seeds):
+        total = 0
+        for _ in range(simulation_times):
+            res = simulation_algo_func(
+                tranProMatrix, seeds, succ_distribution, dis_distribution, None
+            )
+            total += np.sum(res)
+        return total / simulation_times
+
+    start_time_all = time.time()
     
-    return [int(node) for node in selected_seeds]
+    # 1. 第一轮：计算所有节点的初始边际增益（相当于 Individual Monte Carlo）
+    # 这一步不可避免，需要遍历所有节点
+    logging.info("Step 0: 初始化所有节点的边际增益...")
+    gains = [] 
+    for node in range(n):
+        spread = compute_spread([node])
+        # (gain, node_id)
+        gains.append((spread, node))
+    
+    # 按增益从大到小排序
+    gains.sort(reverse=True, key=lambda x: x[0])
+    
+    selected_seeds = [gains[0][1]] # 选出第一个最好的
+    current_spread = gains[0][0]
+    logging.info(f"Seed 1: {selected_seeds[0]}, Spread: {current_spread:.2f}")
+    
+    # 移除已选的，剩下的作为候选列表
+    # 列表结构: [ (marginal_gain, node_id), ... ]
+    gains = gains[1:] 
+    
+    # 记录每个节点是在哪一轮计算的增益 (Lazy Evaluation)
+    # 初始都是第 0 轮算的
+    last_updated = {node: 0 for _, node in gains} 
+    
+    # 2. 后续轮次：CELF 加速选择
+    num_selected = 1
+    while num_selected < m:
+        curr_node_idx = 0
+        
+        while True:
+            # 取出当前增益最大的候选节点
+            best_guess_gain, best_guess_node = gains[curr_node_idx]
+            
+            # CELF 核心逻辑：
+            # 如果这个节点的增益是基于上一轮 (num_selected) 计算的，
+            # 那么因为子模性(Submodularity)，它在当前轮次依然是最大的，直接选中！
+            if last_updated[best_guess_node] == num_selected:
+                selected_seeds.append(best_guess_node)
+                current_spread += best_guess_gain
+                
+                # 从列表中移除该节点
+                gains.pop(curr_node_idx)
+                
+                num_selected += 1
+                logging.info(f"Seed {num_selected}: {best_guess_node}, Gain: {best_guess_gain:.2f}, Total: {current_spread:.2f}")
+                break
+            
+            # 否则，我们需要重新计算它的边际增益
+            # 新增益 = Spread(已选 + {u}) - Spread(已选)
+            new_spread = compute_spread(selected_seeds + [best_guess_node])
+            new_gain = new_spread - current_spread
+            
+            # 更新该节点的增益和轮次信息
+            gains[curr_node_idx] = (new_gain, best_guess_node)
+            last_updated[best_guess_node] = num_selected
+            
+            # 重新排序：只针对这就这一个元素进行重排，保持列表有序
+            # 因为只有它变小了，所以只需要把它往后挪
+            # 为了简单，这里用 sort，实际上可以用二分插入优化，但 Python sort 针对部分有序列表很快
+            gains.sort(reverse=True, key=lambda x: x[0])
+            
+            # 循环继续，去检查重排后列表头部的那个节点
+            
+    logging.info(f"CELF 完成，总耗时: {time.time() - start_time_all:.2f}s")
+    return selected_seeds
+
 
 # 随机策略
 def deliverers_random(n: int, m: int) -> list:
@@ -266,77 +379,3 @@ def deliverers_1_neighbor(succ_distribution,init_tranProMatrix,m) -> list:
     logging.info("")
         
     return [node for node, value in selected_nodes_with_values]
-
-
-def deliverers_monteCarlo_spread_aware(
-        n: int, 
-        m: int, 
-        tranProMatrix: np.ndarray, 
-        succ_distribution: np.ndarray, 
-        dis_distribution: np.ndarray, 
-        constantFactor_distribution: np.ndarray,
-        simulation_algo_func, # 传入你的模拟函数，如 AgainContinue
-        L: int = 100          # 每个节点的模拟次数 默认100次
-) -> List[int]:
-    """
-    基于传播潜力的蒙特卡洛策略 (Propagation-Focused MC)
-    
-    核心逻辑：使用 AgainContinue 模拟，计算每个种子能产生的【平均触达覆盖数】。
-    """
-    logging.info(f"--- Running: Monte Carlo Spread-Aware (L={L}) ---")
-    
-    # 存储每个节点的传播得分
-    spread_scores = np.zeros(n)
-
-    # 预先处理邻居索引，加速模拟过程
-    # 注意：如果 n 很大，可以只对度数 > 0 的节点进行评估
-    for seed_candidate in range(n):
-        if seed_candidate % 1000 == 0:
-            logging.info(f"正在评估节点传播能力: {seed_candidate}/{n}...")
-
-        total_reach_count = 0
-        
-        for _ in range(L):
-            # --- 模拟单次随机游走 (AgainContinue 逻辑) ---
-            current_user = seed_candidate
-            visited_nodes = {current_user} # 记录这张券走过的所有人
-            
-            while True:
-                rand_pro = np.random.rand()
-                p_succ = succ_distribution[current_user]
-                p_dis = dis_distribution[current_user]
-                
-                # 判定：是【使用】还是【丢弃】
-                # 在传播潜力评估中，我们关注它在“终止”前能走多远
-                if rand_pro < (p_succ + p_dis):
-                    # 券在这里被核销或扔掉，游走终止
-                    break
-                
-                # 否则判定为【转发】
-                # 寻找下一个邻居
-                neighbors = np.flatnonzero(tranProMatrix[:, current_user])
-                if neighbors.size == 0:
-                    break # 死胡同
-                
-                # 简单实现：按转发概率选下一个
-                probs = tranProMatrix[neighbors, current_user]
-                probs /= np.sum(probs)
-                current_user = np.random.choice(neighbors, p=probs)
-                
-                visited_nodes.add(current_user)
-                
-                # 防止由于逻辑问题导致无限循环（TTL 保护）
-                if len(visited_nodes) > 1000: 
-                    break
-            
-            total_reach_count += len(visited_nodes)
-        
-        # 该节点的得分 = 平均每张券能让多少人“看到”
-        spread_scores[seed_candidate] = total_reach_count / L
-
-    # 按传播得分降序排列
-    sorted_indexes = np.argsort(spread_scores)[::-1]
-    selected_seeds = sorted_indexes[:m].tolist()
-    
-    logging.info(f"评估完成。最高触达得分: {spread_scores[selected_seeds[0]]:.2f}")
-    return [int(node) for node in selected_seeds]

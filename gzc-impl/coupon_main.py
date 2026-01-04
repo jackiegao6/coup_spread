@@ -15,6 +15,45 @@ from pathlib import Path
 import numpy as np
 import argparse
 import get_trans_matrix
+import scipy.sparse as sp
+import networkx as nx
+
+def print_density(G):
+
+    n = G.number_of_nodes()
+    m = G.number_of_edges()
+
+    # 1. 直接调用函数
+    density = nx.density(G)
+
+    logging.info(f"节点数: {n}, 边数: {m}")
+    logging.info(f"图密度: {density:.6f}") # 比如 0.005
+    logging.info(f"稀疏度: {1 - density:.6f}") # 比如 0.995
+
+    # 2. 看平均度数 (Average Degree) —— 这更直观
+    # 平均度数 = 每个节点平均有多少个邻居
+    avg_degree = 2 * m / n  # 无向图
+    logging.info(f"平均度数: {avg_degree:.2f}")
+
+def check_sparsity_from_matrix(adj_matrix):
+    # adj_matrix 是 sp.csr_matrix 或 sp.coo_matrix
+    
+    num_nodes = adj_matrix.shape[0]
+    num_edges = adj_matrix.nnz  # nnz = Number of Non-Zero elements (非零元素个数，即边数)
+    
+    # 理论最大边数 (假设是有向的，就是 N*N；无向且对角线为0则是 N*(N-1))
+    # 简单估算通常直接用 N*N
+    max_possible_edges = num_nodes * num_nodes
+    
+    density = num_edges / max_possible_edges
+    sparsity = 1.0 - density
+    
+    logging.info(f"--- 矩阵分析 ---")
+    logging.info(f"节点数 (N): {num_nodes}")
+    logging.info(f"边数 (E): {num_edges}")
+    logging.info(f"密度 (Density): {density:.8f} (越小越稀疏)")
+    logging.info(f"稀疏度 (Sparsity): {sparsity:.8f} (越接近1越稀疏)")
+    logging.info(f"平均度数 (Avg Degree): {num_edges / num_nodes:.2f}")
 
 
 def load_experiment_data(config: "ExperimentConfig") -> Dict[str, Any]:
@@ -34,6 +73,7 @@ def load_experiment_data(config: "ExperimentConfig") -> Dict[str, Any]:
         except Exception as e:
             raise ValueError(f"文件加载错误 {adj_path}") from e
 
+    check_sparsity_from_matrix(adj)
     return {"adj": adj, "n": adj.shape[0]}
 
 
@@ -77,7 +117,7 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
 
     selector_dict = {
 
-        'monterCarlo': lambda: get_seeds.deliverers_monteCarlo(
+        'monterCarlo_standard': lambda: get_seeds.deliverers_monteCarlo_greedy_standard(
             n=data["n"],
             m=m,
             tranProMatrix=data["init_tran_matrix"],
@@ -87,7 +127,7 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
             simulation_algo_func=simulation_algo.monteCarlo_singleTime_improved2, # 使用你确认的 AgainContinue
             L=config.monte_carlo_L # 根据你的承受能力调整，4000节点设100次大概需要几分钟
         ),
-        'monterCarlo_spread': lambda: get_seeds.deliverers_monteCarlo_spread_aware(
+        'monterCarlo_CELF': lambda: get_seeds.deliverers_monteCarlo_CELF(
             n=data["n"],
             m=m,
             tranProMatrix=data["init_tran_matrix"],
@@ -239,7 +279,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
-        data_set='Mich', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin students
+        data_set='facebook', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin students
         simulation_times=[500],  # [1000, 5000]
         # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
         methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage', 'monterCarlo','monterCarlo_spread'],
@@ -259,7 +299,7 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainReJudge',  # AgainReJudge(接受过的用户可以再次接受) 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)(目的：不是让券的使用率最大，而是让券的尽可能地覆盖)
-        version='2025-12-22',
+        version='2026-1-4',
         random_dirichlet=[500,500,500] # 期望一致 概率越大标准差越小
     )
 
