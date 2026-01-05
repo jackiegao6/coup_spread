@@ -89,7 +89,6 @@ def deliverers_monteCarlo_CELF(
 ) -> list:
     """
     CELF (Lazy Forward) 优化的贪心蒙特卡洛策略。
-    逻辑上等同于导师要求的贪心算法，但速度快几个数量级。
     """
     logging.info(f"--- Running: CELF Greedy Monte Carlo (Sims={simulation_times}) ---")
     

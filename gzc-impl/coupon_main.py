@@ -101,7 +101,7 @@ def load_contribution_and_tran_matrix_watch(config: "ExperimentConfig", adj, n: 
     # 1. 寻找“看门人”：度数最高的那个节点 (Facebook这种无标度网络，大V连接了非常多的人)
     # 注意：adj 是稀疏矩阵
     degrees = np.array(adj.sum(axis=1)).flatten()
-    top_k_indices = np.argsort(degrees)[::-1][:100]
+    top_k_indices = np.argsort(degrees)[::-1][:50]
     
     # 2. 寻找“社区成员”：看门人的所有邻居
     # 对于 CSR 矩阵，高效获取邻居的方法：
@@ -352,7 +352,7 @@ if __name__ == '__main__':
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=80000,
+        num_samples=100000,
         # seeds_num=num,  # 32 64 128 256 512
         succ_degree_influence_factor= -0.5,
         dis_degree_influence_factor= 0.5,
@@ -361,7 +361,8 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainReJudge',  # AgainReJudge(接受过的用户可以再次接受) 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)(目的：不是让券的使用率最大，而是让券的尽可能地覆盖)
-        version='2026-1-5-watch-random_dirichlet=[500,500,500]',
+        # version='2026-1-5-watch-random_dirichlet=[500,500,500]',
+        version='2026-1-5-watch-fans-50-random_dirichlet=[500,500,500]',
         random_dirichlet=[500,500,500] # 期望一致 概率越大标准差越小
         # random_dirichlet=[5,2,8] # succ dis trans 期望一致 概率越大标准差越小
         # random_dirichlet=[5,1,15] # succ dis trans 期望一致 概率越大标准差越小
