@@ -124,9 +124,9 @@ def load_contribution_and_tran_matrix_watch(config: "ExperimentConfig", adj, n: 
     # 4. 【设置社区成员】：Alpha_sort 的诱饵 (中等成功率，但也容易丢弃)
     # 设定：P(succ)=0.4。这在全网是最高的，Alpha_sort 肯定选他们。
     # 但单点期望只有 0.4。
-    succ_dist[community_nodes] = 0.4
-    dis_dist[community_nodes]  = 0.3
-    tran_dist[community_nodes] = 0.3
+    succ_dist[community_nodes] = 0.1
+    dis_dist[community_nodes]  = 0.5
+    tran_dist[community_nodes] = 0.4
 
     # 5. 【设置看门人】：RIS 的宝藏 (自己不用，但这辈子绝不丢弃，必转发)
     # 设定：P(succ)=0.0, P(dis)=0.0, P(tran)=1.0 (完美路由器)
@@ -314,8 +314,8 @@ def run_coupon_experiment(config: ExperimentConfig):
     adj = adj_and_n["adj"]
     n = adj_and_n["n"]
 
-    # experiment_data = load_contribution_and_tran_matrix(config=config, adj=adj, n=n)
-    experiment_data = load_contribution_and_tran_matrix_watch(config=config, adj=adj, n=n)
+    experiment_data = load_contribution_and_tran_matrix(config=config, adj=adj, n=n)
+    # experiment_data = load_contribution_and_tran_matrix_watch(config=config, adj=adj, n=n)
 
 
     # 2. 获取种子集
@@ -340,11 +340,11 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
-        data_set='facebook', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin students
+        data_set='network.douban', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin students network.douban
         simulation_times=[500],  # [1000, 5000]
 
-        # methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage', 'monterCarlo_CELF','monterCarlo_standard'],
-        methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage', 'monterCarlo_CELF'],
+        # methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage', 'monterCarlo_CELF'],
+        methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage'],
 
         monte_carlo_L=300,
 
@@ -361,8 +361,7 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainReJudge',  # AgainReJudge(接受过的用户可以再次接受) 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)(目的：不是让券的使用率最大，而是让券的尽可能地覆盖)
-        # version='2026-1-5-watch-random_dirichlet=[500,500,500]',
-        version='2026-1-5-watch-fans-50-random_dirichlet=[500,500,500]',
+        version='2026-1-6',
         random_dirichlet=[500,500,500] # 期望一致 概率越大标准差越小
         # random_dirichlet=[5,2,8] # succ dis trans 期望一致 概率越大标准差越小
         # random_dirichlet=[5,1,15] # succ dis trans 期望一致 概率越大标准差越小

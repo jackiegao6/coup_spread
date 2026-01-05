@@ -96,7 +96,7 @@ def deliverers_monteCarlo_CELF(
     def compute_spread(seeds):
         total = 0
         for _ in range(simulation_times):
-            res = simulation_algo_func(
+            res, _ = simulation_algo_func(
                 tranProMatrix, seeds, succ_distribution, dis_distribution, None
             )
             total += np.sum(res)

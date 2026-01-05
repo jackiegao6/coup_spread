@@ -42,22 +42,27 @@ def monteCarlo_singleTime_improved2(
     succ_distribution: np.ndarray,
     dis_distribution: np.ndarray,
     constantFactor_distribution: np.ndarray
-) -> np.ndarray:
+) -> tuple:
     """
     如果一个用户已经使用过优惠券 activatedUsers, 当他再次收到券时，他依然会按照概率决定是“再次使用”、“丢弃”还是“转发
     由于用户已经是“激活”状态，即使他决定“使用”，总激活人数也不会增加
     在这种模式下，已激活用户变成了优惠券的“汇点”（Sink）。券一旦被他们再次决定使用或丢弃，游走就终止，券就从网络中消失了。这模拟了现实中“用户对重复优惠券感到厌烦或直接核销但不产生额外收益”的场景
+    修改版：返回 (success_vector, total_steps)
     """
 
     n = tranProMatrix.shape[0]
     activatedUsers = set()
+    # 新增：记录这批种子总共走了多少步
+    total_steps_batch = 0 
 
     for start_user in initial_deliverers: # 为每个初始投放者启动一个独立的随机游走
 
         current_user = start_user
+        current_coupon_steps = 0 # 单张券的步数
 
         # 模拟单张优惠券的随机游走过程 一旦使用 || 丢弃 循环将就break
         while True:
+            current_coupon_steps += 1 # 每经历一个节点，步数+1
             rand_pro = np.random.rand()
             p_succ = succ_distribution[current_user]
             p_dis = dis_distribution[current_user]
@@ -98,10 +103,11 @@ def monteCarlo_singleTime_improved2(
                 # 更新当前节点，继续游走
                 current_user = next_node
 
+        total_steps_batch += current_coupon_steps
     # 将最终成功使用的节点集合转换为0/1向量
     success_vector = np.zeros(n, dtype=int)
     success_vector[list(activatedUsers)] = 1
-    return success_vector
+    return success_vector, total_steps_batch
 
 def monteCarlo_singleTime_improved2_AgainContinue(
     tranProMatrix: np.ndarray,

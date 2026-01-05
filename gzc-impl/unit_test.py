@@ -3,7 +3,6 @@ import scipy.sparse as sp
 import logging
 import sys
 
-# 引入你自己的模块（确保路径正确）
 # 假设你的算法都在 coupon_usage_rate_get_distribution_degree_aware.py 或者其他地方
 # 这里我们需要用到你的 CELF 和 RIS 函数，以及辅助函数
 import get_trans_matrix  # 用于生成转移矩阵

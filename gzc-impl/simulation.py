@@ -14,13 +14,14 @@ def evaluate_seed_set(
 
     # 创建一个列表来存储每一次模拟的结果
     all_simulation_results = []
+    all_steps_results = [] # 存储每轮的平均步数
 
 
     succ_dist, dis_dist, _, const_factor_dist = distributions
 
     for i in range(num_simulations):
         # print(f"\t\t当前模拟轮次: {i}")
-        success_vector = simulation_function(
+        success_vector, batch_steps  = simulation_function(
             tran_matrix,
             seed_list,
             succ_dist,
@@ -30,9 +31,16 @@ def evaluate_seed_set(
         single_activated_users  = np.sum(success_vector)
         all_simulation_results.append(single_activated_users)
 
+        # 计算这一轮模拟中，平均每张券走了几步
+        # batch_steps 是所有种子的总步数，除以种子数量得到平均步数
+        avg_steps_this_round = batch_steps / len(seed_list) if len(seed_list) > 0 else 0
+        all_steps_results.append(avg_steps_this_round)
+
     E_activated_users = np.mean(all_simulation_results)
     Var_activated_users = np.var(all_simulation_results)
-    return E_activated_users, Var_activated_users
+    Final_Avg_Steps = np.mean(all_steps_results)
+
+    return E_activated_users, Var_activated_users, Final_Avg_Steps
 
 
 def worker_evaluate_method(
@@ -53,7 +61,7 @@ def worker_evaluate_method(
 
     for num_sims in simulation_times:
         # 执行评估
-        E_activated, Var_activated = evaluate_seed_set(
+        E_activated, Var_activated, Avg_Steps  = evaluate_seed_set(
             seed_list=seed_set,
             simulation_function=single_sim_func,
             num_simulations=num_sims,
@@ -63,7 +71,6 @@ def worker_evaluate_method(
 
         std_dev = np.sqrt(Var_activated)
 
-        # 将结果打包成字典返回，不要在进程里写文件！
         result_data = {
             "method": method_name,
             "seed_num": seed_num,
@@ -71,6 +78,7 @@ def worker_evaluate_method(
             "E_activated_users": E_activated,
             "variance": Var_activated,
             "std_deviation": std_dev,
+            "avg_steps": Avg_Steps, 
             "random_dirichlet": config_dict.get('random_dirichlet'),
             "degree_exponent_succ": config_dict.get('succ_degree_influence_factor'),
             "degree_exponent_dis": config_dict.get('dis_degree_influence_factor'),
@@ -154,4 +162,3 @@ def simulation2(
     df_new.to_csv(usage_rate_file, mode='a+', header=not file_exists, index=False, encoding='utf-8-sig')
 
     logging.info(f"成功写入 {len(df_new)} 条记录至 {usage_rate_file}")
-
