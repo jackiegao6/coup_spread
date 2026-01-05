@@ -41,5 +41,5 @@ def convert_mat_to_pickle(
 if __name__ == "__main__":
     convert_mat_to_pickle(
         mat_path="/root/pythonspace/data-test/datasets/network.mat",
-        mat_key="douban"
+        mat_key="netactorcollaboration"
     )

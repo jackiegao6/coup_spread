@@ -340,7 +340,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
-        data_set='network.douban', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin students network.douban
+        # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin students 
+        # network.douban network.Amazon network.douban11core network.netYeast network.doubanrandom
+        data_set='network.netactorcollaboration', 
+
         simulation_times=[500],  # [1000, 5000]
 
         # methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage', 'monterCarlo_CELF'],

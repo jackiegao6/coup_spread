@@ -129,8 +129,8 @@ def simulation2(
     # 2. 启动进程池
     # processes数量：通常设为 min(任务数, CPU核心数 - 1)
     # 留一个核给系统和主进程写文件
-    # num_workers = len(methods)
-    num_workers = 2
+    num_workers = len(methods)
+    # num_workers = 2
 
     all_results_flat = []
 
