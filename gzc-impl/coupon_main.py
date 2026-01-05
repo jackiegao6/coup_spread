@@ -77,14 +77,76 @@ def load_experiment_data(config: "ExperimentConfig") -> Dict[str, Any]:
     return {"adj": adj, "n": adj.shape[0]}
 
 
-def load_contribution_and_tran_matrix(config: "ExperimentConfig", adj, n: int) -> Dict[str, Any]:
+def load_contribution_and_tran_matrix_watch(config: "ExperimentConfig", adj, n: int) -> Dict[str, Any]:
     """
-    根据每个节点的度生成不同的三个分布 比如通过幂律分布
-    可以控制参数a
-    通过 config中的 degree_influence_factor 联合度数 控制a大小
+    生成分布，并强制注入“看门人机制”以展示拓扑算法优势
+    """
+    # 1. 正常生成基础分布 (比如 Dirichlet=[5, 2, 8])
+    # 这作为背景噪音，让大部分节点表现平庸
+    distribution_res = gd.get_distribution_degree_aware(
+        config.distribution_file(m=config.seeds_num),
+        config.distribution_type,
+        adj,
+        config=config
+    )
 
-    :return: 转移分布、接收分布、拒绝分布、行为分布
-    """
+    # 解包分布 (确保是 numpy array)
+    succ_dist, dis_dist, tran_dist, const_factor_dist = [np.array(d) for d in distribution_res]
+
+    # =========================================================================
+    # 【必杀技】：注入“看门人机制” (Gatekeeper Mechanism)
+    # =========================================================================
+    logging.info(">>> 正在注入‘社区效应/看门人机制’以区分算法能力...")
+
+    # 1. 寻找“看门人”：度数最高的那个节点 (Facebook这种无标度网络，大V连接了非常多的人)
+    # 注意：adj 是稀疏矩阵
+    degrees = np.array(adj.sum(axis=1)).flatten()
+    top_k_indices = np.argsort(degrees)[::-1][:100]
+    
+    # 2. 寻找“社区成员”：看门人的所有邻居
+    # 对于 CSR 矩阵，高效获取邻居的方法：
+    # 找到这些看门人覆盖的所有粉丝（去重）
+    all_fans = set()
+    for gx in top_k_indices:
+        start = adj.indptr[gx]
+        end = adj.indptr[gx+1]
+        all_fans.update(adj.indices[start:end])
+    community_nodes = list(all_fans)
+    
+
+    # 3. 【设置背景板】：让全网其他节点变“垃圾” (低成功、高丢弃)
+    # 这样 Alpha_sort 就不会去选背景节点，而被逼去选我们设定的社区成员
+    # 设定：P(succ)=0.05, P(dis)=0.8 (地狱难度)
+    succ_dist[:] = 0.05
+    dis_dist[:] = 0.8
+    tran_dist[:] = 0.15
+
+    # 4. 【设置社区成员】：Alpha_sort 的诱饵 (中等成功率，但也容易丢弃)
+    # 设定：P(succ)=0.4。这在全网是最高的，Alpha_sort 肯定选他们。
+    # 但单点期望只有 0.4。
+    succ_dist[community_nodes] = 0.4
+    dis_dist[community_nodes]  = 0.3
+    tran_dist[community_nodes] = 0.3
+
+    # 5. 【设置看门人】：RIS 的宝藏 (自己不用，但这辈子绝不丢弃，必转发)
+    # 设定：P(succ)=0.0, P(dis)=0.0, P(tran)=1.0 (完美路由器)
+    succ_dist[top_k_indices] = 0.0
+    dis_dist[top_k_indices] = 0.0
+    tran_dist[top_k_indices] = 1.0
+
+    # 重新打包
+    distribution_res = (succ_dist, dis_dist, tran_dist, const_factor_dist)
+
+    tran_matrix = get_trans_matrix.getTranProMatrix(adj)
+
+    return {
+        "adj": adj,
+        "distributions": distribution_res,
+        "init_tran_matrix": tran_matrix,
+        "n": n
+    }
+
+def load_contribution_and_tran_matrix(config: "ExperimentConfig", adj, n: int) -> Dict[str, Any]:
     distribution_res = gd.get_distribution_degree_aware(
         config.distribution_file(m=config.seeds_num),
         config.distribution_type,
@@ -123,9 +185,8 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
             tranProMatrix=data["init_tran_matrix"],
             succ_distribution=data["distributions"][0],
             dis_distribution=data["distributions"][1],
-            constantFactor_distribution=data["distributions"][3],
-            simulation_algo_func=simulation_algo.monteCarlo_singleTime_improved2, # 使用你确认的 AgainContinue
-            L=config.monte_carlo_L # 根据你的承受能力调整，4000节点设100次大概需要几分钟
+            simulation_algo_func=simulation_algo.monteCarlo_singleTime_improved2,
+            simulation_times=config.monte_carlo_L 
         ),
         'monterCarlo_CELF': lambda: get_seeds.deliverers_monteCarlo_CELF(
             n=data["n"],
@@ -133,9 +194,8 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
             tranProMatrix=data["init_tran_matrix"],
             succ_distribution=data["distributions"][0],
             dis_distribution=data["distributions"][1],
-            constantFactor_distribution=data["distributions"][3],
-            simulation_algo_func=simulation_algo.monteCarlo_singleTime_improved2, # 使用你确认的 AgainContinue
-            L=config.monte_carlo_L # 根据你的承受能力调整，4000节点设100次大概需要几分钟
+            simulation_algo_func=simulation_algo.monteCarlo_singleTime_improved2,
+            simulation_times=config.monte_carlo_L 
         ),
 
         'random': lambda: get_seeds.deliverers_random(data["n"], m),  # 基线方法
@@ -215,7 +275,6 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
 def run_evaluation(methods_with_seeds: dict, config: ExperimentConfig, data: dict):
     logging.info(f"评估种子集: {config.personalization}")
 
-    #deprecated
     evaluation_dict = {
         'None': simulation.simulation2,
         'firstUnused': simulation.simulation2,
@@ -255,7 +314,9 @@ def run_coupon_experiment(config: ExperimentConfig):
     adj = adj_and_n["adj"]
     n = adj_and_n["n"]
 
-    experiment_data = load_contribution_and_tran_matrix(config=config, adj=adj, n=n)
+    # experiment_data = load_contribution_and_tran_matrix(config=config, adj=adj, n=n)
+    experiment_data = load_contribution_and_tran_matrix_watch(config=config, adj=adj, n=n)
+
 
     # 2. 获取种子集
     get_seeds_methods = config.methods
@@ -281,10 +342,11 @@ if __name__ == '__main__':
     my_config = ExperimentConfig(
         data_set='facebook', # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin students
         simulation_times=[500],  # [1000, 5000]
-        # methods=['degreeTopM'], # ['theroy','monterCarlo','random','degreeTopM','pageRank','succPro','1_neighbor','ris_coverage']
-        methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage', 'monterCarlo','monterCarlo_spread'],
 
-        monte_carlo_L=200,
+        # methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage', 'monterCarlo_CELF','monterCarlo_standard'],
+        methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage', 'monterCarlo_CELF'],
+
+        monte_carlo_L=300,
 
         distribution_type='random',  # powerlaw powerlaw-old random poisson gamma
         personalization='None',  # firstUnused
@@ -299,8 +361,10 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainReJudge',  # AgainReJudge(接受过的用户可以再次接受) 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)(目的：不是让券的使用率最大，而是让券的尽可能地覆盖)
-        version='2026-1-4',
+        version='2026-1-5-watch-random_dirichlet=[500,500,500]',
         random_dirichlet=[500,500,500] # 期望一致 概率越大标准差越小
+        # random_dirichlet=[5,2,8] # succ dis trans 期望一致 概率越大标准差越小
+        # random_dirichlet=[5,1,15] # succ dis trans 期望一致 概率越大标准差越小
     )
 
     # 外循环 控制种子个数

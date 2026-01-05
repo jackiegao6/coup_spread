@@ -1,0 +1,140 @@
+2026-01-04 15:12:54,075 - INFO - 加载数据集: students
+2026-01-04 15:12:54,076 - INFO - --- 矩阵分析 ---
+2026-01-04 15:12:54,076 - INFO - 节点数 (N): 84
+2026-01-04 15:12:54,076 - INFO - 边数 (E): 380
+2026-01-04 15:12:54,076 - INFO - 密度 (Density): 0.05385488 (越小越稀疏)
+2026-01-04 15:12:54,076 - INFO - 稀疏度 (Sparsity): 0.94614512 (越接近1越稀疏)
+2026-01-04 15:12:54,076 - INFO - 平均度数 (Avg Degree): 4.52
+2026-01-04 15:12:54,077 - INFO - 首次生成度相关概率分布 分布类型: 'random'.
+2026-01-04 15:12:54,077 - INFO - ===> Generating 'Dirichlet' distributions with alpha=[500, 500, 500]...
+2026-01-04 15:12:54,078 - INFO - 保存概率分布 文件位置: /root/pythonspace/data-test/students/2026-1-4/distribution-in-students/distribution-random_seedNum-10.pkl
+2026-01-04 15:12:54,079 - INFO - 首次生成种子集 random
+2026-01-04 15:12:54,079 - INFO - 执行当前算法开始: random
+2026-01-04 15:12:54,079 - INFO - 数据集节点总数:  n = 84, m = 10
+2026-01-04 15:12:54,079 - INFO - 选择 10  [3, 57, 79, 77, 15, 72, 63, 56, 65, 16]
+
+2026-01-04 15:12:54,079 - INFO - 当前用时 0.00 秒
+2026-01-04 15:12:54,079 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/students/2026-1-4/seeds-with-students/random_random_seedNum-10_SSRNum-80000.txt
+2026-01-04 15:12:54,079 - INFO - 首次生成种子集 degreeTopM
+2026-01-04 15:12:54,080 - INFO - 执行当前算法开始: degreeTopM
+2026-01-04 15:12:54,080 - INFO - 依据: 选择连接数（度数）最多的节点。
+2026-01-04 15:12:54,080 - INFO - 选择的 Top M 节点及其度数:
+2026-01-04 15:12:54,080 - INFO - 
+2026-01-04 15:12:54,080 - INFO - 当前用时 0.00 秒
+2026-01-04 15:12:54,080 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/students/2026-1-4/seeds-with-students/random_degreeTopM_seedNum-10_SSRNum-80000.txt
+2026-01-04 15:12:54,080 - INFO - 首次生成种子集 pageRank
+2026-01-04 15:12:54,080 - INFO - 执行当前算法开始: pageRank
+2026-01-04 15:12:54,080 - INFO - --- Running: PageRank (on tranProMatrix) Top M ---
+2026-01-04 15:12:54,102 - INFO - Selected PageRank seeds: [38, 0, 10, 18, 24, 40, 71, 81, 23, 29]
+2026-01-04 15:12:54,103 - INFO - 当前用时 0.02 秒
+2026-01-04 15:12:54,103 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/students/2026-1-4/seeds-with-students/random_pageRank_seedNum-10_SSRNum-80000.txt
+2026-01-04 15:12:54,103 - INFO - 首次生成种子集 alpha_sort
+2026-01-04 15:12:54,103 - INFO - 执行当前算法开始: alpha_sort
+2026-01-04 15:12:54,103 - INFO - 84 个节点的alpha值降序排序 done
+2026-01-04 15:12:54,103 - INFO - ==============>> [(79, 0.3598901), (35, 0.3563143), (75, 0.3555092), (24, 0.3551408), (20, 0.3523888), (38, 0.3503925), (32, 0.3496827), (15, 0.3487332), (42, 0.3485298), (40, 0.3479195)]
+2026-01-04 15:12:54,103 - INFO - 
+选择的种子集 (按alpha排序): [79, 35, 75, 24, 20, 38, 32, 15, 42, 40]
+
+2026-01-04 15:12:54,103 - INFO - 当前用时 0.00 秒
+2026-01-04 15:12:54,104 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/students/2026-1-4/seeds-with-students/random_alpha_sort_seedNum-10_SSRNum-80000.txt
+2026-01-04 15:12:54,104 - INFO - 首次生成种子集 importance_sort
+2026-01-04 15:12:54,104 - INFO - 执行当前算法开始: importance_sort
+2026-01-04 15:12:54,115 - INFO - 84 个节点的Importance值降序排序 done
+2026-01-04 15:12:54,115 - INFO - 
+选择的种子集 (按Importance排序): [79, 24, 28, 39, 71, 68, 58, 10, 66, 65]
+
+2026-01-04 15:12:54,115 - INFO - 当前用时 0.01 秒
+2026-01-04 15:12:54,116 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/students/2026-1-4/seeds-with-students/random_importance_sort_seedNum-10_SSRNum-80000.txt
+2026-01-04 15:12:54,116 - INFO - 首次生成种子集 ris_coverage
+2026-01-04 15:12:54,116 - INFO - 执行当前算法开始: ris_coverage
+2026-01-04 15:12:54,116 - INFO - 图初始化完成，节点数: 84，CSR 矩阵准备就绪。
+2026-01-04 15:12:54,116 - INFO - 
+开始生成 80000 组 SSR (并行进程: 8)...
+2026-01-04 15:12:56,147 - INFO - 生成完毕。耗时: 2.03 秒。
+2026-01-04 15:12:56,148 - INFO - 
+开始选择最优种子 (Optimized Greedy) ...
+2026-01-04 15:12:57,258 - INFO -   - 券 1/10 选中节点 7, 新增覆盖 1440
+2026-01-04 15:12:57,266 - INFO -   - 券 2/10 选中节点 52, 新增覆盖 1376
+2026-01-04 15:12:57,274 - INFO -   - 券 3/10 选中节点 51, 新增覆盖 1326
+2026-01-04 15:12:57,284 - INFO -   - 券 4/10 选中节点 53, 新增覆盖 1320
+2026-01-04 15:12:57,290 - INFO -   - 券 5/10 选中节点 64, 新增覆盖 1231
+2026-01-04 15:12:57,297 - INFO -   - 券 6/10 选中节点 3, 新增覆盖 1293
+2026-01-04 15:12:57,304 - INFO -   - 券 7/10 选中节点 74, 新增覆盖 1266
+2026-01-04 15:12:57,311 - INFO -   - 券 8/10 选中节点 75, 新增覆盖 1228
+2026-01-04 15:12:57,317 - INFO -   - 券 9/10 选中节点 27, 新增覆盖 1168
+2026-01-04 15:12:57,324 - INFO -   - 券 10/10 选中节点 56, 新增覆盖 1166
+2026-01-04 15:12:57,324 - INFO - 选种完毕。耗时: 1.18 秒。
+2026-01-04 15:12:57,355 - INFO - 最终选择的种子集: [7, 52, 51, 53, 64, 3, 74, 75, 27, 56]
+
+2026-01-04 15:12:57,511 - INFO - 当前用时 3.39 秒
+2026-01-04 15:12:57,512 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/students/2026-1-4/seeds-with-students/random_ris_coverage_seedNum-10_SSRNum-80000.txt
+2026-01-04 15:12:57,512 - INFO - 首次生成种子集 monterCarlo_CELF
+2026-01-04 15:12:57,512 - INFO - 执行当前算法开始: monterCarlo_CELF
+2026-01-04 15:14:31,496 - INFO - 加载数据集: students
+2026-01-04 15:14:31,497 - INFO - --- 矩阵分析 ---
+2026-01-04 15:14:31,497 - INFO - 节点数 (N): 84
+2026-01-04 15:14:31,497 - INFO - 边数 (E): 380
+2026-01-04 15:14:31,497 - INFO - 密度 (Density): 0.05385488 (越小越稀疏)
+2026-01-04 15:14:31,497 - INFO - 稀疏度 (Sparsity): 0.94614512 (越接近1越稀疏)
+2026-01-04 15:14:31,497 - INFO - 平均度数 (Avg Degree): 4.52
+2026-01-04 15:14:31,498 - INFO - 复用概率分布 文件位置: /root/pythonspace/data-test/students/2026-1-4/distribution-in-students/distribution-random_seedNum-10.pkl
+2026-01-04 15:14:31,499 - INFO - 从当前位置 读取种子集 /root/pythonspace/data-test/students/2026-1-4/seeds-with-students/random_random_seedNum-10_SSRNum-80000.txt
+2026-01-04 15:14:31,500 - INFO - 从当前位置 读取种子集 /root/pythonspace/data-test/students/2026-1-4/seeds-with-students/random_degreeTopM_seedNum-10_SSRNum-80000.txt
+2026-01-04 15:14:31,500 - INFO - 从当前位置 读取种子集 /root/pythonspace/data-test/students/2026-1-4/seeds-with-students/random_pageRank_seedNum-10_SSRNum-80000.txt
+2026-01-04 15:14:31,500 - INFO - 从当前位置 读取种子集 /root/pythonspace/data-test/students/2026-1-4/seeds-with-students/random_alpha_sort_seedNum-10_SSRNum-80000.txt
+2026-01-04 15:14:31,500 - INFO - 从当前位置 读取种子集 /root/pythonspace/data-test/students/2026-1-4/seeds-with-students/random_importance_sort_seedNum-10_SSRNum-80000.txt
+2026-01-04 15:14:31,501 - INFO - 从当前位置 读取种子集 /root/pythonspace/data-test/students/2026-1-4/seeds-with-students/random_ris_coverage_seedNum-10_SSRNum-80000.txt
+2026-01-04 15:14:31,501 - INFO - 首次生成种子集 monterCarlo_CELF
+2026-01-04 15:14:31,501 - INFO - 执行当前算法开始: monterCarlo_CELF
+2026-01-04 15:14:31,501 - INFO - --- Running: CELF Greedy Monte Carlo (Sims=200) ---
+2026-01-04 15:14:31,501 - INFO - Step 0: 初始化所有节点的边际增益...
+2026-01-04 15:14:31,874 - INFO - Seed 1: 64, Spread: 0.62
+2026-01-04 15:14:32,157 - INFO - Seed 2: 66, Gain: 0.51, Total: 1.13
+2026-01-04 15:14:32,483 - INFO - Seed 3: 55, Gain: 0.50, Total: 1.62
+2026-01-04 15:14:32,661 - INFO - Seed 4: 16, Gain: 0.46, Total: 2.08
+2026-01-04 15:14:32,677 - INFO - Seed 5: 19, Gain: 0.44, Total: 2.52
+2026-01-04 15:14:32,715 - INFO - Seed 6: 15, Gain: 0.47, Total: 3.00
+2026-01-04 15:14:32,738 - INFO - Seed 7: 12, Gain: 0.52, Total: 3.52
+2026-01-04 15:14:32,762 - INFO - Seed 8: 49, Gain: 0.62, Total: 4.14
+2026-01-04 15:14:32,902 - INFO - Seed 9: 51, Gain: 0.43, Total: 4.57
+2026-01-04 15:14:33,078 - INFO - Seed 10: 52, Gain: 0.54, Total: 5.11
+2026-01-04 15:14:33,078 - INFO - CELF 完成，总耗时: 1.58s
+2026-01-04 15:14:33,078 - INFO - 当前用时 1.58 秒
+2026-01-04 15:14:33,079 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/students/2026-1-4/seeds-with-students/random_monterCarlo_CELF_seedNum-10_SSRNum-80000.txt
+2026-01-04 15:14:33,079 - INFO - 首次生成种子集 monterCarlo_standard
+2026-01-04 15:14:33,079 - INFO - 执行当前算法开始: monterCarlo_standard
+2026-01-04 15:14:33,079 - INFO - --- Running: Standard Greedy Monte Carlo (Sims=200) ---
+2026-01-04 15:14:33,379 - INFO - Step 1/10: 选中节点 52, 增益 0.59, 当前总覆盖 0.59 (耗时 0.3s)
+2026-01-04 15:14:33,880 - INFO - Step 2/10: 选中节点 69, 增益 0.56, 当前总覆盖 1.15 (耗时 0.5s)
+2026-01-04 15:14:34,567 - INFO - Step 3/10: 选中节点 40, 增益 0.50, 当前总覆盖 1.65 (耗时 0.7s)
+2026-01-04 15:14:35,439 - INFO - Step 4/10: 选中节点 57, 增益 0.51, 当前总覆盖 2.15 (耗时 0.9s)
+2026-01-04 15:14:36,466 - INFO - Step 5/10: 选中节点 26, 增益 0.49, 当前总覆盖 2.64 (耗时 1.0s)
+2026-01-04 15:14:37,662 - INFO - Step 6/10: 选中节点 79, 增益 0.55, 当前总覆盖 3.19 (耗时 1.2s)
+2026-01-04 15:14:39,014 - INFO - Step 7/10: 选中节点 7, 增益 0.51, 当前总覆盖 3.70 (耗时 1.4s)
+2026-01-04 15:14:40,504 - INFO - Step 8/10: 选中节点 15, 增益 0.53, 当前总覆盖 4.23 (耗时 1.5s)
+2026-01-04 15:14:42,148 - INFO - Step 9/10: 选中节点 64, 增益 0.49, 当前总覆盖 4.72 (耗时 1.6s)
+2026-01-04 15:14:43,918 - INFO - Step 10/10: 选中节点 5, 增益 0.46, 当前总覆盖 5.18 (耗时 1.8s)
+2026-01-04 15:14:43,919 - INFO - 当前用时 10.84 秒
+2026-01-04 15:14:43,919 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/students/2026-1-4/seeds-with-students/random_monterCarlo_standard_seedNum-10_SSRNum-80000.txt
+2026-01-04 15:14:43,919 - INFO - 评估种子集: None
+2026-01-04 15:14:43,919 - INFO - 多进程评估开始，共有 8 个方法待评估...
+2026-01-04 15:14:43,919 - INFO - 启动进程池，Worker数量: 8
+2026-01-04 15:14:43,972 - INFO - [Process 3631] 开始评估方法: random, 种子数: 10
+2026-01-04 15:14:43,973 - INFO - [Process 3632] 开始评估方法: degreeTopM, 种子数: 10
+2026-01-04 15:14:43,973 - INFO - [Process 3633] 开始评估方法: pageRank, 种子数: 10
+2026-01-04 15:14:43,973 - INFO - [Process 3634] 开始评估方法: alpha_sort, 种子数: 10
+2026-01-04 15:14:43,973 - INFO - [Process 3635] 开始评估方法: importance_sort, 种子数: 10
+2026-01-04 15:14:43,973 - INFO - [Process 3636] 开始评估方法: ris_coverage, 种子数: 10
+2026-01-04 15:14:43,973 - INFO - [Process 3637] 开始评估方法: monterCarlo_CELF, 种子数: 10
+2026-01-04 15:14:43,974 - INFO - [Process 3638] 开始评估方法: monterCarlo_standard, 种子数: 10
+2026-01-04 15:14:44,041 - INFO - [Process 3631] random - 500 sims 完成: E=4.66
+2026-01-04 15:14:44,045 - INFO - [Process 3634] alpha_sort - 500 sims 完成: E=4.98
+2026-01-04 15:14:44,045 - INFO - [Process 3633] pageRank - 500 sims 完成: E=4.83
+2026-01-04 15:14:44,046 - INFO - [Process 3635] importance_sort - 500 sims 完成: E=4.76
+2026-01-04 15:14:44,046 - INFO - [Process 3632] degreeTopM - 500 sims 完成: E=4.75
+2026-01-04 15:14:44,047 - INFO - [Process 3638] monterCarlo_standard - 500 sims 完成: E=4.89
+2026-01-04 15:14:44,048 - INFO - [Process 3637] monterCarlo_CELF - 500 sims 完成: E=4.98
+2026-01-04 15:14:44,048 - INFO - [Process 3636] ris_coverage - 500 sims 完成: E=4.93
+2026-01-04 15:14:44,054 - INFO - 所有进程执行完毕，开始写入数据...
+2026-01-04 15:14:44,058 - INFO - 成功写入 8 条记录至 /root/pythonspace/data-test/students/2026-1-4/E-activated-students/distribution-random/simuTimes-500_random-dirichlet-[500, 500, 500]_rrNumSamples-80000.csv
+2026-01-04 15:14:44,058 - INFO - 保存评估文件至: /root/pythonspace/data-test/students/2026-1-4/E-activated-students/distribution-random/simuTimes-500_random-dirichlet-[500, 500, 500]_rrNumSamples-80000.csv

@@ -7,7 +7,7 @@ class ExperimentConfig:
     simulation_times: list #控制评估的精度（模拟次数）
     methods: list = None #选种子集的方法
     seed_num_list: list = None #种子集列表 # deprecated
-    monte_carlo_L: int = 10 # 蒙特卡洛模拟次数
+    monte_carlo_L: int = 100 # 蒙特卡洛模拟次数
     distribution_type: str = 'random' # poisson gamma powerlaw random
     constant_factor_distri: str = 'random' # deprecated
     personalization: str = 'None'
