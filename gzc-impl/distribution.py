@@ -90,17 +90,63 @@ def _generate_powerlaw_distributions_degree_aware(
 def _generate_random_distributions(
         n: int,
         degrees: np.ndarray,
-        config: ExperimentConfig  # 使用字典代替类，更通用
+        config: ExperimentConfig
 ) -> Dict[str, np.ndarray]:
-    # 从配置中读取狄利克雷分布的alpha参数 [2,2,5]
+    # 1. 读取基础参数
     dirichlet_alpha = config.random_dirichlet
-    logging.info(f"===> Generating 'Dirichlet' distributions with alpha={dirichlet_alpha}...")
+    
+    # 读取度数影响因子 (关键修改点)
+    # 如果 config 里没写，默认给 0 (即不影响)
+    s_factor = getattr(config, 'succ_degree_influence_factor', 0.0)
+    d_factor = getattr(config, 'dis_degree_influence_factor', 0.0)
+    t_factor = getattr(config, 'tran_degree_influence_factor', 0.0)
 
-    prob = np.random.dirichlet(dirichlet_alpha, size=n)
+    logging.info(f"===> Generating 'Dirichlet' with Degree Bias...")
+    logging.info(f"     Alpha: {dirichlet_alpha}")
+    logging.info(f"     Factors -> Succ: {s_factor}, Dis: {d_factor}, Tran: {t_factor}")
 
-    succ_distribution = np.round(prob[:, 0], 7)
-    dis_distribution = np.round(prob[:, 1], 7)
-    tran_distribution = np.round(prob[:, 2], 7)
+    # 2. 生成基础概率 (Base Probabilities)
+    # 比如 [500, 500, 500] 生成出来的就是 [0.33, 0.33, 0.33]
+    base_probs = np.random.dirichlet(dirichlet_alpha, size=n) # Shape: (n, 3)
+    
+    p_succ_base = base_probs[:, 0]
+    p_dis_base  = base_probs[:, 1]
+    p_tran_base = base_probs[:, 2]
+
+    # 3. 计算度数权重 (Degree Weights)
+    # 使用幂律函数：Weight = (Degree + 1) ^ factor
+    # +1 是为了防止度数为0时出现数学错误
+    degrees_safe = degrees.astype(float) + 1.0
+    
+    w_succ = np.power(degrees_safe, s_factor)
+    w_dis  = np.power(degrees_safe, d_factor)
+    w_tran = np.power(degrees_safe, t_factor)
+
+    # 4. 将基础概率与权重相乘得到“潜力值” (Potentials)
+    # 逻辑：如果 factor > 0，度数越大，潜力越大；如果 factor < 0，度数越大，潜力越小
+    potential_succ = p_succ_base * w_succ
+    potential_dis  = p_dis_base  * w_dis
+    potential_tran = p_tran_base * w_tran
+
+    # 5. 重新归一化 (Re-normalization)
+    # 因为乘了权重后，三者之和不再是 1，必须除以总和
+    total_potential = potential_succ + potential_dis + potential_tran
+    
+    # 防止除以0 (极少数情况)
+    total_potential[total_potential == 0] = 1e-9
+
+    succ_distribution = potential_succ / total_potential
+    dis_distribution  = potential_dis  / total_potential
+    tran_distribution = potential_tran / total_potential
+
+    # 6. 打印统计信息，确保改动生效 (调试用)
+    # 检查度数最高的节点发生了什么变化
+    max_deg_idx = np.argmax(degrees)
+    logging.info(f"--- check node (Max Degree={degrees[max_deg_idx]}) ---")
+    logging.info(f"    Base Prob: {base_probs[max_deg_idx]}")
+    logging.info(f"    Final Prob: Succ={succ_distribution[max_deg_idx]:.4f}, Dis={dis_distribution[max_deg_idx]:.4f}, Tran={tran_distribution[max_deg_idx]:.4f}")
+
+    # 7. 格式化返回
     constantFactor_distribution = np.ones(n, dtype=float)
 
     return {
@@ -109,7 +155,6 @@ def _generate_random_distributions(
         'tran_distribution': tran_distribution,
         'constantFactor_distribution': constantFactor_distribution
     }
-
 
 def get_distribution_degree_aware(
         distribution_file: str,

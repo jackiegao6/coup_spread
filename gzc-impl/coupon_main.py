@@ -23,15 +23,12 @@ def print_density(G):
     n = G.number_of_nodes()
     m = G.number_of_edges()
 
-    # 1. 直接调用函数
     density = nx.density(G)
 
     logging.info(f"节点数: {n}, 边数: {m}")
     logging.info(f"图密度: {density:.6f}") # 比如 0.005
     logging.info(f"稀疏度: {1 - density:.6f}") # 比如 0.995
 
-    # 2. 看平均度数 (Average Degree) —— 这更直观
-    # 平均度数 = 每个节点平均有多少个邻居
     avg_degree = 2 * m / n  # 无向图
     logging.info(f"平均度数: {avg_degree:.2f}")
 
@@ -93,9 +90,6 @@ def load_contribution_and_tran_matrix_watch(config: "ExperimentConfig", adj, n: 
     # 解包分布 (确保是 numpy array)
     succ_dist, dis_dist, tran_dist, const_factor_dist = [np.array(d) for d in distribution_res]
 
-    # =========================================================================
-    # 【必杀技】：注入“看门人机制” (Gatekeeper Mechanism)
-    # =========================================================================
     logging.info(">>> 正在注入‘社区效应/看门人机制’以区分算法能力...")
 
     # 1. 寻找“看门人”：度数最高的那个节点 (Facebook这种无标度网络，大V连接了非常多的人)
@@ -341,13 +335,13 @@ if __name__ == '__main__':
 
     my_config = ExperimentConfig(
         # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin students 
-        # network.douban network.Amazon network.douban11core network.netYeast network.doubanrandom
-        data_set='network.netactorcollaboration', 
+        # network.netfacebookego network.netDog network.Amazon network.douban11core network.netYeast network.doubanrandom network.netactorcollaboration network.netfacebookego
+        data_set='network.netDog', 
 
-        simulation_times=[500],  # [1000, 5000]
+        simulation_times=[1000],  # [1000, 5000]
 
         # methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage', 'monterCarlo_CELF'],
-        methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage'],
+        methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage','monterCarlo_CELF'],
 
         monte_carlo_L=300,
 
@@ -357,20 +351,18 @@ if __name__ == '__main__':
 
         num_samples=100000,
         # seeds_num=num,  # 32 64 128 256 512
-        succ_degree_influence_factor= -0.5,
-        dis_degree_influence_factor= 0.5,
-        tran_degree_influence_factor= 1.5,
+
+        succ_degree_influence_factor = 0.0, # 稍微降低大V自用率即可
+        dis_degree_influence_factor = 0.0,  # 降低丢弃，但别降到0
+        tran_degree_influence_factor = 0.0,  # 提高转发，但别提太高
 
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainReJudge',  # AgainReJudge(接受过的用户可以再次接受) 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)(目的：不是让券的使用率最大，而是让券的尽可能地覆盖)
-        version='2026-1-6',
-        random_dirichlet=[500,500,500] # 期望一致 概率越大标准差越小
-        # random_dirichlet=[5,2,8] # succ dis trans 期望一致 概率越大标准差越小
-        # random_dirichlet=[5,1,15] # succ dis trans 期望一致 概率越大标准差越小
+        version='2026-1-7-3-[500,500,500]',
+        random_dirichlet=[50,50,900]
     )
 
-    # 外循环 控制种子个数
     for num in range(args.start, args.end, args.step):
         my_config.seeds_num = num
         generate_logger.init_logger(log_file=my_config.log_file())

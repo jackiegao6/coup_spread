@@ -21,7 +21,7 @@ dict_keys(['__header__', '__version__', '__globals__', 'ans', 'Airtraffic', , 'A
 
 # 'Amazon', 'douban', 'douban11core', 'netYeast', 'youtubefriendship', 'doubanrandom', 'netactorcollaboration'
 data = loadmat('/root/pythonspace/data-test/datasets/network.mat')
-A = data['netactorcollaboration']   # csc_matrix
+A = data['netfacebookego']   # csc_matrix
 n, m = A.shape
 nnz = A.nnz
 

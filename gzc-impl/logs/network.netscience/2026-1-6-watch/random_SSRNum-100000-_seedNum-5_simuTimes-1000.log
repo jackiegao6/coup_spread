@@ -1,0 +1,279 @@
+2026-01-05 22:34:20,823 - INFO - 加载数据集: network.netscience
+2026-01-05 22:34:20,824 - INFO - --- 矩阵分析 ---
+2026-01-05 22:34:20,824 - INFO - 节点数 (N): 379
+2026-01-05 22:34:20,824 - INFO - 边数 (E): 1828
+2026-01-05 22:34:20,824 - INFO - 密度 (Density): 0.01272617 (越小越稀疏)
+2026-01-05 22:34:20,824 - INFO - 稀疏度 (Sparsity): 0.98727383 (越接近1越稀疏)
+2026-01-05 22:34:20,824 - INFO - 平均度数 (Avg Degree): 4.82
+2026-01-05 22:34:20,825 - INFO - 首次生成度相关概率分布 分布类型: 'random'.
+2026-01-05 22:34:20,825 - INFO - ===> Generating 'Dirichlet' distributions with alpha=[500, 500, 500]...
+2026-01-05 22:34:20,825 - INFO - 保存概率分布 文件位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/distribution-in-network.netscience/distribution-random_seedNum-5.pkl
+2026-01-05 22:34:20,827 - INFO - 首次生成种子集 random
+2026-01-05 22:34:20,827 - INFO - 执行当前算法开始: random
+2026-01-05 22:34:20,828 - INFO - 数据集节点总数:  n = 379, m = 5
+2026-01-05 22:34:20,828 - INFO - 选择 5  [237, 265, 234, 93, 77]
+
+2026-01-05 22:34:20,828 - INFO - 当前用时 0.00 秒
+2026-01-05 22:34:20,828 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_random_seedNum-5_SSRNum-100000.txt
+2026-01-05 22:34:20,828 - INFO - 首次生成种子集 degreeTopM
+2026-01-05 22:34:20,828 - INFO - 执行当前算法开始: degreeTopM
+2026-01-05 22:34:20,828 - INFO - 依据: 选择连接数（度数）最多的节点。
+2026-01-05 22:34:20,828 - INFO - 选择的 Top M 节点及其度数:
+2026-01-05 22:34:20,829 - INFO - 
+2026-01-05 22:34:20,829 - INFO - 当前用时 0.00 秒
+2026-01-05 22:34:20,829 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_degreeTopM_seedNum-5_SSRNum-100000.txt
+2026-01-05 22:34:20,829 - INFO - 首次生成种子集 pageRank
+2026-01-05 22:34:20,829 - INFO - 执行当前算法开始: pageRank
+2026-01-05 22:34:20,829 - INFO - --- Running: PageRank (on tranProMatrix) Top M ---
+2026-01-05 22:34:20,867 - INFO - Selected PageRank seeds: [58, 3, 4, 119, 72]
+2026-01-05 22:34:20,867 - INFO - 当前用时 0.04 秒
+2026-01-05 22:34:20,868 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_pageRank_seedNum-5_SSRNum-100000.txt
+2026-01-05 22:34:20,868 - INFO - 首次生成种子集 alpha_sort
+2026-01-05 22:34:20,868 - INFO - 执行当前算法开始: alpha_sort
+2026-01-05 22:34:20,868 - INFO - 379 个节点的alpha值降序排序 done
+2026-01-05 22:34:20,868 - INFO - ==============>> [(167, 0.3683614), (80, 0.3629047), (182, 0.3622217), (363, 0.3615929), (376, 0.3600177), (216, 0.3596529), (200, 0.3590466), (165, 0.3582199), (254, 0.3563205), (139, 0.356027)]
+2026-01-05 22:34:20,868 - INFO - 
+选择的种子集 (按alpha排序): [167, 80, 182, 363, 376]
+
+2026-01-05 22:34:20,868 - INFO - 当前用时 0.00 秒
+2026-01-05 22:34:20,869 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_alpha_sort_seedNum-5_SSRNum-100000.txt
+2026-01-05 22:34:20,869 - INFO - 首次生成种子集 importance_sort
+2026-01-05 22:34:20,869 - INFO - 执行当前算法开始: importance_sort
+2026-01-05 22:34:20,934 - INFO - 379 个节点的Importance值降序排序 done
+2026-01-05 22:34:20,934 - INFO - 
+选择的种子集 (按Importance排序): [9, 1, 3, 7, 5]
+
+2026-01-05 22:34:20,934 - INFO - 当前用时 0.07 秒
+2026-01-05 22:34:20,934 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_importance_sort_seedNum-5_SSRNum-100000.txt
+2026-01-05 22:34:20,935 - INFO - 首次生成种子集 ris_coverage
+2026-01-05 22:34:20,935 - INFO - 执行当前算法开始: ris_coverage
+2026-01-05 22:34:20,937 - INFO - 图初始化完成，节点数: 379，CSR 矩阵准备就绪。
+2026-01-05 22:34:20,937 - INFO - 
+开始生成 100000 组 SSR (并行进程: 8)...
+2026-01-05 22:34:22,511 - INFO - 生成完毕。耗时: 1.57 秒。
+2026-01-05 22:34:22,512 - INFO - 
+开始选择最优种子 (Optimized Greedy) ...
+2026-01-05 22:34:23,435 - INFO -   - 券 1/5 选中节点 22, 新增覆盖 428
+2026-01-05 22:34:23,445 - INFO -   - 券 2/5 选中节点 231, 新增覆盖 404
+2026-01-05 22:34:23,454 - INFO -   - 券 3/5 选中节点 45, 新增覆盖 403
+2026-01-05 22:34:23,464 - INFO -   - 券 4/5 选中节点 165, 新增覆盖 385
+2026-01-05 22:34:23,474 - INFO -   - 券 5/5 选中节点 85, 新增覆盖 388
+2026-01-05 22:34:23,474 - INFO - 选种完毕。耗时: 0.96 秒。
+2026-01-05 22:34:23,490 - INFO - 最终选择的种子集: [22, 231, 45, 165, 85]
+
+2026-01-05 22:34:23,569 - INFO - 当前用时 2.63 秒
+2026-01-05 22:34:23,569 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_ris_coverage_seedNum-5_SSRNum-100000.txt
+2026-01-05 22:34:23,570 - INFO - 评估种子集: None
+2026-01-05 22:34:23,570 - INFO - 多进程评估开始，共有 6 个方法待评估...
+2026-01-05 22:34:23,570 - INFO - 启动进程池，Worker数量: 6
+2026-01-05 22:34:23,597 - INFO - [Process 9654] 开始评估方法: random, 种子数: 5
+2026-01-05 22:34:23,599 - INFO - [Process 9655] 开始评估方法: degreeTopM, 种子数: 5
+2026-01-05 22:34:23,601 - INFO - [Process 9656] 开始评估方法: pageRank, 种子数: 5
+2026-01-05 22:34:23,603 - INFO - [Process 9657] 开始评估方法: alpha_sort, 种子数: 5
+2026-01-05 22:34:23,605 - INFO - [Process 9658] 开始评估方法: importance_sort, 种子数: 5
+2026-01-05 22:34:23,607 - INFO - [Process 9659] 开始评估方法: ris_coverage, 种子数: 5
+2026-01-05 22:34:23,715 - INFO - [Process 9657] alpha_sort - 1000 sims 完成: E=2.66
+2026-01-05 22:34:23,715 - INFO - [Process 9654] random - 1000 sims 完成: E=2.54
+2026-01-05 22:34:23,717 - INFO - [Process 9658] importance_sort - 1000 sims 完成: E=2.51
+2026-01-05 22:34:23,717 - INFO - [Process 9656] pageRank - 1000 sims 完成: E=2.53
+2026-01-05 22:34:23,720 - INFO - [Process 9655] degreeTopM - 1000 sims 完成: E=2.53
+2026-01-05 22:34:23,726 - INFO - [Process 9659] ris_coverage - 1000 sims 完成: E=2.55
+2026-01-05 22:34:23,735 - INFO - 所有进程执行完毕，开始写入数据...
+2026-01-05 22:34:23,740 - INFO - 成功写入 6 条记录至 /root/pythonspace/data-test/network.netscience/2026-1-6-watch/E-activated-network.netscience/distribution-random/simuTimes-1000_random-dirichlet-[500, 500, 500]_rrNumSamples-100000.csv
+2026-01-05 22:34:23,741 - INFO - 保存评估文件至: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/E-activated-network.netscience/distribution-random/simuTimes-1000_random-dirichlet-[500, 500, 500]_rrNumSamples-100000.csv
+2026-01-05 22:34:23,741 - INFO - 加载数据集: network.netscience
+2026-01-05 22:34:23,741 - INFO - --- 矩阵分析 ---
+2026-01-05 22:34:23,741 - INFO - 节点数 (N): 379
+2026-01-05 22:34:23,741 - INFO - 边数 (E): 1828
+2026-01-05 22:34:23,741 - INFO - 密度 (Density): 0.01272617 (越小越稀疏)
+2026-01-05 22:34:23,742 - INFO - 稀疏度 (Sparsity): 0.98727383 (越接近1越稀疏)
+2026-01-05 22:34:23,742 - INFO - 平均度数 (Avg Degree): 4.82
+2026-01-05 22:34:23,742 - INFO - 首次生成度相关概率分布 分布类型: 'random'.
+2026-01-05 22:34:23,742 - INFO - ===> Generating 'Dirichlet' distributions with alpha=[500, 500, 500]...
+2026-01-05 22:34:23,742 - INFO - 保存概率分布 文件位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/distribution-in-network.netscience/distribution-random_seedNum-15.pkl
+2026-01-05 22:34:23,744 - INFO - 首次生成种子集 random
+2026-01-05 22:34:23,744 - INFO - 执行当前算法开始: random
+2026-01-05 22:34:23,744 - INFO - 数据集节点总数:  n = 379, m = 15
+2026-01-05 22:34:23,744 - INFO - 选择 15  [48, 39, 117, 36, 51, 351, 367, 154, 162, 176, 203, 95, 186, 22, 146]
+
+2026-01-05 22:34:23,744 - INFO - 当前用时 0.00 秒
+2026-01-05 22:34:23,744 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_random_seedNum-15_SSRNum-100000.txt
+2026-01-05 22:34:23,745 - INFO - 首次生成种子集 degreeTopM
+2026-01-05 22:34:23,745 - INFO - 执行当前算法开始: degreeTopM
+2026-01-05 22:34:23,745 - INFO - 依据: 选择连接数（度数）最多的节点。
+2026-01-05 22:34:23,745 - INFO - 选择的 Top M 节点及其度数:
+2026-01-05 22:34:23,745 - INFO - 
+2026-01-05 22:34:23,745 - INFO - 当前用时 0.00 秒
+2026-01-05 22:34:23,745 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_degreeTopM_seedNum-15_SSRNum-100000.txt
+2026-01-05 22:34:23,745 - INFO - 首次生成种子集 pageRank
+2026-01-05 22:34:23,745 - INFO - 执行当前算法开始: pageRank
+2026-01-05 22:34:23,746 - INFO - --- Running: PageRank (on tranProMatrix) Top M ---
+2026-01-05 22:34:23,760 - INFO - Selected PageRank seeds: [58, 3, 4, 119, 72, 5, 142, 106, 53, 219, 189, 107, 13, 41, 187]
+2026-01-05 22:34:23,760 - INFO - 当前用时 0.01 秒
+2026-01-05 22:34:23,761 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_pageRank_seedNum-15_SSRNum-100000.txt
+2026-01-05 22:34:23,761 - INFO - 首次生成种子集 alpha_sort
+2026-01-05 22:34:23,761 - INFO - 执行当前算法开始: alpha_sort
+2026-01-05 22:34:23,761 - INFO - 379 个节点的alpha值降序排序 done
+2026-01-05 22:34:23,761 - INFO - ==============>> [(182, 0.3741122), (183, 0.3693866), (213, 0.3684348), (281, 0.3663198), (96, 0.3637545), (363, 0.3635163), (180, 0.3627967), (241, 0.3622196), (66, 0.3599954), (217, 0.3597677)]
+2026-01-05 22:34:23,761 - INFO - 
+选择的种子集 (按alpha排序): [182, 183, 213, 281, 96, 363, 180, 241, 66, 217, 222, 123, 25, 377, 242]
+
+2026-01-05 22:34:23,761 - INFO - 当前用时 0.00 秒
+2026-01-05 22:34:23,761 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_alpha_sort_seedNum-15_SSRNum-100000.txt
+2026-01-05 22:34:23,762 - INFO - 首次生成种子集 importance_sort
+2026-01-05 22:34:23,762 - INFO - 执行当前算法开始: importance_sort
+2026-01-05 22:34:23,826 - INFO - 379 个节点的Importance值降序排序 done
+2026-01-05 22:34:23,826 - INFO - 
+选择的种子集 (按Importance排序): [10, 5, 7, 6, 1, 8, 4, 9, 2, 3, 182, 183, 213, 281, 96]
+
+2026-01-05 22:34:23,826 - INFO - 当前用时 0.06 秒
+2026-01-05 22:34:23,827 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_importance_sort_seedNum-15_SSRNum-100000.txt
+2026-01-05 22:34:23,827 - INFO - 首次生成种子集 ris_coverage
+2026-01-05 22:34:23,827 - INFO - 执行当前算法开始: ris_coverage
+2026-01-05 22:34:23,829 - INFO - 图初始化完成，节点数: 379，CSR 矩阵准备就绪。
+2026-01-05 22:34:23,829 - INFO - 
+开始生成 100000 组 SSR (并行进程: 8)...
+2026-01-05 22:34:26,551 - INFO - 生成完毕。耗时: 2.72 秒。
+2026-01-05 22:34:26,552 - INFO - 
+开始选择最优种子 (Optimized Greedy) ...
+2026-01-05 22:34:28,121 - INFO -   - 券 1/15 选中节点 31, 新增覆盖 430
+2026-01-05 22:34:28,128 - INFO -   - 券 2/15 选中节点 231, 新增覆盖 429
+2026-01-05 22:34:28,135 - INFO -   - 券 3/15 选中节点 45, 新增覆盖 419
+2026-01-05 22:34:28,141 - INFO -   - 券 4/15 选中节点 343, 新增覆盖 402
+2026-01-05 22:34:28,149 - INFO -   - 券 5/15 选中节点 278, 新增覆盖 405
+2026-01-05 22:34:28,156 - INFO -   - 券 6/15 选中节点 10, 新增覆盖 405
+2026-01-05 22:34:28,162 - INFO -   - 券 7/15 选中节点 344, 新增覆盖 393
+2026-01-05 22:34:28,169 - INFO -   - 券 8/15 选中节点 199, 新增覆盖 387
+2026-01-05 22:34:28,177 - INFO -   - 券 9/15 选中节点 49, 新增覆盖 395
+2026-01-05 22:34:28,185 - INFO -   - 券 10/15 选中节点 151, 新增覆盖 386
+2026-01-05 22:34:28,193 - INFO -   - 券 11/15 选中节点 135, 新增覆盖 376
+2026-01-05 22:34:28,201 - INFO -   - 券 12/15 选中节点 281, 新增覆盖 403
+2026-01-05 22:34:28,209 - INFO -   - 券 13/15 选中节点 371, 新增覆盖 369
+2026-01-05 22:34:28,217 - INFO -   - 券 14/15 选中节点 289, 新增覆盖 376
+2026-01-05 22:34:28,226 - INFO -   - 券 15/15 选中节点 274, 新增覆盖 365
+2026-01-05 22:34:28,226 - INFO - 选种完毕。耗时: 1.67 秒。
+2026-01-05 22:34:28,258 - INFO - 最终选择的种子集: [31, 231, 45, 343, 278, 10, 344, 199, 49, 151, 135, 281, 371, 289, 274]
+
+2026-01-05 22:34:28,409 - INFO - 当前用时 4.58 秒
+2026-01-05 22:34:28,409 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_ris_coverage_seedNum-15_SSRNum-100000.txt
+2026-01-05 22:34:28,409 - INFO - 评估种子集: None
+2026-01-05 22:34:28,409 - INFO - 多进程评估开始，共有 6 个方法待评估...
+2026-01-05 22:34:28,409 - INFO - 启动进程池，Worker数量: 6
+2026-01-05 22:34:28,430 - INFO - [Process 9689] 开始评估方法: random, 种子数: 15
+2026-01-05 22:34:28,432 - INFO - [Process 9690] 开始评估方法: degreeTopM, 种子数: 15
+2026-01-05 22:34:28,434 - INFO - [Process 9691] 开始评估方法: pageRank, 种子数: 15
+2026-01-05 22:34:28,436 - INFO - [Process 9692] 开始评估方法: alpha_sort, 种子数: 15
+2026-01-05 22:34:28,439 - INFO - [Process 9693] 开始评估方法: importance_sort, 种子数: 15
+2026-01-05 22:34:28,441 - INFO - [Process 9694] 开始评估方法: ris_coverage, 种子数: 15
+2026-01-05 22:34:28,611 - INFO - [Process 9690] degreeTopM - 1000 sims 完成: E=7.38
+2026-01-05 22:34:28,613 - INFO - [Process 9692] alpha_sort - 1000 sims 完成: E=7.78
+2026-01-05 22:34:28,613 - INFO - [Process 9689] random - 1000 sims 完成: E=7.54
+2026-01-05 22:34:28,615 - INFO - [Process 9691] pageRank - 1000 sims 完成: E=7.41
+2026-01-05 22:34:28,619 - INFO - [Process 9693] importance_sort - 1000 sims 完成: E=7.41
+2026-01-05 22:34:28,626 - INFO - [Process 9694] ris_coverage - 1000 sims 完成: E=7.55
+2026-01-05 22:34:28,635 - INFO - 所有进程执行完毕，开始写入数据...
+2026-01-05 22:34:28,639 - INFO - 成功写入 6 条记录至 /root/pythonspace/data-test/network.netscience/2026-1-6-watch/E-activated-network.netscience/distribution-random/simuTimes-1000_random-dirichlet-[500, 500, 500]_rrNumSamples-100000.csv
+2026-01-05 22:34:28,639 - INFO - 保存评估文件至: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/E-activated-network.netscience/distribution-random/simuTimes-1000_random-dirichlet-[500, 500, 500]_rrNumSamples-100000.csv
+2026-01-05 22:34:28,640 - INFO - 加载数据集: network.netscience
+2026-01-05 22:34:28,640 - INFO - --- 矩阵分析 ---
+2026-01-05 22:34:28,640 - INFO - 节点数 (N): 379
+2026-01-05 22:34:28,640 - INFO - 边数 (E): 1828
+2026-01-05 22:34:28,640 - INFO - 密度 (Density): 0.01272617 (越小越稀疏)
+2026-01-05 22:34:28,640 - INFO - 稀疏度 (Sparsity): 0.98727383 (越接近1越稀疏)
+2026-01-05 22:34:28,640 - INFO - 平均度数 (Avg Degree): 4.82
+2026-01-05 22:34:28,641 - INFO - 首次生成度相关概率分布 分布类型: 'random'.
+2026-01-05 22:34:28,641 - INFO - ===> Generating 'Dirichlet' distributions with alpha=[500, 500, 500]...
+2026-01-05 22:34:28,642 - INFO - 保存概率分布 文件位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/distribution-in-network.netscience/distribution-random_seedNum-25.pkl
+2026-01-05 22:34:28,644 - INFO - 首次生成种子集 random
+2026-01-05 22:34:28,644 - INFO - 执行当前算法开始: random
+2026-01-05 22:34:28,644 - INFO - 数据集节点总数:  n = 379, m = 25
+2026-01-05 22:34:28,645 - INFO - 选择 25  [233, 34, 64, 107, 146, 102, 173, 99, 352, 221, 195, 33, 145, 349, 176, 230, 113, 245, 118, 317, 89, 193, 224, 283, 304]
+
+2026-01-05 22:34:28,645 - INFO - 当前用时 0.00 秒
+2026-01-05 22:34:28,645 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_random_seedNum-25_SSRNum-100000.txt
+2026-01-05 22:34:28,645 - INFO - 首次生成种子集 degreeTopM
+2026-01-05 22:34:28,645 - INFO - 执行当前算法开始: degreeTopM
+2026-01-05 22:34:28,645 - INFO - 依据: 选择连接数（度数）最多的节点。
+2026-01-05 22:34:28,646 - INFO - 选择的 Top M 节点及其度数:
+2026-01-05 22:34:28,646 - INFO - 
+2026-01-05 22:34:28,646 - INFO - 当前用时 0.00 秒
+2026-01-05 22:34:28,646 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_degreeTopM_seedNum-25_SSRNum-100000.txt
+2026-01-05 22:34:28,646 - INFO - 首次生成种子集 pageRank
+2026-01-05 22:34:28,647 - INFO - 执行当前算法开始: pageRank
+2026-01-05 22:34:28,647 - INFO - --- Running: PageRank (on tranProMatrix) Top M ---
+2026-01-05 22:34:28,656 - INFO - Selected PageRank seeds: [58, 3, 4, 119, 72, 5, 142, 106, 53, 219, 189, 107, 13, 41, 187, 7, 44, 92, 94, 173, 62, 95, 167, 96, 118]
+2026-01-05 22:34:28,657 - INFO - 当前用时 0.01 秒
+2026-01-05 22:34:28,657 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_pageRank_seedNum-25_SSRNum-100000.txt
+2026-01-05 22:34:28,657 - INFO - 首次生成种子集 alpha_sort
+2026-01-05 22:34:28,657 - INFO - 执行当前算法开始: alpha_sort
+2026-01-05 22:34:28,657 - INFO - 379 个节点的alpha值降序排序 done
+2026-01-05 22:34:28,657 - INFO - ==============>> [(115, 0.3680396), (334, 0.3657169), (213, 0.3636367), (113, 0.3596306), (289, 0.3586396), (366, 0.3583359), (337, 0.3562559), (197, 0.355884), (165, 0.3555178), (318, 0.3552558)]
+2026-01-05 22:34:28,657 - INFO - 
+选择的种子集 (按alpha排序): [115, 334, 213, 113, 289, 366, 337, 197, 165, 318, 157, 206, 226, 149, 44, 46, 328, 193, 252, 260, 95, 253, 34, 167, 205]
+
+2026-01-05 22:34:28,657 - INFO - 当前用时 0.00 秒
+2026-01-05 22:34:28,657 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_alpha_sort_seedNum-25_SSRNum-100000.txt
+2026-01-05 22:34:28,658 - INFO - 首次生成种子集 importance_sort
+2026-01-05 22:34:28,658 - INFO - 执行当前算法开始: importance_sort
+2026-01-05 22:34:28,700 - INFO - 379 个节点的Importance值降序排序 done
+2026-01-05 22:34:28,700 - INFO - 
+选择的种子集 (按Importance排序): [7, 4, 6, 2, 9, 5, 10, 3, 1, 8, 115, 334, 213, 113, 289, 366, 337, 197, 165, 318, 157, 206, 226, 149, 44]
+
+2026-01-05 22:34:28,700 - INFO - 当前用时 0.04 秒
+2026-01-05 22:34:28,701 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_importance_sort_seedNum-25_SSRNum-100000.txt
+2026-01-05 22:34:28,701 - INFO - 首次生成种子集 ris_coverage
+2026-01-05 22:34:28,701 - INFO - 执行当前算法开始: ris_coverage
+2026-01-05 22:34:28,702 - INFO - 图初始化完成，节点数: 379，CSR 矩阵准备就绪。
+2026-01-05 22:34:28,702 - INFO - 
+开始生成 100000 组 SSR (并行进程: 8)...
+2026-01-05 22:34:33,520 - INFO - 生成完毕。耗时: 4.82 秒。
+2026-01-05 22:34:33,521 - INFO - 
+开始选择最优种子 (Optimized Greedy) ...
+2026-01-05 22:34:36,051 - INFO -   - 券 1/25 选中节点 30, 新增覆盖 423
+2026-01-05 22:34:36,058 - INFO -   - 券 2/25 选中节点 85, 新增覆盖 404
+2026-01-05 22:34:36,064 - INFO -   - 券 3/25 选中节点 289, 新增覆盖 407
+2026-01-05 22:34:36,071 - INFO -   - 券 4/25 选中节点 371, 新增覆盖 406
+2026-01-05 22:34:36,077 - INFO -   - 券 5/25 选中节点 231, 新增覆盖 405
+2026-01-05 22:34:36,084 - INFO -   - 券 6/25 选中节点 351, 新增覆盖 396
+2026-01-05 22:34:36,092 - INFO -   - 券 7/25 选中节点 34, 新增覆盖 399
+2026-01-05 22:34:36,099 - INFO -   - 券 8/25 选中节点 45, 新增覆盖 394
+2026-01-05 22:34:36,107 - INFO -   - 券 9/25 选中节点 343, 新增覆盖 393
+2026-01-05 22:34:36,115 - INFO -   - 券 10/25 选中节点 310, 新增覆盖 381
+2026-01-05 22:34:36,124 - INFO -   - 券 11/25 选中节点 297, 新增覆盖 392
+2026-01-05 22:34:36,132 - INFO -   - 券 12/25 选中节点 278, 新增覆盖 390
+2026-01-05 22:34:36,141 - INFO -   - 券 13/25 选中节点 22, 新增覆盖 373
+2026-01-05 22:34:36,149 - INFO -   - 券 14/25 选中节点 191, 新增覆盖 382
+2026-01-05 22:34:36,158 - INFO -   - 券 15/25 选中节点 114, 新增覆盖 360
+2026-01-05 22:34:36,167 - INFO -   - 券 16/25 选中节点 64, 新增覆盖 371
+2026-01-05 22:34:36,175 - INFO -   - 券 17/25 选中节点 186, 新增覆盖 364
+2026-01-05 22:34:36,185 - INFO -   - 券 18/25 选中节点 333, 新增覆盖 367
+2026-01-05 22:34:36,194 - INFO -   - 券 19/25 选中节点 158, 新增覆盖 362
+2026-01-05 22:34:36,203 - INFO -   - 券 20/25 选中节点 221, 新增覆盖 347
+2026-01-05 22:34:36,213 - INFO -   - 券 21/25 选中节点 179, 新增覆盖 355
+2026-01-05 22:34:36,223 - INFO -   - 券 22/25 选中节点 194, 新增覆盖 358
+2026-01-05 22:34:36,233 - INFO -   - 券 23/25 选中节点 10, 新增覆盖 364
+2026-01-05 22:34:36,244 - INFO -   - 券 24/25 选中节点 37, 新增覆盖 356
+2026-01-05 22:34:36,254 - INFO -   - 券 25/25 选中节点 251, 新增覆盖 352
+2026-01-05 22:34:36,254 - INFO - 选种完毕。耗时: 2.73 秒。
+2026-01-05 22:34:36,304 - INFO - 最终选择的种子集: [30, 85, 289, 371, 231, 351, 34, 45, 343, 310, 297, 278, 22, 191, 114, 64, 186, 333, 158, 221, 179, 194, 10, 37, 251]
+
+2026-01-05 22:34:36,549 - INFO - 当前用时 7.85 秒
+2026-01-05 22:34:36,550 - INFO - 将种子集 写入位置: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/seeds-with-network.netscience/random_ris_coverage_seedNum-25_SSRNum-100000.txt
+2026-01-05 22:34:36,550 - INFO - 评估种子集: None
+2026-01-05 22:34:36,550 - INFO - 多进程评估开始，共有 6 个方法待评估...
+2026-01-05 22:34:36,550 - INFO - 启动进程池，Worker数量: 6
+2026-01-05 22:34:36,580 - INFO - [Process 9748] 开始评估方法: random, 种子数: 25
+2026-01-05 22:34:36,583 - INFO - [Process 9749] 开始评估方法: degreeTopM, 种子数: 25
+2026-01-05 22:34:36,585 - INFO - [Process 9750] 开始评估方法: pageRank, 种子数: 25
+2026-01-05 22:34:36,589 - INFO - [Process 9751] 开始评估方法: alpha_sort, 种子数: 25
+2026-01-05 22:34:36,591 - INFO - [Process 9752] 开始评估方法: importance_sort, 种子数: 25
+2026-01-05 22:34:36,593 - INFO - [Process 9753] 开始评估方法: ris_coverage, 种子数: 25
+2026-01-05 22:34:36,884 - INFO - [Process 9751] alpha_sort - 1000 sims 完成: E=12.87
+2026-01-05 22:34:36,885 - INFO - [Process 9748] random - 1000 sims 完成: E=12.45
+2026-01-05 22:34:36,889 - INFO - [Process 9752] importance_sort - 1000 sims 完成: E=12.61
+2026-01-05 22:34:36,890 - INFO - [Process 9750] pageRank - 1000 sims 完成: E=12.35
+2026-01-05 22:34:36,892 - INFO - [Process 9749] degreeTopM - 1000 sims 完成: E=12.29
+2026-01-05 22:34:36,895 - INFO - [Process 9753] ris_coverage - 1000 sims 完成: E=12.68
+2026-01-05 22:34:36,904 - INFO - 所有进程执行完毕，开始写入数据...
+2026-01-05 22:34:36,908 - INFO - 成功写入 6 条记录至 /root/pythonspace/data-test/network.netscience/2026-1-6-watch/E-activated-network.netscience/distribution-random/simuTimes-1000_random-dirichlet-[500, 500, 500]_rrNumSamples-100000.csv
+2026-01-05 22:34:36,908 - INFO - 保存评估文件至: /root/pythonspace/data-test/network.netscience/2026-1-6-watch/E-activated-network.netscience/distribution-random/simuTimes-1000_random-dirichlet-[500, 500, 500]_rrNumSamples-100000.csv
