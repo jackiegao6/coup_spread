@@ -324,7 +324,7 @@ def run_coupon_experiment(config: ExperimentConfig):
     run_evaluation(methods_with_seeds, config, experiment_data)
 
 
-#  python coupon_main.py --start 2300 --end 3000 --step 3000
+#  python coupon_main.py --start 100 --end 301 --step 100
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Run coupon experiment with range of seeds_num.")
@@ -336,12 +336,12 @@ if __name__ == '__main__':
     my_config = ExperimentConfig(
         # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin students 
         # network.netfacebookego network.netDog network.Amazon network.douban11core network.netYeast network.doubanrandom network.netactorcollaboration network.netfacebookego
-        data_set='network.netDog', 
+        data_set='network.netfacebookego', 
 
         simulation_times=[1000],  # [1000, 5000]
 
         # methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage', 'monterCarlo_CELF'],
-        methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage','monterCarlo_CELF'],
+        methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'ris_coverage'],
 
         monte_carlo_L=300,
 
@@ -359,8 +359,8 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainReJudge',  # AgainReJudge(接受过的用户可以再次接受) 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)(目的：不是让券的使用率最大，而是让券的尽可能地覆盖)
-        version='2026-1-7-3-[500,500,500]',
-        random_dirichlet=[50,50,900]
+        version='2026-1-8-[500,500,500]',
+        random_dirichlet=[500,500,500]
     )
 
     for num in range(args.start, args.end, args.step):

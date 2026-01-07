@@ -10,18 +10,19 @@ def evaluate_seed_set(
     num_simulations: int,
     tran_matrix: np.ndarray,
     distributions: tuple
-) -> tuple: # (mean, variance)
+) -> tuple: # (mean_E, variance, avg_steps, avg_redemptions)
 
     # 创建一个列表来存储每一次模拟的结果
     all_simulation_results = []
     all_steps_results = [] # 存储每轮的平均步数
+    all_redemption_results = []
 
 
     succ_dist, dis_dist, _, const_factor_dist = distributions
 
     for i in range(num_simulations):
         # print(f"\t\t当前模拟轮次: {i}")
-        success_vector, batch_steps  = simulation_function(
+        success_vector, batch_steps, batch_redemptions   = simulation_function(
             tran_matrix,
             seed_list,
             succ_dist,
@@ -35,12 +36,15 @@ def evaluate_seed_set(
         # batch_steps 是所有种子的总步数，除以种子数量得到平均步数
         avg_steps_this_round = batch_steps / len(seed_list) if len(seed_list) > 0 else 0
         all_steps_results.append(avg_steps_this_round)
+        # 记录本轮核销数
+        all_redemption_results.append(batch_redemptions) # <--- [新增]
 
     E_activated_users = np.mean(all_simulation_results)
     Var_activated_users = np.var(all_simulation_results)
     Final_Avg_Steps = np.mean(all_steps_results)
+    E_redemptions = np.mean(all_redemption_results) # <--- [新增]
 
-    return E_activated_users, Var_activated_users, Final_Avg_Steps
+    return E_activated_users, Var_activated_users, Final_Avg_Steps, E_redemptions
 
 
 def worker_evaluate_method(
@@ -61,7 +65,7 @@ def worker_evaluate_method(
 
     for num_sims in simulation_times:
         # 执行评估
-        E_activated, Var_activated, Avg_Steps  = evaluate_seed_set(
+        E_activated, Var_activated, Avg_Steps, E_redemptions   = evaluate_seed_set(
             seed_list=seed_set,
             simulation_function=single_sim_func,
             num_simulations=num_sims,
@@ -70,6 +74,9 @@ def worker_evaluate_method(
         )
 
         std_dev = np.sqrt(Var_activated)
+        # 【核心修改】计算真实的使用率
+        # 使用率 = 平均总核销数 / 发放的总券数
+        usage_rate = E_redemptions / seed_num if seed_num > 0 else 0.0
 
         result_data = {
             "method": method_name,
@@ -79,6 +86,7 @@ def worker_evaluate_method(
             "variance": Var_activated,
             "std_deviation": std_dev,
             "avg_steps": Avg_Steps, 
+            "usage_rate": usage_rate,         # 真实使用率
             "random_dirichlet": config_dict.get('random_dirichlet'),
             "degree_exponent_succ": config_dict.get('succ_degree_influence_factor'),
             "degree_exponent_dis": config_dict.get('dis_degree_influence_factor'),

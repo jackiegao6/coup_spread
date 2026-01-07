@@ -54,6 +54,8 @@ def monteCarlo_singleTime_improved2(
     activatedUsers = set()
     # 新增：记录这批种子总共走了多少步
     total_steps_batch = 0 
+    # <--- [新增] 记录本轮模拟总共消耗了多少张券
+    total_redemption_count = 0 
 
     for start_user in initial_deliverers: # 为每个初始投放者启动一个独立的随机游走
 
@@ -67,8 +69,8 @@ def monteCarlo_singleTime_improved2(
             # 【胜负手】引入 TTL 限制
             # Random/RIS 平均 8-9 步，DegreeTopM 平均 12 步
             # 设为 10，恰好卡死 DegreeTopM 的“击鼓传花”
-            if current_coupon_steps > 10:
-                break 
+            # if current_coupon_steps > 10:
+            #     break 
 
 
             rand_pro = np.random.rand()
@@ -80,6 +82,7 @@ def monteCarlo_singleTime_improved2(
                 # 当一个节点被激活过了 再次接触优惠券 可能会消耗掉券但不增加新激活人数
                 if rand_pro < succ_distribution[current_user]:
                     # 继续用
+                    total_redemption_count += 1  # <--- [新增] 消耗+1
                     break
                 elif rand_pro < (succ_distribution[current_user] + dis_distribution[current_user]):
                     # 继续丢弃
@@ -90,6 +93,7 @@ def monteCarlo_singleTime_improved2(
                 if rand_pro < succ_distribution[current_user]:
                     # 决定“使用”
                     activatedUsers.add(current_user)
+                    total_redemption_count += 1  # <--- [新增] 消耗+1
                     # 游走在此中断，因为优惠券被使用了
                     break
                 elif rand_pro < (succ_distribution[current_user] + dis_distribution[current_user]):
@@ -115,7 +119,7 @@ def monteCarlo_singleTime_improved2(
     # 将最终成功使用的节点集合转换为0/1向量
     success_vector = np.zeros(n, dtype=int)
     success_vector[list(activatedUsers)] = 1
-    return success_vector, total_steps_batch
+    return success_vector, total_steps_batch, total_redemption_count
 
 def monteCarlo_singleTime_improved2_AgainContinue(
     tranProMatrix: np.ndarray,
