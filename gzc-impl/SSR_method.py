@@ -100,17 +100,14 @@ def run_single_ssr_generation_without_path(args: Tuple) -> List[Set[int]]:
             neighbor_indices = indices[start_ptr:end_ptr]
             neighbor_probs = data[start_ptr:end_ptr]
 
-            # 【向量化随机判定】：一次性生成所有随机数，比循环快得多
-            rand_vals = np.random.rand(len(neighbor_indices))
-
-            # 找出成功激活的边
-            # 逻辑：如果 rand <= prob，说明反向边存在 (即 j 能够激活 curr)
-            success_mask = rand_vals <= neighbor_probs
-
-            # 得到成功反向传播的邻居
-            active_neighbors = neighbor_indices[success_mask]
-
-            for neighbor in active_neighbors:
+            # 【修复】使用multinomial采样而非独立级联
+            # 归一化概率并选择一个邻居（与simulation_algo一致）
+            prob_sum = np.sum(neighbor_probs)
+            if prob_sum > 0:
+                normalized_probs = neighbor_probs / prob_sum
+                # 从邻居中选择一个
+                selected_idx = np.random.choice(len(neighbor_indices), p=normalized_probs)
+                neighbor = neighbor_indices[selected_idx]
                 if neighbor not in rr_set:
                     rr_set.add(neighbor)
                     queue.append(neighbor)

@@ -336,31 +336,31 @@ if __name__ == '__main__':
     my_config = ExperimentConfig(
         # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin students 
         # network.netfacebookego network.netDog network.Amazon network.douban11core network.netYeast network.doubanrandom network.netactorcollaboration network.netfacebookego
-        data_set='network.netfacebookego', 
+        data_set='network.netDog', 
 
-        simulation_times=[1000],  # [1000, 5000]
+        simulation_times=[500],  # [1000, 5000]
 
         # methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage', 'monterCarlo_CELF'],
         methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'ris_coverage'],
 
         monte_carlo_L=300,
 
-        distribution_type='random',  # powerlaw powerlaw-old random poisson gamma
+        distribution_type='powerlaw',  # powerlaw powerlaw-old random poisson gamma
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
         num_samples=100000,
         # seeds_num=num,  # 32 64 128 256 512
 
-        succ_degree_influence_factor = 0.0, # 稍微降低大V自用率即可
-        dis_degree_influence_factor = 0.0,  # 降低丢弃，但别降到0
-        tran_degree_influence_factor = 0.0,  # 提高转发，但别提太高
+        succ_degree_influence_factor = 0.1, # 稍微降低大V自用率即可
+        dis_degree_influence_factor = 0.1,  # 降低丢弃，但别降到0
+        tran_degree_influence_factor = 0.5,  # 提高转发，但别提太高
 
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainReJudge',  # AgainReJudge(接受过的用户可以再次接受) 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)(目的：不是让券的使用率最大，而是让券的尽可能地覆盖)
-        version='2026-1-8-[500,500,500]',
-        random_dirichlet=[500,500,500]
+        version='2026-1-10-2',
+        random_dirichlet=[400, 100, 500]
     )
 
     for num in range(args.start, args.end, args.step):

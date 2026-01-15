@@ -121,6 +121,7 @@ def monteCarlo_singleTime_improved2(
     success_vector[list(activatedUsers)] = 1
     return success_vector, total_steps_batch, total_redemption_count
 
+#deprecated
 def monteCarlo_singleTime_improved2_AgainContinue(
     tranProMatrix: np.ndarray,
     initial_deliverers: list,
