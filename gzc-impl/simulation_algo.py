@@ -114,6 +114,8 @@ def monteCarlo_singleTime_improved2(
             else:
                 # 更新当前节点，继续游走
                 current_user = next_node
+                if current_coupon_steps > 6: 
+                    break
 
         total_steps_batch += current_coupon_steps
     # 将最终成功使用的节点集合转换为0/1向量
