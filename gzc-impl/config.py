@@ -11,7 +11,7 @@ class ExperimentConfig:
     distribution_type: str = 'random' # poisson gamma powerlaw random
     constant_factor_distri: str = 'random' # deprecated
     personalization: str = 'None'
-    data_prefix: str = '/root/pythonspace/data-test'
+    data_prefix: str = '/home/wen/work/coup_spread'
     method_type: str = 'None'
 
     num_steps: int = 1 # deprecated
@@ -39,7 +39,7 @@ class ExperimentConfig:
 
     @property
     def adj_file(self):
-        return f"{self.data_prefix}/datasets/{self.data_set}-adj.pkl"
+        return f"{self.data_prefix}/dataset/{self.data_set}-adj.pkl"
 
     # 当种子数和分布参数相同时 采用相同的概率分布
     def distribution_file(self, m = 0):
@@ -56,11 +56,10 @@ class ExperimentConfig:
                 return f"{self.data_prefix}/{self.data_set}/{self.version}/E-activated-{self.data_set}/distribution-{self.distribution_type}/tsd_{self.tran_degree_influence_factor}-{self.succ_degree_influence_factor}-{self.dis_degree_influence_factor}/single_sim_func-{self.single_sim_func}/simuTimes-{times}_seedNum-{m}_monteCarloL-{self.monte_carlo_L}_single_sim_func-{self.single_sim_func}_rrNumSamples-{self.num_samples}.csv"
             else:
                 return f"{self.data_prefix}/{self.data_set}/{self.version}/E-activated-{self.data_set}/distribution-{self.distribution_type}/tsd_{self.tran_degree_influence_factor}-{self.succ_degree_influence_factor}-{self.dis_degree_influence_factor}/single_sim_func-{self.single_sim_func}/simuTimes-{times}_monteCarloL-{self.monte_carlo_L}_single_sim_func-{self.single_sim_func}_rrNumSamples-{self.num_samples}.csv"
-        return f"{self.data_prefix}/{self.data_set}/{self.version}/E-activated-{self.data_set}/distribution-{self.distribution_type}/simuTimes-{times}_random-dirichlet-{self.random_dirichlet}_rrNumSamples-{self.num_samples}.csv"
-
+        return f"{self.data_prefix}/gzc-impl/results/{self.data_set}/{self.version}/{self.distribution_type}_SSRNum-{self.num_samples}-_seedNum-{self.seeds_num}_simuTimes-{times}.csv"
 
     def log_file(self):
         times = ",".join(str(time) for time in self.simulation_times)
         if self.distribution_type == "powerlaw" or self.distribution_type == "gamma" or self.distribution_type == "poisson":
-            return f"/root/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/{self.version}/{self.distribution_type}_SSRNum-{self.num_samples}-_seedNum-{self.seeds_num}_simuTimes-{times}_t-s-d-baseValue-{self.tran_base_value, self.succ_base_value, self.dis_base_value}_t-s-d-factor-{self.tran_degree_influence_factor, self.succ_degree_influence_factor, self.dis_degree_influence_factor}.log"
-        return f"/root/pythonspace/coup_spread/gzc-impl/logs/{self.data_set}/{self.version}/{self.distribution_type}_SSRNum-{self.num_samples}-_seedNum-{self.seeds_num}_simuTimes-{times}.log"
+            return f"{self.data_prefix}/gzc-impl/logs/{self.data_set}/{self.version}/{self.distribution_type}_SSRNum-{self.num_samples}-_seedNum-{self.seeds_num}_simuTimes-{times}_t-s-d-baseValue-{self.tran_base_value, self.succ_base_value, self.dis_base_value}_t-s-d-factor-{self.tran_degree_influence_factor, self.succ_degree_influence_factor, self.dis_degree_influence_factor}.log"
+        return f"{self.data_prefix}/gzc-impl/logs/{self.data_set}/{self.version}/{self.distribution_type}_SSRNum-{self.num_samples}-_seedNum-{self.seeds_num}_simuTimes-{times}.log"

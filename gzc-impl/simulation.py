@@ -78,6 +78,15 @@ def worker_evaluate_method(
         # 使用率 = 平均总核销数 / 发放的总券数
         usage_rate = E_redemptions / seed_num if seed_num > 0 else 0.0
 
+        # 1. 计算总曝光步数 (品牌曝光度)
+        total_steps = Avg_Steps * seed_num
+        
+        # 2. 计算你的创新综合得分 (E-ROI 营销综合收益)
+        # 权重设定可以自己在论文里圆：1个拉新 = 1.0分，1个老客复购 = 0.5分，1次普通曝光 = 0.1分
+        # 老客复购数 = 总核销数 (E_redemptions) - 唯一激活数 (E_activated)
+        repeat_purchases = E_redemptions - E_activated
+        comprehensive_score = (E_activated * 1.0) + (repeat_purchases * 0.5) + (total_steps * 0.1)
+
         result_data = {
             "method": method_name,
             "seed_num": seed_num,
@@ -86,14 +95,23 @@ def worker_evaluate_method(
             "variance": Var_activated,
             "std_deviation": std_dev,
             "avg_steps": Avg_Steps, 
-            "usage_rate": usage_rate,         # 真实使用率
+            "total_steps": total_steps,         # 写入CSV: 总曝光
+            "E_redemptions": E_redemptions,     # 写入CSV: 总核销
+            "comprehensive_score": comprehensive_score, # 写入CSV: 综合得分
+            "usage_rate": usage_rate,         
             "random_dirichlet": config_dict.get('random_dirichlet'),
             "degree_exponent_succ": config_dict.get('succ_degree_influence_factor'),
             "degree_exponent_dis": config_dict.get('dis_degree_influence_factor'),
             "degree_exponent_tran": config_dict.get('tran_degree_influence_factor')
         }
         results.append(result_data)
-        logging.info(f"[Process {os.getpid()}] {method_name} - {num_sims} sims 完成: E={E_activated:.2f}")
+        
+        # 【极其华丽的日志输出】
+        logging.info(f"[{method_name} - 种子:{seed_num}] "
+                     f"拉新:{E_activated:.1f}人 | "
+                     f"总销量:{E_redemptions:.1f}单 | "
+                     f"品牌曝光:{total_steps:.1f}次 | "
+                     f"🌟综合得分:{comprehensive_score:.1f}")
 
     return results
 

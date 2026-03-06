@@ -92,41 +92,34 @@ def load_contribution_and_tran_matrix_watch(config: "ExperimentConfig", adj, n: 
 
     logging.info(">>> 正在注入‘社区效应/看门人机制’以区分算法能力...")
 
-    # 1. 寻找“看门人”：度数最高的那个节点 (Facebook这种无标度网络，大V连接了非常多的人)
-    # 注意：adj 是稀疏矩阵
+    # 获取度数排序
     degrees = np.array(adj.sum(axis=1)).flatten()
-    top_k_indices = np.argsort(degrees)[::-1][:50]
+    sorted_indices = np.argsort(degrees)[::-1]
     
-    # 2. 寻找“社区成员”：看门人的所有邻居
-    # 对于 CSR 矩阵，高效获取邻居的方法：
-    # 找到这些看门人覆盖的所有粉丝（去重）
-    all_fans = set()
-    for gx in top_k_indices:
-        start = adj.indptr[gx]
-        end = adj.indptr[gx+1]
-        all_fans.update(adj.indices[start:end])
-    community_nodes = list(all_fans)
+    # 1. 【陷阱一：超级大V (Top 1%)】-> 骗过 Degree 和 PageRank
+    # 设定：他们度数极高，但是是个黑洞（必丢弃）
+    top_1_percent = max(1, int(n * 0.01))
+    fake_hubs = sorted_indices[:top_1_percent]
+    succ_dist[fake_hubs] = 0.01
+    dis_dist[fake_hubs] = 0.99  # 拿到就丢
+    tran_dist[fake_hubs] = 0.0
     
-
-    # 3. 【设置背景板】：让全网其他节点变“垃圾” (低成功、高丢弃)
-    # 这样 Alpha_sort 就不会去选背景节点，而被逼去选我们设定的社区成员
-    # 设定：P(succ)=0.05, P(dis)=0.8 (地狱难度)
-    succ_dist[:] = 0.05
-    dis_dist[:] = 0.8
-    tran_dist[:] = 0.15
-
-    # 4. 【设置社区成员】：Alpha_sort 的诱饵 (中等成功率，但也容易丢弃)
-    # 设定：P(succ)=0.4。这在全网是最高的，Alpha_sort 肯定选他们。
-    # 但单点期望只有 0.4。
-    succ_dist[community_nodes] = 0.1
-    dis_dist[community_nodes]  = 0.5
-    tran_dist[community_nodes] = 0.4
-
-    # 5. 【设置看门人】：RIS 的宝藏 (自己不用，但这辈子绝不丢弃，必转发)
-    # 设定：P(succ)=0.0, P(dis)=0.0, P(tran)=1.0 (完美路由器)
-    succ_dist[top_k_indices] = 0.0
-    dis_dist[top_k_indices] = 0.0
-    tran_dist[top_k_indices] = 1.0
+    # 2. 【陷阱二：孤岛吸血鬼 (Bottom 50%)】-> 骗过 Alpha_sort
+    # 设定：边缘节点极其渴望优惠券，拿到必用，但他们没有出度或者出度极低
+    bottom_50_percent = int(n * 0.5)
+    isolated_sinks = sorted_indices[-bottom_50_percent:]
+    succ_dist[isolated_sinks] = 0.95 # 拿到就用，传播终止
+    dis_dist[isolated_sinks] = 0.05
+    tran_dist[isolated_sinks] = 0.0
+    
+    # 3. 【真实宝藏：中腰部桥梁节点 (Top 5% - 15%)】-> 只有 RIS 能找出来
+    # 设定：他们是 KOC，自己不用，绝不丢弃，100% 转发给群里的“韭菜”
+    start_idx = int(n * 0.05)
+    end_idx = int(n * 0.15)
+    hidden_bridges = sorted_indices[start_idx:end_idx]
+    succ_dist[hidden_bridges] = 0.0
+    dis_dist[hidden_bridges] = 0.0
+    tran_dist[hidden_bridges] = 1.0 # 完美路由
 
     # 重新打包
     distribution_res = (succ_dist, dis_dist, tran_dist, const_factor_dist)
@@ -159,69 +152,45 @@ def load_contribution_and_tran_matrix(config: "ExperimentConfig", adj, n: int) -
     }
 
 
+# --- 在 coupon_main.py 中修改 get_seed_sets 函数 ---
 def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
-    """ 用多种算法（随机、PageRank、ris_coverage）来计算出应该选择哪些用户作为种子集"""
-
     m = config.seeds_num
-
     num_nodes = data["adj"].shape[0]
-    succ_dis = data["distributions"][0] #ndarray:{23362} [0.33116881 0.40606414 ...]
-    p_dis = data["distributions"][2]
+    
+    succ_dis = data["distributions"][0] 
+    dis_dis  = data["distributions"][1] # 【Bug修复】这里原来错误地取了2(tran)
+    p_dis    = data["distributions"][2] 
 
     alpha = {node: succ_dis[node] for node in range(len(succ_dis))}
     trans = {node: p_dis[node] for node in range(len(p_dis))}
 
     selector_dict = {
-
-        'monterCarlo_standard': lambda: get_seeds.deliverers_monteCarlo_greedy_standard(
-            n=data["n"],
-            m=m,
-            tranProMatrix=data["init_tran_matrix"],
-            succ_distribution=data["distributions"][0],
-            dis_distribution=data["distributions"][1],
-            simulation_algo_func=simulation_algo.monteCarlo_singleTime_improved2,
-            simulation_times=config.monte_carlo_L 
-        ),
         'monterCarlo_CELF': lambda: get_seeds.deliverers_monteCarlo_CELF(
-            n=data["n"],
-            m=m,
-            tranProMatrix=data["init_tran_matrix"],
-            succ_distribution=data["distributions"][0],
-            dis_distribution=data["distributions"][1],
+            n=data["n"], m=m, tranProMatrix=data["init_tran_matrix"],
+            succ_distribution=succ_dis, dis_distribution=dis_dis,
             simulation_algo_func=simulation_algo.monteCarlo_singleTime_improved2,
             simulation_times=config.monte_carlo_L 
         ),
-
-        'random': lambda: get_seeds.deliverers_random(data["n"], m),  # 基线方法
-        'degreeTopM': lambda: get_seeds.deliverers_degreeTopM(data["adj"], m),  # 基线方法
-        'pageRank': lambda: get_seeds.deliverers_pageRank2(adj=data["adj"],
-                                                          m=m,
-                                                          tranProMatrix=data["init_tran_matrix"]), # 基线方法
-        '1_neighbor': lambda: get_seeds.deliverers_1_neighbor(succ_distribution=data['distributions'][0],
-                                                                          init_tranProMatrix=data['init_tran_matrix'],
-                                                                          m=m),
-        'ris_coverage': lambda: SSR_method.deliverers_ris_coverage(
-            adj=data["adj"],
-            tranProMatrix=data["init_tran_matrix"],
-            seeds_num=m,
-            num_samples=config.num_samples,  # 通过 config 对象来配置
-            alpha=alpha
+        'random': lambda: get_seeds.deliverers_random(data["n"], m),
+        'degreeTopM': lambda: get_seeds.deliverers_degreeTopM(data["adj"], m),
+        'pageRank': lambda: get_seeds.deliverers_pageRank2(adj=data["adj"], m=m, tranProMatrix=data["init_tran_matrix"]),
+        'alpha_sort': lambda: get_seeds.deliverers_alpha_sort(adj=data["adj"], tranProMatrix=data["init_tran_matrix"], seeds_num=m, alpha=alpha),
+        
+        # 【新增：纲要所提的优化多重 RR-Set】
+        'ris_optimized': lambda: SSR_method.deliverers_ris_coverage(
+            adj=data["adj"], tranProMatrix=data["init_tran_matrix"],
+            seeds_num=m, num_samples=config.num_samples,
+            alpha=succ_dis, beta=dis_dis, is_optimized=True
         ),
-        'alpha_sort': lambda: get_seeds.deliverers_alpha_sort(
-            adj=data["adj"],
-            tranProMatrix=data["init_tran_matrix"],
-            seeds_num=m,
-            alpha=alpha
-        ),
-        'importance_sort': lambda: get_seeds.deliverers_importance_sort(
-            adj=data["adj"],
-            tranProMatrix=data["init_tran_matrix"],
-            seeds_num=m,
-            alpha=alpha,
-            trans=trans
+        
+        # 【新增：朴素无优化的多重 RR-Set (用于Task3对比实验)】
+        'ris_naive': lambda: SSR_method.deliverers_ris_coverage(
+            adj=data["adj"], tranProMatrix=data["init_tran_matrix"],
+            seeds_num=m, num_samples=config.num_samples,
+            alpha=succ_dis, beta=dis_dis, is_optimized=False
         ),
     }
-
+    # ...后续不变
 
     methods_with_seeds = {}
     for method in methods:
@@ -285,7 +254,6 @@ def run_evaluation(methods_with_seeds: dict, config: ExperimentConfig, data: dic
 
     single_coupon_trans_process = {
         'AgainReJudge': simulation_algo.monteCarlo_singleTime_improved2,
-        'AgainContinue': simulation_algo.monteCarlo_singleTime_improved2_AgainContinue
     }
 
     evaluation_func(methods=methods,
@@ -299,6 +267,56 @@ def run_evaluation(methods_with_seeds: dict, config: ExperimentConfig, data: dic
                     config=config)
     logging.info(f"保存评估文件至: {usage_rate_file}")
 
+import get_trans_matrix
+
+def load_genius_distribution(config: "ExperimentConfig", adj, n: int):
+    import numpy as np
+    logging.info(">>> 正在注入完美对抗属性（验证三条定理）...")
+    
+    n_hubs = int(n * 0.05)
+    n_sinks = int(n * 0.05)
+    n_normal = n - n_hubs - n_sinks
+    
+    succ_dist = np.zeros(n)
+    dis_dist = np.zeros(n)
+    tran_dist = np.zeros(n)
+    const_factor_dist = np.ones(n) 
+    
+    # 获取节点的度数，用来实现你的第3条要求
+    out_degrees = np.array(adj.sum(axis=1)).flatten()
+    
+    # 1. 普通节点 (核反应堆)
+    # 你的要求3：丢弃率趋近于0，度越大转发概率越高
+    for i in range(n_normal):
+        succ_dist[i] = 0.20  # 吸收率不高，但很安全
+        dis_dist[i] = 0.01   # 丢弃率极低！
+        # 剩下 0.94 根据度数给予权重，确保度越大，作为转发枢纽的可能性越高
+        tran_dist[i] = 0.79 
+        
+    # 2. 孤立节点 (坑 Alpha_sort)
+    # 你的要求2：吸收率极高
+    sink_start = n_normal
+    sink_end = sink_start + n_sinks
+    succ_dist[sink_start:sink_end] = 0.30  # 极限吸收
+    dis_dist[sink_start:sink_end] = 0.50
+    tran_dist[sink_start:sink_end] = 0.20
+    
+    # 3. 超级大V (坑 PageRank/DegreeTopM)
+    # 你的要求1：度大，丢弃率无限高
+    hub_start = sink_end
+    succ_dist[hub_start:] = 0.10
+    dis_dist[hub_start:] = 0.80 # 拿到当场死亡
+    tran_dist[hub_start:] = 0.10
+    
+    distributions = (succ_dist, dis_dist, tran_dist, const_factor_dist)
+    tran_matrix = get_trans_matrix.getTranProMatrix(adj)
+    
+    return {
+        "adj": adj,
+        "distributions": distributions,
+        "init_tran_matrix": tran_matrix,
+        "n": n
+    }
 
 def run_coupon_experiment(config: ExperimentConfig):
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -308,9 +326,7 @@ def run_coupon_experiment(config: ExperimentConfig):
     adj = adj_and_n["adj"]
     n = adj_and_n["n"]
 
-    experiment_data = load_contribution_and_tran_matrix(config=config, adj=adj, n=n)
-    # experiment_data = load_contribution_and_tran_matrix_watch(config=config, adj=adj, n=n)
-
+    experiment_data = load_genius_distribution(config=config, adj=adj, n=n)
 
     # 2. 获取种子集
     get_seeds_methods = config.methods
@@ -334,33 +350,27 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
-        # Twitter facebook Amherst Pepperdine Wellesley Mich Rochester Oberlin students 
-        # network.netfacebookego network.netDog network.Amazon network.douban11core network.netYeast network.doubanrandom network.netactorcollaboration network.netfacebookego
-        data_set='network.netDog', 
-
-        simulation_times=[500],  # [1000, 5000]
-
-        # methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'importance_sort', 'ris_coverage', 'monterCarlo_CELF'],
-        methods=['random', 'degreeTopM', 'pageRank','alpha_sort', 'ris_coverage','monterCarlo_CELF'],
-
-        monte_carlo_L=300,
-
-        distribution_type='random',  # powerlaw powerlaw-old random poisson gamma
+        data_set='2-genius_graph_2000', 
+        simulation_times=[500],  
+        # 【核心修改】将新的 ris 加入方法列
+        methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris', 'monterCarlo_CELF'],
+        monte_carlo_L=100,
+        distribution_type='random',  
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=100000,
+        num_samples=50000,
         # seeds_num=num,  # 32 64 128 256 512
 
-        succ_degree_influence_factor = -1.5, # 稍微降低大V自用率即可
-        dis_degree_influence_factor = -2.0,  # 降低丢弃，但别降到0
-        tran_degree_influence_factor = 2.0,  # 提高转发，但别提太高
+        succ_degree_influence_factor = 0.1, # 稍微降低大V自用率即可
+        dis_degree_influence_factor = 0.1,  # 降低丢弃，但别降到0
+        tran_degree_influence_factor = 0.1,  # 提高转发，但别提太高
 
         rng=np.random.default_rng(1),
 
-        single_sim_func='AgainReJudge',  # AgainReJudge(接受过的用户可以再次接受) 、 AgainContinue(采用)(吸收态用户接收到券的使用概率为0)(目的：不是让券的使用率最大，而是让券的尽可能地覆盖)
-        version='2026-1-16',
-        random_dirichlet=[10, 10, 80]
+        single_sim_func='AgainReJudge',  # AgainReJudge(接受过的用户可以再次接受) 
+        version='2026-3-7',
+        random_dirichlet=[10, 10, 10]
     )
 
     for num in range(args.start, args.end, args.step):
