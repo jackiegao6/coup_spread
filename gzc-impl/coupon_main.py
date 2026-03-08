@@ -273,8 +273,8 @@ def load_genius_distribution(config: "ExperimentConfig", adj, n: int):
     import numpy as np
     logging.info(">>> 正在注入完美对抗属性（验证三条定理）...")
     
-    n_hubs = int(n * 0.05)
-    n_sinks = int(n * 0.05)
+    n_hubs = int(n * 0.1)
+    n_sinks = int(n * 0.1)
     n_normal = n - n_hubs - n_sinks
     
     succ_dist = np.zeros(n)
@@ -350,10 +350,11 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
-        data_set='2-genius_graph_2000', 
+        data_set='network.netfacebookego', 
         simulation_times=[500],  
         # 【核心修改】将新的 ris 加入方法列
-        methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris', 'monterCarlo_CELF'],
+        # methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_optimized'],
+        methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_optimized', 'monterCarlo_CELF'],
         monte_carlo_L=100,
         distribution_type='random',  
         personalization='None',  # firstUnused

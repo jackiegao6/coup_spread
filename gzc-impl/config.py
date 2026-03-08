@@ -39,7 +39,7 @@ class ExperimentConfig:
 
     @property
     def adj_file(self):
-        return f"{self.data_prefix}/dataset/{self.data_set}-adj.pkl"
+        return f"{self.data_prefix}/dataset/network/{self.data_set}-adj.pkl"
 
     # 当种子数和分布参数相同时 采用相同的概率分布
     def distribution_file(self, m = 0):

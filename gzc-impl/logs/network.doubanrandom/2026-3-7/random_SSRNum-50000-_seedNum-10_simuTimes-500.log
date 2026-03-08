@@ -1,0 +1,248 @@
+2026-03-08 21:48:00,432 - INFO - 加载数据集: network.doubanrandom
+2026-03-08 21:48:00,433 - INFO - --- 矩阵分析 ---
+2026-03-08 21:48:00,433 - INFO - 节点数 (N): 4723
+2026-03-08 21:48:00,433 - INFO - 边数 (E): 11774
+2026-03-08 21:48:00,433 - INFO - 密度 (Density): 0.00052782 (越小越稀疏)
+2026-03-08 21:48:00,433 - INFO - 稀疏度 (Sparsity): 0.99947218 (越接近1越稀疏)
+2026-03-08 21:48:00,433 - INFO - 平均度数 (Avg Degree): 2.49
+2026-03-08 21:48:00,433 - INFO - >>> 正在注入完美对抗属性（验证三条定理）...
+2026-03-08 21:48:00,466 - INFO - 首次生成种子集 random
+2026-03-08 21:48:00,466 - INFO - 执行当前算法开始: random
+2026-03-08 21:48:00,466 - INFO - 数据集节点总数:  n = 4723, m = 10
+2026-03-08 21:48:00,466 - INFO - 选择 10  [1901, 3375, 2940, 4044, 3161, 1147, 2091, 3051, 4524, 3618]
+
+2026-03-08 21:48:00,466 - INFO - 当前用时 0.00 秒
+2026-03-08 21:48:00,466 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_random_seedNum-10_SSRNum-50000.txt
+2026-03-08 21:48:00,467 - INFO - 首次生成种子集 degreeTopM
+2026-03-08 21:48:00,467 - INFO - 执行当前算法开始: degreeTopM
+2026-03-08 21:48:00,467 - INFO - 依据: 选择连接数（度数）最多的节点。
+2026-03-08 21:48:00,467 - INFO - 选择的 Top M 节点及其度数:
+2026-03-08 21:48:00,467 - INFO - 
+2026-03-08 21:48:00,467 - INFO - 当前用时 0.00 秒
+2026-03-08 21:48:00,467 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_degreeTopM_seedNum-10_SSRNum-50000.txt
+2026-03-08 21:48:00,467 - INFO - 首次生成种子集 pageRank
+2026-03-08 21:48:00,467 - INFO - 执行当前算法开始: pageRank
+2026-03-08 21:48:00,468 - INFO - --- Running: PageRank (on tranProMatrix) Top M ---
+2026-03-08 21:48:00,707 - INFO - Selected PageRank seeds: [1392, 1843, 121, 4050, 4335, 1572, 1414, 1798, 3687, 1370]
+2026-03-08 21:48:00,707 - INFO - 当前用时 0.24 秒
+2026-03-08 21:48:00,707 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_pageRank_seedNum-10_SSRNum-50000.txt
+2026-03-08 21:48:00,707 - INFO - 首次生成种子集 alpha_sort
+2026-03-08 21:48:00,707 - INFO - 执行当前算法开始: alpha_sort
+2026-03-08 21:48:00,708 - INFO - 4723 个节点的alpha值降序排序 done
+2026-03-08 21:48:00,708 - INFO - ==============>> [(3779, np.float64(0.3)), (3780, np.float64(0.3)), (3781, np.float64(0.3)), (3782, np.float64(0.3)), (3783, np.float64(0.3)), (3784, np.float64(0.3)), (3785, np.float64(0.3)), (3786, np.float64(0.3)), (3787, np.float64(0.3)), (3788, np.float64(0.3))]
+2026-03-08 21:48:00,708 - INFO - 
+选择的种子集 (按alpha排序): [3779, 3780, 3781, 3782, 3783, 3784, 3785, 3786, 3787, 3788]
+
+2026-03-08 21:48:00,708 - INFO - 当前用时 0.00 秒
+2026-03-08 21:48:00,708 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_alpha_sort_seedNum-10_SSRNum-50000.txt
+2026-03-08 21:48:00,709 - INFO - 首次生成种子集 ris_optimized
+2026-03-08 21:48:00,709 - INFO - 执行当前算法开始: ris_optimized
+2026-03-08 21:48:00,956 - INFO - 图初始化完成，节点数: 4723，当前模式: 优化采样
+2026-03-08 21:48:00,956 - INFO - 开始生成 50000 组多重RR-Set...
+2026-03-08 21:48:02,291 - INFO - 生成完毕。耗时: 1.33 秒。
+2026-03-08 21:48:02,298 - INFO - 开始基于多重RR集贪心选择最优种子...
+2026-03-08 21:48:02,524 - INFO - 选种完毕。耗时: 0.23 秒。估算范围: 13.33
+2026-03-08 21:48:02,594 - INFO - 当前用时 1.89 秒
+2026-03-08 21:48:02,595 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_ris_optimized_seedNum-10_SSRNum-50000.txt
+2026-03-08 21:48:02,595 - INFO - 首次生成种子集 monterCarlo_CELF
+2026-03-08 21:48:02,595 - INFO - 执行当前算法开始: monterCarlo_CELF
+2026-03-08 21:48:02,595 - INFO - --- Running: CELF Greedy Monte Carlo (Sims=100) ---
+2026-03-08 21:48:02,595 - INFO - Step 0: 初始化所有节点的边际增益...
+2026-03-08 21:48:52,676 - INFO - Seed 1: 1636, Spread: 0.98
+2026-03-08 21:48:56,543 - INFO - Seed 2: 3068, Gain: 0.93, Total: 1.91
+2026-03-08 21:48:56,746 - INFO - Seed 3: 672, Gain: 0.92, Total: 2.83
+2026-03-08 21:48:56,812 - INFO - Seed 4: 19, Gain: 0.93, Total: 3.76
+2026-03-08 21:48:57,154 - INFO - Seed 5: 367, Gain: 0.96, Total: 4.72
+2026-03-08 21:49:00,071 - INFO - Seed 6: 3322, Gain: 0.93, Total: 5.65
+2026-03-08 21:49:21,305 - INFO - Seed 7: 2263, Gain: 0.94, Total: 6.59
+2026-03-08 21:49:36,287 - INFO - Seed 8: 1481, Gain: 0.99, Total: 7.58
+2026-03-08 21:51:07,346 - INFO - Seed 9: 1398, Gain: 0.82, Total: 8.40
+2026-03-08 21:51:30,822 - INFO - Seed 10: 164, Gain: 0.83, Total: 9.23
+2026-03-08 21:51:30,823 - INFO - CELF 完成，总耗时: 208.23s
+2026-03-08 21:51:30,823 - INFO - 当前用时 208.23 秒
+2026-03-08 21:51:30,824 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_monterCarlo_CELF_seedNum-10_SSRNum-50000.txt
+2026-03-08 21:51:30,825 - INFO - 评估种子集: None
+2026-03-08 21:51:30,826 - INFO - 多进程评估开始，共有 6 个方法待评估...
+2026-03-08 21:51:30,826 - INFO - 启动进程池，Worker数量: 6
+2026-03-08 21:51:31,599 - INFO - [Process 3628062] 开始评估方法: random, 种子数: 10
+2026-03-08 21:51:32,157 - INFO - [random - 种子:10] 拉新:6.8人 | 总销量:6.8单 | 品牌曝光:33.5次 | 🌟综合得分:10.2
+2026-03-08 21:51:32,198 - INFO - [Process 3628063] 开始评估方法: degreeTopM, 种子数: 10
+2026-03-08 21:51:32,697 - INFO - [degreeTopM - 种子:10] 拉新:6.2人 | 总销量:6.2单 | 品牌曝光:30.8次 | 🌟综合得分:9.3
+2026-03-08 21:51:32,796 - INFO - [Process 3628064] 开始评估方法: pageRank, 种子数: 10
+2026-03-08 21:51:33,300 - INFO - [pageRank - 种子:10] 拉新:6.3人 | 总销量:6.3单 | 品牌曝光:31.1次 | 🌟综合得分:9.4
+2026-03-08 21:51:33,395 - INFO - [Process 3628065] 开始评估方法: alpha_sort, 种子数: 10
+2026-03-08 21:51:33,550 - INFO - [alpha_sort - 种子:10] 拉新:4.3人 | 总销量:4.3单 | 品牌曝光:16.0次 | 🌟综合得分:5.9
+2026-03-08 21:51:33,991 - INFO - [Process 3628066] 开始评估方法: ris_optimized, 种子数: 10
+2026-03-08 21:51:34,584 - INFO - [Process 3628067] 开始评估方法: monterCarlo_CELF, 种子数: 10
+2026-03-08 21:51:34,662 - INFO - [ris_optimized - 种子:10] 拉新:7.8人 | 总销量:7.8单 | 品牌曝光:38.7次 | 🌟综合得分:11.7
+2026-03-08 21:51:35,415 - INFO - [monterCarlo_CELF - 种子:10] 拉新:9.1人 | 总销量:9.1单 | 品牌曝光:44.7次 | 🌟综合得分:13.5
+2026-03-08 21:51:35,435 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-08 21:51:35,462 - INFO - 成功写入 6 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.doubanrandom/2026-3-7/random_SSRNum-50000-_seedNum-10_simuTimes-500.csv
+2026-03-08 21:51:35,462 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.doubanrandom/2026-3-7/random_SSRNum-50000-_seedNum-10_simuTimes-500.csv
+2026-03-08 21:51:35,467 - INFO - 加载数据集: network.doubanrandom
+2026-03-08 21:51:35,468 - INFO - --- 矩阵分析 ---
+2026-03-08 21:51:35,468 - INFO - 节点数 (N): 4723
+2026-03-08 21:51:35,468 - INFO - 边数 (E): 11774
+2026-03-08 21:51:35,468 - INFO - 密度 (Density): 0.00052782 (越小越稀疏)
+2026-03-08 21:51:35,468 - INFO - 稀疏度 (Sparsity): 0.99947218 (越接近1越稀疏)
+2026-03-08 21:51:35,468 - INFO - 平均度数 (Avg Degree): 2.49
+2026-03-08 21:51:35,468 - INFO - >>> 正在注入完美对抗属性（验证三条定理）...
+2026-03-08 21:51:35,502 - INFO - 首次生成种子集 random
+2026-03-08 21:51:35,502 - INFO - 执行当前算法开始: random
+2026-03-08 21:51:35,502 - INFO - 数据集节点总数:  n = 4723, m = 20
+2026-03-08 21:51:35,503 - INFO - 选择 20  [2798, 3650, 3391, 2940, 1834, 4396, 2165, 206, 2670, 142, 1254, 2764, 895, 2435, 2756, 814, 1103, 3909, 936, 4554]
+
+2026-03-08 21:51:35,503 - INFO - 当前用时 0.00 秒
+2026-03-08 21:51:35,503 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_random_seedNum-20_SSRNum-50000.txt
+2026-03-08 21:51:35,503 - INFO - 首次生成种子集 degreeTopM
+2026-03-08 21:51:35,503 - INFO - 执行当前算法开始: degreeTopM
+2026-03-08 21:51:35,503 - INFO - 依据: 选择连接数（度数）最多的节点。
+2026-03-08 21:51:35,503 - INFO - 选择的 Top M 节点及其度数:
+2026-03-08 21:51:35,503 - INFO - 
+2026-03-08 21:51:35,503 - INFO - 当前用时 0.00 秒
+2026-03-08 21:51:35,504 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_degreeTopM_seedNum-20_SSRNum-50000.txt
+2026-03-08 21:51:35,504 - INFO - 首次生成种子集 pageRank
+2026-03-08 21:51:35,504 - INFO - 执行当前算法开始: pageRank
+2026-03-08 21:51:35,504 - INFO - --- Running: PageRank (on tranProMatrix) Top M ---
+2026-03-08 21:51:35,760 - INFO - Selected PageRank seeds: [1392, 1843, 121, 4050, 4335, 1572, 1414, 1798, 3687, 1370, 2217, 2105, 2056, 2173, 908, 3719, 4538, 3975, 1958, 710]
+2026-03-08 21:51:35,761 - INFO - 当前用时 0.26 秒
+2026-03-08 21:51:35,761 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_pageRank_seedNum-20_SSRNum-50000.txt
+2026-03-08 21:51:35,761 - INFO - 首次生成种子集 alpha_sort
+2026-03-08 21:51:35,762 - INFO - 执行当前算法开始: alpha_sort
+2026-03-08 21:51:35,763 - INFO - 4723 个节点的alpha值降序排序 done
+2026-03-08 21:51:35,763 - INFO - ==============>> [(3779, np.float64(0.3)), (3780, np.float64(0.3)), (3781, np.float64(0.3)), (3782, np.float64(0.3)), (3783, np.float64(0.3)), (3784, np.float64(0.3)), (3785, np.float64(0.3)), (3786, np.float64(0.3)), (3787, np.float64(0.3)), (3788, np.float64(0.3))]
+2026-03-08 21:51:35,763 - INFO - 
+选择的种子集 (按alpha排序): [3779, 3780, 3781, 3782, 3783, 3784, 3785, 3786, 3787, 3788, 3789, 3790, 3791, 3792, 3793, 3794, 3795, 3796, 3797, 3798]
+
+2026-03-08 21:51:35,764 - INFO - 当前用时 0.00 秒
+2026-03-08 21:51:35,764 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_alpha_sort_seedNum-20_SSRNum-50000.txt
+2026-03-08 21:51:35,764 - INFO - 首次生成种子集 ris_optimized
+2026-03-08 21:51:35,764 - INFO - 执行当前算法开始: ris_optimized
+2026-03-08 21:51:36,034 - INFO - 图初始化完成，节点数: 4723，当前模式: 优化采样
+2026-03-08 21:51:36,034 - INFO - 开始生成 50000 组多重RR-Set...
+2026-03-08 21:51:38,393 - INFO - 生成完毕。耗时: 2.36 秒。
+2026-03-08 21:51:38,400 - INFO - 开始基于多重RR集贪心选择最优种子...
+2026-03-08 21:51:38,803 - INFO - 选种完毕。耗时: 0.40 秒。估算范围: 28.84
+2026-03-08 21:51:38,898 - INFO - 当前用时 3.13 秒
+2026-03-08 21:51:38,899 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_ris_optimized_seedNum-20_SSRNum-50000.txt
+2026-03-08 21:51:38,899 - INFO - 首次生成种子集 monterCarlo_CELF
+2026-03-08 21:51:38,899 - INFO - 执行当前算法开始: monterCarlo_CELF
+2026-03-08 21:51:38,899 - INFO - --- Running: CELF Greedy Monte Carlo (Sims=100) ---
+2026-03-08 21:51:38,899 - INFO - Step 0: 初始化所有节点的边际增益...
+2026-03-08 21:52:29,571 - INFO - Seed 1: 1432, Spread: 0.99
+2026-03-08 21:52:29,713 - INFO - Seed 2: 520, Gain: 0.97, Total: 1.96
+2026-03-08 21:52:33,385 - INFO - Seed 3: 1536, Gain: 0.93, Total: 2.89
+2026-03-08 21:52:35,143 - INFO - Seed 4: 1584, Gain: 0.93, Total: 3.82
+2026-03-08 21:52:38,762 - INFO - Seed 5: 2041, Gain: 0.91, Total: 4.73
+2026-03-08 21:52:49,500 - INFO - Seed 6: 1997, Gain: 0.91, Total: 5.64
+2026-03-08 21:52:53,629 - INFO - Seed 7: 3698, Gain: 0.89, Total: 6.53
+2026-03-08 21:52:56,421 - INFO - Seed 8: 759, Gain: 0.93, Total: 7.46
+2026-03-08 21:53:10,005 - INFO - Seed 9: 1501, Gain: 0.93, Total: 8.39
+2026-03-08 21:53:19,692 - INFO - Seed 10: 2208, Gain: 0.89, Total: 9.28
+2026-03-08 21:53:23,845 - INFO - Seed 11: 684, Gain: 0.87, Total: 10.15
+2026-03-08 21:53:27,797 - INFO - Seed 12: 1589, Gain: 0.91, Total: 11.06
+2026-03-08 21:53:33,893 - INFO - Seed 13: 2930, Gain: 0.91, Total: 11.97
+2026-03-08 21:53:36,139 - INFO - Seed 14: 3418, Gain: 0.88, Total: 12.85
+2026-03-08 21:53:39,091 - INFO - Seed 15: 20, Gain: 0.93, Total: 13.78
+2026-03-08 21:53:39,846 - INFO - Seed 16: 85, Gain: 0.89, Total: 14.67
+2026-03-08 21:53:40,899 - INFO - Seed 17: 227, Gain: 0.93, Total: 15.60
+2026-03-08 21:55:37,050 - INFO - Seed 18: 1344, Gain: 0.83, Total: 16.43
+2026-03-08 21:56:54,927 - INFO - Seed 19: 3375, Gain: 0.86, Total: 17.29
+2026-03-08 21:57:03,252 - INFO - Seed 20: 913, Gain: 0.82, Total: 18.11
+2026-03-08 21:57:03,252 - INFO - CELF 完成，总耗时: 324.35s
+2026-03-08 21:57:03,252 - INFO - 当前用时 324.35 秒
+2026-03-08 21:57:03,253 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_monterCarlo_CELF_seedNum-20_SSRNum-50000.txt
+2026-03-08 21:57:03,254 - INFO - 评估种子集: None
+2026-03-08 21:57:03,254 - INFO - 多进程评估开始，共有 6 个方法待评估...
+2026-03-08 21:57:03,254 - INFO - 启动进程池，Worker数量: 6
+2026-03-08 21:57:04,025 - INFO - [Process 3632642] 开始评估方法: random, 种子数: 20
+2026-03-08 21:57:04,628 - INFO - [Process 3632643] 开始评估方法: degreeTopM, 种子数: 20
+2026-03-08 21:57:05,077 - INFO - [random - 种子:20] 拉新:12.7人 | 总销量:12.7单 | 品牌曝光:63.5次 | 🌟综合得分:19.0
+2026-03-08 21:57:05,231 - INFO - [Process 3632644] 开始评估方法: pageRank, 种子数: 20
+2026-03-08 21:57:05,582 - INFO - [degreeTopM - 种子:20] 拉新:11.6人 | 总销量:11.7单 | 品牌曝光:59.2次 | 🌟综合得分:17.5
+2026-03-08 21:57:05,840 - INFO - [Process 3632645] 开始评估方法: alpha_sort, 种子数: 20
+2026-03-08 21:57:06,156 - INFO - [alpha_sort - 种子:20] 拉新:8.6人 | 总销量:8.6单 | 品牌曝光:32.8次 | 🌟综合得分:11.9
+2026-03-08 21:57:06,264 - INFO - [pageRank - 种子:20] 拉新:12.6人 | 总销量:12.6单 | 品牌曝光:62.8次 | 🌟综合得分:18.9
+2026-03-08 21:57:06,440 - INFO - [Process 3632646] 开始评估方法: ris_optimized, 种子数: 20
+2026-03-08 21:57:07,035 - INFO - [Process 3632647] 开始评估方法: monterCarlo_CELF, 种子数: 20
+2026-03-08 21:57:07,742 - INFO - [ris_optimized - 种子:20] 拉新:15.4人 | 总销量:15.5单 | 品牌曝光:76.0次 | 🌟综合得分:23.1
+2026-03-08 21:57:08,587 - INFO - [monterCarlo_CELF - 种子:20] 拉新:17.9人 | 总销量:17.9单 | 品牌曝光:89.0次 | 🌟综合得分:26.8
+2026-03-08 21:57:08,608 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-08 21:57:08,622 - INFO - 成功写入 6 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.doubanrandom/2026-3-7/random_SSRNum-50000-_seedNum-20_simuTimes-500.csv
+2026-03-08 21:57:08,622 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.doubanrandom/2026-3-7/random_SSRNum-50000-_seedNum-20_simuTimes-500.csv
+2026-03-08 21:57:08,629 - INFO - 加载数据集: network.doubanrandom
+2026-03-08 21:57:08,630 - INFO - --- 矩阵分析 ---
+2026-03-08 21:57:08,631 - INFO - 节点数 (N): 4723
+2026-03-08 21:57:08,631 - INFO - 边数 (E): 11774
+2026-03-08 21:57:08,631 - INFO - 密度 (Density): 0.00052782 (越小越稀疏)
+2026-03-08 21:57:08,631 - INFO - 稀疏度 (Sparsity): 0.99947218 (越接近1越稀疏)
+2026-03-08 21:57:08,631 - INFO - 平均度数 (Avg Degree): 2.49
+2026-03-08 21:57:08,631 - INFO - >>> 正在注入完美对抗属性（验证三条定理）...
+2026-03-08 21:57:08,666 - INFO - 首次生成种子集 random
+2026-03-08 21:57:08,666 - INFO - 执行当前算法开始: random
+2026-03-08 21:57:08,666 - INFO - 数据集节点总数:  n = 4723, m = 30
+2026-03-08 21:57:08,667 - INFO - 选择 30  [2267, 395, 4245, 4230, 2597, 1468, 460, 1309, 182, 4559, 1156, 4, 825, 2077, 3194, 3817, 3639, 870, 2806, 2862, 2136, 2312, 1925, 4029, 2721, 3047, 234, 3781, 2412, 3240]
+
+2026-03-08 21:57:08,667 - INFO - 当前用时 0.00 秒
+2026-03-08 21:57:08,667 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_random_seedNum-30_SSRNum-50000.txt
+2026-03-08 21:57:08,667 - INFO - 首次生成种子集 degreeTopM
+2026-03-08 21:57:08,667 - INFO - 执行当前算法开始: degreeTopM
+2026-03-08 21:57:08,667 - INFO - 依据: 选择连接数（度数）最多的节点。
+2026-03-08 21:57:08,667 - INFO - 选择的 Top M 节点及其度数:
+2026-03-08 21:57:08,668 - INFO - 
+2026-03-08 21:57:08,668 - INFO - 当前用时 0.00 秒
+2026-03-08 21:57:08,668 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_degreeTopM_seedNum-30_SSRNum-50000.txt
+2026-03-08 21:57:08,668 - INFO - 首次生成种子集 pageRank
+2026-03-08 21:57:08,668 - INFO - 执行当前算法开始: pageRank
+2026-03-08 21:57:08,668 - INFO - --- Running: PageRank (on tranProMatrix) Top M ---
+2026-03-08 21:57:08,900 - INFO - Selected PageRank seeds: [1392, 1843, 121, 4050, 4335, 1572, 1414, 1798, 3687, 1370, 2217, 2105, 2056, 2173, 908, 3719, 4538, 3975, 1958, 710, 137, 4259, 323, 1888, 2855, 1288, 3299, 1046, 680, 4410]
+2026-03-08 21:57:08,900 - INFO - 当前用时 0.23 秒
+2026-03-08 21:57:08,901 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_pageRank_seedNum-30_SSRNum-50000.txt
+2026-03-08 21:57:08,901 - INFO - 首次生成种子集 alpha_sort
+2026-03-08 21:57:08,901 - INFO - 执行当前算法开始: alpha_sort
+2026-03-08 21:57:08,902 - INFO - 4723 个节点的alpha值降序排序 done
+2026-03-08 21:57:08,902 - INFO - ==============>> [(3779, np.float64(0.3)), (3780, np.float64(0.3)), (3781, np.float64(0.3)), (3782, np.float64(0.3)), (3783, np.float64(0.3)), (3784, np.float64(0.3)), (3785, np.float64(0.3)), (3786, np.float64(0.3)), (3787, np.float64(0.3)), (3788, np.float64(0.3))]
+2026-03-08 21:57:08,902 - INFO - 
+选择的种子集 (按alpha排序): [3779, 3780, 3781, 3782, 3783, 3784, 3785, 3786, 3787, 3788, 3789, 3790, 3791, 3792, 3793, 3794, 3795, 3796, 3797, 3798, 3799, 3800, 3801, 3802, 3803, 3804, 3805, 3806, 3807, 3808]
+
+2026-03-08 21:57:08,902 - INFO - 当前用时 0.00 秒
+2026-03-08 21:57:08,902 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_alpha_sort_seedNum-30_SSRNum-50000.txt
+2026-03-08 21:57:08,902 - INFO - 首次生成种子集 ris_optimized
+2026-03-08 21:57:08,902 - INFO - 执行当前算法开始: ris_optimized
+2026-03-08 21:57:09,146 - INFO - 图初始化完成，节点数: 4723，当前模式: 优化采样
+2026-03-08 21:57:09,146 - INFO - 开始生成 50000 组多重RR-Set...
+2026-03-08 21:57:11,976 - INFO - 生成完毕。耗时: 2.83 秒。
+2026-03-08 21:57:11,983 - INFO - 开始基于多重RR集贪心选择最优种子...
+2026-03-08 21:57:13,036 - INFO - 选种完毕。耗时: 1.05 秒。估算范围: 43.04
+2026-03-08 21:57:13,179 - INFO - 当前用时 4.28 秒
+2026-03-08 21:57:13,179 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.doubanrandom/2026-3-7/seeds-with-network.doubanrandom/random_ris_optimized_seedNum-30_SSRNum-50000.txt
+2026-03-08 21:57:13,180 - INFO - 首次生成种子集 monterCarlo_CELF
+2026-03-08 21:57:13,180 - INFO - 执行当前算法开始: monterCarlo_CELF
+2026-03-08 21:57:13,180 - INFO - --- Running: CELF Greedy Monte Carlo (Sims=100) ---
+2026-03-08 21:57:13,180 - INFO - Step 0: 初始化所有节点的边际增益...
+2026-03-08 21:58:03,466 - INFO - Seed 1: 2419, Spread: 1.00
+2026-03-08 21:58:04,658 - INFO - Seed 2: 520, Gain: 0.94, Total: 1.94
+2026-03-08 21:58:04,850 - INFO - Seed 3: 269, Gain: 0.94, Total: 2.88
+2026-03-08 21:58:05,998 - INFO - Seed 4: 2322, Gain: 0.93, Total: 3.81
+2026-03-08 21:58:06,824 - INFO - Seed 5: 630, Gain: 0.95, Total: 4.76
+2026-03-08 21:58:09,704 - INFO - Seed 6: 174, Gain: 0.94, Total: 5.70
+2026-03-08 21:58:16,880 - INFO - Seed 7: 208, Gain: 0.94, Total: 6.64
+2026-03-08 21:58:18,323 - INFO - Seed 8: 1287, Gain: 0.94, Total: 7.58
+2026-03-08 21:58:33,149 - INFO - Seed 9: 822, Gain: 0.89, Total: 8.47
+2026-03-08 21:58:39,236 - INFO - Seed 10: 1583, Gain: 0.95, Total: 9.42
+2026-03-08 21:58:48,501 - INFO - Seed 11: 1626, Gain: 0.88, Total: 10.30
+2026-03-08 21:58:50,063 - INFO - Seed 12: 377, Gain: 0.89, Total: 11.19
+2026-03-08 21:58:55,538 - INFO - Seed 13: 1369, Gain: 0.88, Total: 12.07
+2026-03-08 21:59:09,324 - INFO - Seed 14: 2208, Gain: 0.94, Total: 13.01
+2026-03-08 21:59:11,867 - INFO - Seed 15: 2871, Gain: 0.89, Total: 13.90
+2026-03-08 21:59:22,077 - INFO - Seed 16: 1217, Gain: 0.98, Total: 14.88
+2026-03-08 21:59:29,414 - INFO - Seed 17: 2314, Gain: 0.92, Total: 15.80
+2026-03-08 22:02:10,654 - INFO - Seed 18: 909, Gain: 0.83, Total: 16.63
+2026-03-08 22:02:11,846 - INFO - Seed 19: 2882, Gain: 0.86, Total: 17.49
+2026-03-08 22:02:55,246 - INFO - Seed 20: 298, Gain: 0.81, Total: 18.30
+2026-03-08 22:03:28,645 - INFO - Seed 21: 2655, Gain: 0.83, Total: 19.13
+2026-03-08 22:03:35,421 - INFO - Seed 22: 3441, Gain: 0.84, Total: 19.97
+2026-03-08 22:03:41,035 - INFO - Seed 23: 544, Gain: 0.89, Total: 20.86
+2026-03-08 22:03:54,325 - INFO - Seed 24: 449, Gain: 0.82, Total: 21.68
+2026-03-08 22:04:14,848 - INFO - Seed 25: 1812, Gain: 0.88, Total: 22.56
+2026-03-08 22:04:53,668 - INFO - Seed 26: 375, Gain: 0.83, Total: 23.39
