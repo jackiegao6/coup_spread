@@ -350,7 +350,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
-        data_set='network.douban11core', 
+        data_set='network.netYeast', 
         simulation_times=[500],  
         # 【核心修改】将新的 ris 加入方法列
         methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_optimized'],
@@ -370,7 +370,7 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainReJudge',  # AgainReJudge(接受过的用户可以再次接受) 
-        version='2026-3-9',
+        version='2026-3-10',
         random_dirichlet=[10, 10, 10]
     )
 

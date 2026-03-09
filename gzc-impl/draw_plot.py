@@ -62,8 +62,8 @@ def draw_paper_ready_plots(csv_dir):
     ax1.set_title('(a) Expected Activated Users vs. Seed Size')
     ax1.set_xlabel('Number of Initial Seeds (k)')
     ax1.set_ylabel('Expected Activated Users (Adoption Spread)')
-    # ax1.set_xticks(range(10, 101, 10))
-    ax1.set_xticks(range(50, 251, 25))
+    ax1.set_xticks(range(10, 101, 10))
+    # ax1.set_xticks(range(50, 251, 25))
 
 
     # --------- 画右图: comprehensive_score ---------
@@ -78,8 +78,8 @@ def draw_paper_ready_plots(csv_dir):
     ax2.set_title('(b) Comprehensive Marketing Score vs. Seed Size')
     ax2.set_xlabel('Number of Initial Seeds (k)')
     ax2.set_ylabel('Comprehensive Score (E-ROI)')
-    # ax2.set_xticks(range(10, 101, 10))
-    ax2.set_xticks(range(50, 251, 25))
+    ax2.set_xticks(range(10, 101, 10))
+    # ax2.set_xticks(range(50, 251, 25))
 
     # 6. 统一添加图例 (放到画布下方或者右图里)
     handles, labels = ax1.get_legend_handles_labels()
@@ -100,5 +100,5 @@ def draw_paper_ready_plots(csv_dir):
 
 if __name__ == "__main__":
     # 将这里修改为你存放那 10 个 CSV 的文件夹路径
-    CSV_DIRECTORY = "/home/wen/work/coup_spread/gzc-impl/results/network.netactorcollaboration/2026-3-9/" 
+    CSV_DIRECTORY = "/home/wen/work/coup_spread/gzc-impl/results/network.doubanrandom/2026-3-7/" 
     draw_paper_ready_plots(CSV_DIRECTORY)
