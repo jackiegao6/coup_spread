@@ -51,11 +51,6 @@ class ExperimentConfig:
 
     def usage_rate_file(self, m = 0):
         times = ",".join(str(time) for time in self.simulation_times)
-        if self.distribution_type == 'powerlaw':
-            if self.single_file_switch:
-                return f"{self.data_prefix}/{self.data_set}/{self.version}/E-activated-{self.data_set}/distribution-{self.distribution_type}/tsd_{self.tran_degree_influence_factor}-{self.succ_degree_influence_factor}-{self.dis_degree_influence_factor}/single_sim_func-{self.single_sim_func}/simuTimes-{times}_seedNum-{m}_monteCarloL-{self.monte_carlo_L}_single_sim_func-{self.single_sim_func}_rrNumSamples-{self.num_samples}.csv"
-            else:
-                return f"{self.data_prefix}/{self.data_set}/{self.version}/E-activated-{self.data_set}/distribution-{self.distribution_type}/tsd_{self.tran_degree_influence_factor}-{self.succ_degree_influence_factor}-{self.dis_degree_influence_factor}/single_sim_func-{self.single_sim_func}/simuTimes-{times}_monteCarloL-{self.monte_carlo_L}_single_sim_func-{self.single_sim_func}_rrNumSamples-{self.num_samples}.csv"
         return f"{self.data_prefix}/gzc-impl/results/{self.data_set}/{self.version}/{self.distribution_type}_SSRNum-{self.num_samples}-_seedNum-{self.seeds_num}_simuTimes-{times}.csv"
 
     def log_file(self):

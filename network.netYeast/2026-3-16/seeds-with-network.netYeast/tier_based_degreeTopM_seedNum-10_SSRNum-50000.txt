@@ -1,0 +1,2 @@
+random:[1332, 376, 231, 543, 745, 68, 1450, 862, 740, 1055]
+degreeTopM:[np.int64(157), np.int64(25), np.int64(55), np.int64(68), np.int64(57), np.int64(105), np.int64(15), np.int64(238), np.int64(69), np.int64(315)]

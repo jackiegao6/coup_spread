@@ -1,0 +1,5 @@
+random:[1034, 83, 748, 186, 1183, 556, 89, 93, 218, 582]
+degreeTopM:[np.int64(157), np.int64(25), np.int64(55), np.int64(68), np.int64(57), np.int64(105), np.int64(15), np.int64(238), np.int64(69), np.int64(315)]
+pageRank:[157, 25, 57, 55, 15, 68, 315, 105, 238, 1041]
+alpha_sort:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+ris_optimized:[np.int32(110), np.int32(813), 900, np.int32(137), np.int32(896), 131, np.int32(176), np.int32(343), np.int32(47), 819]

@@ -1,2 +1,0 @@
-random:[174, 175, 150, 220, 243, 67, 127, 19, 128, 241, 79, 69, 89, 249, 72, 45, 203, 26, 143, 27, 6, 121, 81, 42, 172]
-degreeTopM:[np.int64(187), np.int64(186), np.int64(68), np.int64(176), np.int64(127), np.int64(6), np.int64(181), np.int64(168), np.int64(180), np.int64(182), np.int64(143), np.int64(156), np.int64(159), np.int64(57), np.int64(25), np.int64(10), np.int64(28), np.int64(47), np.int64(101), np.int64(84), np.int64(75), np.int64(102), np.int64(98), np.int64(164), np.int64(153)]

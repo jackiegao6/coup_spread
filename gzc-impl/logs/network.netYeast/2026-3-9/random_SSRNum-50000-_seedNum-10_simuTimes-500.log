@@ -556,3 +556,223 @@
 2026-03-08 22:25:45,718 - INFO - 所有进程执行完毕，开始写入数据...
 2026-03-08 22:25:45,727 - INFO - 成功写入 5 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-90_simuTimes-500.csv
 2026-03-08 22:25:45,728 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-90_simuTimes-500.csv
+2026-03-09 04:07:26,826 - INFO - 加载数据集: network.netYeast
+2026-03-09 04:07:26,827 - INFO - --- 矩阵分析 ---
+2026-03-09 04:07:26,827 - INFO - 节点数 (N): 1458
+2026-03-09 04:07:26,828 - INFO - 边数 (E): 3896
+2026-03-09 04:07:26,828 - INFO - 密度 (Density): 0.00183275 (越小越稀疏)
+2026-03-09 04:07:26,828 - INFO - 稀疏度 (Sparsity): 0.99816725 (越接近1越稀疏)
+2026-03-09 04:07:26,828 - INFO - 平均度数 (Avg Degree): 2.67
+2026-03-09 04:07:26,828 - INFO - >>> 正在注入完美对抗属性（验证三条定理）...
+2026-03-09 04:07:26,837 - INFO - 首次生成种子集 1hop_sort
+2026-03-09 04:07:26,837 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-09 04:07:26,837 - INFO - --- Running: Teacher's 1-Hop Expected Spread Sort ---
+2026-03-09 04:07:26,884 - INFO - 选出的前 5 个种子得分展示: [0.6 0.6 0.6 0.6 0.6]
+2026-03-09 04:07:26,884 - INFO - 当前用时 0.05 秒
+2026-03-09 04:07:26,884 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netYeast/2026-3-9/seeds-with-network.netYeast/random_1hop_sort_seedNum-10_SSRNum-50000.txt
+2026-03-09 04:07:26,885 - INFO - 评估种子集: None
+2026-03-09 04:07:26,885 - INFO - 多进程评估开始，共有 1 个方法待评估...
+2026-03-09 04:07:26,885 - INFO - 启动进程池，Worker数量: 1
+2026-03-09 04:07:26,995 - INFO - [Process 3931024] 开始评估方法: 1hop_sort, 种子数: 10
+2026-03-09 04:07:27,048 - INFO - [1hop_sort - 种子:10] 拉新:3.8人 | 总销量:3.8单 | 品牌曝光:12.8次 | 🌟综合得分:5.0
+2026-03-09 04:07:27,059 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-09 04:07:27,066 - INFO - 成功写入 1 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-10_simuTimes-500.csv
+2026-03-09 04:07:27,066 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-10_simuTimes-500.csv
+2026-03-09 04:07:27,067 - INFO - 加载数据集: network.netYeast
+2026-03-09 04:07:27,068 - INFO - --- 矩阵分析 ---
+2026-03-09 04:07:27,068 - INFO - 节点数 (N): 1458
+2026-03-09 04:07:27,068 - INFO - 边数 (E): 3896
+2026-03-09 04:07:27,068 - INFO - 密度 (Density): 0.00183275 (越小越稀疏)
+2026-03-09 04:07:27,068 - INFO - 稀疏度 (Sparsity): 0.99816725 (越接近1越稀疏)
+2026-03-09 04:07:27,068 - INFO - 平均度数 (Avg Degree): 2.67
+2026-03-09 04:07:27,068 - INFO - >>> 正在注入完美对抗属性（验证三条定理）...
+2026-03-09 04:07:27,084 - INFO - 首次生成种子集 1hop_sort
+2026-03-09 04:07:27,084 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-09 04:07:27,084 - INFO - --- Running: Teacher's 1-Hop Expected Spread Sort ---
+2026-03-09 04:07:27,085 - INFO - 选出的前 5 个种子得分展示: [0.6 0.6 0.6 0.6 0.6]
+2026-03-09 04:07:27,085 - INFO - 当前用时 0.00 秒
+2026-03-09 04:07:27,086 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netYeast/2026-3-9/seeds-with-network.netYeast/random_1hop_sort_seedNum-20_SSRNum-50000.txt
+2026-03-09 04:07:27,086 - INFO - 评估种子集: None
+2026-03-09 04:07:27,086 - INFO - 多进程评估开始，共有 1 个方法待评估...
+2026-03-09 04:07:27,086 - INFO - 启动进程池，Worker数量: 1
+2026-03-09 04:07:27,206 - INFO - [Process 3931037] 开始评估方法: 1hop_sort, 种子数: 20
+2026-03-09 04:07:27,308 - INFO - [1hop_sort - 种子:20] 拉新:7.4人 | 总销量:7.5单 | 品牌曝光:25.8次 | 🌟综合得分:10.0
+2026-03-09 04:07:27,316 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-09 04:07:27,323 - INFO - 成功写入 1 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-20_simuTimes-500.csv
+2026-03-09 04:07:27,324 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-20_simuTimes-500.csv
+2026-03-09 04:07:27,324 - INFO - 加载数据集: network.netYeast
+2026-03-09 04:07:27,325 - INFO - --- 矩阵分析 ---
+2026-03-09 04:07:27,325 - INFO - 节点数 (N): 1458
+2026-03-09 04:07:27,325 - INFO - 边数 (E): 3896
+2026-03-09 04:07:27,325 - INFO - 密度 (Density): 0.00183275 (越小越稀疏)
+2026-03-09 04:07:27,326 - INFO - 稀疏度 (Sparsity): 0.99816725 (越接近1越稀疏)
+2026-03-09 04:07:27,326 - INFO - 平均度数 (Avg Degree): 2.67
+2026-03-09 04:07:27,326 - INFO - >>> 正在注入完美对抗属性（验证三条定理）...
+2026-03-09 04:07:27,348 - INFO - 首次生成种子集 1hop_sort
+2026-03-09 04:07:27,348 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-09 04:07:27,349 - INFO - --- Running: Teacher's 1-Hop Expected Spread Sort ---
+2026-03-09 04:07:27,350 - INFO - 选出的前 5 个种子得分展示: [0.6 0.6 0.6 0.6 0.6]
+2026-03-09 04:07:27,350 - INFO - 当前用时 0.00 秒
+2026-03-09 04:07:27,350 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netYeast/2026-3-9/seeds-with-network.netYeast/random_1hop_sort_seedNum-30_SSRNum-50000.txt
+2026-03-09 04:07:27,351 - INFO - 评估种子集: None
+2026-03-09 04:07:27,351 - INFO - 多进程评估开始，共有 1 个方法待评估...
+2026-03-09 04:07:27,351 - INFO - 启动进程池，Worker数量: 1
+2026-03-09 04:07:27,472 - INFO - [Process 3931061] 开始评估方法: 1hop_sort, 种子数: 30
+2026-03-09 04:07:27,629 - INFO - [1hop_sort - 种子:30] 拉新:11.2人 | 总销量:11.6单 | 品牌曝光:40.1次 | 🌟综合得分:15.4
+2026-03-09 04:07:27,639 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-09 04:07:27,646 - INFO - 成功写入 1 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-30_simuTimes-500.csv
+2026-03-09 04:07:27,647 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-30_simuTimes-500.csv
+2026-03-09 04:07:27,647 - INFO - 加载数据集: network.netYeast
+2026-03-09 04:07:27,648 - INFO - --- 矩阵分析 ---
+2026-03-09 04:07:27,648 - INFO - 节点数 (N): 1458
+2026-03-09 04:07:27,648 - INFO - 边数 (E): 3896
+2026-03-09 04:07:27,649 - INFO - 密度 (Density): 0.00183275 (越小越稀疏)
+2026-03-09 04:07:27,649 - INFO - 稀疏度 (Sparsity): 0.99816725 (越接近1越稀疏)
+2026-03-09 04:07:27,649 - INFO - 平均度数 (Avg Degree): 2.67
+2026-03-09 04:07:27,649 - INFO - >>> 正在注入完美对抗属性（验证三条定理）...
+2026-03-09 04:07:27,670 - INFO - 首次生成种子集 1hop_sort
+2026-03-09 04:07:27,670 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-09 04:07:27,670 - INFO - --- Running: Teacher's 1-Hop Expected Spread Sort ---
+2026-03-09 04:07:27,672 - INFO - 选出的前 5 个种子得分展示: [0.6 0.6 0.6 0.6 0.6]
+2026-03-09 04:07:27,672 - INFO - 当前用时 0.00 秒
+2026-03-09 04:07:27,672 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netYeast/2026-3-9/seeds-with-network.netYeast/random_1hop_sort_seedNum-40_SSRNum-50000.txt
+2026-03-09 04:07:27,672 - INFO - 评估种子集: None
+2026-03-09 04:07:27,672 - INFO - 多进程评估开始，共有 1 个方法待评估...
+2026-03-09 04:07:27,672 - INFO - 启动进程池，Worker数量: 1
+2026-03-09 04:07:27,795 - INFO - [Process 3931065] 开始评估方法: 1hop_sort, 种子数: 40
+2026-03-09 04:07:28,026 - INFO - [1hop_sort - 种子:40] 拉新:15.1人 | 总销量:15.7单 | 品牌曝光:55.4次 | 🌟综合得分:21.0
+2026-03-09 04:07:28,035 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-09 04:07:28,042 - INFO - 成功写入 1 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-40_simuTimes-500.csv
+2026-03-09 04:07:28,043 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-40_simuTimes-500.csv
+2026-03-09 04:07:28,043 - INFO - 加载数据集: network.netYeast
+2026-03-09 04:07:28,044 - INFO - --- 矩阵分析 ---
+2026-03-09 04:07:28,044 - INFO - 节点数 (N): 1458
+2026-03-09 04:07:28,044 - INFO - 边数 (E): 3896
+2026-03-09 04:07:28,044 - INFO - 密度 (Density): 0.00183275 (越小越稀疏)
+2026-03-09 04:07:28,045 - INFO - 稀疏度 (Sparsity): 0.99816725 (越接近1越稀疏)
+2026-03-09 04:07:28,045 - INFO - 平均度数 (Avg Degree): 2.67
+2026-03-09 04:07:28,045 - INFO - >>> 正在注入完美对抗属性（验证三条定理）...
+2026-03-09 04:07:28,071 - INFO - 首次生成种子集 1hop_sort
+2026-03-09 04:07:28,071 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-09 04:07:28,071 - INFO - --- Running: Teacher's 1-Hop Expected Spread Sort ---
+2026-03-09 04:07:28,074 - INFO - 选出的前 5 个种子得分展示: [0.6 0.6 0.6 0.6 0.6]
+2026-03-09 04:07:28,074 - INFO - 当前用时 0.00 秒
+2026-03-09 04:07:28,075 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netYeast/2026-3-9/seeds-with-network.netYeast/random_1hop_sort_seedNum-50_SSRNum-50000.txt
+2026-03-09 04:07:28,075 - INFO - 评估种子集: None
+2026-03-09 04:07:28,075 - INFO - 多进程评估开始，共有 1 个方法待评估...
+2026-03-09 04:07:28,075 - INFO - 启动进程池，Worker数量: 1
+2026-03-09 04:07:28,198 - INFO - [Process 3931069] 开始评估方法: 1hop_sort, 种子数: 50
+2026-03-09 04:07:28,533 - INFO - [1hop_sort - 种子:50] 拉新:19.6人 | 总销量:20.2单 | 品牌曝光:72.2次 | 🌟综合得分:27.1
+2026-03-09 04:07:28,552 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-09 04:07:28,563 - INFO - 成功写入 1 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-50_simuTimes-500.csv
+2026-03-09 04:07:28,563 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-50_simuTimes-500.csv
+2026-03-09 04:07:28,564 - INFO - 加载数据集: network.netYeast
+2026-03-09 04:07:28,565 - INFO - --- 矩阵分析 ---
+2026-03-09 04:07:28,565 - INFO - 节点数 (N): 1458
+2026-03-09 04:07:28,565 - INFO - 边数 (E): 3896
+2026-03-09 04:07:28,565 - INFO - 密度 (Density): 0.00183275 (越小越稀疏)
+2026-03-09 04:07:28,565 - INFO - 稀疏度 (Sparsity): 0.99816725 (越接近1越稀疏)
+2026-03-09 04:07:28,565 - INFO - 平均度数 (Avg Degree): 2.67
+2026-03-09 04:07:28,565 - INFO - >>> 正在注入完美对抗属性（验证三条定理）...
+2026-03-09 04:07:28,583 - INFO - 首次生成种子集 1hop_sort
+2026-03-09 04:07:28,583 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-09 04:07:28,583 - INFO - --- Running: Teacher's 1-Hop Expected Spread Sort ---
+2026-03-09 04:07:28,585 - INFO - 选出的前 5 个种子得分展示: [0.6 0.6 0.6 0.6 0.6]
+2026-03-09 04:07:28,585 - INFO - 当前用时 0.00 秒
+2026-03-09 04:07:28,585 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netYeast/2026-3-9/seeds-with-network.netYeast/random_1hop_sort_seedNum-60_SSRNum-50000.txt
+2026-03-09 04:07:28,585 - INFO - 评估种子集: None
+2026-03-09 04:07:28,585 - INFO - 多进程评估开始，共有 1 个方法待评估...
+2026-03-09 04:07:28,586 - INFO - 启动进程池，Worker数量: 1
+2026-03-09 04:07:28,707 - INFO - [Process 3931096] 开始评估方法: 1hop_sort, 种子数: 60
+2026-03-09 04:07:29,127 - INFO - [1hop_sort - 种子:60] 拉新:24.1人 | 总销量:24.7单 | 品牌曝光:89.8次 | 🌟综合得分:33.4
+2026-03-09 04:07:29,137 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-09 04:07:29,144 - INFO - 成功写入 1 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-60_simuTimes-500.csv
+2026-03-09 04:07:29,144 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-60_simuTimes-500.csv
+2026-03-09 04:07:29,145 - INFO - 加载数据集: network.netYeast
+2026-03-09 04:07:29,146 - INFO - --- 矩阵分析 ---
+2026-03-09 04:07:29,146 - INFO - 节点数 (N): 1458
+2026-03-09 04:07:29,146 - INFO - 边数 (E): 3896
+2026-03-09 04:07:29,146 - INFO - 密度 (Density): 0.00183275 (越小越稀疏)
+2026-03-09 04:07:29,147 - INFO - 稀疏度 (Sparsity): 0.99816725 (越接近1越稀疏)
+2026-03-09 04:07:29,147 - INFO - 平均度数 (Avg Degree): 2.67
+2026-03-09 04:07:29,147 - INFO - >>> 正在注入完美对抗属性（验证三条定理）...
+2026-03-09 04:07:29,166 - INFO - 首次生成种子集 1hop_sort
+2026-03-09 04:07:29,167 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-09 04:07:29,167 - INFO - --- Running: Teacher's 1-Hop Expected Spread Sort ---
+2026-03-09 04:07:29,168 - INFO - 选出的前 5 个种子得分展示: [0.6 0.6 0.6 0.6 0.6]
+2026-03-09 04:07:29,168 - INFO - 当前用时 0.00 秒
+2026-03-09 04:07:29,168 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netYeast/2026-3-9/seeds-with-network.netYeast/random_1hop_sort_seedNum-70_SSRNum-50000.txt
+2026-03-09 04:07:29,169 - INFO - 评估种子集: None
+2026-03-09 04:07:29,169 - INFO - 多进程评估开始，共有 1 个方法待评估...
+2026-03-09 04:07:29,169 - INFO - 启动进程池，Worker数量: 1
+2026-03-09 04:07:29,291 - INFO - [Process 3931100] 开始评估方法: 1hop_sort, 种子数: 70
+2026-03-09 04:07:29,791 - INFO - [1hop_sort - 种子:70] 拉新:28.4人 | 总销量:29.1单 | 品牌曝光:105.7次 | 🌟综合得分:39.3
+2026-03-09 04:07:29,811 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-09 04:07:29,818 - INFO - 成功写入 1 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-70_simuTimes-500.csv
+2026-03-09 04:07:29,818 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-70_simuTimes-500.csv
+2026-03-09 04:07:29,819 - INFO - 加载数据集: network.netYeast
+2026-03-09 04:07:29,820 - INFO - --- 矩阵分析 ---
+2026-03-09 04:07:29,820 - INFO - 节点数 (N): 1458
+2026-03-09 04:07:29,820 - INFO - 边数 (E): 3896
+2026-03-09 04:07:29,820 - INFO - 密度 (Density): 0.00183275 (越小越稀疏)
+2026-03-09 04:07:29,821 - INFO - 稀疏度 (Sparsity): 0.99816725 (越接近1越稀疏)
+2026-03-09 04:07:29,821 - INFO - 平均度数 (Avg Degree): 2.67
+2026-03-09 04:07:29,821 - INFO - >>> 正在注入完美对抗属性（验证三条定理）...
+2026-03-09 04:07:29,839 - INFO - 首次生成种子集 1hop_sort
+2026-03-09 04:07:29,840 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-09 04:07:29,840 - INFO - --- Running: Teacher's 1-Hop Expected Spread Sort ---
+2026-03-09 04:07:29,841 - INFO - 选出的前 5 个种子得分展示: [0.6 0.6 0.6 0.6 0.6]
+2026-03-09 04:07:29,841 - INFO - 当前用时 0.00 秒
+2026-03-09 04:07:29,841 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netYeast/2026-3-9/seeds-with-network.netYeast/random_1hop_sort_seedNum-80_SSRNum-50000.txt
+2026-03-09 04:07:29,842 - INFO - 评估种子集: None
+2026-03-09 04:07:29,842 - INFO - 多进程评估开始，共有 1 个方法待评估...
+2026-03-09 04:07:29,842 - INFO - 启动进程池，Worker数量: 1
+2026-03-09 04:07:29,965 - INFO - [Process 3931104] 开始评估方法: 1hop_sort, 种子数: 80
+2026-03-09 04:07:30,555 - INFO - [1hop_sort - 种子:80] 拉新:32.8人 | 总销量:33.5单 | 品牌曝光:122.4次 | 🌟综合得分:45.4
+2026-03-09 04:07:30,564 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-09 04:07:30,571 - INFO - 成功写入 1 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-80_simuTimes-500.csv
+2026-03-09 04:07:30,572 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-80_simuTimes-500.csv
+2026-03-09 04:07:30,573 - INFO - 加载数据集: network.netYeast
+2026-03-09 04:07:30,574 - INFO - --- 矩阵分析 ---
+2026-03-09 04:07:30,574 - INFO - 节点数 (N): 1458
+2026-03-09 04:07:30,574 - INFO - 边数 (E): 3896
+2026-03-09 04:07:30,574 - INFO - 密度 (Density): 0.00183275 (越小越稀疏)
+2026-03-09 04:07:30,574 - INFO - 稀疏度 (Sparsity): 0.99816725 (越接近1越稀疏)
+2026-03-09 04:07:30,574 - INFO - 平均度数 (Avg Degree): 2.67
+2026-03-09 04:07:30,574 - INFO - >>> 正在注入完美对抗属性（验证三条定理）...
+2026-03-09 04:07:30,593 - INFO - 首次生成种子集 1hop_sort
+2026-03-09 04:07:30,593 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-09 04:07:30,593 - INFO - --- Running: Teacher's 1-Hop Expected Spread Sort ---
+2026-03-09 04:07:30,595 - INFO - 选出的前 5 个种子得分展示: [0.6 0.6 0.6 0.6 0.6]
+2026-03-09 04:07:30,595 - INFO - 当前用时 0.00 秒
+2026-03-09 04:07:30,595 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netYeast/2026-3-9/seeds-with-network.netYeast/random_1hop_sort_seedNum-90_SSRNum-50000.txt
+2026-03-09 04:07:30,595 - INFO - 评估种子集: None
+2026-03-09 04:07:30,595 - INFO - 多进程评估开始，共有 1 个方法待评估...
+2026-03-09 04:07:30,595 - INFO - 启动进程池，Worker数量: 1
+2026-03-09 04:07:30,718 - INFO - [Process 3931128] 开始评估方法: 1hop_sort, 种子数: 90
+2026-03-09 04:07:31,399 - INFO - [1hop_sort - 种子:90] 拉新:37.2人 | 总销量:38.1单 | 品牌曝光:139.9次 | 🌟综合得分:51.6
+2026-03-09 04:07:31,408 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-09 04:07:31,415 - INFO - 成功写入 1 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-90_simuTimes-500.csv
+2026-03-09 04:07:31,416 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-90_simuTimes-500.csv
+2026-03-09 04:07:31,416 - INFO - 加载数据集: network.netYeast
+2026-03-09 04:07:31,417 - INFO - --- 矩阵分析 ---
+2026-03-09 04:07:31,417 - INFO - 节点数 (N): 1458
+2026-03-09 04:07:31,417 - INFO - 边数 (E): 3896
+2026-03-09 04:07:31,418 - INFO - 密度 (Density): 0.00183275 (越小越稀疏)
+2026-03-09 04:07:31,418 - INFO - 稀疏度 (Sparsity): 0.99816725 (越接近1越稀疏)
+2026-03-09 04:07:31,418 - INFO - 平均度数 (Avg Degree): 2.67
+2026-03-09 04:07:31,418 - INFO - >>> 正在注入完美对抗属性（验证三条定理）...
+2026-03-09 04:07:31,437 - INFO - 首次生成种子集 1hop_sort
+2026-03-09 04:07:31,437 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-09 04:07:31,438 - INFO - --- Running: Teacher's 1-Hop Expected Spread Sort ---
+2026-03-09 04:07:31,439 - INFO - 选出的前 5 个种子得分展示: [0.6 0.6 0.6 0.6 0.6]
+2026-03-09 04:07:31,439 - INFO - 当前用时 0.00 秒
+2026-03-09 04:07:31,439 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netYeast/2026-3-9/seeds-with-network.netYeast/random_1hop_sort_seedNum-100_SSRNum-50000.txt
+2026-03-09 04:07:31,440 - INFO - 评估种子集: None
+2026-03-09 04:07:31,440 - INFO - 多进程评估开始，共有 1 个方法待评估...
+2026-03-09 04:07:31,440 - INFO - 启动进程池，Worker数量: 1
+2026-03-09 04:07:31,561 - INFO - [Process 3931132] 开始评估方法: 1hop_sort, 种子数: 100
+2026-03-09 04:07:32,337 - INFO - [1hop_sort - 种子:100] 拉新:41.4人 | 总销量:42.3单 | 品牌曝光:156.3次 | 🌟综合得分:57.5
+2026-03-09 04:07:32,349 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-09 04:07:32,357 - INFO - 成功写入 1 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-100_simuTimes-500.csv
+2026-03-09 04:07:32,358 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netYeast/2026-3-9/random_SSRNum-50000-_seedNum-100_simuTimes-500.csv

@@ -294,87 +294,42 @@ def deliverers_alpha_sort(
     return selected_seeds
 
 
-# 重要性混合策略
-def deliverers_importance_sort(
-        adj: sp.csr_matrix,
+import scipy.sparse as sp
+
+def deliverers_teacher_alpha_1hop_sort(
         tranProMatrix: np.ndarray,
         seeds_num: int,
-        alpha: Dict[int, float],
-        trans: Dict[int, float],
+        alpha_distribution: np.ndarray
 ) -> list:
     """
-    Importance_i = alpha_i + p_i * (sum of alpha_j for all relevant neighbors j)
-
-    Args:
-        adj (sp.csr_matrix): 邻接矩阵。
-        tranProMatrix (np.ndarray): 转移概率矩阵, tranProMatrix[v, u] = p(u->v)。
-        seeds_num (int): 要选择的种子数量 (k)。
-        alpha (Dict[int, float]): 包含每个节点领券概率的字典。
-
-    Returns:
-        list: 包含k个最优种子节点ID的列表，按Importance值从高到低排序。
+    【导师指定的 1-hop 期望启发式基线】
+    公式: Score_i = alpha_i + sum_j (p_{ij} * alpha_j)
     """
+    logging.info("--- Running: Teacher's 1-Hop Expected Spread Sort ---")
 
-    num_nodes = adj.shape[0]
-    if seeds_num > num_nodes:
-        logging.warning(f"种子数 ({seeds_num}) 大于图中节点数 ({num_nodes})")
-        seeds_num = num_nodes
+    # 1. 处理转移矩阵
+    # 根据 get_trans_matrix.py，tranProMatrix[j, i] 代表 i -> j 
+    # 因此，我们需要对 tranProMatrix 进行转置 (Transpose)，
+    # 使得 M_T[i, j] 代表 i 指向 j 的概率 p_ij
+    if sp.issparse(tranProMatrix):
+        M_T = tranProMatrix.T.tocsr()
+    else:
+        M_T = np.asarray(tranProMatrix).T
 
-    # 计算所有节点的Importance值
-    node_importance = {}
+    # 2. 矩阵乘法极限加速
+    # M_T (N x N) 点乘 alpha_distribution (N x 1)
+    # 这在数学上完美等价于对每个节点 i 执行：sum_j (p_ij * alpha_j)
+    # 比用 for 循环快上万倍！
+    neighbor_influence = M_T.dot(alpha_distribution)
 
-    for cur_node in range(num_nodes):
-        neighbor_alphas_sum = 0.0 # 初始化
-        trans_value = 0.0 # 初始化
+    # 3. 最终得分计算
+    # 得分 = 自身的转化率 + 邻居的期望转化率
+    scores = alpha_distribution + neighbor_influence
 
-        # 找到所有 i 指向的邻居 j
-        # 找到第i行的非零行索引 (col_indices, row_indices)
-        out_neighbors = adj.getcol(cur_node).nonzero()[1]
-        for out in out_neighbors:
-            neighbor_alphas_sum += alpha.get(out, 0.0)
-            trans_value = tranProMatrix[out, cur_node]
+    # 4. 排序并挑选 Top K
+    sorted_indexes = np.argsort(scores)[::-1]
+    selected_nodes = sorted_indexes[:seeds_num].tolist()
 
-        # 计算最终的 Importance 值
-        importance = alpha.get(cur_node, 0.0) + trans_value * neighbor_alphas_sum
-        node_importance[cur_node] = importance
-
-    # 排序
-    importance_items = list(node_importance.items())
-    importance_items.sort(key=lambda item: item[1], reverse=True)
-    logging.info(f"{len(importance_items)} 个节点的Importance值降序排序 done")
-
-    # 前k个种子节点
-    selected_seeds = [item[0] for item in importance_items[:seeds_num]]
-    logging.info(f"\n选择的种子集 (按Importance排序): {selected_seeds}\n")
-
-    return selected_seeds
-
-
-# 一阶邻居影响力策略
-def deliverers_1_neighbor(succ_distribution,init_tranProMatrix,m) -> list:
-    logging.info("--- Running: 1-Hop Neighbor Influence Top M ---")
-    logging.info("依据: 选择其所有邻居的成功使用概率之和最大的节点。")
-
-    # 确保邻接矩阵是 NumPy 数组
-    adj = init_tranProMatrix
-    adj_array = adj.toarray() if hasattr(adj, 'toarray') else np.asarray(adj)
+    logging.info(f"选出的前 5 个种子得分展示: {scores[selected_nodes[:5]]}")
     
-    # 计算每个节点的邻居影响力
-    # adj_array.T[i] 是一个向量，表示哪些节点是 i 的邻居
-    # succ_distribution 是所有节点的成功概率向量
-    # 点积操作高效地计算了每个节点的所有邻居的成功概率之和
-    one_hop_influence = adj_array.T.dot(succ_distribution)
-    
-    sorted_indexes = np.argsort(one_hop_influence)[::-1]
-    
-    top_m_indexes = sorted_indexes[:m]
-    
-    logging.info("选择的 Top M 节点及其一步邻居影响力:")
-    selected_nodes_with_values = []
-    for index in top_m_indexes:
-        value = one_hop_influence[index]
-        logging.info(f"  - 节点 {index}: 邻居影响力 = {value:.4f}")
-        selected_nodes_with_values.append((index, value))
-    logging.info("")
-        
-    return [node for node, value in selected_nodes_with_values]
+    return selected_nodes

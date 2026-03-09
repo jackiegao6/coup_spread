@@ -1,5 +1,0 @@
-random:[216, 101, 155, 222, 97]
-degreeTopM:[np.int64(187), np.int64(186), np.int64(68), np.int64(176), np.int64(127)]
-pageRank:[187, 186, 127, 68, 98]
-alpha_sort:[200, 201, 202, 203, 204]
-ris_optimized:[243, 230, 225, 233, 229]

@@ -175,8 +175,11 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
         'degreeTopM': lambda: get_seeds.deliverers_degreeTopM(data["adj"], m),
         'pageRank': lambda: get_seeds.deliverers_pageRank2(adj=data["adj"], m=m, tranProMatrix=data["init_tran_matrix"]),
         'alpha_sort': lambda: get_seeds.deliverers_alpha_sort(adj=data["adj"], tranProMatrix=data["init_tran_matrix"], seeds_num=m, alpha=alpha),
-        
-        # 【新增：纲要所提的优化多重 RR-Set】
+        '1hop_sort': lambda: get_seeds.deliverers_teacher_alpha_1hop_sort(
+            tranProMatrix=data["init_tran_matrix"],
+            seeds_num=m,
+            alpha_distribution=succ_dis
+        ),
         'ris_optimized': lambda: SSR_method.deliverers_ris_coverage(
             adj=data["adj"], tranProMatrix=data["init_tran_matrix"],
             seeds_num=m, num_samples=config.num_samples,
@@ -190,7 +193,6 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
             alpha=succ_dis, beta=dis_dis, is_optimized=False
         ),
     }
-    # ...后续不变
 
     methods_with_seeds = {}
     for method in methods:
@@ -269,54 +271,104 @@ def run_evaluation(methods_with_seeds: dict, config: ExperimentConfig, data: dic
 
 import get_trans_matrix
 
-def load_genius_distribution(config: "ExperimentConfig", adj, n: int):
-    import numpy as np
-    logging.info(">>> 正在注入完美对抗属性（验证三条定理）...")
+# def load_genius_distribution(config: "ExperimentConfig", adj, n: int):
+#     import numpy as np
+#     logging.info(">>> 正在注入完美对抗属性（验证三条定理）...")
     
-    n_hubs = int(n * 0.1)
-    n_sinks = int(n * 0.1)
-    n_normal = n - n_hubs - n_sinks
+#     n_hubs = int(n * 0.1)
+#     n_sinks = int(n * 0.1)
+#     n_normal = n - n_hubs - n_sinks
     
-    succ_dist = np.zeros(n)
-    dis_dist = np.zeros(n)
-    tran_dist = np.zeros(n)
-    const_factor_dist = np.ones(n) 
+#     succ_dist = np.zeros(n)
+#     dis_dist = np.zeros(n)
+#     tran_dist = np.zeros(n)
+#     const_factor_dist = np.ones(n) 
     
-    # 获取节点的度数，用来实现你的第3条要求
-    out_degrees = np.array(adj.sum(axis=1)).flatten()
+#     # 获取节点的度数，用来实现你的第3条要求
+#     out_degrees = np.array(adj.sum(axis=1)).flatten()
     
-    # 1. 普通节点 (核反应堆)
-    # 你的要求3：丢弃率趋近于0，度越大转发概率越高
-    for i in range(n_normal):
-        succ_dist[i] = 0.20  # 吸收率不高，但很安全
-        dis_dist[i] = 0.01   # 丢弃率极低！
-        # 剩下 0.94 根据度数给予权重，确保度越大，作为转发枢纽的可能性越高
-        tran_dist[i] = 0.79 
+#     # 1. 普通节点 (核反应堆)
+#     # 你的要求3：丢弃率趋近于0，度越大转发概率越高
+#     for i in range(n_normal):
+#         succ_dist[i] = 0.20  # 吸收率不高，但很安全
+#         dis_dist[i] = 0.01   # 丢弃率极低！
+#         # 剩下 0.94 根据度数给予权重，确保度越大，作为转发枢纽的可能性越高
+#         tran_dist[i] = 0.79 
         
-    # 2. 孤立节点 (坑 Alpha_sort)
-    # 你的要求2：吸收率极高
-    sink_start = n_normal
-    sink_end = sink_start + n_sinks
-    succ_dist[sink_start:sink_end] = 0.30  # 极限吸收
-    dis_dist[sink_start:sink_end] = 0.50
-    tran_dist[sink_start:sink_end] = 0.20
+#     # 2. 孤立节点 (坑 Alpha_sort)
+#     # 你的要求2：吸收率极高
+#     sink_start = n_normal
+#     sink_end = sink_start + n_sinks
+#     succ_dist[sink_start:sink_end] = 0.30  # 极限吸收
+#     dis_dist[sink_start:sink_end] = 0.50
+#     tran_dist[sink_start:sink_end] = 0.20
     
-    # 3. 超级大V (坑 PageRank/DegreeTopM)
-    # 你的要求1：度大，丢弃率无限高
-    hub_start = sink_end
-    succ_dist[hub_start:] = 0.10
-    dis_dist[hub_start:] = 0.80 # 拿到当场死亡
-    tran_dist[hub_start:] = 0.10
+#     # 3. 超级大V (坑 PageRank/DegreeTopM)
+#     # 你的要求1：度大，丢弃率无限高
+#     hub_start = sink_end
+#     succ_dist[hub_start:] = 0.10
+#     dis_dist[hub_start:] = 0.80 # 拿到当场死亡
+#     tran_dist[hub_start:] = 0.10
     
-    distributions = (succ_dist, dis_dist, tran_dist, const_factor_dist)
-    tran_matrix = get_trans_matrix.getTranProMatrix(adj)
+#     distributions = (succ_dist, dis_dist, tran_dist, const_factor_dist)
+#     tran_matrix = get_trans_matrix.getTranProMatrix(adj)
     
-    return {
-        "adj": adj,
-        "distributions": distributions,
-        "init_tran_matrix": tran_matrix,
-        "n": n
-    }
+#     return {
+#         "adj": adj,
+#         "distributions": distributions,
+#         "init_tran_matrix": tran_matrix,
+#         "n": n
+#     }
+
+
+# def load_genius_distribution2(config: "ExperimentConfig", adj, n: int):
+#     import numpy as np
+#     logging.info(">>> 正在注入完美对抗属性（验证三条定理）...")
+    
+#     n_hubs = int(n * 0.1)
+#     n_sinks = int(n * 0.1)
+#     n_normal = n - n_hubs - n_sinks
+    
+#     succ_dist = np.zeros(n)
+#     dis_dist = np.zeros(n)
+#     tran_dist = np.zeros(n)
+#     const_factor_dist = np.ones(n) 
+    
+#     # 获取节点的度数，用来实现你的第3条要求
+#     out_degrees = np.array(adj.sum(axis=1)).flatten()
+    
+#     # 1. 普通节点 (核反应堆)
+#     # 你的要求3：丢弃率趋近于0，度越大转发概率越高
+#     for i in range(n_normal):
+#         succ_dist[i] = 0.20  # 吸收率不高，但很安全
+#         dis_dist[i] = 0.01   # 丢弃率极低！
+#         # 剩下 0.94 根据度数给予权重，确保度越大，作为转发枢纽的可能性越高
+#         tran_dist[i] = 0.79 
+        
+#     # 2. 孤立节点 (坑 Alpha_sort)
+#     # 你的要求2：吸收率极高
+#     sink_start = n_normal
+#     sink_end = sink_start + n_sinks
+#     succ_dist[sink_start:sink_end] = 0.20  # 极限吸收
+#     dis_dist[sink_start:sink_end] = 0.01
+#     tran_dist[sink_start:sink_end] = 0.79
+    
+#     # 3. 超级大V (坑 PageRank/DegreeTopM)
+#     # 你的要求1：度大，丢弃率无限高
+#     hub_start = sink_end
+#     succ_dist[hub_start:] = 0.10
+#     dis_dist[hub_start:] = 0.80 # 拿到当场死亡
+#     tran_dist[hub_start:] = 0.10
+    
+#     distributions = (succ_dist, dis_dist, tran_dist, const_factor_dist)
+#     tran_matrix = get_trans_matrix.getTranProMatrix(adj)
+    
+#     return {
+#         "adj": adj,
+#         "distributions": distributions,
+#         "init_tran_matrix": tran_matrix,
+#         "n": n
+#     }
 
 def run_coupon_experiment(config: ExperimentConfig):
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -326,7 +378,8 @@ def run_coupon_experiment(config: ExperimentConfig):
     adj = adj_and_n["adj"]
     n = adj_and_n["n"]
 
-    experiment_data = load_genius_distribution(config=config, adj=adj, n=n)
+    # experiment_data = load_genius_distribution2(config=config, adj=adj, n=n)
+    experiment_data = load_contribution_and_tran_matrix(config=config, adj=adj, n=n)
 
     # 2. 获取种子集
     get_seeds_methods = config.methods
@@ -350,27 +403,28 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
-        data_set='network.netYeast', 
+        data_set='network.netYeast',  # netactorcollaboration EmailEnron douban11core netscience
         simulation_times=[500],  
         # 【核心修改】将新的 ris 加入方法列
-        methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_optimized'],
+        methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_optimized', '1hop_sort'],
+
         # methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_optimized', 'monterCarlo_CELF'],
         monte_carlo_L=100,
-        distribution_type='random',  
+        distribution_type='log_continuous',  # 'powerlaw' 或 'random' log_continuous tier_based
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
         num_samples=50000,
         # seeds_num=num,  # 32 64 128 256 512
 
-        succ_degree_influence_factor = 0.1, # 稍微降低大V自用率即可
-        dis_degree_influence_factor = 0.1,  # 降低丢弃，但别降到0
-        tran_degree_influence_factor = 0.1,  # 提高转发，但别提太高
+        succ_degree_influence_factor = -0.5, 
+        dis_degree_influence_factor = 0.8,  
+        tran_degree_influence_factor = 0.0,  
 
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainReJudge',  # AgainReJudge(接受过的用户可以再次接受) 
-        version='2026-3-10',
+        version='2026-3-19',
         random_dirichlet=[10, 10, 10]
     )
 

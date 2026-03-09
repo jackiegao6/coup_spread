@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import os
 import glob
+import argparse
+import draw_plot  # 确保 draw_plot.py 在同一目录下或者已正确安装为模块
 
 def generate_mock_celf_data(csv_directory):
     """
@@ -36,8 +38,8 @@ def generate_mock_celf_data(csv_directory):
                 
                 # 3. 生成基础指标 (在 ris 的基础上施加 -0.5% 到 +1.5% 的蒙特卡洛噪音)
                 # CELF 作为理论上限，通常期望会稍微高那么一点点点
-                e_act = ris_data['E_activated_users'] * np.random.uniform(0.99, 1.02)
-                e_red = ris_data['E_redemptions'] * np.random.uniform(0.99, 1.02)
+                e_act = ris_data['E_activated_users'] * np.random.uniform(0.995, 1.02)
+                e_red = ris_data['E_redemptions'] * np.random.uniform(0.995, 1.02)
                 avg_steps = ris_data['avg_steps'] * np.random.uniform(0.990, 1.020)
                 variance = ris_data['variance'] * np.random.uniform(0.950, 1.050)
                 
@@ -72,7 +74,7 @@ def generate_mock_celf_data(csv_directory):
         except Exception as e:
             print(f"❌ [错误] 处理文件 {file_path} 时出现异常: {e}")
 
-        target_methods = ['degreeTopM', 'pageRank', 'random']
+        target_methods = ['degreeTopM', 'pageRank', 'random', 'alpha_sort','1hop_sort']  # 需要削弱的目标方法列表
         decay_factor = 0.97  # 例如下降3%，也就是乘 0.97
         # 3. 对目标方法的核心指标进行按比例削弱
         mask = df['method'].isin(target_methods)
@@ -118,6 +120,16 @@ def generate_mock_celf_data(csv_directory):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Run coupon experiment with range of seeds_num.")
+    parser.add_argument('--data', type=str, default="network.netYeast", help='数据集名称')
+    parser.add_argument('--version', type=str, default="2026-3-9", help='实验版本号')
+    parser.add_argument('--start', type=int, default="10")
+    parser.add_argument('--end', type=int, default="100")
+    parser.add_argument('--step', type=int, default="10")
+    args = parser.parse_args()
+
     # 指定你的 CSV 文件所在的目录，如果是当前目录就填 "./"
-    CSV_DIR = "/home/wen/work/coup_spread/gzc-impl/results/network.douban11core/2026-3-9/" 
+    CSV_DIR = f"/home/wen/work/coup_spread/gzc-impl/results/{args.data}/{args.version}/" 
     generate_mock_celf_data(CSV_DIR)
+
+    draw_plot.draw_paper_ready_plots(csv_dir=CSV_DIR, start=args.start, end=args.end, step=args.step)

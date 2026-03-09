@@ -4,7 +4,7 @@ import seaborn as sns
 import glob
 import os
 
-def draw_paper_ready_plots(csv_dir):
+def draw_paper_ready_plots(csv_dir, start=10, end=100, step=10):
     # 1. 自动读取目录下所有的 csv 文件并合并
     # 假设你的文件命名为 random_SSRNum-50000-_seedNum-10_simuTimes-500.csv 等
     all_files = glob.glob(os.path.join(csv_dir, "*.csv"))
@@ -44,7 +44,8 @@ def draw_paper_ready_plots(csv_dir):
         'pageRank':         {'color': '#27ae60', 'marker': '^', 'label': 'PageRank', 'linewidth': 1.5, 'markersize': 7},
         'degreeTopM':       {'color': '#f39c12', 'marker': 'v', 'label': 'DegreeTopM', 'linewidth': 1.5, 'markersize': 7},
         'alpha_sort':       {'color': '#8e44ad', 'marker': 'D', 'label': 'Alpha_Sort', 'linewidth': 1.5, 'markersize': 7},
-        'random':           {'color': '#7f8c8d', 'marker': 'o', 'label': 'Random', 'linewidth': 1.5, 'markersize': 7}
+        'random':           {'color': '#7f8c8d', 'marker': 'o', 'label': 'Random', 'linewidth': 1.5, 'markersize': 7},
+        '1hop_sort':        {'color': '#c0392b', 'marker': 'P', 'label': '1Hop_Sort', 'linewidth': 1.5, 'markersize': 7}
     }
 
     # 5. 创建 1x2 的画布 (宽高比大约为 2:1)
@@ -62,8 +63,7 @@ def draw_paper_ready_plots(csv_dir):
     ax1.set_title('(a) Expected Activated Users vs. Seed Size')
     ax1.set_xlabel('Number of Initial Seeds (k)')
     ax1.set_ylabel('Expected Activated Users (Adoption Spread)')
-    ax1.set_xticks(range(10, 101, 10))
-    # ax1.set_xticks(range(50, 251, 25))
+    ax1.set_xticks(range(start, end + 1, step))
 
 
     # --------- 画右图: comprehensive_score ---------
@@ -78,8 +78,7 @@ def draw_paper_ready_plots(csv_dir):
     ax2.set_title('(b) Comprehensive Marketing Score vs. Seed Size')
     ax2.set_xlabel('Number of Initial Seeds (k)')
     ax2.set_ylabel('Comprehensive Score (E-ROI)')
-    ax2.set_xticks(range(10, 101, 10))
-    # ax2.set_xticks(range(50, 251, 25))
+    ax2.set_xticks(range(start, end + 1, step))
 
     # 6. 统一添加图例 (放到画布下方或者右图里)
     handles, labels = ax1.get_legend_handles_labels()
@@ -100,5 +99,5 @@ def draw_paper_ready_plots(csv_dir):
 
 if __name__ == "__main__":
     # 将这里修改为你存放那 10 个 CSV 的文件夹路径
-    CSV_DIRECTORY = "/home/wen/work/coup_spread/gzc-impl/results/network.doubanrandom/2026-3-7/" 
+    CSV_DIRECTORY = "/home/wen/work/coup_spread/gzc-impl/results/network.netDog/2026-3-12/" 
     draw_paper_ready_plots(CSV_DIRECTORY)
