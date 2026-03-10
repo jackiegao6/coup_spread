@@ -39,8 +39,8 @@ def draw_paper_ready_plots(csv_dir, start=10, end=100, step=10):
 
     # 4. 定义不同算法的颜色和标记形状 (保持高对比度)
     method_styles = {
-        'ris_optimized':    {'color': '#e74c3c', 'marker': '*', 'label': 'RIS_Optimized (Ours)', 'linewidth': 2.5, 'markersize': 10},
         'monterCarlo_CELF': {'color': '#2980b9', 'marker': 's', 'label': 'MC_CELF (Upper Bound)', 'linewidth': 2.0, 'markersize': 7},
+        'ris_optimized':    {'color': '#e74c3c', 'marker': '*', 'label': 'RIS_Optimized (Ours)', 'linewidth': 2.5, 'markersize': 10},
         'pageRank':         {'color': '#27ae60', 'marker': '^', 'label': 'PageRank', 'linewidth': 1.5, 'markersize': 7},
         'degreeTopM':       {'color': '#f39c12', 'marker': 'v', 'label': 'DegreeTopM', 'linewidth': 1.5, 'markersize': 7},
         'alpha_sort':       {'color': '#8e44ad', 'marker': 'D', 'label': 'Alpha_Sort', 'linewidth': 1.5, 'markersize': 7},

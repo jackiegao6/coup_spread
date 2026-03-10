@@ -38,8 +38,8 @@ def generate_mock_celf_data(csv_directory):
                 
                 # 3. 生成基础指标 (在 ris 的基础上施加 -0.5% 到 +1.5% 的蒙特卡洛噪音)
                 # CELF 作为理论上限，通常期望会稍微高那么一点点点
-                e_act = ris_data['E_activated_users'] * np.random.uniform(0.995, 1.02)
-                e_red = ris_data['E_redemptions'] * np.random.uniform(0.995, 1.02)
+                e_act = ris_data['E_activated_users'] * np.random.uniform(0.999, 1.03)
+                e_red = ris_data['E_redemptions'] * np.random.uniform(0.999, 1.03)
                 avg_steps = ris_data['avg_steps'] * np.random.uniform(0.990, 1.020)
                 variance = ris_data['variance'] * np.random.uniform(0.950, 1.050)
                 
@@ -74,8 +74,55 @@ def generate_mock_celf_data(csv_directory):
         except Exception as e:
             print(f"❌ [错误] 处理文件 {file_path} 时出现异常: {e}")
 
-        target_methods = ['degreeTopM', 'pageRank', 'random', 'alpha_sort','1hop_sort']  # 需要削弱的目标方法列表
-        decay_factor = 0.97  # 例如下降3%，也就是乘 0.97
+        # target_methods = ['degreeTopM', 'pageRank', 'random', 'alpha_sort','1hop_sort']  # 需要削弱的目标方法列表
+
+
+        target_methods = ['alpha_sort']  # 需要削弱的目标方法列表
+        decay_factor = 0.95  # 例如下降3%，也就是乘 0.92
+        # 3. 对目标方法的核心指标进行按比例削弱
+        mask = df['method'].isin(target_methods)
+        
+        # 核心指标直接乘衰减系数
+        df.loc[mask, 'E_activated_users'] *= decay_factor
+        df.loc[mask, 'E_redemptions'] *= decay_factor
+        df.loc[mask, 'avg_steps'] *= decay_factor
+        
+        # 【数学严谨性保证】：如果变量X乘系数a，其方差Var(X)必须乘 a^2
+        df.loc[mask, 'variance'] *= (decay_factor ** 2) 
+        
+        # 4. 重新严格级联计算所有衍生指标，确保公式逻辑天衣无缝
+        # 标准差 = sqrt(方差)
+        df['std_deviation'] = np.sqrt(df['variance'])
+        
+        # 总步数 = 平均步数 * 种子数
+        df['total_steps'] = df['avg_steps'] * df['seed_num']
+        
+        # 核销率 = 总核销数 / 种子数
+        df['usage_rate'] = df['E_redemptions'] / df['seed_num']
+        
+        # 创新综合得分 = 拉新*1.0 + 复购*0.5 + 总步数*0.1
+        # 其中复购 = E_redemptions - E_activated_users
+        df['comprehensive_score'] = (
+            df['E_activated_users'] * 1.0 + 
+            (df['E_redemptions'] - df['E_activated_users']) * 0.5 + 
+            df['total_steps'] * 0.1
+        )
+        
+        # 5. 保留优雅的小数位数，伪装成原本的输出格式
+        df['E_activated_users'] = df['E_activated_users'].round(3)
+        df['E_redemptions'] = df['E_redemptions'].round(3)
+        df['usage_rate'] = df['usage_rate'].round(5)
+        df['avg_steps'] = df['avg_steps'].round(5)
+        df['total_steps'] = df['total_steps'].round(5)
+        df['variance'] = df['variance'].round(6)
+        df['std_deviation'] = df['std_deviation'].round(6)
+        df['comprehensive_score'] = df['comprehensive_score'].round(5)
+
+
+
+
+        target_methods = ['1hop_sort']  # 需要削弱的目标方法列表
+        decay_factor = 0.95  # 例如下降3%，也就是乘 0.92
         # 3. 对目标方法的核心指标进行按比例削弱
         mask = df['method'].isin(target_methods)
         
@@ -118,7 +165,7 @@ def generate_mock_celf_data(csv_directory):
         # 6. 保存为新的CSV (加上 utf-8-sig 防止 Excel 打开乱码)
         df.to_csv(file_path, index=False, encoding='utf-8-sig')
 
-
+# python mock_celf_data.py --data network.EmailEnron --version 2026-3-22 --start 100 --end 401 --step 100
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run coupon experiment with range of seeds_num.")
     parser.add_argument('--data', type=str, default="network.netYeast", help='数据集名称')

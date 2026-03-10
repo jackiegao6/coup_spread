@@ -302,14 +302,12 @@ def deliverers_teacher_alpha_1hop_sort(
         alpha_distribution: np.ndarray
 ) -> list:
     """
-    【导师指定的 1-hop 期望启发式基线】
     公式: Score_i = alpha_i + sum_j (p_{ij} * alpha_j)
     """
-    logging.info("--- Running: Teacher's 1-Hop Expected Spread Sort ---")
 
     # 1. 处理转移矩阵
     # 根据 get_trans_matrix.py，tranProMatrix[j, i] 代表 i -> j 
-    # 因此，我们需要对 tranProMatrix 进行转置 (Transpose)，
+    # 对 tranProMatrix 进行转置 (Transpose)，
     # 使得 M_T[i, j] 代表 i 指向 j 的概率 p_ij
     if sp.issparse(tranProMatrix):
         M_T = tranProMatrix.T.tocsr()
@@ -318,8 +316,7 @@ def deliverers_teacher_alpha_1hop_sort(
 
     # 2. 矩阵乘法极限加速
     # M_T (N x N) 点乘 alpha_distribution (N x 1)
-    # 这在数学上完美等价于对每个节点 i 执行：sum_j (p_ij * alpha_j)
-    # 比用 for 循环快上万倍！
+    # 等价于对每个节点 i 执行：sum_j (p_ij * alpha_j)
     neighbor_influence = M_T.dot(alpha_distribution)
 
     # 3. 最终得分计算
@@ -329,7 +326,4 @@ def deliverers_teacher_alpha_1hop_sort(
     # 4. 排序并挑选 Top K
     sorted_indexes = np.argsort(scores)[::-1]
     selected_nodes = sorted_indexes[:seeds_num].tolist()
-
-    logging.info(f"选出的前 5 个种子得分展示: {scores[selected_nodes[:5]]}")
-    
     return selected_nodes
