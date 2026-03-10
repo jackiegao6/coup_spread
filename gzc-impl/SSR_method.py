@@ -87,6 +87,129 @@ def run_single_ssr_generation_worker(args: Tuple) -> List[Set[int]]:
     return ssr_list
 
 
+# class CouponInfluenceMaximizer:
+#     def __init__(self, adj: sp.csr_matrix, tranProMatrix: np.ndarray, alpha: np.ndarray, beta: np.ndarray, k: int, is_optimized: bool = True):
+#         self.k = k
+#         self.alpha = alpha
+#         self.beta = beta
+#         self.is_optimized = is_optimized
+
+#         self.num_nodes = adj.shape[0]
+#         self.nodes = list(range(self.num_nodes))
+
+#         # 转换为CSR以提高切片性能
+#         self.tran_matrix_csr = sp.csr_matrix(tranProMatrix) if isinstance(tranProMatrix, np.ndarray) else tranProMatrix
+
+#         # 【重点】构造入边矩阵 (in_csr) 和 出边矩阵 (out_csr)
+#         # tranProMatrix[i, j] 表示 j -> i，因此行提取代表入边，转置后代表出边
+#         self.in_csr = self.tran_matrix_csr.tocsr()
+#         self.in_indices, self.in_indptr, self.in_data = self.in_csr.indices, self.in_csr.indptr, self.in_csr.data
+
+#         self.out_csr = self.tran_matrix_csr.T.tocsr()
+#         self.out_indices, self.out_indptr, self.out_data = self.out_csr.indices, self.out_csr.indptr, self.out_csr.data
+
+#         self.all_ssrs: List[List[Set[int]]] =[]
+
+#         # 计算论文中的理论分布调整
+#         if self.is_optimized:
+#             self.W_v = np.zeros(self.num_nodes)
+#             for v in range(self.num_nodes):
+#                 p_acc = self.alpha[v] if isinstance(self.alpha, (list, np.ndarray)) else self.alpha.get(v, 0)
+#                 # 事件至少有一次为真的概率
+#                 self.W_v[v] = 1.0 - (1.0 - p_acc)**self.k 
+#             self.W_total = np.sum(self.W_v)
+#             self.v_probs = self.W_v / self.W_total if self.W_total > 0 else (np.ones(self.num_nodes) / self.num_nodes)
+#         else:
+#             self.W_total = self.num_nodes # 朴素采样的总权重即为节点数
+
+#         logging.info(f"图初始化完成，节点数: {self.num_nodes}，当前模式: {'优化采样' if is_optimized else '朴素采样'}")
+
+#     def generate_rr_sets_parallel(self, N: int, workers: int = 8):
+#         logging.info(f"开始生成 {N} 组多重RR-Set...")
+#         start_time = time.time()
+
+#         # 根据是否优化，决定根节点 v 的采样方式
+#         if self.is_optimized:
+#             sampled_vs = random.choices(range(self.num_nodes), weights=self.v_probs, k=N)
+#         else:
+#             sampled_vs =[random.randint(0, self.num_nodes - 1) for _ in range(N)]
+
+#         args_list =[
+#             (self.num_nodes, self.in_indices, self.in_indptr, self.in_data,
+#              self.out_indices, self.out_indptr, self.out_data,
+#              self.alpha, self.beta, self.k, sampled_vs[i], self.is_optimized)
+#             for i in range(N)
+#         ]
+
+#         with Pool(processes=workers) as pool:
+#             self.all_ssrs = pool.map(run_single_ssr_generation_worker, args_list)
+
+#         logging.info(f"生成完毕。耗时: {time.time() - start_time:.2f} 秒。")
+
+#     def select_seeds(self) -> Tuple[List[int], float]:
+#         logging.info("开始基于多重RR集贪心选择最优种子...")
+#         start_time = time.time()
+#         coupon_node_map = defaultdict(lambda: defaultdict(set))
+#         total_samples = len(self.all_ssrs)
+
+#         # 倒排索引：快速找到节点覆盖的采样编号
+#         for ssr_idx, ssr_list in enumerate(self.all_ssrs):
+#             for coupon_j, rr_set in enumerate(ssr_list):
+#                 if not rr_set: continue
+#                 for node in rr_set:
+#                     coupon_node_map[coupon_j][node].add(ssr_idx)
+
+#         selected_seeds =[]
+#         covered_ssr_indices = set()
+
+#         for i in range(self.k):
+#             coupon_to_assign = i
+#             best_node, max_gain = -1, -1
+#             candidate_nodes = coupon_node_map[coupon_to_assign].keys()
+
+#             if candidate_nodes:
+#                 for node in candidate_nodes:
+#                     if node in selected_seeds: continue
+#                     covered_by_node = coupon_node_map[coupon_to_assign][node]
+#                     current_gain = len(covered_by_node - covered_ssr_indices)
+#                     if current_gain > max_gain:
+#                         max_gain = current_gain
+#                         best_node = node
+
+#             if best_node == -1:
+#                 remaining = list(set(self.nodes) - set(selected_seeds))
+#                 best_node = remaining[0] if remaining else 0
+
+#             selected_seeds.append(best_node)
+#             covered_ssr_indices.update(coupon_node_map[coupon_to_assign][best_node])
+#             # logging.info(f"  - 券 {i + 1}/{self.k} 选中节点 {best_node}, 边际增益 {max_gain}")
+
+#         # 影响力的期望估计：由于有偏向采样，乘子变为 W_total
+#         estimated_influence = (len(covered_ssr_indices) / total_samples) * self.W_total
+#         logging.info(f"选种完毕。耗时: {time.time() - start_time:.2f} 秒。估算范围: {estimated_influence:.2f}")
+#         return selected_seeds, estimated_influence
+
+def deliverers_ris_coverage(adj: sp.csr_matrix, tranProMatrix: np.ndarray, seeds_num: int, num_samples: int = 100, alpha: np.ndarray = None, beta: np.ndarray = None, is_optimized: bool = True) -> list:
+    maximizer = CouponInfluenceMaximizer(adj, tranProMatrix, alpha, beta, k=seeds_num, is_optimized=is_optimized)
+    maximizer.generate_rr_sets_parallel(N=num_samples)
+    selected_seeds, _ = maximizer.select_seeds()
+    return selected_seeds
+
+
+
+
+
+import random
+import time
+from multiprocessing import Pool
+import numpy as np
+import scipy.sparse as sp
+import logging
+from typing import List, Tuple
+
+# 注意：run_single_ssr_generation_worker 保持你上一个版本的逻辑不变
+# (为了节省篇幅，这里不重复贴出 run_single_ssr_generation_worker 的代码)
+
 class CouponInfluenceMaximizer:
     def __init__(self, adj: sp.csr_matrix, tranProMatrix: np.ndarray, alpha: np.ndarray, beta: np.ndarray, k: int, is_optimized: bool = True):
         self.k = k
@@ -99,98 +222,117 @@ class CouponInfluenceMaximizer:
 
         # 转换为CSR以提高切片性能
         self.tran_matrix_csr = sp.csr_matrix(tranProMatrix) if isinstance(tranProMatrix, np.ndarray) else tranProMatrix
-
-        # 【重点】构造入边矩阵 (in_csr) 和 出边矩阵 (out_csr)
-        # tranProMatrix[i, j] 表示 j -> i，因此行提取代表入边，转置后代表出边
         self.in_csr = self.tran_matrix_csr.tocsr()
         self.in_indices, self.in_indptr, self.in_data = self.in_csr.indices, self.in_csr.indptr, self.in_csr.data
-
         self.out_csr = self.tran_matrix_csr.T.tocsr()
         self.out_indices, self.out_indptr, self.out_data = self.out_csr.indices, self.out_csr.indptr, self.out_csr.data
 
-        self.all_ssrs: List[List[Set[int]]] =[]
+        # 【极限优化 1】：直接初始化结构化的倒排索引列表，抛弃字典
+        # node_coverage[coupon_j][node_id] =[ssr_idx1, ssr_idx2, ...]
+        self.node_coverage = [[[] for _ in range(self.num_nodes)] for _ in range(self.k)]
+        self.total_samples = 0
 
-        # 计算论文中的理论分布调整
         if self.is_optimized:
             self.W_v = np.zeros(self.num_nodes)
             for v in range(self.num_nodes):
                 p_acc = self.alpha[v] if isinstance(self.alpha, (list, np.ndarray)) else self.alpha.get(v, 0)
-                # 事件至少有一次为真的概率
                 self.W_v[v] = 1.0 - (1.0 - p_acc)**self.k 
             self.W_total = np.sum(self.W_v)
             self.v_probs = self.W_v / self.W_total if self.W_total > 0 else (np.ones(self.num_nodes) / self.num_nodes)
         else:
-            self.W_total = self.num_nodes # 朴素采样的总权重即为节点数
-
-        logging.info(f"图初始化完成，节点数: {self.num_nodes}，当前模式: {'优化采样' if is_optimized else '朴素采样'}")
+            self.W_total = self.num_nodes
 
     def generate_rr_sets_parallel(self, N: int, workers: int = 8):
-        logging.info(f"开始生成 {N} 组多重RR-Set...")
+        logging.info(f"开始生成 {N} 组多重RR-Set (万级节点极限内存优化版)...")
         start_time = time.time()
+        self.total_samples = N
 
-        # 根据是否优化，决定根节点 v 的采样方式
         if self.is_optimized:
             sampled_vs = random.choices(range(self.num_nodes), weights=self.v_probs, k=N)
         else:
             sampled_vs =[random.randint(0, self.num_nodes - 1) for _ in range(N)]
 
-        args_list =[
-            (self.num_nodes, self.in_indices, self.in_indptr, self.in_data,
-             self.out_indices, self.out_indptr, self.out_data,
-             self.alpha, self.beta, self.k, sampled_vs[i], self.is_optimized)
-            for i in range(N)
-        ]
+        # 使用生成器 (Generator) 构建参数，不在内存中囤积巨大的参数列表
+        def args_generator():
+            for i in range(N):
+                yield (self.num_nodes, self.in_indices, self.in_indptr, self.in_data,
+                       self.out_indices, self.out_indptr, self.out_data,
+                       self.alpha, self.beta, self.k, sampled_vs[i], self.is_optimized)
 
+        # 【极限优化 2】：流式处理 (imap_unordered) 与 及时销毁 (del)
         with Pool(processes=workers) as pool:
-            self.all_ssrs = pool.map(run_single_ssr_generation_worker, args_list)
+            # chunksize=1000 让子进程攒够1000个再传回主进程，极大降低通信开销
+            for ssr_idx, ssr_list in enumerate(pool.imap_unordered(run_single_ssr_generation_worker, args_generator(), chunksize=1000)):
+                # 拿到结果立刻拆解，存入倒排索引
+                for coupon_j, rr_set in enumerate(ssr_list):
+                    for node in rr_set:
+                        self.node_coverage[coupon_j][node].append(ssr_idx)
+                
+                # 核心：处理完立刻销毁庞大的 Python Set，释放内存！
+                del ssr_list 
 
-        logging.info(f"生成完毕。耗时: {time.time() - start_time:.2f} 秒。")
+        # 【极限优化 3】：将松散的 List 转为极致紧凑的 Numpy Int32 数组
+        # 这一步能把 GB 级的内存开销压缩到 MB 级，并且大幅加速后续贪心算法
+        for j in range(self.k):
+            for v in range(self.num_nodes):
+                # 只有被覆盖过的才转为 numpy array
+                if self.node_coverage[j][v]:
+                    self.node_coverage[j][v] = np.array(self.node_coverage[j][v], dtype=np.int32)
+                else:
+                    self.node_coverage[j][v] = np.array([], dtype=np.int32)
+
+        logging.info(f"生成与倒排构建完毕。耗时: {time.time() - start_time:.2f} 秒。")
 
     def select_seeds(self) -> Tuple[List[int], float]:
-        logging.info("开始基于多重RR集贪心选择最优种子...")
+        logging.info("开始基于 Numpy 矩阵的高速贪心选择...")
         start_time = time.time()
-        coupon_node_map = defaultdict(lambda: defaultdict(set))
-        total_samples = len(self.all_ssrs)
-
-        # 倒排索引：快速找到节点覆盖的采样编号
-        for ssr_idx, ssr_list in enumerate(self.all_ssrs):
-            for coupon_j, rr_set in enumerate(ssr_list):
-                if not rr_set: continue
-                for node in rr_set:
-                    coupon_node_map[coupon_j][node].add(ssr_idx)
 
         selected_seeds =[]
-        covered_ssr_indices = set()
+        # 【极限优化 4】：用全局 Boolean Mask 代替 Set 的求并集运算
+        # covered_flags[i] == True 表示第 i 个可能世界已经被覆盖了
+        covered_flags = np.zeros(self.total_samples, dtype=bool)
 
         for i in range(self.k):
             coupon_to_assign = i
-            best_node, max_gain = -1, -1
-            candidate_nodes = coupon_node_map[coupon_to_assign].keys()
+            best_node = -1
+            max_gain = -1
 
-            if candidate_nodes:
-                for node in candidate_nodes:
-                    if node in selected_seeds: continue
-                    covered_by_node = coupon_node_map[coupon_to_assign][node]
-                    current_gain = len(covered_by_node - covered_ssr_indices)
-                    if current_gain > max_gain:
-                        max_gain = current_gain
-                        best_node = node
+            # 遍历所有节点寻找最大边际增益
+            for node in range(self.num_nodes):
+                if node in selected_seeds:
+                    continue
+                
+                # 拿出该节点能触达的所有 SSR 索引 (Numpy Array)
+                node_ssrs = self.node_coverage[coupon_to_assign][node]
+                if node_ssrs.size == 0:
+                    continue
+                
+                # 极限加速：利用 boolean mask 一次性统计未被覆盖的数量
+                # ~covered_flags 是对 bool 数组取反 (未覆盖的为 True)
+                # 这行代码在底层是 C 语言跑的，瞬间完成！
+                gain = np.count_nonzero(~covered_flags[node_ssrs])
 
+                if gain > max_gain:
+                    max_gain = gain
+                    best_node = node
+
+            # 处理异常情况 (没有节点能带来增益)
             if best_node == -1:
                 remaining = list(set(self.nodes) - set(selected_seeds))
                 best_node = remaining[0] if remaining else 0
 
             selected_seeds.append(best_node)
-            covered_ssr_indices.update(coupon_node_map[coupon_to_assign][best_node])
-            # logging.info(f"  - 券 {i + 1}/{self.k} 选中节点 {best_node}, 边际增益 {max_gain}")
+            
+            # 更新覆盖状态：将选中的节点对应的 SSR 标记为 True
+            best_node_ssrs = self.node_coverage[coupon_to_assign][best_node]
+            if best_node_ssrs.size > 0:
+                covered_flags[best_node_ssrs] = True
 
-        # 影响力的期望估计：由于有偏向采样，乘子变为 W_total
-        estimated_influence = (len(covered_ssr_indices) / total_samples) * self.W_total
-        logging.info(f"选种完毕。耗时: {time.time() - start_time:.2f} 秒。估算范围: {estimated_influence:.2f}")
+            print(f"  - 券 {i + 1}/{self.k} 选中节点 {best_node}, 边际增益 {max_gain}")
+
+        # 估算影响力
+        total_covered = np.count_nonzero(covered_flags)
+        estimated_influence = (total_covered / self.total_samples) * self.W_total
+        
+        logging.info(f"高速选种完毕。耗时: {time.time() - start_time:.2f} 秒。估算范围: {estimated_influence:.2f}")
         return selected_seeds, estimated_influence
-
-def deliverers_ris_coverage(adj: sp.csr_matrix, tranProMatrix: np.ndarray, seeds_num: int, num_samples: int = 100, alpha: np.ndarray = None, beta: np.ndarray = None, is_optimized: bool = True) -> list:
-    maximizer = CouponInfluenceMaximizer(adj, tranProMatrix, alpha, beta, k=seeds_num, is_optimized=is_optimized)
-    maximizer.generate_rr_sets_parallel(N=num_samples)
-    selected_seeds, _ = maximizer.select_seeds()
-    return selected_seeds
