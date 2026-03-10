@@ -177,3 +177,27 @@
 2026-03-10 04:35:43,791 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.EmailEnron/2026-4-1/seeds-with-network.EmailEnron/log_continuous_alpha_sort_seedNum-125_SSRNum-130000.txt
 2026-03-10 04:35:43,791 - INFO - 首次生成种子集 ris_optimized
 2026-03-10 04:35:43,791 - INFO - 执行当前算法开始: ris_optimized
+2026-03-10 04:36:06,948 - INFO - 开始生成 130000 组多重RR-Set (万级节点极限内存优化版)...
+2026-03-10 04:36:58,585 - INFO - 生成与倒排构建完毕。耗时: 51.64 秒。
+2026-03-10 04:36:58,589 - INFO - 开始基于 Numpy 矩阵的高速贪心选择...
+2026-03-10 04:37:08,966 - INFO - 高速选种完毕。耗时: 10.38 秒。估算范围: 316.98
+2026-03-10 04:37:09,542 - INFO - 当前用时 85.75 秒
+2026-03-10 04:37:09,543 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.EmailEnron/2026-4-1/seeds-with-network.EmailEnron/log_continuous_ris_optimized_seedNum-125_SSRNum-130000.txt
+2026-03-10 04:37:09,544 - INFO - 首次生成种子集 1hop_sort
+2026-03-10 04:37:09,544 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-10 04:37:09,694 - INFO - 当前用时 0.15 秒
+2026-03-10 04:37:09,695 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.EmailEnron/2026-4-1/seeds-with-network.EmailEnron/log_continuous_1hop_sort_seedNum-125_SSRNum-130000.txt
+2026-03-10 04:37:09,711 - INFO - 评估种子集: None
+2026-03-10 04:37:09,711 - INFO - 多进程评估开始，共有 6 个方法待评估...
+2026-03-10 04:37:09,711 - INFO - 启动进程池，Worker数量: 6
+2026-03-10 04:37:52,094 - INFO - [Process 891825] 开始评估方法: random, 种子数: 125
+2026-03-10 04:38:03,440 - INFO - [random - 种子:125] 拉新:60.4人 | 总销量:60.5单 | 品牌曝光:213.8次 | 🌟综合得分:81.8
+2026-03-10 04:38:28,489 - INFO - [Process 891826] 开始评估方法: degreeTopM, 种子数: 125
+2026-03-10 04:38:34,163 - INFO - [degreeTopM - 种子:125] 拉新:23.5人 | 总销量:23.5单 | 品牌曝光:168.8次 | 🌟综合得分:40.4
+2026-03-10 04:39:02,247 - INFO - [Process 891827] 开始评估方法: pageRank, 种子数: 125
+2026-03-10 04:39:09,069 - INFO - [pageRank - 种子:125] 拉新:25.5人 | 总销量:25.6单 | 品牌曝光:172.1次 | 🌟综合得分:42.8
+2026-03-10 04:40:36,271 - INFO - [Process 891828] 开始评估方法: alpha_sort, 种子数: 125
+2026-03-10 04:41:58,170 - INFO - [Process 891829] 开始评估方法: ris_optimized, 种子数: 125
+2026-03-10 04:42:18,780 - INFO - [ris_optimized - 种子:125] 拉新:74.1人 | 总销量:74.1单 | 品牌曝光:210.0次 | 🌟综合得分:95.1
+2026-03-10 04:43:13,780 - INFO - [Process 891830] 开始评估方法: 1hop_sort, 种子数: 125
+2026-03-10 04:43:21,200 - INFO - [1hop_sort - 种子:125] 拉新:92.8人 | 总销量:94.8单 | 品牌曝光:185.1次 | 🌟综合得分:112.3

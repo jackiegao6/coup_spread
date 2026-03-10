@@ -1,0 +1,12 @@
+name: coupon
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+  - networkx
+  - numpy
+  - scipy
+  - pandas
+  - matplotlib
+  - seaborn
+prefix: /home/wen/miniconda3/envs/coupon
