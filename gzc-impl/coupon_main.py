@@ -414,7 +414,7 @@ if __name__ == '__main__':
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=130000,
+        num_samples=100000,
         # seeds_num=num,  # 32 64 128 256 512
 
         succ_degree_influence_factor = -0.5, 
@@ -424,7 +424,7 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainReJudge',  # AgainReJudge(接受过的用户可以再次接受) 
-        version='2026-4-1',
+        version='2026-4-4',
         random_dirichlet=[10, 10, 10]
     )
 

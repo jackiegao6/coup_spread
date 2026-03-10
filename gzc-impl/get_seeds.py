@@ -174,9 +174,7 @@ def deliverers_monteCarlo_CELF(
 # 随机策略
 def deliverers_random(n: int, m: int) -> list:
     logging.info(f"数据集节点总数:  n = {n}, m = {m}")
-    if m > n:
-        raise ValueError(f"m={m} 不能大于 n={n}")
-    selected_nodes = random.sample(range(n), k=m)
+    selected_nodes = random.choices(range(n), k=m)
     logging.info(f"选择 {m}  {selected_nodes}\n")
     return selected_nodes
 

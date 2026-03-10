@@ -1,0 +1,483 @@
+2026-03-10 22:54:51,911 - INFO - 加载数据集: network.netscience
+2026-03-10 22:54:51,912 - INFO - --- 矩阵分析 ---
+2026-03-10 22:54:51,912 - INFO - 节点数 (N): 379
+2026-03-10 22:54:51,912 - INFO - 边数 (E): 1828
+2026-03-10 22:54:51,912 - INFO - 密度 (Density): 0.01272617 (越小越稀疏)
+2026-03-10 22:54:51,912 - INFO - 稀疏度 (Sparsity): 0.98727383 (越接近1越稀疏)
+2026-03-10 22:54:51,912 - INFO - 平均度数 (Avg Degree): 4.82
+2026-03-10 22:54:51,913 - INFO - 首次生成度相关概率分布 分布类型: 'log_continuous'.
+2026-03-10 22:54:51,913 - INFO - ===> Generating 'Log-Continuous' distributions for Real Graph...
+2026-03-10 22:54:51,916 - INFO - 保存概率分布 文件位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/distribution-in-network.netscience/distribution-log_continuous_seedNum-16.pkl
+2026-03-10 22:54:51,918 - INFO - 首次生成种子集 random
+2026-03-10 22:54:51,918 - INFO - 执行当前算法开始: random
+2026-03-10 22:54:51,918 - INFO - 数据集节点总数:  n = 379, m = 16
+2026-03-10 22:54:51,918 - INFO - 选择 16  [113, 210, 164, 115, 118, 141, 191, 183, 38, 307, 293, 103, 330, 174, 26, 371]
+
+2026-03-10 22:54:51,919 - INFO - 当前用时 0.00 秒
+2026-03-10 22:54:51,919 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_random_seedNum-16_SSRNum-50000.txt
+2026-03-10 22:54:51,919 - INFO - 首次生成种子集 degreeTopM
+2026-03-10 22:54:51,919 - INFO - 执行当前算法开始: degreeTopM
+2026-03-10 22:54:51,919 - INFO - 依据: 选择连接数（度数）最多的节点。
+2026-03-10 22:54:51,919 - INFO - 选择的 Top M 节点及其度数:
+2026-03-10 22:54:51,919 - INFO - 
+2026-03-10 22:54:51,919 - INFO - 当前用时 0.00 秒
+2026-03-10 22:54:51,919 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_degreeTopM_seedNum-16_SSRNum-50000.txt
+2026-03-10 22:54:51,919 - INFO - 首次生成种子集 pageRank
+2026-03-10 22:54:51,919 - INFO - 执行当前算法开始: pageRank
+2026-03-10 22:54:51,919 - INFO - --- Running: PageRank (on tranProMatrix) Top M ---
+2026-03-10 22:54:51,929 - INFO - Selected PageRank seeds: [58, 3, 4, 119, 72, 5, 142, 106, 53, 219, 189, 107, 13, 41, 187, 7]
+2026-03-10 22:54:51,929 - INFO - 当前用时 0.01 秒
+2026-03-10 22:54:51,929 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_pageRank_seedNum-16_SSRNum-50000.txt
+2026-03-10 22:54:51,929 - INFO - 首次生成种子集 alpha_sort
+2026-03-10 22:54:51,929 - INFO - 执行当前算法开始: alpha_sort
+2026-03-10 22:54:51,929 - INFO - 379 个节点的alpha值降序排序 done
+2026-03-10 22:54:51,930 - INFO - ==============>> [(196, np.float64(0.4761543759146074)), (133, np.float64(0.44857128895439097)), (179, np.float64(0.4476946228280887)), (321, np.float64(0.40617652723166164)), (222, np.float64(0.3991677376118984)), (275, np.float64(0.3980521239747853)), (32, np.float64(0.3936118487891139)), (103, np.float64(0.3766912822109997)), (302, np.float64(0.37169735269599197)), (373, np.float64(0.36767627649803303))]
+2026-03-10 22:54:51,930 - INFO - 
+选择的种子集 (按alpha排序): [196, 133, 179, 321, 222, 275, 32, 103, 302, 373, 111, 231, 266, 272, 315, 365]
+
+2026-03-10 22:54:51,930 - INFO - 当前用时 0.00 秒
+2026-03-10 22:54:51,930 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_alpha_sort_seedNum-16_SSRNum-50000.txt
+2026-03-10 22:54:51,930 - INFO - 首次生成种子集 ris_optimized
+2026-03-10 22:54:51,930 - INFO - 执行当前算法开始: ris_optimized
+2026-03-10 22:54:51,933 - INFO - 开始生成 50000 组多重RR-Set (万级节点极限内存优化版)...
+2026-03-10 22:54:53,441 - INFO - 生成与倒排构建完毕。耗时: 1.51 秒。
+2026-03-10 22:54:53,442 - INFO - 开始基于 Numpy 矩阵的高速贪心选择...
+2026-03-10 22:54:53,457 - INFO - 高速选种完毕。耗时: 0.01 秒。估算范围: 8.35
+2026-03-10 22:54:53,458 - INFO - 当前用时 1.53 秒
+2026-03-10 22:54:53,458 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_ris_optimized_seedNum-16_SSRNum-50000.txt
+2026-03-10 22:54:53,458 - INFO - 首次生成种子集 1hop_sort
+2026-03-10 22:54:53,458 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-10 22:54:53,504 - INFO - 当前用时 0.05 秒
+2026-03-10 22:54:53,505 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_1hop_sort_seedNum-16_SSRNum-50000.txt
+2026-03-10 22:54:53,505 - INFO - 评估种子集: None
+2026-03-10 22:54:53,506 - INFO - 多进程评估开始，共有 6 个方法待评估...
+2026-03-10 22:54:53,506 - INFO - 启动进程池，Worker数量: 6
+2026-03-10 22:54:53,572 - INFO - [Process 1922831] 开始评估方法: random, 种子数: 16
+2026-03-10 22:54:53,585 - INFO - [Process 1922832] 开始评估方法: degreeTopM, 种子数: 16
+2026-03-10 22:54:53,597 - INFO - [Process 1922833] 开始评估方法: pageRank, 种子数: 16
+2026-03-10 22:54:53,608 - INFO - [Process 1922834] 开始评估方法: alpha_sort, 种子数: 16
+2026-03-10 22:54:53,619 - INFO - [Process 1922835] 开始评估方法: ris_optimized, 种子数: 16
+2026-03-10 22:54:53,629 - INFO - [Process 1922836] 开始评估方法: 1hop_sort, 种子数: 16
+2026-03-10 22:54:53,715 - INFO - [degreeTopM - 种子:16] 拉新:1.9人 | 总销量:1.9单 | 品牌曝光:26.0次 | 🌟综合得分:4.6
+2026-03-10 22:54:53,727 - INFO - [pageRank - 种子:16] 拉新:2.2人 | 总销量:2.3单 | 品牌曝光:26.1次 | 🌟综合得分:4.9
+2026-03-10 22:54:53,759 - INFO - [random - 种子:16] 拉新:4.6人 | 总销量:4.6单 | 品牌曝光:30.7次 | 🌟综合得分:7.7
+2026-03-10 22:54:53,778 - INFO - [ris_optimized - 种子:16] 拉新:7.6人 | 总销量:7.6单 | 品牌曝光:29.5次 | 🌟综合得分:10.6
+2026-03-10 22:54:53,784 - INFO - [1hop_sort - 种子:16] 拉新:7.5人 | 总销量:7.6单 | 品牌曝光:29.0次 | 🌟综合得分:10.4
+2026-03-10 22:54:53,797 - INFO - [alpha_sort - 种子:16] 拉新:7.5人 | 总销量:7.5单 | 品牌曝光:28.4次 | 🌟综合得分:10.3
+2026-03-10 22:54:53,812 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-10 22:54:53,826 - INFO - 成功写入 6 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netscience/2026-4-3/log_continuous_SSRNum-50000-_seedNum-16_simuTimes-500.csv
+2026-03-10 22:54:53,826 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netscience/2026-4-3/log_continuous_SSRNum-50000-_seedNum-16_simuTimes-500.csv
+2026-03-10 22:54:53,827 - INFO - 加载数据集: network.netscience
+2026-03-10 22:54:53,828 - INFO - --- 矩阵分析 ---
+2026-03-10 22:54:53,828 - INFO - 节点数 (N): 379
+2026-03-10 22:54:53,828 - INFO - 边数 (E): 1828
+2026-03-10 22:54:53,828 - INFO - 密度 (Density): 0.01272617 (越小越稀疏)
+2026-03-10 22:54:53,828 - INFO - 稀疏度 (Sparsity): 0.98727383 (越接近1越稀疏)
+2026-03-10 22:54:53,828 - INFO - 平均度数 (Avg Degree): 4.82
+2026-03-10 22:54:53,829 - INFO - 首次生成度相关概率分布 分布类型: 'log_continuous'.
+2026-03-10 22:54:53,829 - INFO - ===> Generating 'Log-Continuous' distributions for Real Graph...
+2026-03-10 22:54:53,836 - INFO - 保存概率分布 文件位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/distribution-in-network.netscience/distribution-log_continuous_seedNum-28.pkl
+2026-03-10 22:54:53,839 - INFO - 首次生成种子集 random
+2026-03-10 22:54:53,839 - INFO - 执行当前算法开始: random
+2026-03-10 22:54:53,839 - INFO - 数据集节点总数:  n = 379, m = 28
+2026-03-10 22:54:53,839 - INFO - 选择 28  [356, 249, 327, 265, 132, 251, 106, 51, 74, 84, 241, 274, 148, 159, 335, 367, 130, 297, 137, 82, 57, 150, 98, 195, 53, 269, 357, 103]
+
+2026-03-10 22:54:53,839 - INFO - 当前用时 0.00 秒
+2026-03-10 22:54:53,839 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_random_seedNum-28_SSRNum-50000.txt
+2026-03-10 22:54:53,839 - INFO - 首次生成种子集 degreeTopM
+2026-03-10 22:54:53,839 - INFO - 执行当前算法开始: degreeTopM
+2026-03-10 22:54:53,839 - INFO - 依据: 选择连接数（度数）最多的节点。
+2026-03-10 22:54:53,840 - INFO - 选择的 Top M 节点及其度数:
+2026-03-10 22:54:53,840 - INFO - 
+2026-03-10 22:54:53,840 - INFO - 当前用时 0.00 秒
+2026-03-10 22:54:53,840 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_degreeTopM_seedNum-28_SSRNum-50000.txt
+2026-03-10 22:54:53,840 - INFO - 首次生成种子集 pageRank
+2026-03-10 22:54:53,840 - INFO - 执行当前算法开始: pageRank
+2026-03-10 22:54:53,840 - INFO - --- Running: PageRank (on tranProMatrix) Top M ---
+2026-03-10 22:54:53,850 - INFO - Selected PageRank seeds: [58, 3, 4, 119, 72, 5, 142, 106, 53, 219, 189, 107, 13, 41, 187, 7, 44, 92, 94, 173, 62, 95, 167, 96, 118, 75, 8, 123]
+2026-03-10 22:54:53,850 - INFO - 当前用时 0.01 秒
+2026-03-10 22:54:53,851 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_pageRank_seedNum-28_SSRNum-50000.txt
+2026-03-10 22:54:53,851 - INFO - 首次生成种子集 alpha_sort
+2026-03-10 22:54:53,851 - INFO - 执行当前算法开始: alpha_sort
+2026-03-10 22:54:53,851 - INFO - 379 个节点的alpha值降序排序 done
+2026-03-10 22:54:53,851 - INFO - ==============>> [(169, np.float64(0.5080958804142522)), (205, np.float64(0.4563919704938332)), (133, np.float64(0.3979018842360993)), (191, np.float64(0.39658323329821277)), (110, np.float64(0.39583798550660104)), (309, np.float64(0.3915932064272739)), (310, np.float64(0.39101987073225414)), (186, np.float64(0.39031709130727194)), (223, np.float64(0.38935386228492247)), (358, np.float64(0.3634200535235172))]
+2026-03-10 22:54:53,851 - INFO - 
+选择的种子集 (按alpha排序): [169, 205, 133, 191, 110, 309, 310, 186, 223, 358, 244, 179, 45, 201, 39, 227, 269, 215, 199, 114, 164, 354, 66, 97, 316, 33, 324, 377]
+
+2026-03-10 22:54:53,851 - INFO - 当前用时 0.00 秒
+2026-03-10 22:54:53,851 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_alpha_sort_seedNum-28_SSRNum-50000.txt
+2026-03-10 22:54:53,851 - INFO - 首次生成种子集 ris_optimized
+2026-03-10 22:54:53,851 - INFO - 执行当前算法开始: ris_optimized
+2026-03-10 22:54:53,855 - INFO - 开始生成 50000 组多重RR-Set (万级节点极限内存优化版)...
+2026-03-10 22:54:56,625 - INFO - 生成与倒排构建完毕。耗时: 2.77 秒。
+2026-03-10 22:54:56,626 - INFO - 开始基于 Numpy 矩阵的高速贪心选择...
+2026-03-10 22:54:56,663 - INFO - 高速选种完毕。耗时: 0.04 秒。估算范围: 13.44
+2026-03-10 22:54:56,665 - INFO - 当前用时 2.81 秒
+2026-03-10 22:54:56,665 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_ris_optimized_seedNum-28_SSRNum-50000.txt
+2026-03-10 22:54:56,666 - INFO - 首次生成种子集 1hop_sort
+2026-03-10 22:54:56,666 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-10 22:54:56,666 - INFO - 当前用时 0.00 秒
+2026-03-10 22:54:56,667 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_1hop_sort_seedNum-28_SSRNum-50000.txt
+2026-03-10 22:54:56,667 - INFO - 评估种子集: None
+2026-03-10 22:54:56,667 - INFO - 多进程评估开始，共有 6 个方法待评估...
+2026-03-10 22:54:56,667 - INFO - 启动进程池，Worker数量: 6
+2026-03-10 22:54:56,731 - INFO - [Process 1922931] 开始评估方法: random, 种子数: 28
+2026-03-10 22:54:56,741 - INFO - [Process 1922932] 开始评估方法: degreeTopM, 种子数: 28
+2026-03-10 22:54:56,750 - INFO - [Process 1922933] 开始评估方法: pageRank, 种子数: 28
+2026-03-10 22:54:56,760 - INFO - [Process 1922934] 开始评估方法: alpha_sort, 种子数: 28
+2026-03-10 22:54:56,770 - INFO - [Process 1922935] 开始评估方法: ris_optimized, 种子数: 28
+2026-03-10 22:54:56,780 - INFO - [Process 1922936] 开始评估方法: 1hop_sort, 种子数: 28
+2026-03-10 22:54:56,966 - INFO - [degreeTopM - 种子:28] 拉新:3.5人 | 总销量:3.5单 | 品牌曝光:46.7次 | 🌟综合得分:8.1
+2026-03-10 22:54:56,987 - INFO - [pageRank - 种子:28] 拉新:3.7人 | 总销量:3.8单 | 品牌曝光:47.9次 | 🌟综合得分:8.5
+2026-03-10 22:54:57,022 - INFO - [alpha_sort - 种子:28] 拉新:12.2人 | 总销量:12.3单 | 品牌曝光:50.7次 | 🌟综合得分:17.3
+2026-03-10 22:54:57,059 - INFO - [random - 种子:28] 拉新:7.5人 | 总销量:7.6单 | 品牌曝光:56.5次 | 🌟综合得分:13.2
+2026-03-10 22:54:57,066 - INFO - [1hop_sort - 种子:28] 拉新:12.4人 | 总销量:13.0单 | 品牌曝光:52.8次 | 🌟综合得分:18.0
+2026-03-10 22:54:57,079 - INFO - [ris_optimized - 种子:28] 拉新:12.6人 | 总销量:12.7单 | 品牌曝光:56.1次 | 🌟综合得分:18.2
+2026-03-10 22:54:57,093 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-10 22:54:57,101 - INFO - 成功写入 6 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netscience/2026-4-3/log_continuous_SSRNum-50000-_seedNum-28_simuTimes-500.csv
+2026-03-10 22:54:57,102 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netscience/2026-4-3/log_continuous_SSRNum-50000-_seedNum-28_simuTimes-500.csv
+2026-03-10 22:54:57,103 - INFO - 加载数据集: network.netscience
+2026-03-10 22:54:57,104 - INFO - --- 矩阵分析 ---
+2026-03-10 22:54:57,104 - INFO - 节点数 (N): 379
+2026-03-10 22:54:57,104 - INFO - 边数 (E): 1828
+2026-03-10 22:54:57,104 - INFO - 密度 (Density): 0.01272617 (越小越稀疏)
+2026-03-10 22:54:57,104 - INFO - 稀疏度 (Sparsity): 0.98727383 (越接近1越稀疏)
+2026-03-10 22:54:57,104 - INFO - 平均度数 (Avg Degree): 4.82
+2026-03-10 22:54:57,105 - INFO - 首次生成度相关概率分布 分布类型: 'log_continuous'.
+2026-03-10 22:54:57,105 - INFO - ===> Generating 'Log-Continuous' distributions for Real Graph...
+2026-03-10 22:54:57,114 - INFO - 保存概率分布 文件位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/distribution-in-network.netscience/distribution-log_continuous_seedNum-40.pkl
+2026-03-10 22:54:57,116 - INFO - 首次生成种子集 random
+2026-03-10 22:54:57,117 - INFO - 执行当前算法开始: random
+2026-03-10 22:54:57,117 - INFO - 数据集节点总数:  n = 379, m = 40
+2026-03-10 22:54:57,117 - INFO - 选择 40  [266, 336, 350, 8, 87, 120, 17, 155, 25, 11, 220, 341, 246, 191, 154, 362, 222, 166, 329, 238, 1, 211, 293, 213, 326, 346, 100, 126, 261, 169, 274, 248, 217, 74, 205, 162, 200, 372, 153, 306]
+
+2026-03-10 22:54:57,117 - INFO - 当前用时 0.00 秒
+2026-03-10 22:54:57,117 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_random_seedNum-40_SSRNum-50000.txt
+2026-03-10 22:54:57,117 - INFO - 首次生成种子集 degreeTopM
+2026-03-10 22:54:57,117 - INFO - 执行当前算法开始: degreeTopM
+2026-03-10 22:54:57,117 - INFO - 依据: 选择连接数（度数）最多的节点。
+2026-03-10 22:54:57,118 - INFO - 选择的 Top M 节点及其度数:
+2026-03-10 22:54:57,118 - INFO - 
+2026-03-10 22:54:57,118 - INFO - 当前用时 0.00 秒
+2026-03-10 22:54:57,118 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_degreeTopM_seedNum-40_SSRNum-50000.txt
+2026-03-10 22:54:57,118 - INFO - 首次生成种子集 pageRank
+2026-03-10 22:54:57,118 - INFO - 执行当前算法开始: pageRank
+2026-03-10 22:54:57,118 - INFO - --- Running: PageRank (on tranProMatrix) Top M ---
+2026-03-10 22:54:57,129 - INFO - Selected PageRank seeds: [58, 3, 4, 119, 72, 5, 142, 106, 53, 219, 189, 107, 13, 41, 187, 7, 44, 92, 94, 173, 62, 95, 167, 96, 118, 75, 8, 123, 235, 234, 113, 180, 217, 11, 0, 76, 232, 124, 233, 46]
+2026-03-10 22:54:57,130 - INFO - 当前用时 0.01 秒
+2026-03-10 22:54:57,130 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_pageRank_seedNum-40_SSRNum-50000.txt
+2026-03-10 22:54:57,130 - INFO - 首次生成种子集 alpha_sort
+2026-03-10 22:54:57,130 - INFO - 执行当前算法开始: alpha_sort
+2026-03-10 22:54:57,130 - INFO - 379 个节点的alpha值降序排序 done
+2026-03-10 22:54:57,130 - INFO - ==============>> [(181, np.float64(0.41540942335975667)), (27, np.float64(0.40541137474713906)), (120, np.float64(0.38459667479201554)), (132, np.float64(0.37419477496926995)), (288, np.float64(0.3670755020683515)), (23, np.float64(0.33167491789095643)), (67, np.float64(0.3189297296771064)), (80, np.float64(0.3167177091718008)), (2, np.float64(0.3065296275710432)), (365, np.float64(0.30356623419582346))]
+2026-03-10 22:54:57,130 - INFO - 
+选择的种子集 (按alpha排序): [181, 27, 120, 132, 288, 23, 67, 80, 2, 365, 185, 340, 204, 121, 191, 339, 125, 64, 21, 114, 104, 306, 164, 348, 51, 284, 374, 243, 278, 273, 137, 91, 282, 356, 203, 314, 152, 240, 331, 281]
+
+2026-03-10 22:54:57,130 - INFO - 当前用时 0.00 秒
+2026-03-10 22:54:57,131 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_alpha_sort_seedNum-40_SSRNum-50000.txt
+2026-03-10 22:54:57,131 - INFO - 首次生成种子集 ris_optimized
+2026-03-10 22:54:57,131 - INFO - 执行当前算法开始: ris_optimized
+2026-03-10 22:54:57,175 - INFO - 开始生成 50000 组多重RR-Set (万级节点极限内存优化版)...
+2026-03-10 22:55:00,645 - INFO - 生成与倒排构建完毕。耗时: 3.47 秒。
+2026-03-10 22:55:00,646 - INFO - 开始基于 Numpy 矩阵的高速贪心选择...
+2026-03-10 22:55:00,685 - INFO - 高速选种完毕。耗时: 0.04 秒。估算范围: 18.72
+2026-03-10 22:55:00,686 - INFO - 当前用时 3.56 秒
+2026-03-10 22:55:00,687 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_ris_optimized_seedNum-40_SSRNum-50000.txt
+2026-03-10 22:55:00,687 - INFO - 首次生成种子集 1hop_sort
+2026-03-10 22:55:00,687 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-10 22:55:00,688 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:00,688 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_1hop_sort_seedNum-40_SSRNum-50000.txt
+2026-03-10 22:55:00,689 - INFO - 评估种子集: None
+2026-03-10 22:55:00,689 - INFO - 多进程评估开始，共有 6 个方法待评估...
+2026-03-10 22:55:00,689 - INFO - 启动进程池，Worker数量: 6
+2026-03-10 22:55:00,745 - INFO - [Process 1923236] 开始评估方法: random, 种子数: 40
+2026-03-10 22:55:00,756 - INFO - [Process 1923237] 开始评估方法: degreeTopM, 种子数: 40
+2026-03-10 22:55:00,763 - INFO - [Process 1923238] 开始评估方法: pageRank, 种子数: 40
+2026-03-10 22:55:00,768 - INFO - [Process 1923239] 开始评估方法: alpha_sort, 种子数: 40
+2026-03-10 22:55:00,782 - INFO - [Process 1923240] 开始评估方法: ris_optimized, 种子数: 40
+2026-03-10 22:55:00,795 - INFO - [Process 1923241] 开始评估方法: 1hop_sort, 种子数: 40
+2026-03-10 22:55:01,093 - INFO - [pageRank - 种子:40] 拉新:7.0人 | 总销量:7.1单 | 品牌曝光:67.5次 | 🌟综合得分:13.8
+2026-03-10 22:55:01,118 - INFO - [degreeTopM - 种子:40] 拉新:6.1人 | 总销量:6.2单 | 品牌曝光:67.8次 | 🌟综合得分:13.0
+2026-03-10 22:55:01,157 - INFO - [random - 种子:40] 拉新:10.5人 | 总销量:10.6单 | 品牌曝光:77.8次 | 🌟综合得分:18.3
+2026-03-10 22:55:01,193 - INFO - [1hop_sort - 种子:40] 拉新:16.0人 | 总销量:16.6单 | 品牌曝光:72.8次 | 🌟综合得分:23.6
+2026-03-10 22:55:01,238 - INFO - [alpha_sort - 种子:40] 拉新:16.5人 | 总销量:16.6单 | 品牌曝光:75.8次 | 🌟综合得分:24.1
+2026-03-10 22:55:01,242 - INFO - [ris_optimized - 种子:40] 拉新:16.8人 | 总销量:16.9单 | 品牌曝光:79.9次 | 🌟综合得分:24.8
+2026-03-10 22:55:01,258 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-10 22:55:01,264 - INFO - 成功写入 6 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netscience/2026-4-3/log_continuous_SSRNum-50000-_seedNum-40_simuTimes-500.csv
+2026-03-10 22:55:01,265 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netscience/2026-4-3/log_continuous_SSRNum-50000-_seedNum-40_simuTimes-500.csv
+2026-03-10 22:55:01,265 - INFO - 加载数据集: network.netscience
+2026-03-10 22:55:01,266 - INFO - --- 矩阵分析 ---
+2026-03-10 22:55:01,266 - INFO - 节点数 (N): 379
+2026-03-10 22:55:01,266 - INFO - 边数 (E): 1828
+2026-03-10 22:55:01,266 - INFO - 密度 (Density): 0.01272617 (越小越稀疏)
+2026-03-10 22:55:01,266 - INFO - 稀疏度 (Sparsity): 0.98727383 (越接近1越稀疏)
+2026-03-10 22:55:01,266 - INFO - 平均度数 (Avg Degree): 4.82
+2026-03-10 22:55:01,267 - INFO - 首次生成度相关概率分布 分布类型: 'log_continuous'.
+2026-03-10 22:55:01,267 - INFO - ===> Generating 'Log-Continuous' distributions for Real Graph...
+2026-03-10 22:55:01,273 - INFO - 保存概率分布 文件位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/distribution-in-network.netscience/distribution-log_continuous_seedNum-52.pkl
+2026-03-10 22:55:01,275 - INFO - 首次生成种子集 random
+2026-03-10 22:55:01,276 - INFO - 执行当前算法开始: random
+2026-03-10 22:55:01,276 - INFO - 数据集节点总数:  n = 379, m = 52
+2026-03-10 22:55:01,276 - INFO - 选择 52  [303, 136, 369, 276, 67, 227, 213, 99, 283, 334, 294, 135, 265, 377, 80, 179, 319, 154, 50, 375, 169, 181, 264, 42, 215, 335, 183, 304, 204, 305, 364, 120, 171, 200, 306, 63, 122, 147, 41, 45, 291, 182, 247, 216, 286, 297, 211, 206, 40, 5, 209, 53]
+
+2026-03-10 22:55:01,276 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:01,276 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_random_seedNum-52_SSRNum-50000.txt
+2026-03-10 22:55:01,276 - INFO - 首次生成种子集 degreeTopM
+2026-03-10 22:55:01,276 - INFO - 执行当前算法开始: degreeTopM
+2026-03-10 22:55:01,276 - INFO - 依据: 选择连接数（度数）最多的节点。
+2026-03-10 22:55:01,276 - INFO - 选择的 Top M 节点及其度数:
+2026-03-10 22:55:01,277 - INFO - 
+2026-03-10 22:55:01,277 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:01,277 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_degreeTopM_seedNum-52_SSRNum-50000.txt
+2026-03-10 22:55:01,277 - INFO - 首次生成种子集 pageRank
+2026-03-10 22:55:01,277 - INFO - 执行当前算法开始: pageRank
+2026-03-10 22:55:01,277 - INFO - --- Running: PageRank (on tranProMatrix) Top M ---
+2026-03-10 22:55:01,287 - INFO - Selected PageRank seeds: [58, 3, 4, 119, 72, 5, 142, 106, 53, 219, 189, 107, 13, 41, 187, 7, 44, 92, 94, 173, 62, 95, 167, 96, 118, 75, 8, 123, 235, 234, 113, 180, 217, 11, 0, 76, 232, 124, 233, 46, 20, 140, 329, 52, 156, 87, 362, 122, 268, 74, 126, 81]
+2026-03-10 22:55:01,287 - INFO - 当前用时 0.01 秒
+2026-03-10 22:55:01,287 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_pageRank_seedNum-52_SSRNum-50000.txt
+2026-03-10 22:55:01,287 - INFO - 首次生成种子集 alpha_sort
+2026-03-10 22:55:01,287 - INFO - 执行当前算法开始: alpha_sort
+2026-03-10 22:55:01,287 - INFO - 379 个节点的alpha值降序排序 done
+2026-03-10 22:55:01,287 - INFO - ==============>> [(325, np.float64(0.47972768708203767)), (337, np.float64(0.41958699466807253)), (342, np.float64(0.3941685198476954)), (247, np.float64(0.3933793640253244)), (318, np.float64(0.3925887727236209)), (277, np.float64(0.3701009451631112)), (70, np.float64(0.35094078519837063)), (136, np.float64(0.34953446194425997)), (181, np.float64(0.3457064825831496)), (150, np.float64(0.34174664386050146))]
+2026-03-10 22:55:01,287 - INFO - 
+选择的种子集 (按alpha排序): [325, 337, 342, 247, 318, 277, 70, 136, 181, 150, 273, 282, 37, 194, 353, 242, 283, 347, 281, 93, 357, 103, 231, 113, 134, 278, 335, 163, 147, 309, 158, 330, 208, 151, 358, 153, 16, 131, 111, 143, 175, 179, 372, 125, 193, 311, 164, 333, 190, 317, 114, 271]
+
+2026-03-10 22:55:01,287 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:01,287 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_alpha_sort_seedNum-52_SSRNum-50000.txt
+2026-03-10 22:55:01,288 - INFO - 首次生成种子集 ris_optimized
+2026-03-10 22:55:01,288 - INFO - 执行当前算法开始: ris_optimized
+2026-03-10 22:55:01,292 - INFO - 开始生成 50000 组多重RR-Set (万级节点极限内存优化版)...
+2026-03-10 22:55:06,009 - INFO - 生成与倒排构建完毕。耗时: 4.72 秒。
+2026-03-10 22:55:06,010 - INFO - 开始基于 Numpy 矩阵的高速贪心选择...
+2026-03-10 22:55:06,057 - INFO - 高速选种完毕。耗时: 0.05 秒。估算范围: 24.59
+2026-03-10 22:55:06,059 - INFO - 当前用时 4.77 秒
+2026-03-10 22:55:06,060 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_ris_optimized_seedNum-52_SSRNum-50000.txt
+2026-03-10 22:55:06,060 - INFO - 首次生成种子集 1hop_sort
+2026-03-10 22:55:06,060 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-10 22:55:06,061 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:06,061 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_1hop_sort_seedNum-52_SSRNum-50000.txt
+2026-03-10 22:55:06,062 - INFO - 评估种子集: None
+2026-03-10 22:55:06,062 - INFO - 多进程评估开始，共有 6 个方法待评估...
+2026-03-10 22:55:06,062 - INFO - 启动进程池，Worker数量: 6
+2026-03-10 22:55:06,122 - INFO - [Process 1923356] 开始评估方法: random, 种子数: 52
+2026-03-10 22:55:06,133 - INFO - [Process 1923357] 开始评估方法: degreeTopM, 种子数: 52
+2026-03-10 22:55:06,138 - INFO - [Process 1923358] 开始评估方法: pageRank, 种子数: 52
+2026-03-10 22:55:06,149 - INFO - [Process 1923359] 开始评估方法: alpha_sort, 种子数: 52
+2026-03-10 22:55:06,153 - INFO - [Process 1923360] 开始评估方法: ris_optimized, 种子数: 52
+2026-03-10 22:55:06,157 - INFO - [Process 1923361] 开始评估方法: 1hop_sort, 种子数: 52
+2026-03-10 22:55:06,582 - INFO - [pageRank - 种子:52] 拉新:8.6人 | 总销量:8.7单 | 品牌曝光:88.5次 | 🌟综合得分:17.5
+2026-03-10 22:55:06,607 - INFO - [degreeTopM - 种子:52] 拉新:8.4人 | 总销量:8.6单 | 品牌曝光:86.2次 | 🌟综合得分:17.1
+2026-03-10 22:55:06,630 - INFO - [alpha_sort - 种子:52] 拉新:21.5人 | 总销量:21.9单 | 品牌曝光:97.1次 | 🌟综合得分:31.4
+2026-03-10 22:55:06,664 - INFO - [random - 种子:52] 拉新:13.0人 | 总销量:13.2单 | 品牌曝光:100.8次 | 🌟综合得分:23.2
+2026-03-10 22:55:06,707 - INFO - [ris_optimized - 种子:52] 拉新:22.0人 | 总销量:22.2单 | 品牌曝光:104.8次 | 🌟综合得分:32.6
+2026-03-10 22:55:06,744 - INFO - [1hop_sort - 种子:52] 拉新:21.3人 | 总销量:22.7单 | 品牌曝光:100.0次 | 🌟综合得分:32.0
+2026-03-10 22:55:06,759 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-10 22:55:06,767 - INFO - 成功写入 6 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netscience/2026-4-3/log_continuous_SSRNum-50000-_seedNum-52_simuTimes-500.csv
+2026-03-10 22:55:06,768 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netscience/2026-4-3/log_continuous_SSRNum-50000-_seedNum-52_simuTimes-500.csv
+2026-03-10 22:55:06,769 - INFO - 加载数据集: network.netscience
+2026-03-10 22:55:06,770 - INFO - --- 矩阵分析 ---
+2026-03-10 22:55:06,770 - INFO - 节点数 (N): 379
+2026-03-10 22:55:06,770 - INFO - 边数 (E): 1828
+2026-03-10 22:55:06,771 - INFO - 密度 (Density): 0.01272617 (越小越稀疏)
+2026-03-10 22:55:06,771 - INFO - 稀疏度 (Sparsity): 0.98727383 (越接近1越稀疏)
+2026-03-10 22:55:06,771 - INFO - 平均度数 (Avg Degree): 4.82
+2026-03-10 22:55:06,772 - INFO - 首次生成度相关概率分布 分布类型: 'log_continuous'.
+2026-03-10 22:55:06,772 - INFO - ===> Generating 'Log-Continuous' distributions for Real Graph...
+2026-03-10 22:55:06,780 - INFO - 保存概率分布 文件位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/distribution-in-network.netscience/distribution-log_continuous_seedNum-64.pkl
+2026-03-10 22:55:06,783 - INFO - 首次生成种子集 random
+2026-03-10 22:55:06,783 - INFO - 执行当前算法开始: random
+2026-03-10 22:55:06,783 - INFO - 数据集节点总数:  n = 379, m = 64
+2026-03-10 22:55:06,783 - INFO - 选择 64  [232, 284, 9, 308, 375, 175, 51, 311, 154, 162, 222, 338, 226, 258, 243, 111, 352, 7, 233, 199, 122, 88, 64, 182, 21, 324, 140, 42, 201, 5, 103, 225, 368, 164, 246, 146, 74, 139, 320, 369, 95, 305, 363, 264, 77, 292, 82, 34, 92, 336, 249, 196, 167, 337, 32, 149, 213, 200, 260, 119, 235, 291, 47, 334]
+
+2026-03-10 22:55:06,783 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:06,783 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_random_seedNum-64_SSRNum-50000.txt
+2026-03-10 22:55:06,784 - INFO - 首次生成种子集 degreeTopM
+2026-03-10 22:55:06,784 - INFO - 执行当前算法开始: degreeTopM
+2026-03-10 22:55:06,784 - INFO - 依据: 选择连接数（度数）最多的节点。
+2026-03-10 22:55:06,784 - INFO - 选择的 Top M 节点及其度数:
+2026-03-10 22:55:06,784 - INFO - 
+2026-03-10 22:55:06,784 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:06,784 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_degreeTopM_seedNum-64_SSRNum-50000.txt
+2026-03-10 22:55:06,784 - INFO - 首次生成种子集 pageRank
+2026-03-10 22:55:06,784 - INFO - 执行当前算法开始: pageRank
+2026-03-10 22:55:06,784 - INFO - --- Running: PageRank (on tranProMatrix) Top M ---
+2026-03-10 22:55:06,794 - INFO - Selected PageRank seeds: [58, 3, 4, 119, 72, 5, 142, 106, 53, 219, 189, 107, 13, 41, 187, 7, 44, 92, 94, 173, 62, 95, 167, 96, 118, 75, 8, 123, 235, 234, 113, 180, 217, 11, 0, 76, 232, 124, 233, 46, 20, 140, 329, 52, 156, 87, 362, 122, 268, 74, 126, 81, 252, 249, 250, 295, 14, 320, 204, 201, 267, 209, 127, 188]
+2026-03-10 22:55:06,795 - INFO - 当前用时 0.01 秒
+2026-03-10 22:55:06,795 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_pageRank_seedNum-64_SSRNum-50000.txt
+2026-03-10 22:55:06,795 - INFO - 首次生成种子集 alpha_sort
+2026-03-10 22:55:06,795 - INFO - 执行当前算法开始: alpha_sort
+2026-03-10 22:55:06,795 - INFO - 379 个节点的alpha值降序排序 done
+2026-03-10 22:55:06,795 - INFO - ==============>> [(281, np.float64(0.47504949065915497)), (333, np.float64(0.42969974181369985)), (147, np.float64(0.4281854877147096)), (133, np.float64(0.3563905335778556)), (366, np.float64(0.35327528515623957)), (229, np.float64(0.3428522734988776)), (85, np.float64(0.3409072569113644)), (303, np.float64(0.33708039158903463)), (2, np.float64(0.3319675424731623)), (137, np.float64(0.3275884241339183))]
+2026-03-10 22:55:06,795 - INFO - 
+选择的种子集 (按alpha排序): [281, 333, 147, 133, 366, 229, 85, 303, 2, 137, 224, 181, 80, 199, 276, 364, 159, 371, 330, 213, 121, 313, 37, 140, 108, 244, 195, 152, 352, 183, 285, 332, 170, 66, 70, 356, 351, 310, 145, 149, 309, 77, 339, 143, 12, 63, 50, 107, 79, 22, 311, 203, 97, 186, 194, 161, 76, 192, 321, 153, 14, 78, 231, 46]
+
+2026-03-10 22:55:06,795 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:06,795 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_alpha_sort_seedNum-64_SSRNum-50000.txt
+2026-03-10 22:55:06,796 - INFO - 首次生成种子集 ris_optimized
+2026-03-10 22:55:06,796 - INFO - 执行当前算法开始: ris_optimized
+2026-03-10 22:55:06,800 - INFO - 开始生成 50000 组多重RR-Set (万级节点极限内存优化版)...
+2026-03-10 22:55:12,727 - INFO - 生成与倒排构建完毕。耗时: 5.93 秒。
+2026-03-10 22:55:12,728 - INFO - 开始基于 Numpy 矩阵的高速贪心选择...
+2026-03-10 22:55:12,785 - INFO - 高速选种完毕。耗时: 0.06 秒。估算范围: 28.33
+2026-03-10 22:55:12,787 - INFO - 当前用时 5.99 秒
+2026-03-10 22:55:12,788 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_ris_optimized_seedNum-64_SSRNum-50000.txt
+2026-03-10 22:55:12,789 - INFO - 首次生成种子集 1hop_sort
+2026-03-10 22:55:12,789 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-10 22:55:12,789 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:12,790 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_1hop_sort_seedNum-64_SSRNum-50000.txt
+2026-03-10 22:55:12,790 - INFO - 评估种子集: None
+2026-03-10 22:55:12,790 - INFO - 多进程评估开始，共有 6 个方法待评估...
+2026-03-10 22:55:12,790 - INFO - 启动进程池，Worker数量: 6
+2026-03-10 22:55:12,852 - INFO - [Process 1923487] 开始评估方法: random, 种子数: 64
+2026-03-10 22:55:12,861 - INFO - [Process 1923488] 开始评估方法: degreeTopM, 种子数: 64
+2026-03-10 22:55:12,868 - INFO - [Process 1923489] 开始评估方法: pageRank, 种子数: 64
+2026-03-10 22:55:12,876 - INFO - [Process 1923490] 开始评估方法: alpha_sort, 种子数: 64
+2026-03-10 22:55:12,885 - INFO - [Process 1923491] 开始评估方法: ris_optimized, 种子数: 64
+2026-03-10 22:55:12,890 - INFO - [Process 1923492] 开始评估方法: 1hop_sort, 种子数: 64
+2026-03-10 22:55:13,437 - INFO - [degreeTopM - 种子:64] 拉新:10.2人 | 总销量:10.3单 | 品牌曝光:108.6次 | 🌟综合得分:21.1
+2026-03-10 22:55:13,454 - INFO - [pageRank - 种子:64] 拉新:11.2人 | 总销量:11.3单 | 品牌曝光:110.3次 | 🌟综合得分:22.3
+2026-03-10 22:55:13,501 - INFO - [random - 种子:64] 拉新:14.7人 | 总销量:14.8单 | 品牌曝光:122.2次 | 🌟综合得分:27.0
+2026-03-10 22:55:13,515 - INFO - [ris_optimized - 种子:64] 拉新:25.0人 | 总销量:25.6单 | 品牌曝光:127.0次 | 🌟综合得分:38.0
+2026-03-10 22:55:13,550 - INFO - [alpha_sort - 种子:64] 拉新:24.3人 | 总销量:24.8单 | 品牌曝光:118.7次 | 🌟综合得分:36.4
+2026-03-10 22:55:13,660 - INFO - [1hop_sort - 种子:64] 拉新:24.5人 | 总销量:25.7单 | 品牌曝光:120.4次 | 🌟综合得分:37.1
+2026-03-10 22:55:13,676 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-10 22:55:13,684 - INFO - 成功写入 6 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netscience/2026-4-3/log_continuous_SSRNum-50000-_seedNum-64_simuTimes-500.csv
+2026-03-10 22:55:13,685 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netscience/2026-4-3/log_continuous_SSRNum-50000-_seedNum-64_simuTimes-500.csv
+2026-03-10 22:55:13,686 - INFO - 加载数据集: network.netscience
+2026-03-10 22:55:13,687 - INFO - --- 矩阵分析 ---
+2026-03-10 22:55:13,687 - INFO - 节点数 (N): 379
+2026-03-10 22:55:13,687 - INFO - 边数 (E): 1828
+2026-03-10 22:55:13,687 - INFO - 密度 (Density): 0.01272617 (越小越稀疏)
+2026-03-10 22:55:13,687 - INFO - 稀疏度 (Sparsity): 0.98727383 (越接近1越稀疏)
+2026-03-10 22:55:13,687 - INFO - 平均度数 (Avg Degree): 4.82
+2026-03-10 22:55:13,688 - INFO - 首次生成度相关概率分布 分布类型: 'log_continuous'.
+2026-03-10 22:55:13,688 - INFO - ===> Generating 'Log-Continuous' distributions for Real Graph...
+2026-03-10 22:55:13,697 - INFO - 保存概率分布 文件位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/distribution-in-network.netscience/distribution-log_continuous_seedNum-76.pkl
+2026-03-10 22:55:13,700 - INFO - 首次生成种子集 random
+2026-03-10 22:55:13,700 - INFO - 执行当前算法开始: random
+2026-03-10 22:55:13,700 - INFO - 数据集节点总数:  n = 379, m = 76
+2026-03-10 22:55:13,700 - INFO - 选择 76  [354, 206, 118, 151, 109, 230, 181, 167, 127, 79, 229, 259, 143, 356, 372, 299, 303, 192, 282, 315, 164, 255, 5, 115, 342, 322, 306, 51, 348, 285, 268, 101, 352, 337, 38, 94, 112, 11, 274, 292, 177, 128, 313, 361, 305, 120, 148, 43, 91, 202, 235, 59, 349, 328, 108, 263, 57, 287, 248, 264, 205, 133, 85, 220, 196, 77, 284, 374, 134, 208, 93, 7, 347, 67, 19, 158]
+
+2026-03-10 22:55:13,700 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:13,700 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_random_seedNum-76_SSRNum-50000.txt
+2026-03-10 22:55:13,701 - INFO - 首次生成种子集 degreeTopM
+2026-03-10 22:55:13,701 - INFO - 执行当前算法开始: degreeTopM
+2026-03-10 22:55:13,701 - INFO - 依据: 选择连接数（度数）最多的节点。
+2026-03-10 22:55:13,701 - INFO - 选择的 Top M 节点及其度数:
+2026-03-10 22:55:13,701 - INFO - 
+2026-03-10 22:55:13,701 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:13,701 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_degreeTopM_seedNum-76_SSRNum-50000.txt
+2026-03-10 22:55:13,702 - INFO - 首次生成种子集 pageRank
+2026-03-10 22:55:13,702 - INFO - 执行当前算法开始: pageRank
+2026-03-10 22:55:13,702 - INFO - --- Running: PageRank (on tranProMatrix) Top M ---
+2026-03-10 22:55:13,712 - INFO - Selected PageRank seeds: [58, 3, 4, 119, 72, 5, 142, 106, 53, 219, 189, 107, 13, 41, 187, 7, 44, 92, 94, 173, 62, 95, 167, 96, 118, 75, 8, 123, 235, 234, 113, 180, 217, 11, 0, 76, 232, 124, 233, 46, 20, 140, 329, 52, 156, 87, 362, 122, 268, 74, 126, 81, 252, 249, 250, 295, 14, 320, 204, 201, 267, 209, 127, 188, 258, 259, 200, 178, 193, 216, 162, 163, 225, 69, 280, 40]
+2026-03-10 22:55:13,713 - INFO - 当前用时 0.01 秒
+2026-03-10 22:55:13,713 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_pageRank_seedNum-76_SSRNum-50000.txt
+2026-03-10 22:55:13,713 - INFO - 首次生成种子集 alpha_sort
+2026-03-10 22:55:13,713 - INFO - 执行当前算法开始: alpha_sort
+2026-03-10 22:55:13,713 - INFO - 379 个节点的alpha值降序排序 done
+2026-03-10 22:55:13,713 - INFO - ==============>> [(281, np.float64(0.5111969201840775)), (255, np.float64(0.49916831911122206)), (310, np.float64(0.4367264670911956)), (171, np.float64(0.4286927921229456)), (111, np.float64(0.41329321542622305)), (289, np.float64(0.40667514109242414)), (128, np.float64(0.4037366565182654)), (190, np.float64(0.3874593816976746)), (297, np.float64(0.3722576021120482)), (312, np.float64(0.3613781607900693))]
+2026-03-10 22:55:13,713 - INFO - 
+选择的种子集 (按alpha排序): [281, 255, 310, 171, 111, 289, 128, 190, 297, 312, 265, 344, 363, 290, 177, 332, 231, 182, 109, 175, 91, 262, 233, 98, 354, 51, 286, 39, 197, 340, 373, 151, 86, 110, 272, 317, 162, 164, 311, 89, 132, 326, 248, 63, 78, 161, 236, 48, 181, 134, 184, 244, 114, 319, 57, 163, 309, 350, 194, 374, 90, 153, 79, 328, 346, 225, 222, 142, 17, 291, 121, 137, 226, 376, 377, 157]
+
+2026-03-10 22:55:13,713 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:13,713 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_alpha_sort_seedNum-76_SSRNum-50000.txt
+2026-03-10 22:55:13,714 - INFO - 首次生成种子集 ris_optimized
+2026-03-10 22:55:13,714 - INFO - 执行当前算法开始: ris_optimized
+2026-03-10 22:55:13,762 - INFO - 开始生成 50000 组多重RR-Set (万级节点极限内存优化版)...
+2026-03-10 22:55:21,212 - INFO - 生成与倒排构建完毕。耗时: 7.45 秒。
+2026-03-10 22:55:21,213 - INFO - 开始基于 Numpy 矩阵的高速贪心选择...
+2026-03-10 22:55:21,281 - INFO - 高速选种完毕。耗时: 0.07 秒。估算范围: 35.66
+2026-03-10 22:55:21,284 - INFO - 当前用时 7.57 秒
+2026-03-10 22:55:21,285 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_ris_optimized_seedNum-76_SSRNum-50000.txt
+2026-03-10 22:55:21,285 - INFO - 首次生成种子集 1hop_sort
+2026-03-10 22:55:21,285 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-10 22:55:21,286 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:21,286 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_1hop_sort_seedNum-76_SSRNum-50000.txt
+2026-03-10 22:55:21,287 - INFO - 评估种子集: None
+2026-03-10 22:55:21,287 - INFO - 多进程评估开始，共有 6 个方法待评估...
+2026-03-10 22:55:21,287 - INFO - 启动进程池，Worker数量: 6
+2026-03-10 22:55:21,347 - INFO - [Process 1923632] 开始评估方法: random, 种子数: 76
+2026-03-10 22:55:21,354 - INFO - [Process 1923633] 开始评估方法: degreeTopM, 种子数: 76
+2026-03-10 22:55:21,358 - INFO - [Process 1923634] 开始评估方法: pageRank, 种子数: 76
+2026-03-10 22:55:21,362 - INFO - [Process 1923635] 开始评估方法: alpha_sort, 种子数: 76
+2026-03-10 22:55:21,367 - INFO - [Process 1923636] 开始评估方法: ris_optimized, 种子数: 76
+2026-03-10 22:55:21,375 - INFO - [Process 1923637] 开始评估方法: 1hop_sort, 种子数: 76
+2026-03-10 22:55:22,044 - INFO - [degreeTopM - 种子:76] 拉新:14.2人 | 总销量:14.7单 | 品牌曝光:129.9次 | 🌟综合得分:27.5
+2026-03-10 22:55:22,114 - INFO - [1hop_sort - 种子:76] 拉新:31.0人 | 总销量:32.8单 | 品牌曝光:145.4次 | 🌟综合得分:46.4
+2026-03-10 22:55:22,144 - INFO - [pageRank - 种子:76] 拉新:15.8人 | 总销量:16.1单 | 品牌曝光:134.6次 | 🌟综合得分:29.4
+2026-03-10 22:55:22,168 - INFO - [random - 种子:76] 拉新:20.9人 | 总销量:21.4单 | 品牌曝光:151.0次 | 🌟综合得分:36.3
+2026-03-10 22:55:22,184 - INFO - [alpha_sort - 种子:76] 拉新:31.2人 | 总销量:32.1单 | 品牌曝光:143.3次 | 🌟综合得分:46.0
+2026-03-10 22:55:22,247 - INFO - [ris_optimized - 种子:76] 拉新:31.3人 | 总销量:32.0单 | 品牌曝光:149.3次 | 🌟综合得分:46.6
+2026-03-10 22:55:22,263 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-10 22:55:22,271 - INFO - 成功写入 6 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netscience/2026-4-3/log_continuous_SSRNum-50000-_seedNum-76_simuTimes-500.csv
+2026-03-10 22:55:22,272 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netscience/2026-4-3/log_continuous_SSRNum-50000-_seedNum-76_simuTimes-500.csv
+2026-03-10 22:55:22,273 - INFO - 加载数据集: network.netscience
+2026-03-10 22:55:22,273 - INFO - --- 矩阵分析 ---
+2026-03-10 22:55:22,274 - INFO - 节点数 (N): 379
+2026-03-10 22:55:22,274 - INFO - 边数 (E): 1828
+2026-03-10 22:55:22,274 - INFO - 密度 (Density): 0.01272617 (越小越稀疏)
+2026-03-10 22:55:22,274 - INFO - 稀疏度 (Sparsity): 0.98727383 (越接近1越稀疏)
+2026-03-10 22:55:22,274 - INFO - 平均度数 (Avg Degree): 4.82
+2026-03-10 22:55:22,274 - INFO - 首次生成度相关概率分布 分布类型: 'log_continuous'.
+2026-03-10 22:55:22,275 - INFO - ===> Generating 'Log-Continuous' distributions for Real Graph...
+2026-03-10 22:55:22,282 - INFO - 保存概率分布 文件位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/distribution-in-network.netscience/distribution-log_continuous_seedNum-88.pkl
+2026-03-10 22:55:22,284 - INFO - 首次生成种子集 random
+2026-03-10 22:55:22,284 - INFO - 执行当前算法开始: random
+2026-03-10 22:55:22,285 - INFO - 数据集节点总数:  n = 379, m = 88
+2026-03-10 22:55:22,285 - INFO - 选择 88  [222, 94, 298, 61, 351, 7, 208, 51, 300, 43, 283, 236, 71, 39, 35, 136, 234, 95, 121, 217, 312, 174, 0, 291, 165, 302, 29, 26, 157, 335, 3, 341, 84, 299, 265, 54, 42, 243, 274, 304, 44, 259, 264, 17, 198, 4, 2, 11, 197, 248, 34, 77, 193, 203, 80, 24, 368, 69, 378, 357, 15, 172, 57, 250, 40, 188, 286, 191, 168, 330, 321, 285, 59, 46, 270, 196, 108, 151, 83, 116, 232, 159, 104, 75, 154, 360, 170, 290]
+
+2026-03-10 22:55:22,285 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:22,285 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_random_seedNum-88_SSRNum-50000.txt
+2026-03-10 22:55:22,285 - INFO - 首次生成种子集 degreeTopM
+2026-03-10 22:55:22,285 - INFO - 执行当前算法开始: degreeTopM
+2026-03-10 22:55:22,285 - INFO - 依据: 选择连接数（度数）最多的节点。
+2026-03-10 22:55:22,285 - INFO - 选择的 Top M 节点及其度数:
+2026-03-10 22:55:22,286 - INFO - 
+2026-03-10 22:55:22,286 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:22,286 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_degreeTopM_seedNum-88_SSRNum-50000.txt
+2026-03-10 22:55:22,286 - INFO - 首次生成种子集 pageRank
+2026-03-10 22:55:22,286 - INFO - 执行当前算法开始: pageRank
+2026-03-10 22:55:22,286 - INFO - --- Running: PageRank (on tranProMatrix) Top M ---
+2026-03-10 22:55:22,296 - INFO - Selected PageRank seeds: [58, 3, 4, 119, 72, 5, 142, 106, 53, 219, 189, 107, 13, 41, 187, 7, 44, 92, 94, 173, 62, 95, 167, 96, 118, 75, 8, 123, 235, 234, 113, 180, 217, 11, 0, 76, 232, 124, 233, 46, 20, 140, 329, 52, 156, 87, 362, 122, 268, 74, 126, 81, 252, 249, 250, 295, 14, 320, 204, 201, 267, 209, 127, 188, 258, 259, 200, 178, 193, 216, 162, 163, 225, 69, 280, 40, 42, 286, 198, 369, 247, 283, 15, 16, 28, 29, 63, 18]
+2026-03-10 22:55:22,296 - INFO - 当前用时 0.01 秒
+2026-03-10 22:55:22,296 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_pageRank_seedNum-88_SSRNum-50000.txt
+2026-03-10 22:55:22,296 - INFO - 首次生成种子集 alpha_sort
+2026-03-10 22:55:22,296 - INFO - 执行当前算法开始: alpha_sort
+2026-03-10 22:55:22,297 - INFO - 379 个节点的alpha值降序排序 done
+2026-03-10 22:55:22,297 - INFO - ==============>> [(210, np.float64(0.5411367366801261)), (277, np.float64(0.5160345616904236)), (318, np.float64(0.4476505327889434)), (324, np.float64(0.4220526314500294)), (125, np.float64(0.4118620666481225)), (179, np.float64(0.4059570001797103)), (206, np.float64(0.40528200611345355)), (308, np.float64(0.38311698366292063)), (329, np.float64(0.3724213223277542)), (270, np.float64(0.36965661397640465))]
+2026-03-10 22:55:22,297 - INFO - 
+选择的种子集 (按alpha排序): [210, 277, 318, 324, 125, 179, 206, 308, 329, 270, 309, 321, 48, 239, 128, 154, 136, 289, 197, 346, 218, 267, 139, 280, 203, 323, 339, 86, 1, 344, 177, 322, 195, 288, 351, 95, 287, 89, 129, 0, 207, 376, 213, 57, 282, 70, 316, 350, 65, 105, 240, 281, 151, 303, 108, 104, 275, 77, 333, 9, 320, 66, 337, 364, 80, 158, 278, 367, 372, 153, 257, 71, 81, 152, 292, 236, 306, 352, 327, 331, 325, 205, 319, 315, 38, 284, 374, 164]
+
+2026-03-10 22:55:22,297 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:22,297 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_alpha_sort_seedNum-88_SSRNum-50000.txt
+2026-03-10 22:55:22,297 - INFO - 首次生成种子集 ris_optimized
+2026-03-10 22:55:22,297 - INFO - 执行当前算法开始: ris_optimized
+2026-03-10 22:55:22,303 - INFO - 开始生成 50000 组多重RR-Set (万级节点极限内存优化版)...
+2026-03-10 22:55:30,832 - INFO - 生成与倒排构建完毕。耗时: 8.53 秒。
+2026-03-10 22:55:30,833 - INFO - 开始基于 Numpy 矩阵的高速贪心选择...
+2026-03-10 22:55:30,915 - INFO - 高速选种完毕。耗时: 0.08 秒。估算范围: 39.37
+2026-03-10 22:55:30,917 - INFO - 当前用时 8.62 秒
+2026-03-10 22:55:30,919 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_ris_optimized_seedNum-88_SSRNum-50000.txt
+2026-03-10 22:55:30,919 - INFO - 首次生成种子集 1hop_sort
+2026-03-10 22:55:30,919 - INFO - 执行当前算法开始: 1hop_sort
+2026-03-10 22:55:30,920 - INFO - 当前用时 0.00 秒
+2026-03-10 22:55:30,920 - INFO - 将种子集 写入位置: /home/wen/work/coup_spread/network.netscience/2026-4-3/seeds-with-network.netscience/log_continuous_1hop_sort_seedNum-88_SSRNum-50000.txt
+2026-03-10 22:55:30,921 - INFO - 评估种子集: None
+2026-03-10 22:55:30,921 - INFO - 多进程评估开始，共有 6 个方法待评估...
+2026-03-10 22:55:30,921 - INFO - 启动进程池，Worker数量: 6
+2026-03-10 22:55:30,984 - INFO - [Process 1923806] 开始评估方法: random, 种子数: 88
+2026-03-10 22:55:30,989 - INFO - [Process 1923807] 开始评估方法: degreeTopM, 种子数: 88
+2026-03-10 22:55:30,992 - INFO - [Process 1923808] 开始评估方法: pageRank, 种子数: 88
+2026-03-10 22:55:31,014 - INFO - [Process 1923809] 开始评估方法: alpha_sort, 种子数: 88
+2026-03-10 22:55:31,020 - INFO - [Process 1923810] 开始评估方法: ris_optimized, 种子数: 88
+2026-03-10 22:55:31,025 - INFO - [Process 1923811] 开始评估方法: 1hop_sort, 种子数: 88
+2026-03-10 22:55:31,676 - INFO - [degreeTopM - 种子:88] 拉新:16.3人 | 总销量:16.7单 | 品牌曝光:149.4次 | 🌟综合得分:31.4
+2026-03-10 22:55:31,790 - INFO - [pageRank - 种子:88] 拉新:17.5人 | 总销量:17.9单 | 品牌曝光:153.7次 | 🌟综合得分:33.1
+2026-03-10 22:55:31,858 - INFO - [alpha_sort - 种子:88] 拉新:34.7人 | 总销量:36.3单 | 品牌曝光:168.1次 | 🌟综合得分:52.3
+2026-03-10 22:55:31,898 - INFO - [1hop_sort - 种子:88] 拉新:34.4人 | 总销量:37.1单 | 品牌曝光:171.1次 | 🌟综合得分:52.8
+2026-03-10 22:55:31,903 - INFO - [random - 种子:88] 拉新:22.6人 | 总销量:23.1单 | 品牌曝光:175.1次 | 🌟综合得分:40.3
+2026-03-10 22:55:31,944 - INFO - [ris_optimized - 种子:88] 拉新:34.6人 | 总销量:36.5单 | 品牌曝光:176.0次 | 🌟综合得分:53.2
+2026-03-10 22:55:31,961 - INFO - 所有进程执行完毕，开始写入数据...
+2026-03-10 22:55:31,967 - INFO - 成功写入 6 条记录至 /home/wen/work/coup_spread/gzc-impl/results/network.netscience/2026-4-3/log_continuous_SSRNum-50000-_seedNum-88_simuTimes-500.csv
+2026-03-10 22:55:31,967 - INFO - 保存评估文件至: /home/wen/work/coup_spread/gzc-impl/results/network.netscience/2026-4-3/log_continuous_SSRNum-50000-_seedNum-88_simuTimes-500.csv

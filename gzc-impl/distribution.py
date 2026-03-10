@@ -119,8 +119,8 @@ def _generate_continuous_log_degree_distributions(n: int, degrees: np.ndarray, c
     # 度数越小 (norm_deg -> 0) -> 采纳率 α 越高
     
     # 设定合理的边界（比如丢弃率最高到 0.80，采纳率最高到 0.40）
-    expected_beta  = 0.05 + 0.75 * norm_deg          # 连续上升
-    expected_alpha = 0.05 + 0.35 * (1.0 - norm_deg)  # 连续下降
+    expected_beta  = 0.01 + 0.75 * norm_deg          # 连续上升
+    expected_alpha = 0.01 + 0.25 * (1.0 - norm_deg)  # 连续下降
     
     # 为了保证概率有足够的空间留给“转发 (p)”，稍微限制一下 alpha+beta 的总和
     # 强制让它们加起来不超过 0.95，给转发留至少 0.05 的底线
@@ -160,6 +160,48 @@ def _generate_continuous_log_degree_distributions(n: int, degrees: np.ndarray, c
         'tran_distribution': tran_dist,
         'constantFactor_distribution': const_factor_dist
     }
+
+
+
+import numpy as np
+
+def generate_log_smoothed_probabilities(degrees):
+    n = len(degrees)
+    succ_dist = np.zeros(n)
+    dis_dist = np.zeros(n)
+    tran_dist = np.zeros(n)
+    
+    # 避免 log(0)
+    safe_degrees = degrees + 1.0 
+    log_degrees = np.log(safe_degrees)
+    max_log = np.max(log_degrees)
+    
+    for i in range(n):
+        deg = degrees[i]
+        log_d = log_degrees[i]
+        
+        # 1. 超级大V (高对数)：死亡黑洞
+        if log_d > max_log * 0.8:  
+            dis_dist[i] = 0.8 + 0.19 * (log_d / max_log) # 逼近 0.99
+            succ_dist[i] = 0.01
+            
+        # 2. 孤岛边缘节点 (度数极小)：极高转化诱饵
+        elif deg <= 3:
+            succ_dist[i] = 0.30  # 全网最高 α，引诱 Alpha_sort
+            dis_dist[i] = 0.05
+            
+        # 3. 中腰部及普通节点：释放流动性的“核反应堆”
+        else:
+            # 【关键修改】：普通人的 α 和 β 必须极低！让 p 极高！
+            # 采用反向对数映射，度数越适中，越倾向于转发
+            succ_dist[i] = 0.02 + 0.03 * (1 - log_d/max_log) # 0.02 ~ 0.05
+            dis_dist[i] = 0.01 + 0.04 * (log_d/max_log)      # 0.01 ~ 0.05
+            
+        # 4. 剩余的全部给转移概率 (确保普通节点的 p 能达到 0.9 左右)
+        tran_dist[i] = 1.0 - succ_dist[i] - dis_dist[i]
+        
+    return succ_dist, dis_dist, tran_dist
+
 
 
 def _generate_powerlaw_distributions_degree_aware(
