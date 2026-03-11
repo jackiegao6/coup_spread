@@ -120,7 +120,7 @@ def _generate_continuous_log_degree_distributions(n: int, degrees: np.ndarray, c
     
     # 设定合理的边界（比如丢弃率最高到 0.80，采纳率最高到 0.40）
     expected_beta  = 0.01 + 0.75 * norm_deg          # 连续上升
-    expected_alpha = 0.01 + 0.25 * (1.0 - norm_deg)  # 连续下降
+    expected_alpha = 0.01 + 0.15 * (1.0 - norm_deg)  # 连续下降
     
     # 为了保证概率有足够的空间留给“转发 (p)”，稍微限制一下 alpha+beta 的总和
     # 强制让它们加起来不超过 0.95，给转发留至少 0.05 的底线

@@ -11,7 +11,8 @@ class ExperimentConfig:
     distribution_type: str = 'random' # poisson gamma powerlaw random
     constant_factor_distri: str = 'random' # deprecated
     personalization: str = 'None'
-    data_prefix: str = '/home/wen/work/coup_spread'
+    # data_prefix: str = '/home/wen/work/coup_spread'
+    data_prefix: str = '/root/work/coupon/coup_spread'
     method_type: str = 'None'
 
     num_steps: int = 1 # deprecated

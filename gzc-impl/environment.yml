@@ -9,4 +9,4 @@ dependencies:
   - pandas
   - matplotlib
   - seaborn
-prefix: /home/wen/miniconda3/envs/coupon
+prefix: /root/miniconda3/envs/coupon
