@@ -27,37 +27,25 @@ def _min_max_scale(v: np.ndarray) -> np.ndarray:
     return (v - min_val) / range_val
 
 
+# --- 修改 distribution.py 中的 _generate_continuous_log_degree_distributions 函数 ---
+
 def _generate_continuous_log_degree_distributions(n: int, degrees: np.ndarray, config) -> dict:
-    """
-    顶会级无懈可击方案：基于 Log-Degree 的连续概率平滑映射
-    完美保留了属性与拓扑的有机相关性，没有任何人为阶跃截断，让审稿人挑不出毛病。
-    """
     import logging
     import numpy as np
-    logging.info("===> Generating 'Log-Continuous' distributions for Real Graph...")
+    logging.info(f"===> Generating 'Log-Continuous' distributions (AlphaSlope={config.log_alpha_slope}, BetaSlope={config.log_beta_slope})...")
     
     rng = np.random.default_rng(config.rng)
     
-    # 1. 对数平滑归一化 (Log-Normalization)
-    # 处理幂律分布极值的标准数学手段：用 log 压平长尾
-    log_degrees = np.log1p(degrees) # log(1 + degree)
+    log_degrees = np.log1p(degrees) 
     max_log = np.max(log_degrees)
     if max_log == 0: max_log = 1.0
     
-    # 得到 0 到 1 之间的连续平滑度数特征
     norm_deg = log_degrees / max_log 
     
-    # 2. 有机且连续的期望值映射 (Continuous Expected Values)
-    # 根据我们之前论证的商业逻辑：
-    # 度数越大 (norm_deg -> 1) -> 丢弃率 β 越高
-    # 度数越小 (norm_deg -> 0) -> 采纳率 α 越高
+    # 【核心修改】使用 config 传进来的参数
+    expected_beta  = config.log_beta_base + config.log_beta_slope * norm_deg          
+    expected_alpha = config.log_alpha_base + config.log_alpha_slope * (1.0 - norm_deg)  
     
-    # 设定合理的边界（比如丢弃率最高到 0.80，采纳率最高到 0.40）
-    expected_beta  = 0.01 + 0.25 * norm_deg          # 连续上升
-    expected_alpha = 0.01 + 0.1 * (1.0 - norm_deg)  # 连续下降
-    
-    # 为了保证概率有足够的空间留给“转发 (p)”，稍微限制一下 alpha+beta 的总和
-    # 强制让它们加起来不超过 0.95，给转发留至少 0.05 的底线
     sum_ab = expected_alpha + expected_beta
     overflow_mask = sum_ab > 0.95
     expected_alpha[overflow_mask] = (expected_alpha[overflow_mask] / sum_ab[overflow_mask]) * 0.95
@@ -65,19 +53,14 @@ def _generate_continuous_log_degree_distributions(n: int, degrees: np.ndarray, c
     
     expected_tran = 1.0 - expected_alpha - expected_beta
     
-    # 3. 引入 Dirichlet 个体异质性噪音 (Heterogeneous Noise)
-    # 真实世界里，哪怕是同等度数的两个人，意愿也有微小波动
-    # 我们用预期值乘以一个散度参数 gamma 作为 Dirichlet 的 alpha 参数
-    gamma = 20.0 # 散度控制，gamma 越大越集中于期望值，越小越随机
+    gamma = 20.0 
     
     dirichlet_params = np.vstack([
         expected_alpha * gamma + 1e-3, 
         expected_beta * gamma + 1e-3, 
         expected_tran * gamma + 1e-3
-    ]).T # 形状 (n, 3)
+    ]).T 
     
-    # 逐个节点生成符合其专属 Dirichlet 分布的概率
-    # 这样生成的概率，期望值符合连续曲线，但具有真实的随机噪音！
     probs = np.zeros((n, 3))
     for i in range(n):
         probs[i] = rng.dirichlet(dirichlet_params[i])
@@ -94,7 +77,6 @@ def _generate_continuous_log_degree_distributions(n: int, degrees: np.ndarray, c
         'tran_distribution': tran_dist,
         'constantFactor_distribution': const_factor_dist
     }
-
 
 
 import numpy as np

@@ -96,6 +96,10 @@ def worker_evaluate_method(
             "std_deviation": std_dev,
             "avg_steps": Avg_Steps, 
             "total_steps": total_steps,         # 写入CSV: 总曝光
+            "degree_exponent_tran": config_dict.get('tran_degree_influence_factor'),
+            # 【新增】写入 CSV
+            "log_alpha_slope": config_dict.get('log_alpha_slope'),
+            "log_beta_slope": config_dict.get('log_beta_slope'),
             "E_redemptions": E_redemptions,     # 写入CSV: 总核销
             "comprehensive_score": comprehensive_score, # 写入CSV: 综合得分
             "usage_rate": usage_rate,         
@@ -106,7 +110,6 @@ def worker_evaluate_method(
         }
         results.append(result_data)
         
-        # 【极其华丽的日志输出】
         logging.info(f"[{method_name} - 种子:{seed_num}] "
                      f"拉新:{E_activated:.1f}人 | "
                      f"总销量:{E_redemptions:.1f}单 | "
@@ -115,7 +118,6 @@ def worker_evaluate_method(
 
     return results
 
-# --- 新增：Worker 函数 (独立于类之外，方便序列化) ---
 def simulation2(
         methods: list,
         seeds_list: list,
@@ -135,7 +137,10 @@ def simulation2(
         'random_dirichlet': config.random_dirichlet,
         'succ_degree_influence_factor': config.succ_degree_influence_factor,
         'dis_degree_influence_factor': config.dis_degree_influence_factor,
-        'tran_degree_influence_factor': config.tran_degree_influence_factor
+        'tran_degree_influence_factor': config.tran_degree_influence_factor,
+        # 【新增】
+        'log_alpha_slope': getattr(config, 'log_alpha_slope', 0.1),
+        'log_beta_slope': getattr(config, 'log_beta_slope', 0.25)
     }
 
     tasks = []

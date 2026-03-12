@@ -298,43 +298,64 @@ def run_coupon_experiment(config: ExperimentConfig):
 
 
 #  python coupon_main.py --start 100 --end 301 --step 100
-if __name__ == '__main__':
+# --- 修改 coupon_main.py 的 __main__ 部分 ---
 
-    parser = argparse.ArgumentParser(description="Run coupon experiment with range of seeds_num.")
-    parser.add_argument('--start', type=int, default=3, help='起始 seeds_num')
-    parser.add_argument('--end', type=int, default=10, help='结束 seeds_num（不包含）')
-    parser.add_argument('--step', type=int, default=500, help='步长')
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Run coupon experiment.")
+    parser.add_argument('--start', type=int, default=100, help='起始 seeds_num')
+    parser.add_argument('--end', type=int, default=101, help='结束 seeds_num')
+    parser.add_argument('--step', type=int, default=100, help='步长')
+    # 【新增】是否开启参数搜索模式
+    parser.add_argument('--search', action='store_true', help='开启 log_continuous 参数网格搜索')
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
-        data_set='network.EmailEnron',  # netactorcollaboration EmailEnron douban11core netscience netYeast douban11core
+        data_set='network.EmailEnron', 
         simulation_times=[600],  
-        # 【核心修改】将新的 ris 加入方法列
-        # methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_optimized', 'ris_path_aware', '1hop_sort'],
-        methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_path_aware', '1hop_sort'],
-
-        # methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_optimized', 'monterCarlo_CELF'],
+        # methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_path_aware', '1hop_sort'],
+        methods=['ris_path_aware', '1hop_sort'],
         monte_carlo_L=100,
-        distribution_type='log_continuous',  # 'powerlaw' 或 'random' log_continuous tier_based
-        personalization='None',  # firstUnused
-        method_type='None',  # new,
-
-        num_samples=600000,
-        # seeds_num=num,  # 32 64 128 256 512
-
+        distribution_type='log_continuous', 
+        personalization='None',  
+        method_type='None',  
+        num_samples=400000,
         succ_degree_influence_factor = -0.5, 
         dis_degree_influence_factor = 0.8,  
         tran_degree_influence_factor = 0.0,  
-
         rng=np.random.default_rng(1),
-
-        single_sim_func='AgainReJudge',  # AgainReJudge(接受过的用户可以再次接受) 
-        version='2026-4-14',
+        single_sim_func='AgainReJudge',  
+        version='2026-4-16',
         random_dirichlet=[10, 10, 10]
     )
 
-    for num in range(args.start, args.end, args.step):
-        my_config.seeds_num = num
-        generate_logger.init_logger(log_file=my_config.log_file())
-        run_coupon_experiment(my_config)
-    print("done!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!!!\ndone!!!!!!!!!!!!!!!!!!!!!!\n")
+    if args.search:
+        logging.info("================ 开启参数网格搜索模式 ================")
+        # 定义你要遍历的参数范围
+        # alpha_slope 越大，边缘节点越容易直接核销 (Alpha_sort 会变强，但传播会断)
+        # beta_slope 越大，大V节点越容易丢弃券 (DegreeTopM 和 PageRank 会变弱)
+        alpha_slopes_to_test = [0.05, 0.1, 0.15]
+        beta_slopes_to_test = [0.3, 0.4, 0.5]
+        
+        # 固定一个种子数进行测试（比如100）
+        my_config.seeds_num = args.start 
+
+        for a_slope in alpha_slopes_to_test:
+            for b_slope in beta_slopes_to_test:
+                my_config.log_alpha_slope = a_slope
+                my_config.log_beta_slope = b_slope
+                
+                logging.info(f"\n\n>>> 当前测试参数: Alpha_Slope={a_slope}, Beta_Slope={b_slope} <<<")
+                generate_logger.init_logger(log_file=my_config.log_file())
+                
+                # 运行实验
+                run_coupon_experiment(my_config)
+                
+        print("网格搜索结束！请查看 results 目录下的 Search_log_continuous_xxx.csv 文件。")
+
+    else:
+        # 原有的普通运行逻辑
+        for num in range(args.start, args.end, args.step):
+            my_config.seeds_num = num
+            generate_logger.init_logger(log_file=my_config.log_file())
+            run_coupon_experiment(my_config)
+        print("done!!!!!!!!!!!!!!!!!\n")

@@ -38,22 +38,37 @@ class ExperimentConfig:
 
     single_file_switch: bool = False
 
+    # === 新增：log_continuous 分布的控制参数 ===
+    log_alpha_base: float = 0.01
+    log_alpha_slope: float = 0.1   # 控制低度数节点的采纳率上限
+    log_beta_base: float = 0.01
+    log_beta_slope: float = 0.25   # 控制高度数节点的丢弃率上限
+
     @property
     def adj_file(self):
         return f"{self.data_prefix}/dataset/network/{self.data_set}-adj.pkl"
 
+    @property
+    def param_str(self):
+        """生成参数后缀，用于区分不同参数下的缓存文件"""
+        if self.distribution_type == 'log_continuous':
+            return f"_aSlope{self.log_alpha_slope}_bSlope{self.log_beta_slope}"
+        return ""
+
     # 当种子数和分布参数相同时 采用相同的概率分布
     def distribution_file(self, m = 0):
-        return f"{self.data_prefix}/{self.data_set}/{self.version}/distribution-in-{self.data_set}/distribution-{self.distribution_type}_seedNum-{m}.pkl"
+        # 加入 param_str 防止不同参数覆盖同一个分布文件
+        return f"{self.data_prefix}/{self.data_set}/{self.version}/distribution-in-{self.data_set}/distribution-{self.distribution_type}{self.param_str}_seedNum-{m}.pkl"
 
     def deliverers_cache_file(self, method, m = 0):
-        return f"{self.data_prefix}/{self.data_set}/{self.version}/seeds-with-{self.data_set}/{self.distribution_type}_{method}_seedNum-{m}_SSRNum-{self.num_samples}.txt"
-
+        # 加入 param_str 防止读取到旧参数生成的种子
+        return f"{self.data_prefix}/{self.data_set}/{self.version}/seeds-with-{self.data_set}/{self.distribution_type}{self.param_str}_{method}_seedNum-{m}_SSRNum-{self.num_samples}.txt"
 
     def usage_rate_file(self, m = 0):
         times = ",".join(str(time) for time in self.simulation_times)
-        return f"{self.data_prefix}/gzc-impl/results/{self.data_set}/{self.version}/{self.distribution_type}_SSRNum-{self.num_samples}-_seedNum-{self.seeds_num}_simuTimes-{times}.csv"
-
+        # 结果文件也加上 param_str，或者统一写到一个带 search 字样的文件里方便画图
+        return f"{self.data_prefix}/gzc-impl/results/{self.data_set}/{self.version}/Search_{self.distribution_type}_SSRNum-{self.num_samples}_seedNum-{self.seeds_num}.csv"
+        
     def log_file(self):
         times = ",".join(str(time) for time in self.simulation_times)
         if self.distribution_type == "powerlaw" or self.distribution_type == "gamma" or self.distribution_type == "poisson":

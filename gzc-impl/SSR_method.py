@@ -4,7 +4,7 @@ import random
 import time
 from multiprocessing import Pool
 from typing import List, Set, Tuple
-
+from tqdm import tqdm   # ←←← 新增这一行
 import numpy as np
 import scipy.sparse as sp
 
@@ -260,13 +260,10 @@ class CouponInfluenceMaximizer:
 
 
 
-    def generate_rr_sets_parallel(self, N: int, workers: int | None = None, chunksize: int = 512):
+    def generate_rr_sets_parallel(self, N: int, workers: int = 16, chunksize: int = 512):
         logging.info("开始生成 %d 组多重 SSR...", N)
         start_time = time.time()
         self.total_samples = N
-
-        if workers is None:
-            workers = min(8, os.cpu_count() or 1)
 
         if self.is_optimized:
             sampled_vs = random.choices(range(self.num_nodes), weights=self.v_probs, k=N)
@@ -291,13 +288,26 @@ class CouponInfluenceMaximizer:
                 )
 
         with Pool(processes=workers) as pool:
+            # 用 tqdm 包装 imap_unordered，实时显示进度
+            iterator = pool.imap_unordered(
+                run_single_ssr_generation_worker, 
+                args_generator(), 
+                chunksize=chunksize
+            )
             for ssr_idx, ssr_list in enumerate(
-                pool.imap_unordered(run_single_ssr_generation_worker, args_generator(), chunksize=chunksize)
+                tqdm(
+                    iterator,
+                    total=N,
+                    desc="生成多重 SSR",
+                    unit="组",
+                    ncols=80,           # 可选：进度条宽度
+                    leave=True
+                )
             ):
                 for coupon_j, rr_set in enumerate(ssr_list):
                     for node in rr_set:
                         self.node_coverage[coupon_j][node].append(ssr_idx)
-                del ssr_list
+                del ssr_list  # 及时释放内存
 
         for j in range(self.k):
             for v in range(self.num_nodes):
