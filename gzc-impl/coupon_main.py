@@ -274,55 +274,6 @@ def run_evaluation(methods_with_seeds: dict, config: ExperimentConfig, data: dic
 
 import get_trans_matrix
 
-# def load_genius_distribution2(config: "ExperimentConfig", adj, n: int):
-#     import numpy as np
-#     logging.info(">>> 正在注入完美对抗属性（验证三条定理）...")
-    
-#     n_hubs = int(n * 0.1)
-#     n_sinks = int(n * 0.1)
-#     n_normal = n - n_hubs - n_sinks
-    
-#     succ_dist = np.zeros(n)
-#     dis_dist = np.zeros(n)
-#     tran_dist = np.zeros(n)
-#     const_factor_dist = np.ones(n) 
-    
-#     # 获取节点的度数，用来实现你的第3条要求
-#     out_degrees = np.array(adj.sum(axis=1)).flatten()
-    
-#     # 1. 普通节点 (核反应堆)
-#     # 你的要求3：丢弃率趋近于0，度越大转发概率越高
-#     for i in range(n_normal):
-#         succ_dist[i] = 0.20  # 吸收率不高，但很安全
-#         dis_dist[i] = 0.01   # 丢弃率极低！
-#         # 剩下 0.94 根据度数给予权重，确保度越大，作为转发枢纽的可能性越高
-#         tran_dist[i] = 0.79 
-        
-#     # 2. 孤立节点 (坑 Alpha_sort)
-#     # 你的要求2：吸收率极高
-#     sink_start = n_normal
-#     sink_end = sink_start + n_sinks
-#     succ_dist[sink_start:sink_end] = 0.20  # 极限吸收
-#     dis_dist[sink_start:sink_end] = 0.01
-#     tran_dist[sink_start:sink_end] = 0.79
-    
-#     # 3. 超级大V (坑 PageRank/DegreeTopM)
-#     # 你的要求1：度大，丢弃率无限高
-#     hub_start = sink_end
-#     succ_dist[hub_start:] = 0.10
-#     dis_dist[hub_start:] = 0.80 # 拿到当场死亡
-#     tran_dist[hub_start:] = 0.10
-    
-#     distributions = (succ_dist, dis_dist, tran_dist, const_factor_dist)
-#     tran_matrix = get_trans_matrix.getTranProMatrix(adj)
-    
-#     return {
-#         "adj": adj,
-#         "distributions": distributions,
-#         "init_tran_matrix": tran_matrix,
-#         "n": n
-#     }
-
 def run_coupon_experiment(config: ExperimentConfig):
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -357,7 +308,7 @@ if __name__ == '__main__':
 
     my_config = ExperimentConfig(
         data_set='network.EmailEnron',  # netactorcollaboration EmailEnron douban11core netscience netYeast douban11core
-        simulation_times=[500],  
+        simulation_times=[600],  
         # 【核心修改】将新的 ris 加入方法列
         # methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_optimized', 'ris_path_aware', '1hop_sort'],
         methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_path_aware', '1hop_sort'],
@@ -368,7 +319,7 @@ if __name__ == '__main__':
         personalization='None',  # firstUnused
         method_type='None',  # new,
 
-        num_samples=500000,
+        num_samples=600000,
         # seeds_num=num,  # 32 64 128 256 512
 
         succ_degree_influence_factor = -0.5, 
@@ -378,7 +329,7 @@ if __name__ == '__main__':
         rng=np.random.default_rng(1),
 
         single_sim_func='AgainReJudge',  # AgainReJudge(接受过的用户可以再次接受) 
-        version='2026-4-11',
+        version='2026-4-14',
         random_dirichlet=[10, 10, 10]
     )
 

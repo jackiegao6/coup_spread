@@ -27,72 +27,6 @@ def _min_max_scale(v: np.ndarray) -> np.ndarray:
     return (v - min_val) / range_val
 
 
-def _generate_tier_based_distributions(n: int, degrees: np.ndarray, config: ExperimentConfig) -> dict:
-    """
-    顶会推荐：按度数分位数(Percentiles)将真实图动态划分为三大阶层
-    既保留了真实的图结构，又完美映射了现实营销中的身份特征
-    """
-    import logging
-    logging.info("===> Generating 'Tier-based (Percentile)' distributions for Real Graph...")
-    
-    # 按照度数从大到小排序，获取节点索引
-    sorted_indices = np.argsort(degrees)[::-1]
-    
-    succ_dist = np.zeros(n)
-    dis_dist = np.zeros(n)
-    tran_dist = np.zeros(n)
-    
-    # 动态计算阶层人数
-    n_hubs = max(1, int(n * 0.05))   # Top 5% 作为超级大V (陷阱)
-    n_sinks = int(n * 0.20)          # Bottom 20% 作为孤岛边缘人
-    
-    # 1. 超级大V (Top 5% 度数最高) -> 广告免疫，高丢弃
-    hubs = sorted_indices[:n_hubs]
-    succ_dist[hubs] = 0.20
-    dis_dist[hubs] = 0.10  # 拿到就丢
-    tran_dist[hubs] = 0.70
-    
-    # 2. 边缘孤岛 (Bottom 20% 度数最低) -> 贪小便宜，高采纳不转发
-    sinks = sorted_indices[-n_sinks:]
-    succ_dist[sinks] = 0.40 # 拿到就用
-    dis_dist[sinks] = 0.20
-    tran_dist[sinks] = 0.40
-    
-    # 3. 中坚力量/社区平民 (剩下的 75%) -> 优秀的裂变土壤
-    mid = sorted_indices[n_hubs:-n_sinks]
-    # 为平民注入基准概率，比如 [10%, 5%, 85%]
-    succ_dist[mid] = 0.20
-    dis_dist[mid] = 0.01
-    tran_dist[mid] = 0.79
-    
-    # [可选增强] 为了让同阶层的人也有随机差异，加入 ±20% 的均匀噪音
-    rng = np.random.default_rng(config.rng) # 或直接用 np.random
-    noise_succ = rng.uniform(0.8, 1.2, size=n)
-    noise_dis = rng.uniform(0.8, 1.2, size=n)
-    noise_tran = rng.uniform(0.8, 1.2, size=n)
-    
-    succ_dist = np.clip(succ_dist * noise_succ, 0, 1)
-    dis_dist = np.clip(dis_dist * noise_dis, 0, 1)
-    tran_dist = np.clip(tran_dist * noise_tran, 0, 1)
-    
-    # 归一化 (确保三者之和为 1)
-    total = succ_dist + dis_dist + tran_dist
-    total[total == 0] = 1e-9
-    
-    succ_dist /= total
-    dis_dist /= total
-    tran_dist /= total
-    
-    const_factor_dist = np.ones(n, dtype=float)
-    
-    return {
-        'succ_distribution': succ_dist,
-        'dis_distribution': dis_dist,
-        'tran_distribution': tran_dist,
-        'constantFactor_distribution': const_factor_dist
-    }
-
-
 def _generate_continuous_log_degree_distributions(n: int, degrees: np.ndarray, config) -> dict:
     """
     顶会级无懈可击方案：基于 Log-Degree 的连续概率平滑映射
@@ -119,8 +53,8 @@ def _generate_continuous_log_degree_distributions(n: int, degrees: np.ndarray, c
     # 度数越小 (norm_deg -> 0) -> 采纳率 α 越高
     
     # 设定合理的边界（比如丢弃率最高到 0.80，采纳率最高到 0.40）
-    expected_beta  = 0.01 + 0.55 * norm_deg          # 连续上升
-    expected_alpha = 0.01 + 0.15 * (1.0 - norm_deg)  # 连续下降
+    expected_beta  = 0.01 + 0.25 * norm_deg          # 连续上升
+    expected_alpha = 0.01 + 0.1 * (1.0 - norm_deg)  # 连续下降
     
     # 为了保证概率有足够的空间留给“转发 (p)”，稍微限制一下 alpha+beta 的总和
     # 强制让它们加起来不超过 0.95，给转发留至少 0.05 的底线
@@ -371,7 +305,6 @@ def get_distribution_degree_aware(
     generator_registry = {
         'powerlaw': _generate_powerlaw_distributions_degree_aware,
         'random': _generate_random_distributions,
-        'tier_based': _generate_tier_based_distributions,  
         'log_continuous': _generate_continuous_log_degree_distributions, 
     }
 
