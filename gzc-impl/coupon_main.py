@@ -18,20 +18,6 @@ import get_trans_matrix
 import scipy.sparse as sp
 import networkx as nx
 
-def print_density(G):
-
-    n = G.number_of_nodes()
-    m = G.number_of_edges()
-
-    density = nx.density(G)
-
-    logging.info(f"节点数: {n}, 边数: {m}")
-    logging.info(f"图密度: {density:.6f}") # 比如 0.005
-    logging.info(f"稀疏度: {1 - density:.6f}") # 比如 0.995
-
-    avg_degree = 2 * m / n  # 无向图
-    logging.info(f"平均度数: {avg_degree:.2f}")
-
 def check_sparsity_from_matrix(adj_matrix):
     # adj_matrix 是 sp.csr_matrix 或 sp.coo_matrix
     
@@ -74,65 +60,6 @@ def load_experiment_data(config: "ExperimentConfig") -> Dict[str, Any]:
     return {"adj": adj, "n": adj.shape[0]}
 
 
-def load_contribution_and_tran_matrix_watch(config: "ExperimentConfig", adj, n: int) -> Dict[str, Any]:
-    """
-    生成分布，并强制注入“看门人机制”以展示拓扑算法优势
-    """
-    # 1. 正常生成基础分布 (比如 Dirichlet=[5, 2, 8])
-    # 这作为背景噪音，让大部分节点表现平庸
-    distribution_res = gd.get_distribution_degree_aware(
-        config.distribution_file(m=config.seeds_num),
-        config.distribution_type,
-        adj,
-        config=config
-    )
-
-    # 解包分布 (确保是 numpy array)
-    succ_dist, dis_dist, tran_dist, const_factor_dist = [np.array(d) for d in distribution_res]
-
-    logging.info(">>> 正在注入‘社区效应/看门人机制’以区分算法能力...")
-
-    # 获取度数排序
-    degrees = np.array(adj.sum(axis=1)).flatten()
-    sorted_indices = np.argsort(degrees)[::-1]
-    
-    # 1. 【陷阱一：超级大V (Top 1%)】-> 骗过 Degree 和 PageRank
-    # 设定：他们度数极高，但是是个黑洞（必丢弃）
-    top_1_percent = max(1, int(n * 0.01))
-    fake_hubs = sorted_indices[:top_1_percent]
-    succ_dist[fake_hubs] = 0.01
-    dis_dist[fake_hubs] = 0.99  # 拿到就丢
-    tran_dist[fake_hubs] = 0.0
-    
-    # 2. 【陷阱二：孤岛吸血鬼 (Bottom 50%)】-> 骗过 Alpha_sort
-    # 设定：边缘节点极其渴望优惠券，拿到必用，但他们没有出度或者出度极低
-    bottom_50_percent = int(n * 0.5)
-    isolated_sinks = sorted_indices[-bottom_50_percent:]
-    succ_dist[isolated_sinks] = 0.95 # 拿到就用，传播终止
-    dis_dist[isolated_sinks] = 0.05
-    tran_dist[isolated_sinks] = 0.0
-    
-    # 3. 【真实宝藏：中腰部桥梁节点 (Top 5% - 15%)】-> 只有 RIS 能找出来
-    # 设定：他们是 KOC，自己不用，绝不丢弃，100% 转发给群里的“韭菜”
-    start_idx = int(n * 0.05)
-    end_idx = int(n * 0.15)
-    hidden_bridges = sorted_indices[start_idx:end_idx]
-    succ_dist[hidden_bridges] = 0.0
-    dis_dist[hidden_bridges] = 0.0
-    tran_dist[hidden_bridges] = 1.0 # 完美路由
-
-    # 重新打包
-    distribution_res = (succ_dist, dis_dist, tran_dist, const_factor_dist)
-
-    tran_matrix = get_trans_matrix.getTranProMatrix(adj)
-
-    return {
-        "adj": adj,
-        "distributions": distribution_res,
-        "init_tran_matrix": tran_matrix,
-        "n": n
-    }
-
 def load_contribution_and_tran_matrix(config: "ExperimentConfig", adj, n: int) -> Dict[str, Any]:
     distribution_res = gd.get_distribution_degree_aware(
         config.distribution_file(m=config.seeds_num),
@@ -152,7 +79,6 @@ def load_contribution_and_tran_matrix(config: "ExperimentConfig", adj, n: int) -
     }
 
 
-# --- 在 coupon_main.py 中修改 get_seed_sets 函数 ---
 def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
     m = config.seeds_num
     num_nodes = data["adj"].shape[0]
@@ -231,7 +157,6 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
 
         os.makedirs(os.path.dirname(deliverers_cache_file), exist_ok=True)
         with open(deliverers_cache_file, 'a+') as file:
-            # todo 增加一下列数
             logging.info(f"将种子集 写入位置: {config.deliverers_cache_file(method=method, m=config.seeds_num)}")
             for key, value in methods_with_seeds.items():
                 file.write(f'{key}:{value}\n')
@@ -282,7 +207,6 @@ def run_coupon_experiment(config: ExperimentConfig):
     adj = adj_and_n["adj"]
     n = adj_and_n["n"]
 
-    # experiment_data = load_genius_distribution2(config=config, adj=adj, n=n)
     experiment_data = load_contribution_and_tran_matrix(config=config, adj=adj, n=n)
 
     # 2. 获取种子集
@@ -298,8 +222,6 @@ def run_coupon_experiment(config: ExperimentConfig):
 
 
 #  python coupon_main.py --start 100 --end 301 --step 100
-# --- 修改 coupon_main.py 的 __main__ 部分 ---
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run coupon experiment.")
     parser.add_argument('--start', type=int, default=100, help='起始 seeds_num')
@@ -319,13 +241,9 @@ if __name__ == '__main__':
         personalization='None',  
         method_type='None',  
         num_samples=100000,
-        succ_degree_influence_factor = -0.5, 
-        dis_degree_influence_factor = 0.8,  
-        tran_degree_influence_factor = 0.0,  
         rng=np.random.default_rng(1),
         single_sim_func='AgainReJudge',  
         version='2026-4-17',
-        random_dirichlet=[10, 10, 10]
     )
 
     if args.search:

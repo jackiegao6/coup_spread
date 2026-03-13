@@ -20,12 +20,6 @@ class ExperimentConfig:
     num_samples: int = 50000
 
     seeds_num: int = 1
-    succ_base_value: float = 1.0
-    succ_degree_influence_factor: float = -0.1
-    dis_base_value: float = 1.0
-    dis_degree_influence_factor: float = -0.3
-    tran_base_value: float = 1.0
-    tran_degree_influence_factor: float = 0.5
     randomness_factor: float = 0.2
 
     rng: np.random.Generator = np.random.default_rng(1)
@@ -33,8 +27,6 @@ class ExperimentConfig:
     single_sim_func: str = 'AgainReJudge'
 
     version: str = 'v0'
-
-    random_dirichlet: list = None
 
     single_file_switch: bool = False
 
