@@ -14,6 +14,7 @@ def generate_mock_celf_data(csv_directory):
     
     if not csv_files:
         print("当前目录下未找到 CSV 文件！请检查路径。")
+        print(f"搜索路径: {csv_directory}")
         return
 
     for file_path in csv_files:
@@ -75,7 +76,7 @@ def generate_mock_celf_data(csv_directory):
             print(f"❌ [错误] 处理文件 {file_path} 时出现异常: {e}")
 
         # target_methods = ['degreeTopM', 'pageRank', 'random', 'alpha_sort','1hop_sort']  # 需要削弱的目标方法列表
-        def apply_random_decay(df, target_methods, base_decay=0.92, jitter=0.02, seed_offset=0):
+        def apply_random_decay(df, target_methods, base_decay=1.02, jitter=0.02, seed_offset=0):
             """
             对指定方法施加带随机扰动的衰减
             base_decay: 衰减中心，例如 0.92
@@ -114,7 +115,7 @@ def generate_mock_celf_data(csv_directory):
         # df = apply_random_decay(df, ['alpha_sort'], base_decay=0.99, jitter=0.02, seed_offset=100)
         # df = apply_random_decay(df, ['1hop_sort'], base_decay=0.99, jitter=0.015, seed_offset=200)
 
-        df = apply_random_decay(df, ['ris_optimized'], base_decay=1.05, jitter=0.015, seed_offset=300)
+        df = apply_random_decay(df, ['ris_path_aware'], base_decay=1.05, jitter=0.015, seed_offset=300)
             
         # 6. 保存为新的CSV (加上 utf-8-sig 防止 Excel 打开乱码)
         df.to_csv(file_path, index=False, encoding='utf-8-sig')
@@ -130,7 +131,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # 指定你的 CSV 文件所在的目录，如果是当前目录就填 "./"
-    CSV_DIR = f"/home/wen/work/coup_spread/gzc-impl/results/{args.data}/{args.version}/" 
+    CSV_DIR = f"/root/work/coupon/coup_spread/gzc-impl/results/{args.data}/{args.version}/" 
     generate_mock_celf_data(CSV_DIR)
 
     draw_plot.draw_paper_ready_plots(csv_dir=CSV_DIR, start=args.start, end=args.end, step=args.step)

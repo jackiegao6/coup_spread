@@ -310,21 +310,21 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
-        data_set='network.EmailEnron', 
+        data_set='network.netscience', 
         simulation_times=[600],  
-        # methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_path_aware', '1hop_sort'],
-        methods=['ris_path_aware', '1hop_sort'],
+        methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_path_aware', '1hop_sort'],
+        # methods=['ris_path_aware', '1hop_sort'],
         monte_carlo_L=100,
         distribution_type='log_continuous', 
         personalization='None',  
         method_type='None',  
-        num_samples=400000,
+        num_samples=100000,
         succ_degree_influence_factor = -0.5, 
         dis_degree_influence_factor = 0.8,  
         tran_degree_influence_factor = 0.0,  
         rng=np.random.default_rng(1),
         single_sim_func='AgainReJudge',  
-        version='2026-4-16',
+        version='2026-4-17',
         random_dirichlet=[10, 10, 10]
     )
 

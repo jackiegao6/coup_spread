@@ -42,7 +42,7 @@ class ExperimentConfig:
     log_alpha_base: float = 0.01
     log_alpha_slope: float = 0.1   # 控制低度数节点的采纳率上限
     log_beta_base: float = 0.01
-    log_beta_slope: float = 0.25   # 控制高度数节点的丢弃率上限
+    log_beta_slope: float = 0.6   # 控制高度数节点的丢弃率上限
 
     @property
     def adj_file(self):
@@ -68,7 +68,7 @@ class ExperimentConfig:
         times = ",".join(str(time) for time in self.simulation_times)
         # 结果文件也加上 param_str，或者统一写到一个带 search 字样的文件里方便画图
         return f"{self.data_prefix}/gzc-impl/results/{self.data_set}/{self.version}/Search_{self.distribution_type}_SSRNum-{self.num_samples}_seedNum-{self.seeds_num}.csv"
-        
+
     def log_file(self):
         times = ",".join(str(time) for time in self.simulation_times)
         if self.distribution_type == "powerlaw" or self.distribution_type == "gamma" or self.distribution_type == "poisson":
