@@ -425,3 +425,124 @@ def deliverers_ris_path_aware(
         workers=workers,
         chunksize=chunksize,
     )
+
+
+
+# ==========================================
+# 新增：传统 IC 模型 (IMM/TIM+) 的 Baseline 实现
+# ==========================================
+def run_single_ic_rr_generation_worker(args: Tuple) -> List[Set[int]]:
+    """
+    传统 IC 模型的 RR-set 生成逻辑（广播模式）
+    """
+    (num_nodes, in_indices, in_indptr, in_data, alpha, k, root_node_v) = args
+    
+    ssr_list = []
+    for j in range(k):
+        # 为了公平对比，根节点依然需要满足核销概率 alpha 才能算作有效转化
+        if random.random() > alpha[root_node_v]:
+            ssr_list.append(set())
+            continue
+            
+        rr_set = {root_node_v}
+        queue = [root_node_v]
+        idx = 0
+        
+        while idx < len(queue):
+            curr_node = queue[idx]
+            idx += 1
+            
+            # 在反向图中，寻找指向 curr_node 的节点 u (即原图中的 u -> curr_node)
+            start_ptr = in_indptr[curr_node]
+            end_ptr = in_indptr[curr_node + 1]
+            
+            for i in range(start_ptr, end_ptr):
+                u = in_indices[i]
+                p_uv = in_data[i] # 原图中 u 转发给 curr_node 的概率
+                
+                if u not in rr_set:
+                    # 【核心差异】：IC 模型下，每条边独立抛硬币（广播假设）
+                    # 而不是像 Random Walk 那样在所有邻居中只选一个
+                    if random.random() < p_uv:
+                        rr_set.add(u)
+                        queue.append(u)
+                        
+        ssr_list.append(rr_set)
+    return ssr_list
+
+def deliverers_imm_ic(
+    tranProMatrix: np.ndarray,
+    seeds_num: int,
+    num_samples: int = 100000,
+    alpha: np.ndarray = None,
+    workers: int = 16,
+    chunksize: int = 512,
+) -> list:
+    """
+    模拟传统 IMM 算法 (基于独立级联 IC 模型)
+    """
+    logging.info("--- Running: Traditional IMM (IC Model Baseline) ---")
+    start_time = time.time()
+    
+    num_nodes = tranProMatrix.shape[0]
+    alpha_np = _to_numpy_prob(alpha, num_nodes, "alpha")
+    
+    # 构建 CSR 矩阵提取数据
+    in_csr = sp.csr_matrix(tranProMatrix) if not sp.issparse(tranProMatrix) else tranProMatrix.tocsr()
+    in_indices = in_csr.indices
+    in_indptr = in_csr.indptr
+    in_data = in_csr.data # 转移概率
+    
+    # 1. 均匀采样根节点
+    sampled_vs = [random.randint(0, num_nodes - 1) for _ in range(num_samples)]
+    
+    def args_generator():
+        for i in range(num_samples):
+            yield (num_nodes, in_indices, in_indptr, in_data, alpha_np, seeds_num, sampled_vs[i])
+            
+    # 2. 并行生成 IC 模型的 RR-sets
+    node_coverage = [[[] for _ in range(num_nodes)] for _ in range(seeds_num)]
+    
+    with Pool(processes=workers) as pool:
+        iterator = pool.imap_unordered(run_single_ic_rr_generation_worker, args_generator(), chunksize=chunksize)
+        for ssr_idx, ssr_list in enumerate(tqdm(iterator, total=num_samples, desc="生成 IC RR-sets")):
+            for coupon_j, rr_set in enumerate(ssr_list):
+                for node in rr_set:
+                    node_coverage[coupon_j][node].append(ssr_idx)
+                    
+    for j in range(seeds_num):
+        for v in range(num_nodes):
+            node_coverage[j][v] = np.asarray(node_coverage[j][v], dtype=np.int32)
+            
+    # 3. 标准贪心覆盖选种
+    selected_seeds = []
+    selected_set = set()
+    covered_flags = np.zeros(num_samples, dtype=bool)
+    
+    for coupon_idx in range(seeds_num):
+        best_node = -1
+        max_gain = -1
+        
+        for node in range(num_nodes):
+            if node in selected_set: continue
+            node_ssrs = node_coverage[coupon_idx][node]
+            if node_ssrs.size == 0: continue
+            
+            gain = int(np.count_nonzero(~covered_flags[node_ssrs]))
+            if gain > max_gain:
+                max_gain = gain
+                best_node = node
+                
+        if best_node == -1:
+            remaining = [n for n in range(num_nodes) if n not in selected_set]
+            best_node = remaining[0] if remaining else 0
+            
+        selected_seeds.append(best_node)
+        selected_set.add(best_node)
+        
+        best_node_ssrs = node_coverage[coupon_idx][best_node]
+        if best_node_ssrs.size > 0:
+            covered_flags[best_node_ssrs] = True
+            
+    logging.info(f"IMM-IC 选种完成。耗时: {time.time() - start_time:.2f} 秒。")
+    return selected_seeds
