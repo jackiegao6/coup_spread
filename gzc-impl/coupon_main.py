@@ -89,6 +89,14 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
             beta=dis_dis,
             is_optimized=True
         ),
+        # 【新增】：注册传统 IMM-IC 算法
+        'imm_ic': lambda: SSR_method.deliverers_imm_ic(
+            tranProMatrix=data["init_tran_matrix"],
+            seeds_num=m,
+            num_samples=config.num_samples,
+            alpha=succ_dis,
+            workers=16
+        ),
     }
 
     methods_with_seeds = {}
@@ -179,18 +187,22 @@ def run_coupon_experiment(config: ExperimentConfig):
     run_evaluation(methods_with_seeds, config, experiment_data)
 
 
-#  python coupon_main.py --start 100 --end 301 --step 100
+# python coupon_main.py --start 100 --end 301 --step 100
+# python coupon_main.py --start 10 --end 121 --step 12 --h_list=-0.5,1.0,1.5
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run coupon experiment.")
-    parser.add_argument('--start', type=int, default=100, help='起始 seeds_num')
+    parser.add_argument('--start', type=int, default=10, help='起始 seeds_num')
     parser.add_argument('--end', type=int, default=101, help='结束 seeds_num')
-    parser.add_argument('--step', type=int, default=100, help='步长')
+    parser.add_argument('--step', type=int, default=10, help='步长')
+    # 【新增】接收外部传递的 h 列表
+    parser.add_argument('--h_list', type=str, default='-0.5,1.0,1.5', help='逗号分隔的 h 值')
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
         data_set='network.netscience', 
         simulation_times=[600],  
-        methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_path_aware', '1hop_sort'],
+        methods=['ris_path_aware'],
+        # methods=['random', 'degreeTopM', 'pageRank', 'imm_ic', 'ris_path_aware'],
         monte_carlo_L=100,
         distribution_type='log_continuous', 
         personalization='None',  
@@ -198,11 +210,21 @@ if __name__ == '__main__':
         num_samples=100000,
         rng=np.random.default_rng(1),
         single_sim_func='AgainReJudge',  
-        version='2026-4-20',
+        version='2026-4-20-ablation_h', 
     )
 
-    for num in range(args.start, args.end, args.step):
-        my_config.seeds_num = num
-        generate_logger.init_logger(log_file=my_config.log_file())
-        run_coupon_experiment(my_config)
-    print("done!!!!!!!!!!!!!!!!!\n")
+    # 解析 h 列表
+    h_values = [float(x) for x in args.h_list.split(',')]
+
+    # 外层循环：遍历不同的 h
+    for h in h_values:
+        my_config.degree_power_h = h
+        logging.info(f"================ 开始测试 h = {h} ================")
+        
+        # 内层循环：遍历不同的种子数量 k
+        for num in range(args.start, args.end, args.step):
+            my_config.seeds_num = num
+            generate_logger.init_logger(log_file=my_config.log_file())
+            run_coupon_experiment(my_config)
+            
+    print("All experiments done!!!!!!!!!!!!!!!!!\n")

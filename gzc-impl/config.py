@@ -29,22 +29,27 @@ class ExperimentConfig:
     log_alpha_slope: float = 0.1   # 控制低度数节点的采纳率上限
     log_beta_base: float = 0.01
     log_beta_slope: float = 0.6   # 控制高度数节点的丢弃率上限
-
-    @property
-    def adj_file(self):
-        return f"{self.data_prefix}/dataset/network/{self.data_set}-adj.pkl"
+    # === 新增：控制度数非线性映射的指数 h ===
+    degree_power_h: float = 1.0
 
     @property
     def param_str(self):
         if self.distribution_type == 'log_continuous':
-            return f"_aSlope{self.log_alpha_slope}_bSlope{self.log_beta_slope}"
+            # 【关键修改】：把 h 的值加入到文件名后缀中！
+            return f"_aSlope{self.log_alpha_slope}_bSlope{self.log_beta_slope}_h{self.degree_power_h}"
         return ""
+    
+    @property
+    def adj_file(self):
+        return f"{self.data_prefix}/dataset/network/{self.data_set}-adj.pkl"
+
+    
 
     def distribution_file(self, m = 0):
-        return f"{self.data_prefix}/{self.data_set}/{self.version}/distribution-in-{self.data_set}/distribution-{self.distribution_type}{self.param_str}_seedNum-{m}.pkl"
+        return f"{self.data_prefix}/{self.data_set}/{self.version}/distribution-in-{self.data_set}/{self.distribution_type}_{self.param_str}_seedNum-{m}.pkl"
 
     def deliverers_cache_file(self, method, m = 0):
-        return f"{self.data_prefix}/{self.data_set}/{self.version}/seeds-with-{self.data_set}/{self.distribution_type}{self.param_str}_{method}_seedNum-{m}_SSRNum-{self.num_samples}.txt"
+        return f"{self.data_prefix}/{self.data_set}/{self.version}/seeds-with-{self.data_set}/{self.distribution_type}_{self.param_str}_{method}_seedNum-{m}_SSRNum-{self.num_samples}.txt"
 
     def usage_rate_file(self, m = 0):
         times = ",".join(str(time) for time in self.simulation_times)

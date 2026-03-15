@@ -95,12 +95,13 @@ def worker_evaluate_method(
             "variance": Var_activated,
             "std_deviation": std_dev,
             "avg_steps": Avg_Steps, 
-            "total_steps": total_steps,         # 写入CSV: 总曝光
-            # 【新增】写入 CSV
+            "total_steps": total_steps,
             "log_alpha_slope": config_dict.get('log_alpha_slope'),
             "log_beta_slope": config_dict.get('log_beta_slope'),
-            "E_redemptions": E_redemptions,     # 写入CSV: 总核销
-            "comprehensive_score": comprehensive_score, # 写入CSV: 综合得分
+            # 【新增】写入 CSV
+            "degree_power_h": config_dict.get('degree_power_h'),
+            "E_redemptions": E_redemptions,
+            "comprehensive_score": comprehensive_score,
         }
         results.append(result_data)
         
@@ -126,15 +127,14 @@ def simulation2(
     logging.info(f"多进程评估开始，共有 {len(methods)} 个方法待评估...")
 
     # 1. 准备多进程参数
-    # 将 config 转为 dict，确保安全序列化
     config_dict = {
-        'random_dirichlet': config.random_dirichlet,
-        'succ_degree_influence_factor': config.succ_degree_influence_factor,
-        'dis_degree_influence_factor': config.dis_degree_influence_factor,
-        'tran_degree_influence_factor': config.tran_degree_influence_factor,
-        # 【新增】
+        'random_dirichlet': getattr(config, 'random_dirichlet', False),
+        'succ_degree_influence_factor': getattr(config, 'succ_degree_influence_factor', 0),
+        'dis_degree_influence_factor': getattr(config, 'dis_degree_influence_factor', 0),
+        'tran_degree_influence_factor': getattr(config, 'tran_degree_influence_factor', 0),
         'log_alpha_slope': getattr(config, 'log_alpha_slope', 0.1),
-        'log_beta_slope': getattr(config, 'log_beta_slope', 0.25)
+        'log_beta_slope': getattr(config, 'log_beta_slope', 0.25),
+        'degree_power_h': getattr(config, 'degree_power_h', 1.0) 
     }
 
     tasks = []
