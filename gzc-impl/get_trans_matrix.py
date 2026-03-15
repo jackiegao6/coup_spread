@@ -17,10 +17,7 @@ def getTranProMatrix(adj) -> np.ndarray:
         adj_sparse = adj
 
     # 2. 转置矩阵
-    # 你的逻辑需要 Col=Source (j->i)，但通常输入是 Row=Source (i->j)。
-    # 如果你的输入已经是 j->i，请注释掉下面这行转置。
     adj_t = adj_sparse.T
-
     # 此时 adj_t[i, j] 表示 j -> i (列 j 指向 行 i)
 
     # 3. 计算出度 (按列求和 -> 也就是压缩行，因为现在每列代表一个源节点的所有出边)
@@ -39,7 +36,4 @@ def getTranProMatrix(adj) -> np.ndarray:
 
     # 结果矩阵 M，其中 M[:, j] sum 为 1 (如果度>0)
     tran_matrix_sparse = adj_t.dot(D_inv_diag)
-
-    # 6. 如果节点数不大，转回稠密矩阵方便后续索引；如果节点数很大，建议直接返回稀疏矩阵
-    # 考虑到你的蒙特卡洛也是用的 numpy 索引，这里转回 dense
     return tran_matrix_sparse.toarray()

@@ -18,32 +18,7 @@ import get_trans_matrix
 import scipy.sparse as sp
 import networkx as nx
 
-def check_sparsity_from_matrix(adj_matrix):
-    # adj_matrix 是 sp.csr_matrix 或 sp.coo_matrix
-    
-    num_nodes = adj_matrix.shape[0]
-    num_edges = adj_matrix.nnz  # nnz = Number of Non-Zero elements (非零元素个数，即边数)
-    
-    # 理论最大边数 (假设是有向的，就是 N*N；无向且对角线为0则是 N*(N-1))
-    # 简单估算通常直接用 N*N
-    max_possible_edges = num_nodes * num_nodes
-    
-    density = num_edges / max_possible_edges
-    sparsity = 1.0 - density
-    
-    logging.info(f"--- 矩阵分析 ---")
-    logging.info(f"节点数 (N): {num_nodes}")
-    logging.info(f"边数 (E): {num_edges}")
-    logging.info(f"密度 (Density): {density:.8f} (越小越稀疏)")
-    logging.info(f"稀疏度 (Sparsity): {sparsity:.8f} (越接近1越稀疏)")
-    logging.info(f"平均度数 (Avg Degree): {num_edges / num_nodes:.2f}")
-
-
 def load_experiment_data(config: "ExperimentConfig") -> Dict[str, Any]:
-    """
-    :param config: 根据配置文件 单纯加载数据集
-    :return: 返回邻接矩阵+度数
-    """
     logging.info("加载数据集: %s", config.data_set)
 
     adj_path = Path(config.adj_file)
@@ -56,7 +31,6 @@ def load_experiment_data(config: "ExperimentConfig") -> Dict[str, Any]:
         except Exception as e:
             raise ValueError(f"文件加载错误 {adj_path}") from e
 
-    check_sparsity_from_matrix(adj)
     return {"adj": adj, "n": adj.shape[0]}
 
 
@@ -84,7 +58,7 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
     num_nodes = data["adj"].shape[0]
     
     succ_dis = data["distributions"][0] 
-    dis_dis  = data["distributions"][1] # 【Bug修复】这里原来错误地取了2(tran)
+    dis_dis  = data["distributions"][1]
     p_dis    = data["distributions"][2] 
 
     alpha = {node: succ_dis[node] for node in range(len(succ_dis))}
@@ -105,13 +79,7 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
             tranProMatrix=data["init_tran_matrix"],
             seeds_num=m,
             alpha_distribution=succ_dis
-        ),
-        'ris_optimized': lambda: SSR_method.deliverers_ris_coverage(
-            adj=data["adj"], tranProMatrix=data["init_tran_matrix"],
-            seeds_num=m, num_samples=config.num_samples,
-            alpha=succ_dis, beta=dis_dis, is_optimized=True
-        ),
-        
+        ),      
         'ris_path_aware': lambda: SSR_method.deliverers_ris_path_aware(
             adj=data["adj"],
             tranProMatrix=data["init_tran_matrix"],
@@ -142,9 +110,6 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
             print(methods_with_seeds)
             continue
 
-        logging.info(f"首次生成种子集 {method}")
-
-
         start_time = time.time()
         logging.info(f"执行当前算法开始: {method}")
 
@@ -163,15 +128,11 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
 
     return methods_with_seeds
 
-
-
 def run_evaluation(methods_with_seeds: dict, config: ExperimentConfig, data: dict):
     logging.info(f"评估种子集: {config.personalization}")
 
     evaluation_dict = {
         'None': simulation.simulation2,
-        'firstUnused': simulation.simulation2,
-        'firstDiscard': simulation.simulation2,
     }
 
     if config.personalization not in evaluation_dict: raise ValueError(f"Unknown personalization type: {config.personalization}")
@@ -202,14 +163,12 @@ import get_trans_matrix
 def run_coupon_experiment(config: ExperimentConfig):
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-    # 1. 加载数据
     adj_and_n = load_experiment_data(config)
     adj = adj_and_n["adj"]
     n = adj_and_n["n"]
 
     experiment_data = load_contribution_and_tran_matrix(config=config, adj=adj, n=n)
 
-    # 2. 获取种子集
     get_seeds_methods = config.methods
     methods_with_seeds = get_seed_sets(get_seeds_methods, config, experiment_data)
 
@@ -217,7 +176,6 @@ def run_coupon_experiment(config: ExperimentConfig):
         logging.error("No seed sets were generated. Aborting.")
         return
 
-    # 3. 评估种子集
     run_evaluation(methods_with_seeds, config, experiment_data)
 
 
@@ -227,15 +185,12 @@ if __name__ == '__main__':
     parser.add_argument('--start', type=int, default=100, help='起始 seeds_num')
     parser.add_argument('--end', type=int, default=101, help='结束 seeds_num')
     parser.add_argument('--step', type=int, default=100, help='步长')
-    # 【新增】是否开启参数搜索模式
-    parser.add_argument('--search', action='store_true', help='开启 log_continuous 参数网格搜索')
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
         data_set='network.netscience', 
         simulation_times=[600],  
         methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_path_aware', '1hop_sort'],
-        # methods=['ris_path_aware', '1hop_sort'],
         monte_carlo_L=100,
         distribution_type='log_continuous', 
         personalization='None',  
@@ -243,37 +198,11 @@ if __name__ == '__main__':
         num_samples=100000,
         rng=np.random.default_rng(1),
         single_sim_func='AgainReJudge',  
-        version='2026-4-17',
+        version='2026-4-20',
     )
 
-    if args.search:
-        logging.info("================ 开启参数网格搜索模式 ================")
-        # 定义你要遍历的参数范围
-        # alpha_slope 越大，边缘节点越容易直接核销 (Alpha_sort 会变强，但传播会断)
-        # beta_slope 越大，大V节点越容易丢弃券 (DegreeTopM 和 PageRank 会变弱)
-        alpha_slopes_to_test = [0.05, 0.1, 0.15]
-        beta_slopes_to_test = [0.3, 0.4, 0.5]
-        
-        # 固定一个种子数进行测试（比如100）
-        my_config.seeds_num = args.start 
-
-        for a_slope in alpha_slopes_to_test:
-            for b_slope in beta_slopes_to_test:
-                my_config.log_alpha_slope = a_slope
-                my_config.log_beta_slope = b_slope
-                
-                logging.info(f"\n\n>>> 当前测试参数: Alpha_Slope={a_slope}, Beta_Slope={b_slope} <<<")
-                generate_logger.init_logger(log_file=my_config.log_file())
-                
-                # 运行实验
-                run_coupon_experiment(my_config)
-                
-        print("网格搜索结束！请查看 results 目录下的 Search_log_continuous_xxx.csv 文件。")
-
-    else:
-        # 原有的普通运行逻辑
-        for num in range(args.start, args.end, args.step):
-            my_config.seeds_num = num
-            generate_logger.init_logger(log_file=my_config.log_file())
-            run_coupon_experiment(my_config)
-        print("done!!!!!!!!!!!!!!!!!\n")
+    for num in range(args.start, args.end, args.step):
+        my_config.seeds_num = num
+        generate_logger.init_logger(log_file=my_config.log_file())
+        run_coupon_experiment(my_config)
+    print("done!!!!!!!!!!!!!!!!!\n")

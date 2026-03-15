@@ -65,14 +65,6 @@ def monteCarlo_singleTime_improved2(
         # 模拟单张优惠券的随机游走过程 一旦使用 || 丢弃 循环将就break
         while True:
             current_coupon_steps += 1 # 每经历一个节点，步数+1
-
-            # 【胜负手】引入 TTL 限制
-            # Random/RIS 平均 8-9 步，DegreeTopM 平均 12 步
-            # 设为 10，恰好卡死 DegreeTopM 的“击鼓传花”
-            # if current_coupon_steps > 10:
-            #     break 
-
-
             rand_pro = np.random.rand()
             p_succ = succ_distribution[current_user]
             p_dis = dis_distribution[current_user]

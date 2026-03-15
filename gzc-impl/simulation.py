@@ -96,17 +96,11 @@ def worker_evaluate_method(
             "std_deviation": std_dev,
             "avg_steps": Avg_Steps, 
             "total_steps": total_steps,         # 写入CSV: 总曝光
-            "degree_exponent_tran": config_dict.get('tran_degree_influence_factor'),
             # 【新增】写入 CSV
             "log_alpha_slope": config_dict.get('log_alpha_slope'),
             "log_beta_slope": config_dict.get('log_beta_slope'),
             "E_redemptions": E_redemptions,     # 写入CSV: 总核销
             "comprehensive_score": comprehensive_score, # 写入CSV: 综合得分
-            "usage_rate": usage_rate,         
-            "random_dirichlet": config_dict.get('random_dirichlet'),
-            "degree_exponent_succ": config_dict.get('succ_degree_influence_factor'),
-            "degree_exponent_dis": config_dict.get('dis_degree_influence_factor'),
-            "degree_exponent_tran": config_dict.get('tran_degree_influence_factor')
         }
         results.append(result_data)
         

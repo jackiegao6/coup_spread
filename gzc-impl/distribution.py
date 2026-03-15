@@ -3,7 +3,7 @@ import pickle
 import numpy as np
 from scipy.stats import truncnorm, gamma, expon
 import logging
-import networkx as nx  # 引入 networkx 来处理图和度
+import networkx as nx
 import scipy.sparse as sp
 from config import ExperimentConfig
 from typing import Dict
@@ -38,7 +38,6 @@ def _generate_continuous_log_degree_distributions(n: int, degrees: np.ndarray, c
     
     norm_deg = log_degrees / max_log 
     
-    # 【核心修改】使用 config 传进来的参数
     expected_beta  = config.log_beta_base + config.log_beta_slope * norm_deg          
     expected_alpha = config.log_alpha_base + config.log_alpha_slope * (1.0 - norm_deg)  
     
@@ -78,7 +77,7 @@ def _generate_continuous_log_degree_distributions(n: int, degrees: np.ndarray, c
 def get_distribution_degree_aware(
         distribution_file: str,
         distribution_type: str,
-        adj: nx.Graph,  # 直接传入图对象或邻接矩阵
+        adj: nx.Graph,
         config: ExperimentConfig,
 ) -> tuple:
     if isinstance(adj, np.ndarray):
@@ -87,21 +86,17 @@ def get_distribution_degree_aware(
     elif isinstance(adj, nx.Graph):
         n = adj.number_of_nodes()
         degrees = np.array([d for n, d in adj.degree()])
-    elif sp.issparse(adj):  # 添加对稀疏矩阵的支持
+    elif sp.issparse(adj):
         n = adj.shape[0]
         degrees = np.array(adj.sum(axis=1)).flatten()
     else:
         raise TypeError("矩阵类型不支持")
 
-    # 先找缓存
     if os.path.exists(distribution_file):
         logging.info(f"复用概率分布 文件位置: {distribution_file}")
         with open(distribution_file, 'rb') as f:
             dis_dict = pickle.load(f)
         return tuple(dis_dict.values())
-
-    logging.info(f"首次生成度相关概率分布 分布类型: '{distribution_type}'.")
-
 
     generator_registry = {
         'log_continuous': _generate_continuous_log_degree_distributions, 
@@ -111,7 +106,6 @@ def get_distribution_degree_aware(
         raise ValueError(f"该分布类型暂不支持: '{distribution_type}'.")
 
     generator_func = generator_registry[distribution_type]
-    # 将 n 和 degrees 都传递给生成函数
     dis_dict = generator_func(n, degrees, config)
 
     os.makedirs(os.path.dirname(distribution_file), exist_ok=True)

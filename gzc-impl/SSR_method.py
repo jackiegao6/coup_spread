@@ -4,7 +4,7 @@ import random
 import time
 from multiprocessing import Pool
 from typing import List, Set, Tuple
-from tqdm import tqdm   # ←←← 新增这一行
+from tqdm import tqdm
 import numpy as np
 import scipy.sparse as sp
 
@@ -67,8 +67,6 @@ def compute_path_success_probabilities(
         q = next_q
 
     return q
-
-
 
 def _sample_root_success_flags(p_success: float, k: int, is_optimized: bool) -> List[bool]:
     """为根节点的 k 张券采样“这张券最终是否会产生一次成功核销”事件。"""
@@ -171,8 +169,6 @@ def run_single_ssr_generation_worker(args: Tuple) -> List[Set[int]]:
 
     return ssr_list
 
-
-
 class CouponInfluenceMaximizer:
     def __init__(
         self,
@@ -257,8 +253,6 @@ class CouponInfluenceMaximizer:
             raise ValueError(f"未知 root_event_mode: {mode}")
 
         return np.clip(root_probs, 0.0, 1.0)
-
-
 
     def generate_rr_sets_parallel(self, N: int, workers: int = 16, chunksize: int = 512):
         logging.info("开始生成 %d 组多重 SSR...", N)
@@ -372,9 +366,6 @@ class CouponInfluenceMaximizer:
         )
         return selected_seeds, estimated_influence
     
-
-
-
 
 def deliverers_ris_coverage(
     adj: sp.csr_matrix,
