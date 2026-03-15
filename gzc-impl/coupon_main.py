@@ -135,7 +135,7 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
                 f.write("method,seed_num,time_ms\n") # 写入表头
             f.write(f"{method},{config.seeds_num},{cost_time_ms}\n")
 
-            
+
         os.makedirs(os.path.dirname(deliverers_cache_file), exist_ok=True)
         with open(deliverers_cache_file, 'a+') as file:
             logging.info(f"将种子集 写入位置: {config.deliverers_cache_file(method=method, m=config.seeds_num)}")
@@ -203,7 +203,7 @@ if __name__ == '__main__':
     parser.add_argument('--end', type=int, default=101, help='结束 seeds_num')
     parser.add_argument('--step', type=int, default=10, help='步长')
     # 【新增】接收外部传递的 h 列表
-    parser.add_argument('--h_list', type=str, default='-0.5,1.0,1.5', help='逗号分隔的 h 值')
+    parser.add_argument('--h_list', type=str, default='-2.0,-1.0,-0.5,1.0,1.5,2.0,2.5,3.0,5.0', help='逗号分隔的 h 值')
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
@@ -218,7 +218,7 @@ if __name__ == '__main__':
         num_samples=100000,
         rng=np.random.default_rng(1),
         single_sim_func='AgainReJudge',  
-        version='2026-4-20-ablation_h', 
+        version='paper-netscience-h-test', 
     )
 
     # 解析 h 列表
