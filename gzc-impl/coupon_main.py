@@ -125,9 +125,17 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
         methods_with_seeds[method] = seeds
 
         end_time = time.time()
-        cost_time = end_time - start_time
-        logging.info(f"当前用时 {cost_time:.2f} 秒")
+        cost_time_ms = (end_time - start_time) * 1000 
+        logging.info(f"当前用时 {cost_time_ms:.2f} 毫秒")
+        time_file = config.time_cost_file
+        file_exists = os.path.exists(time_file)
+        os.makedirs(os.path.dirname(time_file), exist_ok=True)
+        with open(time_file, 'a+') as f:
+            if not file_exists:
+                f.write("method,seed_num,time_ms\n") # 写入表头
+            f.write(f"{method},{config.seeds_num},{cost_time_ms}\n")
 
+            
         os.makedirs(os.path.dirname(deliverers_cache_file), exist_ok=True)
         with open(deliverers_cache_file, 'a+') as file:
             logging.info(f"将种子集 写入位置: {config.deliverers_cache_file(method=method, m=config.seeds_num)}")

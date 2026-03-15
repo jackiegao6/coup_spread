@@ -43,7 +43,10 @@ class ExperimentConfig:
     def adj_file(self):
         return f"{self.data_prefix}/dataset/network/{self.data_set}-adj.pkl"
 
-    
+    @property
+    def time_cost_file(self):
+        # 专门用于记录选种耗时的 CSV 文件
+        return f"{self.data_prefix}/gzc-impl/results/{self.data_set}/{self.version}/TimeCost_{self.distribution_type}_SSRNum-{self.num_samples}.csv"
 
     def distribution_file(self, m = 0):
         return f"{self.data_prefix}/{self.data_set}/{self.version}/distribution-in-{self.data_set}/{self.distribution_type}_{self.param_str}_seedNum-{m}.pkl"
