@@ -1,0 +1,2 @@
+﻿method,seed_num,num_sims,E_activated_users,variance,std_deviation,avg_steps,total_steps,log_alpha_slope,log_beta_slope,degree_power_h,E_redemptions,comprehensive_score
+ris_path_aware,100,600,23.911666666666665,15.463863888888888,3.9324119683584637,2.8941666666666666,289.41666666666663,0.1,0.6,1.0,25.196666666666665,53.49583333333333

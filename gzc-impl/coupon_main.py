@@ -203,14 +203,17 @@ if __name__ == '__main__':
     parser.add_argument('--end', type=int, default=101, help='结束 seeds_num')
     parser.add_argument('--step', type=int, default=10, help='步长')
     # 【新增】接收外部传递的 h 列表
-    parser.add_argument('--h_list', type=str, default='-2.0,-1.0,-0.5,1.0,1.5,2.0,2.5,3.0,5.0', help='逗号分隔的 h 值')
+    # parser.add_argument('--h_list', type=str, default='-2.0,-1.0,-0.5,1.0,1.5,2.0,2.5,3.0,5.0', help='逗号分隔的 h 值')
+    parser.add_argument('--h_list', type=str, default='1.0', help='逗号分隔的 h 值')
+    parser.add_argument('--num_samples', type=str, default='1000,10000,50000,100000,150000,200000,300000,400000,500000', help='逗号分隔的 h 值')
     args = parser.parse_args()
 
     my_config = ExperimentConfig(
-        data_set='network.netscience', 
+        data_set='network.netDog', 
         simulation_times=[600],  
         methods=['ris_path_aware'],
         # methods=['random', 'degreeTopM', 'pageRank', 'imm_ic', 'ris_path_aware'],
+        # methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_path_aware', '1hop_sort'],
         monte_carlo_L=100,
         distribution_type='log_continuous', 
         personalization='None',  
@@ -218,16 +221,27 @@ if __name__ == '__main__':
         num_samples=100000,
         rng=np.random.default_rng(1),
         single_sim_func='AgainReJudge',  
-        version='paper-netscience-h-test', 
+        version='paper-netscience-num_samples', 
     )
 
     # 解析 h 列表
     h_values = [float(x) for x in args.h_list.split(',')]
+    num_samples_values = [int(x) for x in args.num_samples.split(',')]
 
     # 外层循环：遍历不同的 h
-    for h in h_values:
-        my_config.degree_power_h = h
-        logging.info(f"================ 开始测试 h = {h} ================")
+    # for h in h_values:
+    #     my_config.degree_power_h = h
+    #     logging.info(f"================ 开始测试 h = {h} ================")
+        
+    #     # 内层循环：遍历不同的种子数量 k
+    #     for num in range(args.start, args.end, args.step):
+    #         my_config.seeds_num = num
+    #         generate_logger.init_logger(log_file=my_config.log_file())
+    #         run_coupon_experiment(my_config)
+
+
+    for num_sample in num_samples_values:
+        my_config.num_samples = num_sample
         
         # 内层循环：遍历不同的种子数量 k
         for num in range(args.start, args.end, args.step):

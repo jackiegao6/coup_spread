@@ -251,5 +251,5 @@ def draw_paper_ready_plots(csv_dir, start=10, end=100, step=10):
     plt.show()
 
 if __name__ == "__main__":
-    CSV_DIRECTORY = "/home/wen/work/coup_spread/gzc-impl/results/network.netscience/2026-4-3/" 
+    CSV_DIRECTORY = "/root/work/coupon/coup_spread/gzc-impl/results/network.netscience/paper-netscience-h-1.0-timecost/" 
     draw_paper_ready_plots(CSV_DIRECTORY)

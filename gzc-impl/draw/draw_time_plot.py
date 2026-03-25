@@ -13,7 +13,7 @@ def draw_time_consumption_plot(time_csv_path):
     df = pd.read_csv(time_csv_path)
 
     # 2. 过滤出我们要对比的两个方法
-    target_methods = ["monterCarlo_CELF", "ris_path_aware"]
+    target_methods = ["monterCarlo_CELF", "ris_path_aware", "pageRank", "degreeTopM", "random","alpha_sort","1hop_sort"]
     df_plot = df[df["method"].isin(target_methods)].copy()
     
     if df_plot.empty:
@@ -40,8 +40,34 @@ def draw_time_consumption_plot(time_csv_path):
 
     # 4. 样式定义
     styles = {
-        "monterCarlo_CELF": {"color": "#E45756", "marker": "s", "label": "MC-CELF (Baseline)"},
-        "ris_path_aware":   {"color": "#4C78A8", "marker": "*", "label": "RIS-Optimized (Ours)", "markersize": 12}
+        "monterCarlo_CELF": {
+            "color": "#4C78A8", "marker": "s", "label": "MC-CELF (Upper Bound)",
+            "linewidth": 2.0, "markersize": 6.2, "zorder": 3, "alpha": 0.95
+        },
+        "ris_path_aware": {
+            "color": "#E45756", "marker": "*", "label": "RIS-Optimized (Ours)",
+            "linewidth": 2.8, "markersize": 10.5, "zorder": 6, "alpha": 0.98
+        },
+        "pageRank": {
+            "color": "#59A14F", "marker": "^", "label": "PageRank",
+            "linewidth": 1.8, "markersize": 6.0, "zorder": 3, "alpha": 0.92
+        },
+        "degreeTopM": {
+            "color": "#F28E2B", "marker": "v", "label": "DegreeTopM",
+            "linewidth": 1.8, "markersize": 6.0, "zorder": 3, "alpha": 0.92
+        },
+        "alpha_sort": {
+            "color": "#B279A2", "marker": "D", "label": "Alpha-Sort",
+            "linewidth": 1.8, "markersize": 5.8, "zorder": 3, "alpha": 0.92
+        },
+        "random": {
+            "color": "#9D9DA1", "marker": "o", "label": "Random",
+            "linewidth": 1.7, "markersize": 5.8, "zorder": 2, "alpha": 0.90
+        },
+        "1hop_sort": {
+            "color": "#9C755F", "marker": "P", "label": "1Hop-Sort",
+            "linewidth": 1.8, "markersize": 6.0, "zorder": 3, "alpha": 0.92
+        },
     }
 
     # 5. 画线
@@ -89,5 +115,6 @@ def draw_time_consumption_plot(time_csv_path):
 
 if __name__ == "__main__":
     # 替换为你实际生成的 TimeCost CSV 文件路径
-    TIME_CSV_FILE = "/root/work/coupon/coup_spread/gzc-impl/results/network.netscience/2026-4-20-time_test/TimeCost_log_continuous_SSRNum-100000.csv" 
+    # /root/work/coupon/coup_spread/gzc-impl/results/network.netscience/paper-netscience-h-1.0-timecost/TimeCost_log_continuous_SSRNum-100000.csv
+    TIME_CSV_FILE = "/root/work/coupon/coup_spread/gzc-impl/results/network.netscience/paper-netscience-h-1.0-timecost/TimeCost_log_continuous_SSRNum-100000.csv" 
     draw_time_consumption_plot(TIME_CSV_FILE)
