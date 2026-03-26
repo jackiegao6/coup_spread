@@ -11,7 +11,7 @@ DATASETS = [
     {"name": "EmailEnron",     "nodes": 33696, "scale": 3500.0}   
 ]
 
-def generate_activated_mock_data():
+def generate_redemptions_mock_data():
     # 点更密集，从 10 到 200，步长为 10 (共 20 个点)
     k_values = np.arange(10, 201, 10)
     
@@ -53,17 +53,20 @@ def generate_activated_mock_data():
                 
                 activated = max(0.5, val + noise)
                 
+                # 【核心逻辑】：核销数比激活数高约 3%~5% (模拟老客复购)
+                redemptions = activated * np.random.uniform(1.03, 1.05)
+                
                 data.append({
                     "dataset": ds_name,
                     "method": method, 
                     "seed_num": k, 
-                    "activated": activated
+                    "redemptions": redemptions
                 })
             
     return pd.DataFrame(data)
 
-def draw_activated_1x4():
-    df = generate_activated_mock_data()
+def draw_redemptions_1x4():
+    df = generate_redemptions_mock_data()
     
     # 2. 纯正的顶会 Matplotlib 风格设置 (全边框，刻度向内)
     plt.rcParams.update({
@@ -100,10 +103,10 @@ def draw_activated_1x4():
         subset_ds = df[df["dataset"] == ds_name]
         ax = axes[col_idx]
         
-        # --- 绘制激活人数 ---
+        # --- 绘制核销数 ---
         for method, style in method_styles.items():
             subset = subset_ds[subset_ds["method"] == method]
-            ax.plot(subset["seed_num"], subset["activated"], label=style["label"],
+            ax.plot(subset["seed_num"], subset["redemptions"], label=style["label"],
                     color=style["color"], marker=style["marker"], 
                     linewidth=style.get("linewidth", 1.2), 
                     markersize=style.get("markersize", 5), 
@@ -114,15 +117,15 @@ def draw_activated_1x4():
         ax.set_xlim(0, 205)
         ax.set_xticks([0, 50, 100, 150, 200])
         
-        # Y 轴标签只在最左侧显示
+        # 【关键修改】：Y 轴标签替换为 E[N_red]
         if col_idx == 0:
-            ax.set_ylabel(r"$\mathbb{E}[N_{act}]$", labelpad=4)
+            ax.set_ylabel(r"$\mathbb{E}[N_{red}]$", labelpad=4)
             
         ax.set_ylim(bottom=0) # Y轴从0开始
         ax.xaxis.set_minor_locator(AutoMinorLocator(2))
         ax.yaxis.set_minor_locator(AutoMinorLocator(2))
         
-        # 【关键】：将 (a) dataset_name 写在图表内部左上角
+        # 将 (a) dataset_name 写在图表内部左上角
         letter = letters[col_idx]
         ax.text(0.04, 0.94, f"({letter}) {ds_name}", 
                 transform=ax.transAxes, fontsize=12, verticalalignment='top',
@@ -139,10 +142,10 @@ def draw_activated_1x4():
     plt.subplots_adjust(top=0.85, bottom=0.15, left=0.05, right=0.98, wspace=0.25)
     
     # 保存高清 PDF
-    output_filename = "neurips_style_activated_1x4.pdf"
+    output_filename = "neurips_style_redemptions_1x4.pdf"
     plt.savefig(output_filename, dpi=300, bbox_inches="tight")
-    print(f"✅ 顶会风格 1x4 激活人数图已生成: {output_filename}")
+    print(f"✅ 顶会风格 1x4 核销数图已生成: {output_filename}")
     plt.show()
 
 if __name__ == "__main__":
-    draw_activated_1x4()
+    draw_redemptions_1x4()
