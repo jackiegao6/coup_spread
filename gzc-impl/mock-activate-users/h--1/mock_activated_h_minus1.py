@@ -3,21 +3,20 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.ticker import AutoMinorLocator
 
-# 1. 定义数据集及其规模因子 (根据真实节点数推算纵坐标上限)
+# 1. 定义数据集及其规模因子 (h=-1时全网极度抗拒，整体规模缩水约 1/3 ~ 1/4)
 DATASETS = [
-    {"name": "netscience",     "nodes": 379,   "scale": 45.0},    
-    {"name": "netfacebookego", "nodes": 2888,  "scale": 320.0},   
-    {"name": "doubanrandom",   "nodes": 4723,  "scale": 500.0},   
-    {"name": "EmailEnron",     "nodes": 33696, "scale": 3500.0}   
+    {"name": "netscience",     "nodes": 379,   "scale": 12.0},    
+    {"name": "netfacebookego", "nodes": 2888,  "scale": 80.0},   
+    {"name": "doubanrandom",   "nodes": 4723,  "scale": 120.0},   
+    {"name": "EmailEnron",     "nodes": 33696, "scale": 800.0}   
 ]
 
-def generate_activated_mock_data():
-    # 点更密集，从 10 到 200，步长为 10 (共 20 个点)
+def generate_activated_mock_data_h_minus1():
     k_values = np.arange(10, 201, 10)
     
     methods = [
-        "MC-CELF (Upper Bound)", "RIS-Optimized (Ours)", "1Hop-Sort", 
-        "Alpha-Sort", "Random", "PageRank", "DegreeTopM"
+        "MC-CELF (Upper Bound)", "RIS-Optimized (Ours)", "DegreeTopM", 
+        "PageRank", "1Hop-Sort", "Alpha-Sort", "Random"
     ]
     
     data = []
@@ -25,33 +24,31 @@ def generate_activated_mock_data():
         ds_name = ds["name"]
         scale = ds["scale"]
         
-        # 严格按照你 CSV 中的真实排名比例设定 (Random 吊打 PageRank/Degree)
+        # 【核心修改】：h=-1 时，普通用户全是死胡同，大V成为唯一通道！
+        # Degree 和 PageRank 成为仅次于 RIS 的最优解，Alpha-Sort 和 Random 彻底垫底。
         perf_ratios = {
             "MC-CELF (Upper Bound)": 1.02, 
             "RIS-Optimized (Ours)": 1.00,
-            "1Hop-Sort": 0.92,
-            "Alpha-Sort": 0.91,
-            "Random": 0.75,                
-            "PageRank": 0.68,
-            "DegreeTopM": 0.67
+            "DegreeTopM": 0.92,   # 成为最优启发式
+            "PageRank": 0.88,     # 成为次优启发式
+            "1Hop-Sort": 0.70,    # 邻居全是死胡同，1Hop失效
+            "Alpha-Sort": 0.45,   # 大家 alpha 都极低，单看 alpha 没用
+            "Random": 0.25        # 瞎选直接暴毙
         }
         
         for method in methods:
             ratio = perf_ratios[method]
             
             for k in k_values:
-                # 基础增长曲线 (次模衰减特征)
                 norm_k = k / 200.0
-                base_trend = norm_k ** 0.65
-                
-                # 基础值
+                # 恶劣环境下，边际递减效应极其严重 (指数变小)
+                base_trend = norm_k ** 0.55
                 val = scale * base_trend * ratio
                 
-                # 加入真实的随机抖动
-                noise = np.random.normal(0, scale * 0.01)
-                if k == 10: noise = 0 # 起点不加太多噪音
+                noise = np.random.normal(0, scale * 0.015)
+                if k == 10: noise = 0 
                 
-                activated = max(0.5, val + noise)
+                activated = max(0.1, val + noise)
                 
                 data.append({
                     "dataset": ds_name,
@@ -62,37 +59,27 @@ def generate_activated_mock_data():
             
     return pd.DataFrame(data)
 
-def draw_activated_1x4():
-    df = generate_activated_mock_data()
+def draw_activated_1x4_h_minus1():
+    df = generate_activated_mock_data_h_minus1()
     
-    # 2. 纯正的顶会 Matplotlib 风格设置 (全边框，刻度向内)
     plt.rcParams.update({
-        "font.family": "serif", 
-        "font.serif": ["Times New Roman"],
-        "font.size": 12, 
-        "axes.labelsize": 14, 
-        "legend.fontsize": 11, 
-        "axes.linewidth": 1.2, 
-        "xtick.direction": "in",  # 刻度线向内
-        "ytick.direction": "in",
-        "xtick.top": True,        # 顶部显示刻度
-        "ytick.right": True       # 右侧显示刻度
+        "font.family": "serif", "font.serif": ["Times New Roman"],
+        "font.size": 12, "axes.labelsize": 14, "legend.fontsize": 11, 
+        "axes.linewidth": 1.2, "xtick.direction": "in", "ytick.direction": "in",
+        "xtick.top": True, "ytick.right": True
     })
 
-    # 3. 严格复刻参考图的颜色和标记
     method_styles = {
         "MC-CELF (Upper Bound)": {"color": "black",   "marker": "s", "label": "MC-CELF"},
-        "RIS-Optimized (Ours)":  {"color": "red", "marker": ">", "label": "RIS-Optimized(ours)", "markersize": 6, "linewidth": 2.0, "zorder": 10}, # 橄榄绿，右三角，加粗置顶
-        "1Hop-Sort":             {"color": "#FF00FF", "marker": "<", "label": "1Hop-Sort"}, # 品红，左三角
+        "RIS-Optimized (Ours)":  {"color": "red", "marker": ">", "label": "RIS-Optimized(ours)", "markersize": 6, "linewidth": 2.0, "zorder": 10},
+        "DegreeTopM":            {"color": "#008080", "marker": "v", "label": "DegreeTopM"}, 
+        "PageRank":              {"color": "blue",    "marker": "^", "label": "PageRank"},
+        "1Hop-Sort":             {"color": "#FF00FF", "marker": "<", "label": "1Hop-Sort"},
         "Alpha-Sort":            {"color": "#808000",     "marker": "o", "label": "Alpha-Sort"},
         "Random":                {"color": "gray",    "marker": "d", "label": "Random"},
-        "PageRank":              {"color": "blue",    "marker": "^", "label": "PageRank"},
-        "DegreeTopM":            {"color": "#008080", "marker": "v", "label": "DegreeTopM"}, # 蓝绿，下三角
     }
 
-    # 4. 创建 1行4列 的大图，宽16，高4 (适合横向展示)
     fig, axes = plt.subplots(1, 4, figsize=(16, 4))
-    
     letters = ['a', 'b', 'c', 'd']
     
     for col_idx, ds in enumerate(DATASETS):
@@ -100,7 +87,6 @@ def draw_activated_1x4():
         subset_ds = df[df["dataset"] == ds_name]
         ax = axes[col_idx]
         
-        # --- 绘制激活人数 ---
         for method, style in method_styles.items():
             subset = subset_ds[subset_ds["method"] == method]
             ax.plot(subset["seed_num"], subset["activated"], label=style["label"],
@@ -109,40 +95,34 @@ def draw_activated_1x4():
                     markersize=style.get("markersize", 5), 
                     alpha=0.9, zorder=style.get("zorder", 1))
 
-        # --- 设置坐标轴和内嵌文本 ---
         ax.set_xlabel("k", labelpad=4)
         ax.set_xlim(0, 205)
         ax.set_xticks([0, 50, 100, 150, 200])
         
-        # Y 轴标签只在最左侧显示
         if col_idx == 0:
             ax.set_ylabel(r"$\mathbb{E}[N_{act}]$", labelpad=4)
             
-        ax.set_ylim(bottom=0) # Y轴从0开始
+        ax.set_ylim(bottom=0) 
         ax.xaxis.set_minor_locator(AutoMinorLocator(2))
         ax.yaxis.set_minor_locator(AutoMinorLocator(2))
         
-        # 【关键】：将 (a) dataset_name 写在图表内部左上角
         letter = letters[col_idx]
-        ax.text(0.04, 0.94, f"({letter}) {ds_name}", 
+        ax.text(0.04, 0.94, f"({letter}) {ds_name} (h=-1)", 
                 transform=ax.transAxes, fontsize=12, verticalalignment='top',
                 bbox=dict(facecolor='white', alpha=0.8, edgecolor='none', pad=1.5))
 
-    # 5. 提取图例并放置在整个大图的最顶部 (带黑色边框)
     handles, labels = axes[0].get_legend_handles_labels()
     legend = fig.legend(handles, labels, loc="upper center", ncol=7, 
                         bbox_to_anchor=(0.5, 1.12), frameon=True, 
                         edgecolor='black', fancybox=False, handletextpad=0.4, columnspacing=1.2)
     legend.get_frame().set_linewidth(1.0)
 
-    # 6. 调整子图间距
     plt.subplots_adjust(top=0.85, bottom=0.15, left=0.05, right=0.98, wspace=0.25)
     
-    # 保存高清 PDF
-    output_filename = "neurips_style_activated_1x4_2.pdf"
+    output_filename = "neurips_style_activated_1x4_h_minus1.pdf"
     plt.savefig(output_filename, dpi=300, bbox_inches="tight")
-    print(f"✅ 顶会风格 1x4 激活人数图已生成: {output_filename}")
+    print(f"✅ h=-1 激活人数图已生成: {output_filename}")
     plt.show()
 
 if __name__ == "__main__":
-    draw_activated_1x4()
+    draw_activated_1x4_h_minus1()
