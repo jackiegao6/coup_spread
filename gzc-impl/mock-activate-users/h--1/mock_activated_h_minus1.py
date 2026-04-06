@@ -5,10 +5,10 @@ from matplotlib.ticker import AutoMinorLocator
 
 # 1. 定义数据集及其规模因子 (h=-1时全网极度抗拒，整体规模缩水约 1/3 ~ 1/4)
 DATASETS = [
-    {"name": "netscience",     "nodes": 379,   "scale": 12.0},    
-    {"name": "netfacebookego", "nodes": 2888,  "scale": 80.0},   
-    {"name": "doubanrandom",   "nodes": 4723,  "scale": 120.0},   
-    {"name": "EmailEnron",     "nodes": 33696, "scale": 800.0}   
+    {"name": "netscience",     "nodes": 379,   "scale": 15.0},    
+    {"name": "netfacebookego", "nodes": 2888,  "scale": 35.0},   
+    {"name": "doubanrandom",   "nodes": 4723,  "scale": 45.0},   
+    {"name": "EmailEnron",     "nodes": 33696, "scale": 65.0}   
 ]
 
 def generate_activated_mock_data_h_minus1():

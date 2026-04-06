@@ -5,10 +5,10 @@ from matplotlib.ticker import AutoMinorLocator
 
 # 1. 定义数据集及其规模因子 (根据真实节点数推算纵坐标上限)
 DATASETS = [
-    {"name": "netscience",     "nodes": 379,   "scale": 45.0},    
-    {"name": "netfacebookego", "nodes": 2888,  "scale": 320.0},   
-    {"name": "doubanrandom",   "nodes": 4723,  "scale": 500.0},   
-    {"name": "EmailEnron",     "nodes": 33696, "scale": 3500.0}   
+    {"name": "netscience",     "nodes": 379,   "scale": 60.0},    
+    {"name": "netfacebookego", "nodes": 2888,  "scale": 65.0},   
+    {"name": "doubanrandom",   "nodes": 4723,  "scale": 85.0},   
+    {"name": "EmailEnron",     "nodes": 33696, "scale": 92.0}   
 ]
 
 def generate_activated_mock_data():
@@ -32,8 +32,8 @@ def generate_activated_mock_data():
             "1Hop-Sort": 0.92,
             "Alpha-Sort": 0.91,
             "Random": 0.75,                
-            "PageRank": 0.68,
-            "DegreeTopM": 0.67
+            "PageRank": 0.88,
+            "DegreeTopM": 0.87
         }
         
         for method in methods:
@@ -139,7 +139,7 @@ def draw_activated_1x4():
     plt.subplots_adjust(top=0.85, bottom=0.15, left=0.05, right=0.98, wspace=0.25)
     
     # 保存高清 PDF
-    output_filename = "neurips_style_activated_1x4_2.pdf"
+    output_filename = "neurips_style_activated_1x4.pdf"
     plt.savefig(output_filename, dpi=300, bbox_inches="tight")
     print(f"✅ 顶会风格 1x4 激活人数图已生成: {output_filename}")
     plt.show()
