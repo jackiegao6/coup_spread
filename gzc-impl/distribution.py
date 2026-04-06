@@ -81,6 +81,62 @@ def _generate_continuous_log_degree_distributions(n: int, degrees: np.ndarray, c
         'constantFactor_distribution': const_factor_dist
     }
 
+def tmpenerate_continuous_log_degree_distributions(n: int, degrees: np.ndarray, config) -> dict:
+    import logging
+    import numpy as np
+    logging.info(f"===> Generating 'Log-Continuous' distributions (AlphaSlope={config.log_alpha_slope}, BetaSlope={config.log_beta_slope}, h={config.degree_power_h})...")
+    
+    rng = np.random.default_rng(config.rng)
+    
+    log_degrees = np.log1p(degrees) 
+    max_log = np.max(log_degrees)
+    if max_log == 0: max_log = 1.0
+    
+    # 1. 先计算基础的归一化值 [0, 1]
+    base_norm_deg = log_degrees / max_log 
+    
+    # 2. 【核心修改】应用指数 h，并做安全截断防止 h<0 时除以 0
+    # 保证底数最小为 1e-5
+    safe_base_norm = np.clip(base_norm_deg, 1e-5, 1.0)
+    norm_deg = np.power(safe_base_norm, config.degree_power_h)
+    
+    # 再次截断确保概率映射不出界 (特别是 h<0 时，值可能会大于1)
+    norm_deg = np.clip(norm_deg, 0.0, 1.0)
+    
+    expected_beta  = config.log_beta_base + config.log_beta_slope * norm_deg          
+    expected_alpha = config.log_alpha_base + config.log_alpha_slope * (1.0 - norm_deg)  
+    
+    sum_ab = expected_alpha + expected_beta
+    overflow_mask = sum_ab > 0.95
+    expected_alpha[overflow_mask] = (expected_alpha[overflow_mask] / sum_ab[overflow_mask]) * 0.95
+    expected_beta[overflow_mask]  = (expected_beta[overflow_mask] / sum_ab[overflow_mask]) * 0.95
+    
+    expected_tran = 1.0 - expected_alpha - expected_beta
+    
+    gamma = 20.0 
+    
+    dirichlet_params = np.vstack([
+        expected_alpha * gamma + 1e-3, 
+        expected_beta * gamma + 1e-3, 
+        expected_tran * gamma + 1e-3
+    ]).T 
+    
+    probs = np.zeros((n, 3))
+    for i in range(n):
+        probs[i] = rng.dirichlet(dirichlet_params[i])
+        
+    succ_dist = probs[:, 0]
+    dis_dist  = probs[:, 1]
+    tran_dist = probs[:, 2]
+    
+    
+    return {
+        'succ_distribution': succ_dist,
+        'dis_distribution': dis_dist,
+        'tran_distribution': tran_dist,
+    }
+
+
 
 def get_distribution_degree_aware(
         distribution_file: str,
