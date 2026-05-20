@@ -240,13 +240,23 @@ if __name__ == '__main__':
     #         run_coupon_experiment(my_config)
 
 
-    for num_sample in num_samples_values:
-        my_config.num_samples = num_sample
+
+    # for num_sample in num_samples_values:
+    #     my_config.num_samples = num_sample
         
-        # 内层循环：遍历不同的种子数量 k
-        for num in range(args.start, args.end, args.step):
-            my_config.seeds_num = num
-            generate_logger.init_logger(log_file=my_config.log_file())
-            run_coupon_experiment(my_config)
+    #     # 内层循环：遍历不同的种子数量 k
+    #     for num in range(args.start, args.end, args.step):
+    #         my_config.seeds_num = num
+    #         generate_logger.init_logger(log_file=my_config.log_file())
+    #         run_coupon_experiment(my_config)
+
+    
             
+
+    # 内层循环：遍历不同的种子数量 k
+    for num in range(args.start, args.end, args.step):
+        my_config.seeds_num = num
+        generate_logger.init_logger(log_file=my_config.log_file())
+        run_coupon_experiment(my_config)
+
     print("All experiments done!!!!!!!!!!!!!!!!!\n")
