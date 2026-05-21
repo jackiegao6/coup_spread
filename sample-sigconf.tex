@@ -73,7 +73,7 @@
 \renewcommand{\shortauthors}{Author One et al.}
 
 \begin{abstract}
-Word-of-mouth and viral marketing have been extensively studied under classical influence propagation models such as Independent Cascade (IC) and Linear Threshold (LT), where activated nodes broadcast influence to all neighbors simultaneously. However, many real-world promotional campaigns --- such as digital coupon forwarding and invitation-code sharing --- follow a fundamentally different pattern: each piece of promotional content propagates as a single instance passed to at most one neighbor at each step. We formalize this setting as the \emph{Sequential Independent Diffusion Influence Maximization (SIDIM)} problem, where $k$ coupons are seeded and each propagates independently as a random walk. At each visited node, the coupon is either redeemed (activating the user and terminating the walk), discarded, or forwarded to exactly one neighbor. The objective is to select $k$ seed nodes that maximize the expected number of distinct users who redeem at least one coupon. We prove that SIDIM is NP-hard, and establish that the adoption spread function is monotone and submodular, admitting a greedy $(1-1/e)$-approximation. We further develop a tailored Reverse Influence Sampling (RIS) framework that jointly generates $k$ reverse reachable sets per root node, yielding a near-linear time algorithm with a $(1-1/e-\epsilon)$-approximation guarantee. Extensive experiments on real-world social networks validate both the importance of the sequential diffusion formulation and the effectiveness of our approach.
+Word-of-mouth and viral marketing have been extensively studied under classical influence propagation models such as Independent Cascade (IC) and Linear Threshold (LT), where activated nodes broadcast influence to all neighbors simultaneously. However, many real-world promotional campaigns --- such as digital coupon forwarding and invitation-code sharing --- follow a fundamentally different pattern: each piece of promotional content propagates as a single instance passed to at most one neighbor at each step. We formalize this setting as the \emph{Sequential Independent Diffusion Influence Maximization (SIDIM)} problem, where $k$ coupons are seeded and each propagates independently as a random walk. At each visited node, the coupon is either redeemed (activating the user and terminating the walk), discarded, or forwarded to exactly one neighbor. The objective is to select $k$ seed nodes that maximize the expected number of distinct users who redeem at least one coupon. We prove that SIDIM is NP-hard, and establish that the adoption spread function is monotone and submodular, admitting a greedy $(1-1/e)$-approximation. We further develop a tailored Reverse Influence Sampling (RIS) framework that jointly generates $k$ reverse reachable sets per root node, yielding a near-linear time algorithm with a $(1-1/e-\epsilon)$-approximation guarantee. Extensive experiments on real-world social networks validate both the importance of the SID formulation and the effectiveness of our approach.
 \end{abstract}
 
 %%
@@ -87,15 +87,15 @@ Word-of-mouth and viral marketing have been extensively studied under classical 
   <concept_significance>500</concept_significance>
  </concept>
  <concept>
-  <concept_id>10002951.10003317.10003338</concept_id>
-  <concept_desc>Information systems~Retrieval models and ranking</concept_desc>
+  <concept_id>10003752.10003809.10010170.10010171</concept_id>
+  <concept_desc>Theory of computation~Approximation algorithms analysis</concept_desc>
   <concept_significance>300</concept_significance>
  </concept>
 </ccs2012>
 \end{CCSXML}
 
 \ccsdesc[500]{Information systems~Social networks}
-\ccsdesc[300]{Information systems~Retrieval models and ranking}
+\ccsdesc[300]{Theory of computation~Approximation algorithms analysis}
 
 \keywords{influence maximization, viral marketing, coupon diffusion, random walk, reverse influence sampling, submodular optimization}
 
@@ -107,9 +107,9 @@ Word-of-mouth and viral marketing techniques have become dominant strategies for
 
 This sequential propagation fundamentally alters both the diffusion mechanism and the objective landscape. First, the diffusion model is structurally different. In standard IC and LT models, an activated node attempts to influence all its neighbors simultaneously, resulting in a branching cascade that fans out rapidly across the network. In SID, however, each piece of promotional content is passed to at most one neighbor, tracing a chain-like propagation process through the network. Second, the definition of activation is strictly decoupled from mere exposure. In classical IM, a node is considered activated as soon as the message reaches it. In coupon or invitation-code scenarios, however, a node that simply forwards the coupon without using it is not considered activated; only a node that ultimately redeems the coupon counts as an activated user. Consequently, the intermediate nodes along the forwarding chain contribute nothing to the final activation. Third, since multiple coupons propagate independently, the same user may redeem more than one coupon, yet is counted as activated only once. The primary goal is therefore to maximize the number of distinct users who ultimately redeem at least one coupon, as each newly activated user represents a potential recurring customer. Beyond this, when multiple seeding strategies yield the same activation coverage, the total number of coupons redeemed also serves as an additional metric. These differences collectively fall outside the modeling scope of existing IM frameworks and call for a new problem formulation.
 
-To address these challenges, we formalize the \emph{Sequential Independent Diffusion Influence Maximization (SIDIM)} problem. In our model, $k$ coupons are distributed to $k$ seed nodes, and each coupon propagates independently through the network as a random walk. At each node along the walk, one of three outcomes occurs: the node redeems the coupon and becomes activated, the node discards the coupon, or the node forwards the coupon to exactly one randomly selected neighbor. In the first two cases, the random walk terminates; in the third, it continues. The objective is to select $k$ seed nodes that maximize the expected number of distinct users who redeem at least one coupon. Since the $k$ coupons propagate independently, each coupon induces its own possible world along the nodes it may visit. The overall diffusion outcome is then determined by the joint configuration of $k$ independent possible worlds. We first prove that SIDIM is NP-hard, confirming the inherent computational intractability of the problem. We then analyze the structural properties of the objective function through the possible-world framework and establish that the expected adoption spread is monotone and submodular. This key property enables the application of a greedy algorithm with a $(1-1/e)$-approximation guarantee. To make the greedy algorithm scalable, we develop a novel Reverse Influence Sampling (RIS) framework tailored to the sequential diffusion setting. Unlike classical RR set construction, where a single RR set captures all potential influence paths to a target node, our framework jointly samples $k$ reverse reachable sets for each target --- one per coupon, corresponding to one per possible world --- reflecting the independent random walks in the diffusion process. Building on this RIS framework, we design a near-linear time seed selection algorithm with a $(1-1/e-\epsilon)$-approximation guarantee.
+To address these challenges, we formalize the \emph{Sequential Independent Diffusion Influence Maximization (SIDIM)} problem. In our model, $k$ coupons are distributed to $k$ seed nodes, and each coupon propagates independently through the network as a random walk. At each node along the walk, one of three outcomes occurs: the node redeems the coupon and becomes activated, the node discards the coupon, or the node forwards the coupon to exactly one randomly selected neighbor. In the first two cases, the random walk terminates; in the third, it continues. The objective is to select $k$ seed nodes that maximize the expected number of distinct users who redeem at least one coupon. Since the $k$ coupons propagate independently, each coupon induces its own possible world along the nodes it may visit. The overall diffusion outcome is then determined by the joint configuration of $k$ independent possible worlds. We first prove that SIDIM is NP-hard, confirming the inherent computational intractability of the problem. We then analyze the structural properties of the objective function through the possible-world framework and establish that the expected adoption spread is monotone and submodular. This key property enables the application of a greedy algorithm with a $(1-1/e)$-approximation guarantee. To make the greedy algorithm scalable, we develop a novel Reverse Influence Sampling (RIS) framework tailored to the SID setting. Unlike classical RR set construction, where a single RR set captures all potential influence paths to a target node, our framework jointly samples $k$ reverse reachable sets for each target --- one per coupon, corresponding to one per possible world --- reflecting the independent random walks in the diffusion process. Building on this RIS framework, we design a near-linear time seed selection algorithm with a $(1-1/e-\epsilon)$-approximation guarantee.
 
-Our contributions are summarized as follows. First, we initiate the formal study of the SIDIM problem, a practically motivated yet theoretically underexplored setting that captures the single-path, multi-coupon nature of real-world sequential promotional campaigns. Second, we prove that SIDIM is NP-hard and establish that the adoption spread function is monotone and submodular, admitting a greedy algorithm with a $(1-1/e)$-approximation guarantee. Third, we develop a tailored RIS scheme that jointly generates $k$ reverse reachable sets per root node with provable unbiasedness, and build upon it a near-linear time algorithm with a $(1-1/e-\epsilon)$-approximation guarantee. Fourth, extensive experiments on real-world social networks demonstrate that our method significantly outperforms baselines adapted from classical IM, validating both the importance of the sequential diffusion formulation and the effectiveness of our algorithmic framework.
+Our contributions are summarized as follows. First, we initiate the formal study of the SIDIM problem, a practically motivated yet theoretically underexplored setting that captures the single-path, multi-coupon nature of real-world sequential promotional campaigns. Second, we prove that SIDIM is NP-hard and establish that the adoption spread function is monotone and submodular, admitting a greedy algorithm with a $(1-1/e)$-approximation guarantee. Third, we develop a tailored RIS scheme that jointly generates $k$ reverse reachable sets per root node with provable unbiasedness, and build upon it a near-linear time algorithm with a $(1-1/e-\epsilon)$-approximation guarantee. Fourth, extensive experiments on real-world social networks demonstrate that our method significantly outperforms baselines adapted from classical IM, validating both the importance of the SID formulation and the effectiveness of our algorithmic framework.
 
 
 \section{Related Work}
@@ -118,7 +118,7 @@ Our contributions are summarized as follows. First, we initiate the formal study
 The IM problem was first formulated by Domingos and Richardson~\cite{domingos2001mining,richardson2002mining}, who modeled viral marketing as probabilistic inference over a Markov random field. Kempe, Kleinberg, and Tardos~\cite{kempe2003maximizing} gave the foundational treatment: they introduced the IC and LT diffusion models, proved IM is NP-hard under both, and showed that the adoption spread function is monotone and submodular, enabling a greedy algorithm with a $(1-1/e)$-approximation guarantee. However, the greedy algorithm requires expensive Monte Carlo estimation of marginal gains. Leskovec et al.~\cite{leskovec2007celf} proposed the CELF optimization to exploit submodularity via lazy evaluations, reducing the number of function evaluations by orders of magnitude. Goyal, Lu, and Lakshmanan~\cite{goyal2011celf} further improved this with CELF++. Chen, Wang, and Yang~\cite{chen2009efficient} introduced the PMIA and LDAG heuristics to avoid Monte Carlo simulation entirely, at the cost of approximation quality.
 
 \paragraph{Reverse influence sampling.}
-Borgs et al.~\cite{borgs2014maximizing} made the decisive breakthrough by introducing the Reverse Influence Sampling (RIS) framework, which provides a $(1-1/e-\epsilon)$-approximation in expected near-linear time. Tang, Xiao, and Shi~\cite{tang2014influence} developed TIM and TIM+, the first practical RIS-based algorithms with rigorous sample complexity bounds. Tang, Shi, and Xiao~\cite{tang2015influence} subsequently introduced IMM, which tightens the sample complexity via a martingale stopping rule, achieving near-linear time with a significantly smaller constant. Nguyen, Thai, and Dinh~\cite{nguyen2016stop} proposed SSA and D-SSA, attaining asymptotically optimal sample complexity. Huang et al.~\cite{huang2017revisiting} revisited the analysis of these algorithms and identified conditions under which the sample bounds can be further tightened. Sun et al.~\cite{sun2018multi} extended the RIS paradigm to multi-round influence maximization, where $k$ seeds are deployed across successive rounds; although structurally distinct from our setting, their work similarly requires reasoning about $k$ independent propagation instances and informed our design of the $k$-joint RR set. All of these methods, however, are designed for the IC or LT broadcast model and assume that a single activated node can simultaneously influence all of its neighbors; they cannot be directly applied to the non-replicable, sequential diffusion setting we study.
+Borgs et al.~\cite{borgs2014maximizing} made the decisive breakthrough by introducing the Reverse Influence Sampling (RIS) framework, which provides a $(1-1/e-\epsilon)$-approximation in expected near-linear time. Tang, Xiao, and Shi~\cite{tang2014influence} developed TIM and TIM+, the first practical RIS-based algorithms with rigorous sample complexity bounds. Tang, Shi, and Xiao~\cite{tang2015influence} subsequently introduced IMM, which tightens the sample complexity via a martingale stopping rule, achieving near-linear time with a significantly smaller constant. Nguyen, Thai, and Dinh~\cite{nguyen2016stop} proposed SSA and D-SSA, attaining asymptotically optimal sample complexity. Huang et al.~\cite{huang2017revisiting} revisited the analysis of these algorithms and identified conditions under which the sample bounds can be further tightened. Sun et al.~\cite{sun2018multi} extended the RIS paradigm to multi-round influence maximization, where $k$ seeds are deployed across successive rounds; although structurally distinct from our setting, their work similarly requires reasoning about $k$ independent propagation instances and informed our design of the $k$-joint RR set. All of these methods, however, are designed for the IC or LT broadcast model and assume that a single activated node can simultaneously influence all of its neighbors; they cannot be directly applied to the non-replicable SID setting we study.
 
 \paragraph{Diffusion model variants.}
 A substantial literature has extended the basic IC and LT models in various directions: competitive influence maximization~\cite{budak2011limiting}, location-aware diffusion~\cite{li2014efficient}, profit-maximizing seeding under cost constraints~\cite{lu2015competition}, and adaptive seeding where the seed set is expanded after observing early diffusion~\cite{seeman2013adaptive}. Despite their diversity, these models share the same broadcast diffusion paradigm: an activated node propagates influence to multiple neighbors simultaneously. Our model departs from this paradigm by having each coupon move as a single instance along a forwarding chain, terminating only when it is redeemed or discarded.
@@ -128,7 +128,7 @@ Random walks have been widely studied as a model for information spreading and n
 
 \section{Problem Definition}
 
-Let $G = (V, E)$ be a directed graph with $n = |V|$ nodes and $m = |E|$ edges, where a node $u \in V$ represents a user and a directed edge $(u, v) \in E$ indicates that $u$ may forward a coupon to $v$. Throughout this paper, we assume $G$ is strongly connected. Given a seed set $S = \{s_1, s_2, \ldots, s_k\} \subseteq V$ of size $k$, a retailer distributes $k$ coupons, one to each seed user, and each coupon then propagates independently through the network according to the diffusion process described below.
+Let $G = (V, E)$ be a directed graph with $n = |V|$ nodes and $m = |E|$ edges, where a node $u \in V$ represents a user and a directed edge $(u, v) \in E$ indicates that $u$ may forward a coupon to $v$. Throughout this paper, we assume $G$ is strongly connected. Given a seed tuple $S = (s_1, s_2, \ldots, s_k) \in V^k$, a retailer distributes $k$ coupons, one to each seed user, and each coupon then propagates independently through the network according to the diffusion process described below.
 
 Consider first the propagation of a single coupon. When a coupon arrives at a node $u$, one of three mutually exclusive outcomes occurs. With probability $p_u^a$, user $u$ \emph{adopts} the coupon: the coupon is redeemed, $u$ is marked as activated, and the propagation terminates at $u$. With probability $p_u^d$, user $u$ \emph{discards} the coupon: the coupon is removed from the network without activating anyone. With the remaining probability $p_u^t = 1 - p_u^a - p_u^d$, user $u$ \emph{transfers} the coupon to exactly one out-neighbor $v$, selected according to an edge-level forwarding parameter $p(u, v)$ satisfying $\sum_{v: (u, v) \in E} p(u, v) = p_u^t$. A crucial feature of this process, which sharply distinguishes our setting from classical IM models, is that the coupon itself is \emph{non-replicable}: unlike a piece of information in the IC or LT model that can be copied and broadcast to all neighbors simultaneously, a coupon exists as a single instance in the network and moves to at most one location at each step.
 
@@ -164,9 +164,9 @@ Condition~(ii) alone guarantees that every intermediate node $w_1, \ldots, w_{l-
 and the \emph{adoption spread} $\sigma(S) = \sum_{u \in V} \Pr[\mathrm{Adopt}_u(S)]$ counts the expected number of distinct users who redeem at least one coupon. The optimization problem is formalized as:
 
 \begin{definition}[SIDIM]
-Given a directed graph $G = (V, E)$ with node parameters $\{(p_u^a, p_u^d)\}_{u \in V}$, edge forwarding parameters $\{p(u, v)\}_{(u, v) \in E}$, and an integer $k$, find a size-$k$ seed set $S^*$ that maximizes the adoption spread:
+Given a directed graph $G = (V, E)$ with node parameters $\{(p_u^a, p_u^d)\}_{u \in V}$, edge forwarding parameters $\{p(u, v)\}_{(u, v) \in E}$, and an integer $k$, find an ordered seed tuple $S^*$ that maximizes the adoption spread:
 \begin{equation}
-S^* = \arg\max_{S \subseteq V, \, |S| = k} \sigma(S).
+S^* = \arg\max_{S \in V^k} \sigma(S).
 \end{equation}
 \end{definition}
 
@@ -184,7 +184,7 @@ The SIDIM problem is NP-hard.
 The classical IM problem under the IC model can be cast as a special instance of our problem by setting $p_u^d = 0$ for every node $u$ and choosing the forwarding parameters $\{p(u, v)\}$ appropriately so that the resulting single-coupon walk reproduces an IC-style cascade restricted to a single trajectory. Since classical IM is NP-hard~\cite{kempe2003maximizing}, our problem is at least as hard. Full details are omitted for space.
 \end{proof}
 
-To analyze the structural properties of $\sigma(S)$, it is convenient to adopt a \emph{possible-world} perspective. For each coupon $j \in \{1, \ldots, k\}$ and each node $u \in V$, the stochastic outcome at $u$ when coupon $j$ visits it is encoded by a single uniform sample $r_{u,j}$, jointly determining $u$'s behavior (adopt, discard, or transfer) under coupon $j$. The collection of these samples across all nodes constitutes a possible world $W_j$, and the joint configuration $\mathcal{W} = (W_1, \ldots, W_k)$ of $k$ independent possible worlds fully determines the diffusion outcome. Within a fixed $\mathcal{W}$, whether $u$ is activated by seed set $S$ is a deterministic function of $S$, and $\sigma(S) = \mathbb{E}_{\mathcal{W}}\bigl[\sum_u \mathrm{Adopt}_u(S)\bigr]$.
+To analyze the structural properties of $\sigma(S)$, it is convenient to adopt a \emph{possible-world} perspective. For each coupon $j \in \{1, \ldots, k\}$ and each node $u \in V$, the stochastic outcome at $u$ when coupon $j$ visits it is encoded by a single uniform sample $r_{u,j}$, jointly determining $u$'s behavior (adopt, discard, or transfer) under coupon $j$. The collection of these samples across all nodes constitutes a possible world $W_j$, and the joint configuration $\mathcal{W} = (W_1, \ldots, W_k)$ of $k$ independent possible worlds fully determines the diffusion outcome. Within a fixed $\mathcal{W}$, whether $u$ is activated by seed tuple $S$ is a deterministic function of $S$, and $\sigma(S) = \mathbb{E}_{\mathcal{W}}\bigl[\sum_u \mathrm{Adopt}_u(S)\bigr]$.
 
 \begin{theorem}
 \label{thm:monosub}
@@ -197,7 +197,7 @@ Fix an arbitrary realization $\mathcal{W} = (W_1,\ldots,W_k)$. Under $\mathcal{W
 Monotonicity is immediate: enlarging $S$ can only increase the chance that $S \cap T_u(\mathcal{W}) \neq \emptyset$. For submodularity, $S \mapsto \mathbb{I}[S \cap T_u(\mathcal{W}) \neq \emptyset]$ is a coverage function and hence submodular for any fixed $\mathcal{W}$. Summing over $u \in V$ and taking expectations over $\mathcal{W}$ preserves both properties, since they are closed under non-negative linear combinations. Therefore $\sigma(S)$ is monotone and submodular. Full details are omitted for space.
 \end{proof}
 
-Theorems~\ref{thm:nphard} and~\ref{thm:monosub} together characterize the SIDIM problem as a monotone submodular maximization problem subject to a cardinality constraint. By the classical result of Nemhauser et al.~\cite{nemhauser1978analysis}, a simple greedy algorithm that iteratively adds the node with the largest marginal gain achieves a $(1 - 1/e)$-approximation of the optimum. However, evaluating the marginal gain exactly is intractable, since computing $\sigma(S)$ for a given $S$ already requires reasoning over all possible worlds. In the next section, we develop a Reverse Influence Sampling framework tailored to the sequential diffusion process, which estimates marginal gains efficiently and yields a near-linear time algorithm with a $(1 - 1/e - \epsilon)$-approximation guarantee.
+Theorems~\ref{thm:nphard} and~\ref{thm:monosub} together characterize the SIDIM problem as a monotone submodular maximization problem subject to a cardinality constraint. By the classical result of Nemhauser et al.~\cite{nemhauser1978analysis}, a simple greedy algorithm that iteratively adds the node with the largest marginal gain achieves a $(1 - 1/e)$-approximation of the optimum. However, evaluating the marginal gain exactly is intractable, since computing $\sigma(S)$ for a given $S$ already requires reasoning over all possible worlds. In the next section, we develop a Reverse Influence Sampling framework tailored to the SID process, which estimates marginal gains efficiently and yields a near-linear time algorithm with a $(1 - 1/e - \epsilon)$-approximation guarantee.
 
 
 \section{Algorithm}
@@ -208,7 +208,7 @@ The monotone submodularity of $\sigma(S)$ (Theorem~\ref{thm:monosub}) immediatel
 
 \subsection{Reverse Reachable Sets for Coupon Diffusion}
 
-We begin by adapting the reverse reachable (RR) set concept to the sequential coupon diffusion model.
+We begin by adapting the reverse reachable (RR) set concept to the SID model.
 
 \paragraph{Single-coupon reverse walk.}
 Fix possible world $W_j$ for coupon $j$, in which each node $u$ has independently drawn a pre-determined action: adopt (with probability $p_u^a$), discard (with probability $p_u^d$), or forward to a specific out-neighbor $v$ (with probability $p(u,v)$ for each $(u,v)\in E$). The \emph{reverse reachable set} of target node $u$ under $W_j$ is defined as
@@ -337,18 +337,18 @@ This greedy selection maximizes the estimated marginal adoption spread contribut
   \hat{\sigma}(S) = \frac{n}{T}\sum_{t=1}^{T}
     \mathbb{I}\!\left[\bigvee_{j=1}^{k} \bigl\{s_j \in R_j^{(t)}\bigr\}\right],
 \]
-which checks, for each sample $t$, whether \emph{the $j$-th seed $s_j$ belongs to the $j$-th component RR set $R_j^{(t)}$} — not whether any seed falls in the union $Q^{(t)}$. This per-coupon check is precisely what Lemma~\ref{lem:unbiased} proves to be unbiased: the union check $S \cap Q^{(t)} \neq \emptyset$ would over-count activations by allowing seed $s_j$ to ``borrow'' reachability from world $W_{j'}$ ($j' \neq j$), which is incorrect because world $W_j$ is the unique probability space in which coupon $j$ propagates. The required number of samples $T$ is determined by the same IMM-style stopping criterion as before. The complete procedure is given in Algorithm~\ref{alg:cimris}.
+which checks, for each sample $t$, whether \emph{the $j$-th seed $s_j$ belongs to the $j$-th component RR set $R_j^{(t)}$} — not whether any seed falls in the union $Q^{(t)}$. This per-coupon check is precisely what Lemma~\ref{lem:unbiased} proves to be unbiased: the union check $S \cap Q^{(t)} \neq \emptyset$ would over-count activations by allowing seed $s_j$ to ``borrow'' reachability from world $W_{j'}$ ($j' \neq j$), which is incorrect because world $W_j$ is the unique probability space in which coupon $j$ propagates. The required number of samples $T$ is determined by the IMM-style stopping criterion described below. The complete procedure is given in Algorithm~\ref{alg:risopt}.
 
 We adapt the stopping criterion of IMM~\cite{tang2015influence}. Let
 \[
   \lambda^* = \frac{(8 + 2\epsilon)\, n}{\epsilon^2}
   \left[(1-1/e)\sqrt{\ln\tbinom{n}{k} + \ln\tfrac{2}{\delta}} + \sqrt{\ln\tfrac{2}{\delta}}\right]^2.
 \]
-Algorithm~\ref{alg:cimris} doubles the RR set collection in phases and uses an empirical lower bound $\mathrm{LB}$ on the optimum to determine when $T = \lceil\lambda^*/\mathrm{LB}\rceil$ samples have been collected.
+Algorithm~\ref{alg:risopt} doubles the RR set collection in phases and uses an empirical lower bound $\mathrm{LB}$ on the optimum to determine when $T = \lceil\lambda^*/\mathrm{LB}\rceil$ samples have been collected.
 
 \begin{algorithm}[t]
 \caption{RIS-Optimized$(G, k, \epsilon, \delta)$}
-\label{alg:cimris}
+\label{alg:risopt}
 \begin{algorithmic}[1]
 \State $\mathcal{F} \leftarrow \emptyset$;\ \ $\mathrm{LB} \leftarrow 1$;\ \ $\epsilon' \leftarrow \epsilon/\sqrt{2}$
 \For{$i = 1, \ldots, \lfloor\log_2 n\rfloor - 1$}
@@ -356,7 +356,7 @@ Algorithm~\ref{alg:cimris} doubles the RR set collection in phases and uses an e
   \While{$|\mathcal{F}| < \theta_i$}
     \State $\mathcal{F} \leftarrow \mathcal{F} \cup \{\text{Sample-}k\text{-Joint-RRSet}(G, k)\}$
   \EndWhile
-  \State Greedy max-coverage on $\mathcal{F}$ $\Rightarrow$ seed set $S_i$
+  \State Greedy max-coverage on $\mathcal{F}$ $\Rightarrow$ seed tuple $S_i$
   \If{$\hat{\sigma}(S_i) \geq (1+\epsilon')\, x$}
     \State $\mathrm{LB} \leftarrow \hat{\sigma}(S_i)/(1+\epsilon')$;\ \ \textbf{break}
   \EndIf
@@ -372,7 +372,7 @@ Algorithm~\ref{alg:cimris} doubles the RR set collection in phases and uses an e
 
 \begin{theorem}
 \label{thm:approx}
-With probability at least $1 - \delta$, Algorithm~\ref{alg:cimris} returns a seed set $\hat{S}$ satisfying
+With probability at least $1 - \delta$, Algorithm~\ref{alg:risopt} returns a seed tuple $\hat{S}$ satisfying
 \[
   \sigma(\hat{S}) \;\geq\; (1 - 1/e - \epsilon)\cdot \sigma(S_{\mathrm{opt}}),
 \]
@@ -451,7 +451,7 @@ We compare RIS-Optimized against two groups of methods.
 
 \smallskip\noindent\textit{Coupon-aware and structural heuristics.}
 \begin{itemize}
-  \item \textbf{MC-CELF}: Greedy seed selection with each marginal gain estimated by $10{,}000$ independent Monte Carlo simulations of the sequential diffusion process, using CELF lazy evaluation~\cite{leskovec2007celf} to reduce function evaluations. This serves as the quality oracle.
+  \item \textbf{MC-CELF}: Greedy seed selection with each marginal gain estimated by $10{,}000$ independent Monte Carlo simulations of the SID process, using CELF lazy evaluation~\cite{leskovec2007celf} to reduce function evaluations. This serves as the quality oracle.
   \item \textbf{1Hop-Sort}: Ranks each node $u$ by its expected one-step adoption score
     \[
       \mathrm{score}_{1h}(u) = p_u^a + \sum_{v \in N^+(u)} p(u,v)\, p_v^a,
@@ -465,7 +465,7 @@ We compare RIS-Optimized against two groups of methods.
 
 \smallskip\noindent\textit{IC-model adaptations.}
 \begin{itemize}
-  \item \textbf{IMM}~\cite{tang2015influence}: The IMM algorithm applied to an IC-model interpretation of the graph, treating each edge weight $p(u,v)$ as an independent activation probability. Its inclusion tests whether a state-of-the-art IM solver can compensate for the fundamental model mismatch with sequential coupon propagation.
+  \item \textbf{IMM}~\cite{tang2015influence}: The IMM algorithm applied to an IC-model interpretation of the graph, treating each edge weight $p(u,v)$ as an independent activation probability. Its inclusion tests whether a state-of-the-art IM solver can compensate for the fundamental model mismatch with SID propagation.
   \item \textbf{OPIM}~\cite{tang2018online}: An online-processing variant of IMM with improved practical efficiency, applied under the same IC interpretation.
 \end{itemize}
 
@@ -475,7 +475,7 @@ Each seed set is evaluated by averaging the number of distinctly activated users
 \subsection{Adoption Spread under Normal Diffusion}
 \label{sec:exp-normal}
 
-Figure~\ref{fig:normal_spread} shows the expected number of activated users ($E[N_{\text{act}}]$) as a function of $k$ under Scenario~I across the four datasets. RIS-Optimized closely tracks the MC-CELF oracle at every value of $k$, validating the near-optimality of the RIS approximation for sequential coupon diffusion. Among the heuristics, 1Hop-Sort and Alpha-Sort perform substantially better than the topology-only methods (DegreeTopM, PageRank, Random), as they exploit the node-level adoption probabilities that govern the coupon walk. However, both coupon-aware heuristics fall increasingly short of RIS-Optimized as $k$ grows: without a global coverage objective, they seed redundant neighborhoods, whereas RIS-Optimized exploits the submodular structure to diversify seed placement across the network.
+Figure~\ref{fig:normal_spread} shows the expected number of activated users ($E[N_{\text{act}}]$) as a function of $k$ under Scenario~I across the four datasets. RIS-Optimized closely tracks the MC-CELF oracle at every value of $k$, validating the near-optimality of the RIS approximation for the SID model. Among the heuristics, 1Hop-Sort and Alpha-Sort perform substantially better than the topology-only methods (DegreeTopM, PageRank, Random), as they exploit the node-level adoption probabilities that govern the coupon walk. However, both coupon-aware heuristics fall increasingly short of RIS-Optimized as $k$ grows: without a global coverage objective, they seed redundant neighborhoods, whereas RIS-Optimized exploits the submodular structure to diversify seed placement across the network.
 
 \begin{figure*}[t]
   \centering
@@ -496,12 +496,12 @@ Figure~\ref{fig:normal_redemp} reports the total number of coupons redeemed unde
 \subsection{Comparison with IC-Based Methods}
 \label{sec:exp-ic}
 
-Figure~\ref{fig:ic_compare} isolates the comparison between RIS-Optimized and the two IC-model baselines, IMM and OPIM. Across all four datasets and all values of $k$, RIS-Optimized achieves substantially higher activation spread. The underperformance of IMM and OPIM is not attributable to algorithmic weaknesses: both carry rigorous $(1-1/e-\epsilon)$-approximation guarantees for the IC model and their implementations are correct. The gap is instead a consequence of structural model mismatch. IC-based optimization selects seeds for their broadcast influence radius, favoring high-degree hubs that can simultaneously activate many neighbors; in sequential coupon propagation, however, a node can forward a coupon to only one neighbor, so degree confers no special propagation advantage. By contrast, RIS-Optimized is built around the actual single-path, random-walk dynamics of the coupon model and correctly identifies seeds that maximize adoption reach under this regime.
+Figure~\ref{fig:ic_compare} isolates the comparison between RIS-Optimized and the two IC-model baselines, IMM and OPIM. Across all four datasets and all values of $k$, RIS-Optimized achieves substantially higher activation spread. The underperformance of IMM and OPIM is not attributable to algorithmic weaknesses: both carry rigorous $(1-1/e-\epsilon)$-approximation guarantees for the IC model and their implementations are correct. The gap is instead a consequence of structural model mismatch. IC-based optimization selects seeds for their broadcast influence radius, favoring high-degree hubs that can simultaneously activate many neighbors; in SID propagation, however, a node can forward a coupon to only one neighbor, so degree confers no special propagation advantage. By contrast, RIS-Optimized is built around the actual single-path, random-walk dynamics of the coupon model and correctly identifies seeds that maximize adoption reach under this regime.
 
 \begin{figure*}[t]
   \centering
   \includegraphics[width=\textwidth]{assets/fig_ic_comparison}
-  \caption{Adoption spread of RIS-Optimized vs.\ IC-model baselines (IMM, OPIM) under Scenario~I (Normal). Despite their theoretical guarantees for the IC setting, IMM and OPIM consistently underperform because the broadcast-influence objective is structurally mismatched with sequential coupon propagation.}
+  \caption{Adoption spread of RIS-Optimized vs.\ IC-model baselines (IMM, OPIM) under Scenario~I (Normal). Despite their theoretical guarantees for the IC setting, IMM and OPIM consistently underperform because the broadcast-influence objective is structurally mismatched with SID propagation.}
   \label{fig:ic_compare}
 \end{figure*}
 
@@ -550,7 +550,7 @@ The results reveal a clear quality--efficiency trade-off. Alpha-Sort and 1Hop-So
 
 We studied the Sequential Independent Diffusion Influence Maximization (SIDIM) problem, a practically motivated yet theoretically underexplored setting in which $k$ non-replicable coupons propagate through a social network as independent random walks. Unlike classical IM models where activated nodes broadcast influence to all neighbors, each coupon in our model traces a single forwarding chain and activates a user only upon redemption, not mere receipt. This distinction fundamentally changes both the diffusion mechanics and the optimization landscape.
 
-We established that SIDIM is NP-hard and that the adoption spread function is monotone and submodular, admitting a greedy $(1-1/e)$-approximation. To make this tractable at scale, we developed a tailored Reverse Influence Sampling framework built on $k$-joint RR sets: for each target node, $k$ independent reverse random walks are sampled and their union serves as an unbiased estimator of the node's activation probability under any seed set. This reduction to a maximum coverage instance allows RIS-Optimized to run in near-linear expected time while retaining a provable $(1-1/e-\epsilon)$-approximation guarantee. Experiments on four real-world networks confirm that RIS-Optimized closely matches the quality of the Monte Carlo oracle while outperforming classical IM adaptations and structural heuristics by a significant margin.
+We established that SIDIM is NP-hard and that the adoption spread function is monotone and submodular, admitting a greedy $(1-1/e)$-approximation. To make this tractable at scale, we developed a tailored Reverse Influence Sampling framework built on $k$-joint RR sets: for each target node, $k$ independent reverse random walks are sampled and they yield per-coupon unbiased estimators of each node's activation probability, enabling SIDIM to be cast as a maximum weighted coverage instance. This reduction to a maximum coverage instance allows RIS-Optimized to run in near-linear expected time while retaining a provable $(1-1/e-\epsilon)$-approximation guarantee. Experiments on four real-world networks confirm that RIS-Optimized closely matches the quality of the Monte Carlo oracle while outperforming classical IM adaptations and structural heuristics by a significant margin.
 
 Several directions remain open. First, extending the model to heterogeneous forwarding behavior --- where different users apply different decision rules --- would better capture real campaign dynamics. Second, the current model assumes a static graph; incorporating temporal network evolution could yield more accurate predictions for time-sensitive promotional campaigns. Third, exploring budget-constrained variants, where seeds are allocated with non-uniform costs, is a natural next step toward practical deployment.
 
@@ -560,17 +560,5 @@ Several directions remain open. First, extending the model to heterogeneous forw
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}
-
-\appendix
-
-\section{Proofs}
-
-\subsection{Proof of Theorem~\ref{thm:nphard}}
-
-% Full NP-hardness reduction proof goes here.
-
-\subsection{Proof of Theorem~\ref{thm:monosub}}
-
-% Full monotonicity and submodularity proof goes here.
 
 \end{document}
