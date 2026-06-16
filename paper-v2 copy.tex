@@ -451,13 +451,20 @@ The ordered representation $S=(s_1,\ldots,s_k)$ is kept for clarity in
 the RIS algorithm (Section~\ref{sec:algo}), where seed $s_j$ is paired
 with world $W_j$.
 
-Fig.~\ref{fig:example} illustrates the SCD model with two coupons.
-Coupon~1 is seeded at $s_1$; in world $W_1$, the live-edge path leads
-to node $u$ where $A_{u,1}$ fires, activating $u$.
-Coupon~2 is seeded at $s_2$; in its independent world $W_2$, a
-different path activates $v$.
-Node $w$ appears in both paths but does not adopt in either world; it
-contributes to propagation but not to the objective.
+Fig.~\ref{fig:example} is a numerical example to illustrate the SCD
+model with two coupons.
+There are two independent possible worlds in this example: coupon~1 is
+seeded at $s_1$ in world $W_1$, and coupon~2 is seeded at $s_2$ in
+world $W_2$.
+In world $W_1$, the live-edge path from $s_1$ reaches node $u$, and
+the adoption event $A_{u,1}$ occurs, so coupon~1 activates $u$.
+In world $W_2$, coupon~2 follows a different live-edge path and
+activates node $v$.
+Node $w$ lies on the forwarding chains but does not adopt either
+coupon, which means that it helps propagation but does not contribute
+to the objective.
+Therefore, in this realization, the adoption spread is
+$\sigma(S)=2$.
 
 \begin{figure}[t]
   \centering
