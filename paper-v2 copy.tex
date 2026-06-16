@@ -330,16 +330,18 @@ time step.
 Throughout the paper, we assume $p_u^a>0$ for every node $u$, so every
 coupon walk terminates almost surely.
 
-The non-replicable nature of the coupon is the defining characteristic
-of the SCD model.
-Unlike IC diffusion where a node can simultaneously trigger activation
-attempts on all neighbors, a transferred coupon moves to \emph{exactly
-one} neighbor, tracing a chain rather than a branching cascade.
-Moreover, a user is counted as activated only when she \emph{adopts}
-the coupon, not when she receives it; users who merely forward or
-discard the coupon contribute nothing to the campaign outcome.
-This adoption-versus-receipt distinction separates SCD from all
-classical IM models.
+One important distinction of the SCD model is that coupon propagation
+and user activation are separated.
+The propagation part is governed by the transfer action, where the
+coupon can move to at most one neighbor in each step; the activation
+part is governed by the adoption action, where only the user who redeems
+the coupon is counted by the campaign.
+Thus a forwarding user may help the coupon reach later users without
+being activated, while an adopting user activates once and terminates
+the coupon walk.
+This distinction makes SCD fundamentally different from classical IC or
+LT diffusion, where activation and propagation are coupled through a
+branching cascade.
 
 \paragraph{Possible-world formalization.}
 To reason precisely about probabilistic outcomes, we use a
