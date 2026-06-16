@@ -296,12 +296,20 @@ spread is maximized.
 
 \subsection{Sequential Coupon Diffusion (SCD) Model}
 
-We model a social network as a directed graph $G = (V, E)$ with
-$n = |V|$ nodes and $m = |E|$ edges.
-A node $u \in V$ represents a user; a directed edge $(u, v) \in E$
-indicates that $u$ may forward a coupon to $v$.
-A retailer distributes $k$ coupons to $k$ seed users simultaneously,
-and each coupon then propagates independently through the network.
+Sequential Coupon Diffusion (SCD) is a model for non-replicable
+promotional tokens that move through a social network by one-hop
+forwarding.
+We model the social network as a directed graph $G=(V,E)$, where $V$ is
+the set of $n=|V|$ users and $E$ is the set of $m=|E|$ directed
+forwarding relationships.
+Each node $u\in V$ has three behavior probabilities: an adoption
+probability $p_u^a$, a discard probability $p_u^d$, and a transfer
+probability $p_u^t$.
+Each edge $(u,v)\in E$ is associated with a forwarding probability
+$p(u,v)$, indicating the probability mass with which user $u$ transfers
+a coupon to user $v$.
+A campaign starts by assigning $k$ coupons to $k$ seed users, and these
+coupons then propagate independently according to the SCD process.
 
 \paragraph{Single-coupon propagation.}
 When a coupon arrives at node $u$, exactly one of three mutually
