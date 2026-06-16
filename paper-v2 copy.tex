@@ -485,10 +485,14 @@ $\sigma(S)=2$.
 \section{Theoretical Analysis}
 \label{sec:theory}
 
-We analyze the computational hardness and structural properties of
-SIDIM.
-These results together define the algorithmic strategy in
-Section~\ref{sec:algo}.
+We study the theoretical properties of SIDIM in this section.
+We first show that SIDIM is NP-hard, indicating that exact optimization
+is computationally difficult.
+We then show that the adoption spread function is monotone and
+submodular, which allows a greedy algorithm to achieve a
+$(1{-}1/e)$ approximation if the objective value can be evaluated.
+Finally, we explain why direct greedy is still inefficient and motivate
+the reverse-sampling algorithm developed in Section~\ref{sec:algo}.
 
 \subsection{Computational Hardness}
 
