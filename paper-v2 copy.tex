@@ -312,20 +312,23 @@ A campaign starts by assigning $k$ coupons to $k$ seed users, and these
 coupons then propagate independently according to the SCD process.
 
 \paragraph{Single-coupon propagation.}
-When a coupon arrives at node $u$, exactly one of three mutually
-exclusive outcomes occurs.
-With probability $p_u^a \in (0,1)$, user $u$ \emph{adopts} the coupon:
-it is redeemed, $u$ is counted as an activated customer, and the walk
-terminates.
-With probability $p_u^d \in [0,1)$, user $u$ \emph{discards} the
-coupon: the walk terminates without activating anyone.
-With the remaining probability $p_u^t = 1 - p_u^a - p_u^d > 0$, user
-$u$ \emph{transfers} the coupon to exactly one out-neighbor $v$,
-chosen according to an edge-level forwarding weight $p(u,v)$ satisfying
-$\sum_{v:(u,v)\in E} p(u,v) = p_u^t$.
-The coupon then continues from $v$.
-Throughout, we assume $p_u^a > 0$ for all $u$, ensuring every walk
-terminates almost surely.
+The propagation process of one coupon starts from a seed node
+$s\in V$ in discrete time steps.
+At step $\tau=0$, only node $s$ holds the coupon.
+At step $\tau\geq 0$, suppose node $u$ holds the coupon.
+Then $u$ adopts the coupon with probability $p_u^a\in(0,1)$, in which
+case the coupon is redeemed, node $u$ is counted as an activated user,
+and the propagation terminates.
+With probability $p_u^d\in[0,1)$, node $u$ discards the coupon, in
+which case the propagation also terminates but no new user is activated.
+With the remaining probability $p_u^t=1-p_u^a-p_u^d>0$, node $u$
+transfers the coupon to exactly one out-neighbor $v$, chosen according
+to edge probabilities satisfying
+$\sum_{v:(u,v)\in E}p(u,v)=p_u^t$.
+The coupon then moves to $v$ and the same process repeats at the next
+time step.
+Throughout the paper, we assume $p_u^a>0$ for every node $u$, so every
+coupon walk terminates almost surely.
 
 The non-replicable nature of the coupon is the defining characteristic
 of the SCD model.
