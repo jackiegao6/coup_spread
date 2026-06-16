@@ -146,22 +146,30 @@ Therefore, coupon-based promotion needs to incorporate the
 non-replicable nature of the token when deciding which users should
 receive the initial coupons.
 
-This sequential propagation mechanism departs from classical IM in three
-fundamental ways.
-First, the \emph{diffusion topology} is a path, not a tree: the coupon
-moves to at most one neighbor at each step, so it can never fan out as a
-broadcast cascade would.
-Second, the \emph{activation semantics} decouple receipt from
-redemption: a user who merely forwards the coupon is not acquired — only
-the user who ultimately redeems it counts toward the campaign objective.
-Intermediate nodes along the forwarding chain contribute nothing to the
-outcome.
-Third, since $k$ coupons propagate \emph{independently}, the same user
-might redeem multiple coupons, yet is counted only once; the objective
-is to maximize the number of \emph{distinct} users reached, a
-union-coverage problem over $k$ independent random walks.
-These differences fall collectively outside the modeling scope of
-existing IM frameworks and call for a new formulation.
+To formalize the above setting, we integrate non-replicable coupon
+propagation with influence maximization into a coherent model called the
+\emph{Sequential Coupon Diffusion (SCD)} model.
+In particular, a directed social network $G=(V,E)$ specifies who may
+forward a coupon to whom, while node-level probabilities specify whether
+a user adopts, discards, or transfers a received coupon.
+In the SCD model, a coupon seeded at node $u$ performs a sequential
+random walk: at each visited node, it is either redeemed and stops,
+discarded and stops, or forwarded to exactly one out-neighbor.
+Thus the diffusion topology of one coupon is a path rather than a tree,
+and the activation event is redemption rather than mere receipt.
+More specifically, in a $k$-coupon campaign, we model the propagation of
+$k$ coupons through $k$ independent possible worlds.
+We use $S=(s_1,\ldots,s_k)$ to denote the seed tuple, where coupon $j$
+starts from seed node $s_j$ and evolves according to its own possible
+world.
+A node contributes to the campaign objective if at least one coupon is
+eventually redeemed by this node.
+We define $\sigma(S)$ as the expected number of distinct adopting users
+under seed tuple $S$.
+The campaign task is defined as the following Sequential Coupon
+Diffusion Influence Maximization (SIDIM) problem: given the network,
+the adoption, discard, and forwarding probabilities, and a coupon budget
+$k$, find $k$ seed nodes such that $\sigma(S)$ is maximized.
 
 This paper integrates the non-replicable coupon dynamics with the
 influence-maximization framework into a coherent model called the
