@@ -543,36 +543,55 @@ Since vertex cover in cubic graphs is NP-hard, SIDIM is NP-hard.
 
 \subsection{Monotonicity and Submodularity}
 
-Despite NP-hardness, the adoption spread function has a key structural
-property that enables efficient approximation.
+Let $\mathcal{U}=V\times[k]$ be the ground set of node-coupon pairs.
+A set function $f:2^{\mathcal{U}}\to\mathbb{R}$ is monotone if
+$f(S)\leq f(Q)$ whenever $S\subseteq Q\subseteq\mathcal{U}$, and $f$ is
+submodular if, for any $S\subseteq Q\subseteq\mathcal{U}$ and any
+$x\in\mathcal{U}\setminus Q$,
+\[
+  f(S\cup\{x\})-f(S) \geq f(Q\cup\{x\})-f(Q).
+\]
+Submodularity means that the marginal value of a node-coupon pair
+decreases as the selected set grows.
+Maximizing a monotone and submodular set function under a cardinality
+constraint can be achieved by a simple greedy algorithm with an
+approximation ratio of $1-1/e$~\cite{nemhauser1978analysis}.
+Fortunately, unlike the exact popularity ratio objective in PRM, the
+adoption spread objective in SIDIM has this structure.
 
 \begin{theorem}
 \label{thm:monosub}
-The adoption spread $\sigma(S)$ is monotone non-decreasing and
-submodular in $S$.
+For any SCD instance, the adoption spread function $\sigma(S)$ is
+monotone and submodular.
 \end{theorem}
 
 \begin{proof}[Proof sketch]
-Fix an arbitrary realization $\mathcal{W} = (W_1, \ldots, W_k)$.
-Under $\mathcal{W}$, let $T_u(\mathcal{W})$ be the set of node-index
-pairs $(w, j)$ such that placing coupon $j$ at $w$ would activate $u$
-in world $W_j$.
-Then $\mathrm{Adopt}_u(S)$ holds deterministically if and only if
-$S \cap T_u(\mathcal{W}) \neq \emptyset$ (treating $S$ as the set of
-pairs $(s_j, j)$).
-The function $S \mapsto \I[S \cap T_u(\mathcal{W}) \neq \emptyset]$ is a
-coverage indicator and hence monotone and submodular for every fixed
-$\mathcal{W}$.
-Summing over $u \in V$ and taking the expectation over $\mathcal{W}$
-preserves both properties, since they are closed under non-negative
-linear combinations and expectations.
+Fix a realization $\mathcal{W}=(W_1,\ldots,W_k)$ of all coupon worlds.
+For every node $u$, let $T_u(\mathcal{W})$ be the set of node-coupon
+pairs $(w,j)$ such that coupon $j$ would activate $u$ if it were seeded
+at node $w$.
+For this fixed realization, node $u$ is adopted by seed tuple $S$ if and
+only if $S$ intersects $T_u(\mathcal{W})$, where $S$ is viewed as the
+set of selected node-coupon pairs $(s_j,j)$.
+Thus the contribution of $u$ is the coverage indicator
+\[
+  \I[S\cap T_u(\mathcal{W})\neq\emptyset],
+\]
+which is monotone and submodular in $S$.
+Summing these coverage indicators over all $u\in V$ preserves
+monotonicity and submodularity.
+Taking expectation over $\mathcal{W}$ also preserves both properties,
+and therefore $\sigma(S)$ is monotone and submodular.
 \end{proof}
 
 By the classical result of Nemhauser et al.~\cite{nemhauser1978analysis},
 Theorem~\ref{thm:monosub} immediately yields a
-\emph{$(1{-}1/e)$-approximation by greedy}: starting from $S = \emptyset$,
-iteratively add the node with the largest marginal gain
-$\Delta(v \mid S) = \sigma(S \cup \{v\}) - \sigma(S)$ until $|S| = k$.
+\emph{$(1{-}1/e)$-approximation by greedy} for the cardinality version:
+starting from $S=\emptyset$, iteratively add the node-coupon pair with
+the largest marginal gain until $|S|=k$.
+For the tuple form of SIDIM, where coupon index $j$ must be paired with
+one seed $s_j$, this coverage view is still the key structural property
+used by our coordinate-wise RIS algorithm.
 
 However, this greedy algorithm cannot be implemented directly.
 Computing $\sigma(S)$ exactly requires solving $k$ linear systems of
