@@ -282,9 +282,17 @@ adoption events and enabling provably correct approximation guarantees.
 \section{Model and Problem Definition}
 \label{sec:model}
 
-In this section, we introduce the SCD model, which captures
-the natural single-path propagation of non-replicable coupons, and
-define the SIDIM optimization problem over this model.
+In this section, we introduce the Sequential Coupon Diffusion (SCD)
+model, which integrates non-replicable promotional tokens with
+single-path random-walk propagation in social networks.
+The SCD model describes how $k$ coupons, each issued to one seed user,
+move through the network: a coupon can be adopted, discarded, or
+transferred to exactly one neighbor, while the campaign counts distinct
+users who eventually adopt at least one coupon.
+Based on the SCD model, we define the Sequential Coupon Diffusion
+Influence Maximization (SIDIM) problem, which characterizes how to
+select the initial coupon recipients so that the expected adoption
+spread is maximized.
 
 \subsection{Sequential Coupon Diffusion (SCD) Model}
 
