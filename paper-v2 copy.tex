@@ -122,19 +122,29 @@ non-replicable promotional tokens, such as digital coupons, referral
 codes, and invitation links that can be redeemed once and forwarded to
 only one recipient.
 
-Consider a food-delivery startup, MealGo, launching a referral campaign
-to compete with an established platform.  MealGo issues $k$ unique
-discount codes to $k$ selected users.  A user who receives a code may
-\emph{redeem} it for a discounted meal (the code is consumed and the
-user is acquired as a customer), or \emph{ignore} it and let it expire,
-or \emph{forward} it to exactly one friend she thinks would use it.
-Crucially, the code is a one-time-use token: a user cannot share it
-with multiple friends simultaneously.  Similar dynamics arise in
-invitation-code campaigns for closed-beta products, charitable donation
-vouchers, and referral links bound to individual accounts.
-In all these settings, the promotional token is \emph{non-replicable}:
-it exists as a single instance in the network and traces a
-chain of forwarding rather than a branching cascade.
+Consider the following motivating example.
+MealGo launches a new food-delivery service in a city already served by
+a large incumbent platform.
+To acquire early users, MealGo distributes $k$ unique discount coupons to
+selected customers.
+A customer receiving a coupon may redeem it for a discounted order, let
+it expire, or forward it to exactly one friend who may be more likely to
+use it.
+Once the coupon is redeemed, it is consumed; once it is forwarded, the
+sender no longer holds another copy.
+Thus MealGo's promotion does not create a broadcast cascade in which one
+activated user simultaneously influences all neighbors.
+Similar situations occur in closed-beta invitation campaigns, referral
+codes tied to individual accounts, and donation vouchers that can be
+claimed only once.
+Different from classical viral marketing, the promotional token is
+non-replicable, meaning that each coupon exists as a single moving object
+in the social network.
+This constraint makes the coupon follow a forwarding chain rather than a
+branching influence tree.
+Therefore, coupon-based promotion needs to incorporate the
+non-replicable nature of the token when deciding which users should
+receive the initial coupons.
 
 This sequential propagation mechanism departs from classical IM in three
 fundamental ways.
