@@ -171,20 +171,23 @@ Diffusion Influence Maximization (SIDIM) problem: given the network,
 the adoption, discard, and forwarding probabilities, and a coupon budget
 $k$, find $k$ seed nodes such that $\sigma(S)$ is maximized.
 
-This paper integrates the non-replicable coupon dynamics with the
-influence-maximization framework into a coherent model called the
-\emph{Sequential Coupon Diffusion (SCD)} model.
-Specifically, we model the multi-coupon diffusion via $k$ independent
-possible worlds and define the \emph{SIDIM} problem over this model
-(Section~\ref{sec:model}).
-We prove SIDIM is NP-hard and that the adoption spread function is
-monotone and submodular, establishing a $(1{-}1/e)$-approximation by
-greedy (Section~\ref{sec:theory}).  However, the exact objective is
-\#P-hard to evaluate.  To overcome this obstacle, we develop \emph{$k$-joint
-reverse reachable (RR) sets} — our key technical innovation — and prove
-an unbiasedness lemma that connects them to adoption spread
-(Section~\ref{sec:algo}).  Building on this, our algorithm \CRIM{}
-achieves a $(1{-}1/e{-}\epsilon)$-approximation in expected near-linear time.
+For the SIDIM problem, we show that selecting the optimal seed tuple is
+NP-hard, while the adoption spread function is monotone and submodular,
+indicating that a greedy algorithm gives a $(1{-}1/e)$ approximation if
+the objective can be evaluated exactly.
+However, exact evaluation of the adoption spread is \#P-hard, making
+direct greedy optimization computationally infeasible on large social
+networks.
+To provide an efficient solution, we design \emph{$k$-joint reverse
+reachable (RR) sets}, which sample $k$ independent reverse random walks
+from a common root and give an unbiased estimator of the distinct
+adoption probability.
+We then develop \CRIM{} based on the reverse influence sampling
+approach and the IMM stopping framework, and prove that it achieves a
+$(1{-}1/e{-}\epsilon)$ approximation in expected near-linear time.
+Our empirical evaluation further demonstrates that \CRIM{} consistently
+matches a Monte Carlo oracle and outperforms coupon-aware heuristics and
+IC-model baselines.
 
 Our contributions are as follows:
 \begin{itemize}[leftmargin=*]
