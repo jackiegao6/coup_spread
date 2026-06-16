@@ -593,17 +593,22 @@ For the tuple form of SIDIM, where coupon index $j$ must be paired with
 one seed $s_j$, this coverage view is still the key structural property
 used by our coordinate-wise RIS algorithm.
 
-However, this greedy algorithm cannot be implemented directly.
-Computing $\sigma(S)$ exactly requires solving $k$ linear systems of
-size $n \times n$ (i.e., computing absorption probabilities of $k$
-random walks), costing $O(kn^3)$ per evaluation.
-Even Monte Carlo estimation requires $O(k^2 n R \bar{L})$ total work
-where $\bar{L}$ is the expected walk length and $R$ is the simulation
-count — prohibitive for large networks.
-In the next section, we resolve this obstacle by developing a Reverse
-Influence Sampling framework tailored to the SCD model, which retains
-the $(1{-}1/e{-}\epsilon)$-approximation guarantee while running in
-near-linear time.
+However, the above greedy algorithm cannot be implemented directly,
+because evaluating $\sigma(S)$ exactly is computationally expensive.
+One may compute the adoption probabilities of the $k$ coupon walks by
+solving linear systems over the graph, but this costs $O(kn^3)$ for one
+objective evaluation and is already prohibitive for medium-size
+networks.
+One may also estimate $\sigma(S)$ by Monte Carlo simulation, but a
+greedy algorithm would require repeated simulations for many candidate
+seeds and many rounds, leading to a cost of
+$O(k^2 nR\bar{L})$, where $R$ is the number of simulations and
+$\bar{L}$ is the expected coupon-walk length.
+Therefore, to make the monotone-submodular structure algorithmically
+useful, we need an efficient estimator of the adoption spread.
+In the next section, we develop such an estimator using $k$-joint
+reverse reachable sets, and then build the \CRIM{} algorithm on top of
+this estimator.
 
 %% ============================================================
 %% 5. ALGORITHM: CRIM
