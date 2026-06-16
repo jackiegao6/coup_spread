@@ -189,31 +189,24 @@ Our empirical evaluation further demonstrates that \CRIM{} consistently
 matches a Monte Carlo oracle and outperforms coupon-aware heuristics and
 IC-model baselines.
 
-Our contributions are as follows:
-\begin{itemize}[leftmargin=*]
-  \item We initiate the formal study of SIDIM, capturing the
-    single-path, non-replicable propagation of real-world coupon
-    campaigns in a principled IM framework.
-  \item We prove SIDIM is NP-hard and establish that adoption spread is
-    monotone and submodular, enabling a $(1{-}1/e)$-approximation by
-    greedy.
-  \item We design $k$-joint RR sets with a provably unbiased coverage
-    representation (Lemma~\ref{lem:unbiased}), resolving the key
-    challenge that classical single-RR-set sampling is incorrect for
-    non-replicable diffusion.
-  \item We develop \CRIM{}, a near-linear time algorithm with a
-    $(1{-}1/e{-}\epsilon)$-approximation guarantee, and validate it on
-    five real-world networks against coupon-aware heuristics and
-    IC-model baselines.
-\end{itemize}
+One important point we demonstrate both theoretically and empirically is
+that coupon-based influence maximization is tightly dependent on the
+non-replicable nature of the promotional token.
+This point indicates that SIDIM is quite different from classical
+influence maximization: the campaign has to consider single-path
+forwarding, adoption-versus-receipt semantics, and overlap among
+independent coupons, while classical influence maximization mainly
+targets increasing the spread of a branching activation cascade.
 
-To the best of our knowledge, SIDIM is the first IM formulation to
-treat promotional tokens as non-replicable and to account for the
-distinction between coupon receipt and redemption in the optimization
-objective.  The closest related work — multi-round
-IM~\cite{sun2018multi} — deploys seeds across successive rounds but
-retains broadcast diffusion within each round, leaving the single-path
-propagation structure unaddressed.
+In summary, our contributions include: (a) proposing the SCD model that
+captures non-replicable sequential coupon propagation; (b) defining the
+SIDIM problem and studying its hardness, monotonicity, and submodularity;
+and (c) designing the \CRIM{} algorithm based on $k$-joint RR sets to
+solve SIDIM efficiently.
+To the best of our knowledge, this is the first study that treats
+promotional tokens as non-replicable objects in an influence
+maximization framework and provides an algorithmic study of seed
+selection under such a sequential diffusion model.
 
 %% ============================================================
 %% 2. RELATED WORK
