@@ -110,15 +110,17 @@ proposed algorithm.
 \section{Introduction}
 \label{sec:intro}
 
-Influence maximization (IM) asks for a small set of \emph{seed nodes}
-in a social network whose initial activation triggers the widest cascade
-of influence.  This classic problem~\cite{domingos2001mining,kempe2003maximizing}
-has driven two decades of research, from theoretical foundations to
-scalable algorithms based on Reverse Influence
-Sampling~\cite{borgs2014maximizing,tang2015influence}.
-The dominant models — IC and LT — share a common paradigm: an activated
-node may simultaneously attempt to influence \emph{all} of its neighbors,
-producing a branching cascade that fans out rapidly through the network.
+Influence maximization (IM) is the problem of finding a subset of nodes
+(seed nodes) in a social network that maximizes the expected spread of
+influence~\cite{kempe2003maximizing}.
+It is a well-studied problem with applications in viral marketing,
+information diffusion, and social-network based
+promotion~\cite{domingos2001mining,borgs2014maximizing,tang2015influence}.
+While most studies treat influence maximization as a broadcast diffusion
+problem, in this paper, we explore how to use influence maximization for
+non-replicable promotional tokens, such as digital coupons, referral
+codes, and invitation links that can be redeemed once and forwarded to
+only one recipient.
 
 Consider a food-delivery startup, MealGo, launching a referral campaign
 to compete with an established platform.  MealGo issues $k$ unique
