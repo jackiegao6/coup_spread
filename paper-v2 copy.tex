@@ -496,18 +496,49 @@ the reverse-sampling algorithm developed in Section~\ref{sec:algo}.
 
 \subsection{Computational Hardness}
 
+The following theorem states the computational hardness of SIDIM.
+
 \begin{theorem}
 \label{thm:nphard}
 The SIDIM problem is NP-hard.
 \end{theorem}
 
 \begin{proof}[Proof sketch]
-Set $k=1$ and $p_u^d = 0$ for all $u$, so the single coupon never
-discards.  Under this instantiation, the adoption event $A_{u,1}$
-plays the role of an IC activation trial at $u$, and live-edge
-reachability from $s_1$ reproduces an IC cascade.
-The classical IM problem under IC is a special case, and since it is
-NP-hard~\cite{kempe2003maximizing}, SIDIM is NP-hard.
+We reduce from vertex cover in cubic graphs.
+Given a cubic graph $H=(V_H,E_H)$ and an integer $K$, we construct a
+two-layer SCD instance.
+For every vertex $x\in V_H$, we create a candidate seed node, and for
+every edge $e\in E_H$, we create an adoption node.
+If vertex $x$ is incident to edge $e$ in $H$, we add a directed edge
+from the seed node of $x$ to the adoption node of $e$ with transfer
+probability $p$, where $p\leq 1/3$.
+Each adoption node adopts with probability $1$, and all other
+probability mass at a seed node is assigned to discard, so each coupon
+chooses at most one incident edge node and then terminates.
+
+For a selected seed set $S$ of size $K$, let $c_e(S)\in\{0,1,2\}$ be
+the number of selected endpoints of edge $e$.
+Selecting the same seed node more than once can only duplicate the same
+incident-edge distribution; hence, when comparing against the vertex
+cover threshold below, it is sufficient to consider solutions that use
+$K$ distinct seed nodes.
+The probability that the adoption node of $e$ is activated is
+$1-(1-p)^{c_e(S)}$.
+Since $H$ is cubic, $\sum_{e\in E_H} c_e(S)=3K$ for every size-$K$
+selection.
+Thus the expected adoption spread is
+\[
+  \sum_{e\in E_H}\!\left(1-(1-p)^{c_e(S)}\right)
+  = 3Kp - p^2\cdot |\{e:c_e(S)=2\}|.
+\]
+Equivalently, using
+$|\{e:c_e(S)=2\}| = 3K-|E_H|+|\{e:c_e(S)=0\}|$, maximizing the spread is
+the same as minimizing the number of uncovered edges.
+Therefore, there exists a vertex cover of size $K$ in $H$ if and only
+if the constructed SIDIM instance has a seed tuple of size $K$ whose
+spread reaches the corresponding threshold
+$3Kp-p^2(3K-|E_H|)$.
+Since vertex cover in cubic graphs is NP-hard, SIDIM is NP-hard.
 \end{proof}
 
 \subsection{Monotonicity and Submodularity}
