@@ -344,11 +344,14 @@ LT diffusion, where activation and propagation are coupled through a
 branching cascade.
 
 \paragraph{Possible-world formalization.}
-To reason precisely about probabilistic outcomes, we use a
-possible-world construction.
-For each coupon index $j \in [k]$ and each node $u \in V$, draw an
-independent random number $r_{u,j} \sim \mathrm{Uniform}[0,1]$.
-The outcome at $u$ under coupon $j$ is determined by:
+To analyze the SCD model, we use the standard possible-world view of
+random diffusion processes.
+For every coupon $j\in[k]$, we independently instantiate one possible
+world $W_j$ that fixes all random choices made by this coupon.
+Specifically, for each node $u\in V$ and coupon $j$, we draw an
+independent random number $r_{u,j}\sim\mathrm{Uniform}[0,1]$.
+This random number determines the behavior of node $u$ when it receives
+coupon $j$ as follows:
 \[
   \mathrm{outcome}_{u,j} =
   \begin{cases}
@@ -358,11 +361,11 @@ The outcome at $u$ under coupon $j$ is determined by:
                             sub-interval of } (p_u^a{+}p_u^d, 1],
   \end{cases}
 \]
-where the out-neighbors of $u$ are assigned contiguous sub-intervals
-proportional to $p(u,v)$.
-The collection $W_j = \{r_{u,j}\}_{u\in V}$ is the $j$-th
-\emph{possible world}, and $\mathcal{W} = (W_1, \ldots, W_k)$ fully
-determines the diffusion outcome for all $k$ coupons.
+where the out-neighbors of $u$ are assigned disjoint sub-intervals
+whose lengths are given by the edge probabilities $p(u,v)$.
+The collection $W_j=\{r_{u,j}\}_{u\in V}$ is the possible world of
+coupon $j$, and the tuple $\mathcal{W}=(W_1,\ldots,W_k)$ fully
+determines the propagation outcome of all $k$ coupons.
 
 \begin{definition}[Live edge]
 Edge $(w,u) \in E$ is a \emph{live edge} in world $W_j$ if\/
@@ -370,19 +373,22 @@ $\mathrm{outcome}_{w,j} = \text{transfer to }u$.
 \end{definition}
 
 Under this construction, coupon $j$ seeded at $s_j$ activates node $u$
-if and only if two independent events co-occur:
+if and only if the following two events both occur:
 \begin{enumerate}[label=(\roman*)]
   \item $r_{u,j} \leq p_u^a$, i.e., $u$ adopts in world $W_j$
     (event $A_{u,j}$); and
   \item there is a live-edge path $s_j \to w_1 \to \cdots \to u$ in
     $W_j$.
 \end{enumerate}
-We denote the conjunction by $\mathrm{Adopt}_{u,j}(s_j)$.
-Observe that $A_{u,j}$ depends only on $r_{u,j}$, while live-edge
-reachability depends only on $\{r_{w,j}\}_{w \neq u}$; the two
-conditions are \emph{stochastically independent} under the
-possible-world construction.
-The full diffusion outcome for seed tuple $S = (s_1,\ldots,s_k)$ is
+We denote the conjunction of these two events by
+$\mathrm{Adopt}_{u,j}(s_j)$.
+Notice that the adoption event $A_{u,j}$ depends only on $r_{u,j}$,
+whereas the live-edge reachability event depends only on the random
+choices of the nodes before $u$ on the path.
+Thus the possible-world construction cleanly separates whether a coupon
+can reach a node from whether the node adopts the coupon.
+For a seed tuple $S=(s_1,\ldots,s_k)$, node $u$ adopts at least one
+coupon if
 \[
   \mathrm{Adopt}_u(S) = \bigvee_{j=1}^{k} \mathrm{Adopt}_{u,j}(s_j).
 \]
