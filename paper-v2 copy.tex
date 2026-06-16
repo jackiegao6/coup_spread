@@ -327,8 +327,10 @@ to edge probabilities satisfying
 $\sum_{v:(u,v)\in E}p(u,v)=p_u^t$.
 The coupon then moves to $v$ and the same process repeats at the next
 time step.
-Throughout the paper, we assume $p_u^a>0$ for every node $u$, so every
-coupon walk terminates almost surely.
+Under the possible-world view introduced below, the behavior of a node
+is fixed for each coupon world; therefore, if a coupon enters a transfer
+cycle without reaching an adopting node, it activates no additional user
+and contributes zero to the objective.
 
 One important distinction of the SCD model is that coupon propagation
 and user activation are separated.
@@ -384,7 +386,7 @@ We denote the conjunction of these two events by
 $\mathrm{Adopt}_{u,j}(s_j)$.
 Notice that the adoption event $A_{u,j}$ depends only on $r_{u,j}$,
 whereas the live-edge reachability event depends only on the random
-choices of the nodes before $u$ on the path.
+choices of nodes other than $u$.
 Thus the possible-world construction cleanly separates whether a coupon
 can reach a node from whether the node adopts the coupon.
 For a seed tuple $S=(s_1,\ldots,s_k)$, node $u$ adopts at least one
@@ -667,7 +669,8 @@ For each world $j$ in which $v$ adopts, a backward BFS expands over
 live in-edges, collecting all nodes that can route a coupon to $v$
 along a live-edge path.
 Random numbers $r_{w,j}$ are generated lazily on demand and reused
-across worlds to save computation.
+within the same world to keep the possible-world realization
+consistent.
 
 \begin{algorithm}[t]
 \caption{$k$-Joint RR Set Generation (CRIM-Sample)}
