@@ -421,10 +421,14 @@ only once.
 
 \begin{definition}[SIDIM]
 \label{def:sidim}
-Given a directed graph $G = (V, E)$, node parameters
-$\{(p_u^a, p_u^d)\}_{u\in V}$, edge parameters $\{p(u,v)\}_{(u,v)\in E}$,
-and a budget $k$, the \emph{Sequential Coupon Diffusion Influence
-Maximization} problem asks for a seed tuple
+Given (a) a directed social network $G=(V,E)$, (b) node behavior
+parameters $\{(p_u^a,p_u^d,p_u^t)\}_{u\in V}$, (c) edge forwarding
+parameters $\{p(u,v)\}_{(u,v)\in E}$, and (d) a coupon budget $k$, the
+task of Sequential Coupon Diffusion Influence Maximization (SIDIM) is
+to find an optimal seed tuple $S^*$ for the campaign, such that the
+total number of issued coupons is $k$, and when the coupons evolve
+according to the SCD model, the adoption spread $\sigma(S^*)$ is
+maximized. Formally, it is
 \[
   S^* = \arg\max_{S \in V^k}\; \sigma(S).
 \]
