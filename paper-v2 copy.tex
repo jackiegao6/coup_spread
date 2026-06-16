@@ -434,11 +434,22 @@ maximized. Formally, it is
 \]
 \end{definition}
 
-We note that $\sigma(S)$ is invariant under permutations of the
-indexing of $S$ when worlds are i.i.d., so any permutation of an
-optimal set is also optimal.
-The ordered representation is kept for clarity in the RIS algorithm
-(Section~\ref{sec:algo}), where seed $s_j$ is paired to world $W_j$.
+Note that it may not be wise to select the individually best seed for
+every coupon, since different coupons may end at the same adopting user,
+which is only counted once in the adoption spread.
+On the other hand, selecting seeds only to be far apart in the graph may
+not be a good choice either, since a distant seed with a low adoption
+probability may contribute little to the final objective.
+Moreover, although the objective is to increase the number of adopting
+users, the problem is still tightly related to forwarding paths, because
+a coupon can be adopted only after it reaches the user through a
+single-path walk.
+Therefore, SIDIM is non-trivial both in considering overlap among
+multiple coupons and in considering the relationship between reachability
+and adoption.
+The ordered representation $S=(s_1,\ldots,s_k)$ is kept for clarity in
+the RIS algorithm (Section~\ref{sec:algo}), where seed $s_j$ is paired
+with world $W_j$.
 
 Fig.~\ref{fig:example} illustrates the SCD model with two coupons.
 Coupon~1 is seeded at $s_1$; in world $W_1$, the live-edge path leads
