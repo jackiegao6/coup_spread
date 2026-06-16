@@ -305,6 +305,8 @@ forwarding relationships.
 Each node $u\in V$ has three behavior probabilities: an adoption
 probability $p_u^a$, a discard probability $p_u^d$, and a transfer
 probability $p_u^t$.
+These probabilities are non-negative and satisfy
+$p_u^a+p_u^d+p_u^t=1$.
 Each edge $(u,v)\in E$ is associated with a forwarding probability
 $p(u,v)$, indicating the probability mass with which user $u$ transfers
 a coupon to user $v$.
@@ -316,12 +318,12 @@ The propagation process of one coupon starts from a seed node
 $s\in V$ in discrete time steps.
 At step $\tau=0$, only node $s$ holds the coupon.
 At step $\tau\geq 0$, suppose node $u$ holds the coupon.
-Then $u$ adopts the coupon with probability $p_u^a\in(0,1)$, in which
+Then $u$ adopts the coupon with probability $p_u^a$, in which
 case the coupon is redeemed, node $u$ is counted as an activated user,
 and the propagation terminates.
-With probability $p_u^d\in[0,1)$, node $u$ discards the coupon, in
+With probability $p_u^d$, node $u$ discards the coupon, in
 which case the propagation also terminates but no new user is activated.
-With the remaining probability $p_u^t=1-p_u^a-p_u^d>0$, node $u$
+With the remaining probability $p_u^t=1-p_u^a-p_u^d$, node $u$
 transfers the coupon to exactly one out-neighbor $v$, chosen according
 to edge probabilities satisfying
 $\sum_{v:(u,v)\in E}p(u,v)=p_u^t$.
@@ -513,8 +515,10 @@ If vertex $x$ is incident to edge $e$ in $H$, we add a directed edge
 from the seed node of $x$ to the adoption node of $e$ with transfer
 probability $p$, where $p\leq 1/3$.
 Each adoption node adopts with probability $1$, and all other
-probability mass at a seed node is assigned to discard, so each coupon
-chooses at most one incident edge node and then terminates.
+probability mass at a candidate seed node, namely $1-3p$, is assigned
+to discard.
+Thus each coupon chooses at most one incident edge node and then
+terminates.
 
 For a selected seed set $S$ of size $K$, let $c_e(S)\in\{0,1,2\}$ be
 the number of selected endpoints of edge $e$.
@@ -534,10 +538,9 @@ Thus the expected adoption spread is
 Equivalently, using
 $|\{e:c_e(S)=2\}| = 3K-|E_H|+|\{e:c_e(S)=0\}|$, maximizing the spread is
 the same as minimizing the number of uncovered edges.
-Therefore, there exists a vertex cover of size $K$ in $H$ if and only
-if the constructed SIDIM instance has a seed tuple of size $K$ whose
-spread reaches the corresponding threshold
-$3Kp-p^2(3K-|E_H|)$.
+Therefore, among size-$K$ selections, the spread reaches the threshold
+$3Kp-p^2(3K-|E_H|)$ exactly when no edge is uncovered, i.e., when the
+selected vertices form a vertex cover of $H$.
 Since vertex cover in cubic graphs is NP-hard, SIDIM is NP-hard.
 \end{proof}
 
