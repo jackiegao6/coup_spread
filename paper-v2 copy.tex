@@ -712,25 +712,40 @@ This is the basic estimator used by \CRIM{}.
 \label{lem:unbiased}
 Let $v$ be drawn uniformly from $V$, and let
 $(R_1(v, W_1), \ldots, R_k(v, W_k))$ be generated from $k$ independent
-worlds.  For any seed tuple $S = (s_1, \ldots, s_k)$:
+worlds rooted at $v$.
+For any seed tuple $S=(s_1,\ldots,s_k)$, we have
 \[
-  \E\!\left[\I\!\left[\bigvee_{j=1}^{k} \{s_j \in R_j(v,W_j)\}\right]\right]
+  \sigma(S)
+  = n\cdot
+  \E\!\left[
+    \I\!\left[\bigvee_{j=1}^{k} \{s_j \in R_j(v,W_j)\}\right]
+  \right],
+\]
+or equivalently,
+\[
+  \E\!\left[
+    \I\!\left[\bigvee_{j=1}^{k} \{s_j \in R_j(v,W_j)\}\right]
+  \right]
   \;=\; \frac{\sigma(S)}{n}.
 \]
 \end{lemma}
 
 \begin{proof}
+The expectation is over the uniformly sampled root $v$ and over the
+independent worlds $W_1,\ldots,W_k$.
 \begin{align*}
-  \E\!\left[\I\!\left[\bigvee_j \{s_j \in R_j(v)\}\right]\right]
+  \E\!\left[
+    \I\!\left[\bigvee_{j=1}^k \{s_j \in R_j(v,W_j)\}\right]
+  \right]
   &= \frac{1}{n}\sum_{u\in V}
      \Pr\!\left[\bigvee_{j=1}^k \{s_j \in R_j(u,W_j)\}\right] \\
   &\stackrel{(*)}{=}
      \frac{1}{n}\sum_{u\in V}
-     \Pr\!\left[\bigvee_j \mathrm{Adopt}_{u,j}(s_j)\right]
+     \Pr\!\left[\bigvee_{j=1}^k \mathrm{Adopt}_{u,j}(s_j)\right]
   = \frac{\sigma(S)}{n},
 \end{align*}
-where step $(*)$ applies Lemma~\ref{lem:coverage} independently for
-each $j$ (valid because $W_1, \ldots, W_k$ are independent).
+where step $(*)$ applies Lemma~\ref{lem:coverage} to each coupon world.
+The last equality follows from the definition of adoption spread.
 \end{proof}
 
 \subsection{Sampling Procedure}
