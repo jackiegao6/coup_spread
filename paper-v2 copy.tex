@@ -73,7 +73,7 @@ independent reverse random walks rooted at a common node — and prove
 they yield an unbiased estimator of adoption spread.
 Our algorithm \CRIM{} (Coupon-RIS Influence Maximization) combines
 $k$-joint sampling with an IMM-style stopping criterion, achieving a
-$(1{-}1/e{-}\epsilon)$-approximation in expected near-linear time.
+$(1/2{-}\epsilon)$-approximation in expected near-linear time.
 Experiments on five real-world social networks show that \CRIM{}
 consistently matches a Monte Carlo oracle and substantially outperforms
 both structural heuristics and IC-model baselines, confirming both the
@@ -184,7 +184,7 @@ from a common root and give an unbiased estimator of the distinct
 adoption probability.
 We then develop \CRIM{} based on the reverse influence sampling
 approach and the IMM stopping framework, and prove that it achieves a
-$(1{-}1/e{-}\epsilon)$ approximation in expected near-linear time.
+$(1/2{-}\epsilon)$ approximation in expected near-linear time.
 Our empirical evaluation further demonstrates that \CRIM{} consistently
 matches a Monte Carlo oracle and outperforms coupon-aware heuristics and
 IC-model baselines.
@@ -594,7 +594,7 @@ starting from $S=\emptyset$, iteratively add the node-coupon pair with
 the largest marginal gain until $|S|=k$.
 For the tuple form of SIDIM, where coupon index $j$ must be paired with
 one seed $s_j$, this coverage view is still the key structural property
-used by our coordinate-wise RIS algorithm.
+used by our partition-greedy RIS algorithm.
 
 However, the above greedy algorithm cannot be implemented directly,
 because evaluating $\sigma(S)$ exactly is computationally expensive.
@@ -855,22 +855,36 @@ The difference from classical RIS is that sample $t$ is covered only
 when some seed $s_j$ covers the corresponding RR set $R_j^{(t)}$ with
 the same coupon index $j$.
 
-Seed selection uses a coordinate-wise greedy rule.
-At round $j$, with $(s_1,\ldots,s_{j-1})$ already selected, we choose
-$s_j$ to maximize the empirical coverage:
+Seed selection is a maximum coverage problem under a partition
+constraint: for each coupon index $j$, at most one node-coupon pair
+$(u,j)$ can be selected.
+We use a greedy rule similar to the one used for partition-matroid
+coverage problems.
+Starting from an empty selected pair set $P$, each iteration chooses the
+feasible pair $(u,j)\in V\times[k]$ with the largest empirical marginal
+gain:
 \[
-  s_j = \arg\max_{u \in V}
-    \sum_{t=1}^{T} \I\!\left[
-      \left(\bigvee_{i=1}^{j-1}\{s_i \in R_i^{(t)}\}\right)
-      \vee \{u \in R_j^{(t)}\}\right].
+  (u^*,j^*) =
+  \arg\max_{(u,j)\ \mathrm{feasible}}
+    \sum_{t=1}^{T}
+    \left(
+      \I\!\left[
+        \mathrm{Cov}_t(P)\vee\{u\in R_j^{(t)}\}
+      \right]
+      - \I[\mathrm{Cov}_t(P)]
+    \right),
 \]
+where $\mathrm{Cov}_t(P)$ denotes that sample $t$ is already covered by
+some pair in $P$.
+The resulting selected pairs are then read as the seed tuple
+$S=(s_1,\ldots,s_k)$.
 The required sample count $T$ is determined adaptively by an IMM-style
 stopping criterion.
 Let
 \[
   \lambda^* = \frac{(8+2\epsilon)\,n}{\epsilon^2}
   \left[
-    (1-1/e)\sqrt{\ln\tbinom{n}{k} + \ln\tfrac{2}{\delta}}
+    \frac{1}{2}\sqrt{\ln\tbinom{n}{k} + \ln\tfrac{2}{\delta}}
     + \sqrt{\ln\tfrac{2}{\delta}}
   \right]^2.
 \]
@@ -890,7 +904,7 @@ determine the final sample size $T = \lceil\lambda^*/\mathrm{LB}\rceil$.
     \State $\mathcal{F} \gets \mathcal{F} \cup
       \{\text{CRIM-Sample}(G, k)\}$
   \EndWhile
-  \State Greedy max-coverage on $\mathcal{F}$
+  \State Partition-greedy coverage on $\mathcal{F}$
     $\Rightarrow$ seed tuple $S_i$
   \If{$\hat{\sigma}(S_i) \geq (1+\epsilon')\,x_i$}
     \State $\mathrm{LB} \gets \hat{\sigma}(S_i)/(1+\epsilon')$;\ \
@@ -901,7 +915,7 @@ determine the final sample size $T = \lceil\lambda^*/\mathrm{LB}\rceil$.
   \State $\mathcal{F} \gets \mathcal{F} \cup
     \{\text{CRIM-Sample}(G, k)\}$
 \EndWhile
-\State \Return greedy max-coverage on $\mathcal{F}$
+\State \Return partition-greedy coverage on $\mathcal{F}$
 \end{algorithmic}
 \end{algorithm}
 
@@ -912,7 +926,7 @@ determine the final sample size $T = \lceil\lambda^*/\mathrm{LB}\rceil$.
 With probability at least $1-\delta$, \CRIM{} returns a seed tuple
 $\hat{S}$ satisfying
 \[
-  \sigma(\hat{S}) \;\geq\; (1-1/e-\epsilon)\cdot\sigma(S^*),
+  \sigma(\hat{S}) \;\geq\; (1/2-\epsilon)\cdot\sigma(S^*),
 \]
 and its expected running time is
 $O\!\left(k(k+\ell)(m+n)\log n/\epsilon^2\right)$, where
@@ -921,9 +935,12 @@ $\ell = \log(1/\delta)$.
 
 \begin{proof}[Proof sketch]
 \textit{Correctness.} Lemma~\ref{lem:unbiased} ensures $\hat{\sigma}$
-is unbiased.  The coordinate-wise greedy achieves a $(1-1/e)$ ratio on
-the sample objective by submodularity of the coverage
-function~\cite{nemhauser1978analysis}.
+is unbiased.  The feasible seed tuples form a partition matroid over
+the ground set $V\times[k]$, since at most one node-coupon pair can be
+selected for each coupon index.
+The partition-greedy procedure gives a $1/2$ approximation on the
+sample coverage objective for monotone submodular maximization under a
+matroid constraint.
 Using a random-variable Chernoff bound (as in
 IMM~\cite{tang2015influence}), with $T = \lceil\lambda^*/\sigma(S^*)\rceil$
 samples, $\hat{\sigma}$ concentrates within an $\epsilon'$ factor of
@@ -1274,7 +1291,7 @@ We proved SIDIM is NP-hard and that adoption spread is monotone and
 submodular, then bridged the gap between theory and practice by
 developing $k$-joint RR sets with a provable unbiasedness lemma.
 Our algorithm \CRIM{} runs in near-linear expected time with a
-$(1{-}1/e{-}\epsilon)$-approximation guarantee.
+$(1/2{-}\epsilon)$-approximation guarantee.
 Experiments on five real-world networks confirm that \CRIM{} matches
 the Monte Carlo oracle while substantially outperforming both
 model-mismatched IC baselines and coupon-aware heuristics — validating
