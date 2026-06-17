@@ -832,18 +832,32 @@ If so, $w$ is added to $R_j$; otherwise, this in-neighbor is ignored.
 
 \subsection{The \CRIM{} Algorithm}
 
-Given $T$ independently generated samples
-$\{((R_1^{(t)},\ldots,R_k^{(t)}),\, v^{(t)})\}_{t=1}^T$, the
-corrected adoption spread estimator is:
+Let $\mathcal{F}$ be a collection of $T$ independently generated
+$k$-joint RR samples,
+\[
+  \mathcal{F} =
+  \{((R_1^{(t)},\ldots,R_k^{(t)}),\, v^{(t)})\}_{t=1}^T .
+\]
+For a seed tuple $S=(s_1,\ldots,s_k)$ and a sample $t$, define
+\[
+  Y_t(S)=
+  \I\!\left[\bigvee_{j=1}^{k} \{s_j \in R_j^{(t)}\}\right].
+\]
+By Lemma~\ref{lem:unbiased}, we estimate the adoption spread by
 \[
   \hat{\sigma}(S) = \frac{n}{T}\sum_{t=1}^{T}
-    \I\!\left[\bigvee_{j=1}^{k} \{s_j \in R_j^{(t)}\}\right].
+    Y_t(S).
 \]
-By Lemma~\ref{lem:unbiased}, $\hat{\sigma}(S)$ is an unbiased estimator
-of $\sigma(S)$.
-Seed selection uses a \emph{coordinate-wise greedy} rule: at round $j$,
-with $(s_1,\ldots,s_{j-1})$ already selected, choose $s_j$ to maximize
-the empirical objective:
+Estimator $\hat{\sigma}(S)$ can be viewed as a coverage function on a
+bipartite graph with node-coupon pairs on one side and $k$-joint RR
+samples on the other side.
+The difference from classical RIS is that sample $t$ is covered only
+when some seed $s_j$ covers the corresponding RR set $R_j^{(t)}$ with
+the same coupon index $j$.
+
+Seed selection uses a coordinate-wise greedy rule.
+At round $j$, with $(s_1,\ldots,s_{j-1})$ already selected, we choose
+$s_j$ to maximize the empirical coverage:
 \[
   s_j = \arg\max_{u \in V}
     \sum_{t=1}^{T} \I\!\left[
