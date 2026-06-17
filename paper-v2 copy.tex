@@ -52,8 +52,8 @@ Influence maximization (IM) has been extensively studied under the
 Independent Cascade (IC) and Linear Threshold (LT) models, where an
 activated node broadcasts influence to all neighbors simultaneously.
 Many real-world promotional campaigns, however, involve
-\emph{non-replicable} tokens — digital coupons or referral codes that
-can be passed to at most one recipient at each step.
+\emph{non-replicable} coupons that can be redeemed once and passed to at
+most one recipient at each step.
 We formalize this setting as the \emph{Sequential Coupon Diffusion
 Influence Maximization (SIDIM)} problem, in which $k$ coupons are
 seeded at selected nodes and each propagates independently as a random
@@ -118,9 +118,8 @@ information diffusion, and social-network based
 promotion~\cite{domingos2001mining,borgs2014maximizing,tang2015influence}.
 While most studies treat influence maximization as a broadcast diffusion
 problem, in this paper, we explore how to use influence maximization for
-non-replicable promotional tokens, such as digital coupons, referral
-codes, and invitation links that can be redeemed once and forwarded to
-only one recipient.
+non-replicable coupons that can be redeemed once and forwarded to only
+one recipient.
 
 Consider the following motivating example.
 MealGo launches a new food-delivery service in a city already served by
@@ -137,13 +136,13 @@ activated user simultaneously influences all neighbors.
 Similar situations occur in closed-beta invitation campaigns, referral
 codes tied to individual accounts, and donation vouchers that can be
 claimed only once.
-Different from classical viral marketing, the promotional token is
-non-replicable, meaning that each coupon exists as a single moving object
-in the social network.
+Different from classical viral marketing, the coupon is non-replicable,
+meaning that each coupon exists as a single moving object in the social
+network.
 This constraint makes the coupon follow a forwarding chain rather than a
 branching influence tree.
 Therefore, coupon-based promotion needs to incorporate the
-non-replicable nature of the token when deciding which users should
+non-replicable nature of the coupon when deciding which users should
 receive the initial coupons.
 
 To formalize the above setting, we integrate non-replicable coupon
@@ -191,7 +190,7 @@ heuristics and IC-model baselines.
 
 One important point we demonstrate both theoretically and empirically is
 that coupon-based influence maximization is tightly dependent on the
-non-replicable nature of the promotional token.
+non-replicable nature of the coupon.
 This point indicates that SIDIM is quite different from classical
 influence maximization: the campaign has to consider single-path
 forwarding, adoption-versus-receipt semantics, and overlap among
@@ -204,7 +203,7 @@ SIDIM problem and studying its hardness, monotonicity, and submodularity;
 and (c) designing the \SIDIMRIS{} algorithm based on $k$-joint RR sets to
 solve SIDIM efficiently.
 To the best of our knowledge, this is the first study that treats
-promotional tokens as non-replicable objects in an influence
+coupons as non-replicable objects in an influence
 maximization framework and provides an algorithmic study of seed
 selection under such a sequential diffusion model.
 
@@ -283,7 +282,7 @@ adoption events and enabling provably correct approximation guarantees.
 \label{sec:model}
 
 In this section, we introduce the Sequential Coupon Diffusion (SCD)
-model, which integrates non-replicable promotional tokens with
+model, which integrates non-replicable coupons with
 single-path random-walk propagation in social networks.
 The SCD model describes how $k$ coupons, each issued to one seed user,
 move through the network: a coupon can be adopted, discarded, or
@@ -297,8 +296,8 @@ spread is maximized.
 \subsection{Sequential Coupon Diffusion (SCD) Model}
 
 Sequential Coupon Diffusion (SCD) is a model for non-replicable
-promotional tokens that move through a social network one edge at a
-time, forming a forwarding path rather than a broadcast cascade.
+coupons that move through a social network one edge at a time, forming
+a forwarding path rather than a broadcast cascade.
 We model the social network as a directed graph $G=(V,E)$, where $V$ is
 the set of $n=|V|$ users and $E$ is the set of $m=|E|$ directed
 forwarding relationships.
