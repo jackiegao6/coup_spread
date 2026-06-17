@@ -750,9 +750,17 @@ The last equality follows from the definition of adoption spread.
 
 \subsection{Sampling Procedure}
 
-Algorithm~\ref{alg:kernel} encodes the single-node outcome as a
-deterministic function of the pre-sampled $r_{u,j}$, enabling
-reproducible lazy generation during the backward BFS.
+We now describe how to generate one $k$-joint RR sample.
+The sampling procedure has three steps: (a) sample a root node $v$
+uniformly from $V$; (b) sample the $k$ adoption gates
+$A_{v,1},\ldots,A_{v,k}$ at the root; and (c) for every world $j$ with
+$A_{v,j}=1$, generate the reverse reachable set $R_j(v,W_j)$ by a
+backward traversal over live in-edges.
+Algorithm~\ref{alg:kernel} gives the deterministic transition kernel
+for one node once the random number $r_{u,j}$ has been fixed.
+This kernel is used lazily during the backward traversal so that the
+same node-coupon pair has a consistent outcome within the same possible
+world.
 
 \begin{algorithm}[t]
 \caption{Single-Node Transition Kernel}
@@ -772,17 +780,17 @@ reproducible lazy generation during the backward BFS.
 \end{algorithmic}
 \end{algorithm}
 
-Algorithm~\ref{alg:rrset} generates a single $k$-joint RR set.
-For a uniformly drawn root $v$, it first determines whether $v$ adopts
-in each of the $k$ worlds (the \emph{adoption gate}).
-If no world triggers adoption, the sample contributes zero to the
-coverage objective and is discarded.
-For each world $j$ in which $v$ adopts, a backward BFS expands over
-live in-edges, collecting all nodes that can route a coupon to $v$
-along a live-edge path.
-Random numbers $r_{w,j}$ are generated lazily on demand and reused
-within the same world to keep the possible-world realization
-consistent.
+Algorithm~\ref{alg:rrset} implements the above sampling procedure.
+If none of the root adoption gates fires, the sample is a
+zero-contribution sample; it is kept as an empty sample in the estimator
+rather than conditioned away.
+Otherwise, for each world $j$ with $A_{v,j}=1$, the algorithm performs
+a backward BFS.
+When the traversal examines an in-neighbor $w$ of the current node, it
+generates $r_{w,j}$ only if this random number has not been generated
+before, and then checks whether $(w,u)$ is the live edge selected by
+$w$ in world $W_j$.
+If so, $w$ is added to $R_j$; otherwise, this in-neighbor is ignored.
 
 \begin{algorithm}[t]
 \caption{$k$-Joint RR Set Generation (CRIM-Sample)}
@@ -790,15 +798,15 @@ consistent.
 \begin{algorithmic}[1]
 \Require Graph $G=(V,E)$; parameters $\{p_u^a, p_u^d, p(u,v)\}$;
   coupon count $k$
-\Ensure $k$-joint RR sample $((R_1,\ldots,R_k),\; v)$,
-  or $\emptyset$ if zero-contribution
+\Ensure $k$-joint RR sample $((R_1,\ldots,R_k),\; v)$
 \State Sample root $v$ uniformly from $V$
 \State Sample $r_{v,1},\ldots,r_{v,k} \sim \mathrm{Uniform}[0,1]$
 \For{$j = 1$ to $k$}
   \State $A_{v,j} \gets \I[r_{v,j} \leq p_v^a]$
 \EndFor
 \If{$A_{v,j} = 0$ for all $j$}
-  \State \Return $\emptyset$ \Comment{Adoption gate: no world activates $v$}
+  \State \Return $((\emptyset,\ldots,\emptyset),\; v)$
+    \Comment{Zero-contribution sample}
 \EndIf
 \State $R_1, \ldots, R_k \gets \emptyset$
 \For{$j = 1$ to $k$}
