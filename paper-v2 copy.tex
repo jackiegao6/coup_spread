@@ -935,33 +935,36 @@ $\ell = \log(1/\delta)$.
 
 \begin{proof}[Proof sketch]
 \textit{Correctness.} Lemma~\ref{lem:unbiased} ensures $\hat{\sigma}$
-is unbiased.  The feasible seed tuples form a partition matroid over
-the ground set $V\times[k]$, since at most one node-coupon pair can be
-selected for each coupon index.
+is an unbiased estimator of $\sigma(S)$ for every seed tuple $S$.
+The feasible seed tuples form a partition matroid over the ground set
+$V\times[k]$, since at most one node-coupon pair can be selected for
+each coupon index.
 The partition-greedy procedure gives a $1/2$ approximation on the
 sample coverage objective for monotone submodular maximization under a
 matroid constraint.
-Using a random-variable Chernoff bound (as in
-IMM~\cite{tang2015influence}), with $T = \lceil\lambda^*/\sigma(S^*)\rceil$
-samples, $\hat{\sigma}$ concentrates within an $\epsilon'$ factor of
-$\sigma(S^*)/n$ with probability $\geq 1-\delta/2$, giving the final
-guarantee with probability $\geq 1-\delta$.
+Using the IMM sampling framework and the standard Chernoff-bound
+analysis for RIS estimators~\cite{tang2015influence}, the number of
+samples determined by $\lambda^*$ is sufficient to make the empirical
+coverage values uniformly close to their expectations with probability
+at least $1-\delta$.
+Combining this concentration with the $1/2$ partition-greedy guarantee
+gives the stated $(1/2-\epsilon)$ approximation.
 
 \textit{Complexity.}
-The expected cost of one $k$-joint RR set is
-$O(k \cdot \E[|R_j|])$.
-By an argument analogous to~\cite{borgs2014maximizing},
-$\E[|R_j|] = O\!\left((m+n)/(n \cdot \sigma(S^*))\right)$
-under the coupon-walk dynamics.
-With $T = O(\lambda^*/\sigma(S^*))$ samples, the total cost for RR-set
-generation is $O(k(k+\ell)(m+n)\log n/\epsilon^2)$.
-Each greedy pass over $\mathcal{F}$ is dominated by the same term.
+Generating one sample requires up to $k$ backward traversals, one for
+each coupon world.
+The expected cost of one backward traversal is linear in the size of
+the generated RR set, and the IMM-style stopping rule bounds the total
+number of generated RR sets in expectation.
+Thus the expected running time is
+$O(k(k+\ell)(m+n)\log n/\epsilon^2)$, where the additional factor $k$
+compared with classical IMM comes from generating $k$ independent RR
+sets for each sampled root.
 \end{proof}
 
-The running time of \CRIM{} exceeds classical IMM by a factor of $k$
-(from generating $k$ RR sets per root rather than one), which is
-necessary and tight: the $k$-independent-worlds structure of SIDIM
-requires $k$ independent backward walks to capture all activation paths.
+Compared with classical IMM, the extra factor $k$ is caused by the
+independent-world structure of SIDIM: a $k$-joint RR sample must contain
+one reverse reachable set for each coupon world.
 
 %% ============================================================
 %% 6. EXPERIMENTS
