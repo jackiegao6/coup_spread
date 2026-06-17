@@ -682,20 +682,31 @@ node $u$ in world $W_j$.
 For $k$ coupons seeded at $(s_1, \ldots, s_k)$ under independent worlds
 $(W_1, \ldots, W_k)$, node $v$ is activated iff
 $\bigvee_{j=1}^k \{s_j \in R_j(v, W_j)\}$.
-A natural but \emph{incorrect} approach is to generate the union
-$Q(v) = \bigcup_j R_j(v, W_j)$ and check whether \emph{any} seed falls
-in $Q(v)$.
-This overcounts activations: seed $s_i$ ($i \neq j$) would be allowed
-to "borrow" world $W_j$, increasing the apparent coverage.
-Correctness requires checking $s_j$ against $R_j(v, W_j)$ exclusively
-— seed $j$ can only activate $v$ in its own world.
+A tempting approach is to generate the union
+$Q(v)=\bigcup_{j=1}^k R_j(v,W_j)$ and check whether any selected seed
+falls in $Q(v)$.
+This approach is incorrect because it ignores coupon identities.
+If $s_i\in R_j(v,W_j)$ for some $i\neq j$, the union test would allow
+seed $s_i$ to borrow the possible world of coupon $j$, although coupon
+$i$ and coupon $j$ propagate independently.
+Therefore, correctness requires a per-coupon test: seed $s_j$ must be
+checked only against $R_j(v,W_j)$.
 
 \paragraph{$k$-joint RR sets.}
-We define the \emph{$k$-joint RR set} rooted at $v$ as the tuple
-$(R_1(v, W_1), \ldots, R_k(v, W_k))$ along with the union
-$Q(v) = \bigcup_j R_j(v, W_j)$, sampled from $k$ independent worlds.
-The per-coupon estimator — checking $s_j \in R_j^{(t)}$ for each $j$
-— is the only correct estimator for this setting.
+Based on the above observation, we define a \emph{$k$-joint RR set}
+rooted at $v$ as the tuple
+\[
+  \mathcal{R}(v)=(R_1(v,W_1),\ldots,R_k(v,W_k)),
+\]
+where $W_1,\ldots,W_k$ are sampled independently.
+The tuple keeps the correspondence between coupon index $j$ and its
+own reverse reachable set $R_j(v,W_j)$.
+For a seed tuple $S=(s_1,\ldots,s_k)$, the sample is covered if
+\[
+  \bigvee_{j=1}^k \{s_j\in R_j(v,W_j)\}
+\]
+holds.
+This is the basic estimator used by \CRIM{}.
 
 \begin{lemma}[Unbiasedness]
 \label{lem:unbiased}
