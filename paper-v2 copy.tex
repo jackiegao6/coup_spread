@@ -972,22 +972,25 @@ one reverse reachable set for each coupon world.
 \section{Experiments}
 \label{sec:exp}
 
-We evaluate \CRIM{} on five real-world social networks under three
-diffusion scenarios that stress-test distinct aspects of sequential
-coupon propagation.
+In this section, we empirically validate \CRIM{} on five real-world
+social networks.
+We evaluate the algorithms under three diffusion scenarios, each
+reflecting a different balance among coupon adoption, discard, and
+forwarding behavior.
 
 \subsection{Experimental Setup}
 \label{sec:exp-setup}
 
 \paragraph{Datasets.}
-Table~\ref{tab:datasets} describes five real-world directed networks
-spanning scientific collaboration (Netscience), online social platforms
-(NetFacebookEgo, DoubanRandom, network.douban), and email communication
-(EmailEnron).
-The four smaller graphs form our primary evaluation suite.
-The largest graph, network.douban, is included for scale illustration
-but excluded from oracle comparisons, since MC-CELF cannot finish on a
-graph of this size within a practical time budget.
+We apply five real-world directed network datasets in our experiments,
+with basic statistics shown in Table~\ref{tab:datasets}.
+The Netscience dataset is a scientific collaboration network, EmailEnron
+is an email communication network, and NetFacebookEgo, DoubanRandom, and
+network.douban are online social networks.
+The four smaller graphs form our primary evaluation suite, while
+network.douban is included to test scalability.
+We exclude network.douban from oracle comparisons because MC-CELF cannot
+finish on this graph within a practical time budget.
 
 \begin{table}[t]
   \caption{Datasets used in the experiments.}
