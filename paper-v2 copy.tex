@@ -641,8 +641,11 @@ live-edge path, and the node adopts the coupon in the corresponding
 coupon world.
 
 \paragraph{Single-coupon RR set.}
-Fix world $W_j$.
-The \emph{reverse reachable set} of target node $u$ under $W_j$ is:
+Fix a coupon index $j$ and its possible world $W_j$.
+For a target node $u$, we define the reverse reachable set
+$R_j(u,W_j)$ as the set of seed nodes that can make coupon $j$ reach
+and activate $u$ in this world.
+Formally,
 \[
   R_j(u, W_j) =
   \begin{cases}
@@ -651,8 +654,11 @@ The \emph{reverse reachable set} of target node $u$ under $W_j$ is:
     \emptyset & \text{otherwise.}
   \end{cases}
 \]
-Here, a \emph{live-edge path} requires every intermediate node to be in
-the transfer state (i.e., each intermediate edge is live).
+The condition $A_{u,j}=1$ is the adoption gate at the root node $u$.
+If this gate does not fire, then no seed can activate $u$ in world
+$W_j$, and the reverse reachable set is empty.
+If it does fire, then $R_j(u,W_j)$ contains exactly the nodes that can
+reach $u$ through live edges in $W_j$.
 
 \begin{lemma}[Coverage lemma]
 \label{lem:coverage}
@@ -666,6 +672,11 @@ live-edge path from $s$ to $u$ in $W_j$.
 Condition (i) is the adoption gate in the definition of $R_j(u,W_j)$,
 and condition (ii) is precisely $s \in R_j(u, W_j)$.
 \end{proof}
+
+Lemma~\ref{lem:coverage} is the single-coupon analogue of the standard
+RR-set coverage property: testing whether $s$ belongs to
+$R_j(u,W_j)$ is equivalent to testing whether seed $s$ activates target
+node $u$ in world $W_j$.
 
 \paragraph{Why a naive union fails for $k$ coupons.}
 For $k$ coupons seeded at $(s_1, \ldots, s_k)$ under independent worlds
