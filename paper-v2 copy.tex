@@ -619,13 +619,26 @@ this estimator.
 \section{Algorithm: \CRIM{}}
 \label{sec:algo}
 
+We now design an efficient algorithm for SIDIM based on reverse
+influence sampling.
+We first define reverse reachable sets for single-coupon diffusion and
+show their coverage property.
+We then extend this construction to $k$ coupons by introducing
+$k$-joint RR sets, which correctly preserve the coupling between the
+$j$-th seed and the $j$-th coupon world.
+Finally, we combine this estimator with an IMM-style sampling framework
+to obtain the \CRIM{} algorithm.
+
 \subsection{Reverse Reachable Sets for Coupon Diffusion}
 
-The key insight of classical RIS is that the seed-selection problem can
-be cast as maximum coverage over sampled \emph{reverse reachable (RR)
-sets}.  We now adapt this construction to the SCD model, where
-the non-replicable nature introduces a critical subtlety absent in
-broadcast diffusion.
+The key insight of classical RIS is that influence maximization can be
+turned into a maximum coverage problem over sampled \emph{reverse
+reachable (RR) sets}.
+In this section, we adapt this construction to the SCD model.
+The main difference is that a coupon activates a node only when two
+events occur simultaneously: the seed reaches the node through a
+live-edge path, and the node adopts the coupon in the corresponding
+coupon world.
 
 \paragraph{Single-coupon RR set.}
 Fix world $W_j$.
