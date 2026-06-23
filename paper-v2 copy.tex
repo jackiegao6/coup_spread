@@ -241,11 +241,15 @@ Second, advertising exposure may create incremental value by increasing
 awareness or preference even before a purchase occurs, whereas a coupon
 has a clear usage event: it is useful to the campaign only when it is
 redeemed.
-For example, suppose a company issues ten coupons to potential customers.
-If six users only see or forward the coupons, two users redeem coupons
-themselves, and two coupons are eventually redeemed by the same referred
-friend, then the campaign records coupon redemptions but gains only
-three distinct adopting users, with a coupon usage rate of $4/10$.
+For example, suppose a company issues ten coupons to potential
+customers.
+Among them, six coupons are never redeemed, two coupons are redeemed by
+their initial recipients, and the remaining two coupons are forwarded
+and redeemed by the same referred user.
+Then the campaign records four coupon redemptions but gains only three
+distinct adopting users.
+Thus the distinct-user adoption rate is $3/10$, while the coupon usage
+rate is $4/10$.
 This is why our model counts users who actually redeem at least one
 coupon, rather than users who merely receive or forward it.
 
