@@ -228,31 +228,6 @@ Each edge $(u,v)\in E$ is associated with a forwarding probability
 $p(u,v)$, indicating the probability mass with which user $u$ transfers
 a coupon to user $v$.
 
-
-\paragraph{Remark.}
-Coupon promotion differs from ordinary advertising in two aspects.
-First, advertising content is usually copyable: showing an advertisement
-to one user does not prevent the same content from being shown to many
-other users.
-By contrast, each coupon in our setting is a single redeemable object,
-and its usage rate is generally less than one because a recipient may
-discard or forward the coupon without redeeming it.
-Second, advertising exposure may create incremental value by increasing
-awareness or preference even before a purchase occurs, whereas a coupon
-has a clear usage event: it is useful to the campaign only when it is
-redeemed.
-For example, suppose a company issues ten coupons to potential
-customers.
-Among them, six coupons are never redeemed, two coupons are redeemed by
-their initial recipients, and the remaining two coupons are forwarded
-and redeemed by the same referred user.
-Then the campaign records four coupon redemptions but gains only three
-distinct adopting users.
-Thus the distinct-user adoption rate is $3/10$, while the coupon usage
-rate is $4/10$.
-This is why our model counts users who actually redeem at least one
-coupon, rather than users who merely receive or forward it.
-
 \paragraph{Single-coupon propagation.}
 The propagation process of one coupon starts from a seed node
 $s\in V$ in discrete time steps.
@@ -285,10 +260,50 @@ This distinction makes coupon influence fundamentally different from
 classical IC or LT diffusion, where activation and propagation are
 coupled through a branching cascade.
 
+\paragraph{Possible-world formalization.}
+To analyze the coupon influence model, we use the standard
+possible-world view of random diffusion processes.
+For every coupon $j\in[k]$, we independently instantiate one possible
+world $W_j$ that fixes all random choices made by this coupon.
+Specifically, for each node $u\in V$ and coupon $j$, we draw an
+independent random number $r_{u,j}\sim\mathrm{Uniform}[0,1]$.
+We use this number to choose the action of $u$ by partitioning the unit
+interval into one adoption segment of length $p_u^a$, one discard
+segment of length $p_u^d$, and one transfer segment for each
+out-neighbor $v$, whose length is $p(u,v)$.
+Let $\Phi_j(u)$ denote the resulting action of $u$ in world $W_j$.
+Then $\Phi_j(u)=\textsf{adopt}$ means that $u$ redeems coupon $j$,
+$\Phi_j(u)=\textsf{discard}$ means that $u$ discards it, and
+$\Phi_j(u)=v$ means that $u$ transfers it to out-neighbor $v$.
+The collection $W_j=\{r_{u,j}\}_{u\in V}$ is the possible world of
+coupon $j$, and the tuple $\mathcal{W}=(W_1,\ldots,W_k)$ fully
+determines the propagation outcome of all $k$ coupons.
+
+\begin{definition}[Live edge]
+Edge $(w,u) \in E$ is a \emph{live edge} in world $W_j$ if\/
+$\Phi_j(w)=u$.
+\end{definition}
+
+Under this construction, coupon $j$ seeded at $s_j$ makes node $u$ adopt
+if and only if the following two events both occur:
+\begin{enumerate}[label=(\roman*)]
+  \item $r_{u,j} \leq p_u^a$, i.e., $u$ adopts in world $W_j$
+    (event $A_{u,j}$); and
+  \item there is a live-edge path $s_j \to w_1 \to \cdots \to u$ in
+    $W_j$.
+\end{enumerate}
+We denote the conjunction of these two events by
+$\mathrm{Adopt}_{u,j}(s_j)$.
+Notice that the adoption event $A_{u,j}$ depends only on $r_{u,j}$,
+whereas the live-edge reachability event depends only on the random
+choices of nodes other than $u$.
+Thus the possible-world construction cleanly separates whether a coupon
+can reach a node from whether the node adopts the coupon.
+
 \paragraph{Boundary cases.}
 The above process also specifies how to handle repeated visits.
 First, the same coupon may return to a node that it has visited before.
-Under the possible-world view below, the behavior of node $u$ for coupon
+Under the possible-world view above, the behavior of node $u$ for coupon
 $j$ is fixed once $W_j$ is instantiated.
 Therefore, if coupon $j$ reaches $u$ again, $u$ takes the same action as
 in the previous visit.
@@ -330,50 +345,35 @@ because it measures the number of distinct adopting users.
 This transition from one coupon to multiple coupons is the main reason
 why CIM cannot be solved by optimizing each coupon separately.
 
-\paragraph{Possible-world formalization.}
-To analyze the coupon influence model, we use the standard
-possible-world view of random diffusion processes.
-For every coupon $j\in[k]$, we independently instantiate one possible
-world $W_j$ that fixes all random choices made by this coupon.
-Specifically, for each node $u\in V$ and coupon $j$, we draw an
-independent random number $r_{u,j}\sim\mathrm{Uniform}[0,1]$.
-We use this number to choose the action of $u$ by partitioning the unit
-interval into one adoption segment of length $p_u^a$, one discard
-segment of length $p_u^d$, and one transfer segment for each
-out-neighbor $v$, whose length is $p(u,v)$.
-Let $\Phi_j(u)$ denote the resulting action of $u$ in world $W_j$.
-Then $\Phi_j(u)=\textsf{adopt}$ means that $u$ redeems coupon $j$,
-$\Phi_j(u)=\textsf{discard}$ means that $u$ discards it, and
-$\Phi_j(u)=v$ means that $u$ transfers it to out-neighbor $v$.
-The collection $W_j=\{r_{u,j}\}_{u\in V}$ is the possible world of
-coupon $j$, and the tuple $\mathcal{W}=(W_1,\ldots,W_k)$ fully
-determines the propagation outcome of all $k$ coupons.
-
-\begin{definition}[Live edge]
-Edge $(w,u) \in E$ is a \emph{live edge} in world $W_j$ if\/
-$\Phi_j(w)=u$.
-\end{definition}
-
-Under this construction, coupon $j$ seeded at $s_j$ makes node $u$ adopt
-if and only if the following two events both occur:
-\begin{enumerate}[label=(\roman*)]
-  \item $r_{u,j} \leq p_u^a$, i.e., $u$ adopts in world $W_j$
-    (event $A_{u,j}$); and
-  \item there is a live-edge path $s_j \to w_1 \to \cdots \to u$ in
-    $W_j$.
-\end{enumerate}
-We denote the conjunction of these two events by
-$\mathrm{Adopt}_{u,j}(s_j)$.
-Notice that the adoption event $A_{u,j}$ depends only on $r_{u,j}$,
-whereas the live-edge reachability event depends only on the random
-choices of nodes other than $u$.
-Thus the possible-world construction cleanly separates whether a coupon
-can reach a node from whether the node adopts the coupon.
 For a seed tuple $S=(s_1,\ldots,s_k)$, node $u$ adopts at least one
 coupon if
 \[
   \mathrm{Adopt}_u(S) = \bigvee_{j=1}^{k} \mathrm{Adopt}_{u,j}(s_j).
 \]
+
+\paragraph{Remark.}
+Coupon promotion differs from ordinary advertising in two aspects.
+First, advertising content is usually copyable: showing an advertisement
+to one user does not prevent the same content from being shown to many
+other users.
+By contrast, each coupon in our setting is a single redeemable object,
+and its usage rate is generally less than one because a recipient may
+discard or forward the coupon without redeeming it.
+Second, advertising exposure may create incremental value by increasing
+awareness or preference even before a purchase occurs, whereas a coupon
+has a clear usage event: it is useful to the campaign only when it is
+redeemed.
+For example, suppose a company issues ten coupons to potential
+customers.
+Among them, six coupons are never redeemed, two coupons are redeemed by
+their initial recipients, and the remaining two coupons are forwarded
+and redeemed by the same referred user.
+Then the campaign records four coupon redemptions but gains only three
+distinct adopting users.
+Thus the distinct-user adoption rate is $3/10$, while the coupon usage
+rate is $4/10$.
+This is why our model counts users who actually redeem at least one
+coupon, rather than users who merely receive or forward it.
 
 \subsection{Adoption Spread, Coupon Usage, and Problem Definitions}
 
