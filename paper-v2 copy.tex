@@ -334,22 +334,14 @@ For every coupon $j\in[k]$, we independently instantiate one possible
 world $W_j$ that fixes all random choices made by this coupon.
 Specifically, for each node $u\in V$ and coupon $j$, we draw an
 independent random number $r_{u,j}\sim\mathrm{Uniform}[0,1]$.
-Fix an arbitrary order of the out-neighbors of $u$, denoted by
-$N^+(u)=\{v_1,\ldots,v_{d_u}\}$, and define
-$b_{u,0}=p_u^a+p_u^d$ and
-$b_{u,i}=b_{u,i-1}+p(u,v_i)$ for $i\in[d_u]$.
-The action of node $u$ in world $W_j$ is the mapping
-$\Phi_j(u)\in\{\mathtt{adopt},\mathtt{discard}\}\cup N^+(u)$ defined by
-\[
-  \Phi_j(u)=
-  \begin{cases}
-    \mathtt{adopt},   & r_{u,j}\in[0,p_u^a],\\
-    \mathtt{discard}, & r_{u,j}\in(p_u^a,b_{u,0}],\\
-    v_i,              & r_{u,j}\in(b_{u,i-1},b_{u,i}],\quad i\in[d_u].
-  \end{cases}
-\]
-Thus $\Phi_j(u)=v$ means that node $u$ transfers coupon $j$ to
-out-neighbor $v$.
+We use this number to choose the action of $u$ by partitioning the unit
+interval into one adoption segment of length $p_u^a$, one discard
+segment of length $p_u^d$, and one transfer segment for each
+out-neighbor $v$, whose length is $p(u,v)$.
+Let $\Phi_j(u)$ denote the resulting action of $u$ in world $W_j$.
+Then $\Phi_j(u)=\textsf{adopt}$ means that $u$ redeems coupon $j$,
+$\Phi_j(u)=\textsf{discard}$ means that $u$ discards it, and
+$\Phi_j(u)=v$ means that $u$ transfers it to out-neighbor $v$.
 The collection $W_j=\{r_{u,j}\}_{u\in V}$ is the possible world of
 coupon $j$, and the tuple $\mathcal{W}=(W_1,\ldots,W_k)$ fully
 determines the propagation outcome of all $k$ coupons.
