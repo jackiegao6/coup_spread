@@ -334,26 +334,29 @@ For every coupon $j\in[k]$, we independently instantiate one possible
 world $W_j$ that fixes all random choices made by this coupon.
 Specifically, for each node $u\in V$ and coupon $j$, we draw an
 independent random number $r_{u,j}\sim\mathrm{Uniform}[0,1]$.
-This random number determines the behavior of node $u$ when it receives
-coupon $j$ as follows:
+Fix an arbitrary order of the out-neighbors of $u$, denoted by
+$N^+(u)=\{v_1,\ldots,v_{d_u}\}$, and define
+$b_{u,0}=p_u^a+p_u^d$ and
+$b_{u,i}=b_{u,i-1}+p(u,v_i)$ for $i\in[d_u]$.
+The action of node $u$ in world $W_j$ is the mapping
+$\Phi_j(u)\in\{\mathtt{adopt},\mathtt{discard}\}\cup N^+(u)$ defined by
 \[
-  \mathrm{outcome}_{u,j} =
+  \Phi_j(u)=
   \begin{cases}
-    \text{adopt}          & \text{if } r_{u,j} \leq p_u^a, \\
-    \text{discard}        & \text{if } r_{u,j} \in (p_u^a,\; p_u^a+p_u^d], \\
-    \text{transfer to }v  & \text{if } r_{u,j} \text{ falls in } v\text{'s
-                            sub-interval of } (p_u^a{+}p_u^d, 1],
+    \mathtt{adopt},   & r_{u,j}\in[0,p_u^a],\\
+    \mathtt{discard}, & r_{u,j}\in(p_u^a,b_{u,0}],\\
+    v_i,              & r_{u,j}\in(b_{u,i-1},b_{u,i}],\quad i\in[d_u].
   \end{cases}
 \]
-where the out-neighbors of $u$ are assigned disjoint sub-intervals
-whose lengths are given by the edge probabilities $p(u,v)$.
+Thus $\Phi_j(u)=v$ means that node $u$ transfers coupon $j$ to
+out-neighbor $v$.
 The collection $W_j=\{r_{u,j}\}_{u\in V}$ is the possible world of
 coupon $j$, and the tuple $\mathcal{W}=(W_1,\ldots,W_k)$ fully
 determines the propagation outcome of all $k$ coupons.
 
 \begin{definition}[Live edge]
 Edge $(w,u) \in E$ is a \emph{live edge} in world $W_j$ if\/
-$\mathrm{outcome}_{w,j} = \text{transfer to }u$.
+$\Phi_j(w)=u$.
 \end{definition}
 
 Under this construction, coupon $j$ seeded at $s_j$ activates node $u$
@@ -780,7 +783,7 @@ backward traversal over live in-edges.
 Algorithm~\ref{alg:kernel} gives the deterministic transition kernel
 for one node once the random number $r_{u,j}$ has been fixed.
 This kernel is used lazily during the backward traversal so that the
-same node-coupon pair has a consistent outcome within the same possible
+same node-coupon pair has a consistent action within the same possible
 world.
 
 \begin{algorithm}[t]
@@ -789,14 +792,15 @@ world.
 \begin{algorithmic}[1]
 \Require Node $u$; world index $j$; parameters $p_u^a$, $p_u^d$,
   $\{p(u,v)\}_{v:(u,v)\in E}$; random number $r_{u,j}$
-\Ensure Outcome $(A_{u,j}, D_{u,j}, v^*)$
+\Ensure Action
+  $\Phi_j(u)\in\{\mathtt{adopt},\mathtt{discard}\}\cup N^+(u)$
 \If{$r_{u,j} \leq p_u^a$}
-  \State \Return $(1,\; 0,\; \emptyset)$ \Comment{Adopt}
+  \State \Return $\mathtt{adopt}$
 \ElsIf{$r_{u,j} \leq p_u^a + p_u^d$}
-  \State \Return $(0,\; 1,\; \emptyset)$ \Comment{Discard}
+  \State \Return $\mathtt{discard}$
 \Else
-  \State Find $v^*$ s.t.\ $r_{u,j}$ falls in $v^*$'s transfer interval
-  \State \Return $(0,\; 0,\; v^*)$ \Comment{Transfer to $v^*$}
+  \State Find $v^*$ such that $r_{u,j}$ falls in $v^*$'s transfer interval
+  \State \Return $v^*$
 \EndIf
 \end{algorithmic}
 \end{algorithm}
