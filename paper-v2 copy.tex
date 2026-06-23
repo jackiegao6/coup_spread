@@ -311,28 +311,6 @@ choices of nodes before $u$ on the forwarding path.
 The realization-space construction therefore separates whether a coupon can
 reach a node from whether the node redeems the coupon.
 
-The same coupon may return to a node that it has visited before.
-Since the behavior of node $u$ for coupon $j$ is fixed once $W_j$ is
-instantiated, if coupon $j$ reaches $u$ again, $u$ takes the same action
-as in the previous visit.
-If this action is adoption or discard, the coupon would have terminated
-at the first visit; hence a genuine revisit can only occur through
-transfer actions and implies that the coupon has entered a deterministic
-transfer cycle.
-Since all nodes on this cycle take transfer actions for coupon $j$, the
-coupon will keep circulating and will not reach an adopting or discarding
-state in this realization.
-We therefore treat this coupon as contributing zero adoption in this
-realization; an implementation can stop the walk once a repeated node is
-detected.
-Different coupons may also reach the same user.
-These events are evaluated independently because coupon $j$ and coupon
-$\ell$ use different independent realizations $W_j$ and $W_\ell$.
-The user may redeem more than one coupon, but the adoption spread counts
-this user only once; repeated receipt affects coupon trajectories and
-redemption counts, whereas $\sigma(S)$ is a distinct-user coverage
-objective.
-
 For a campaign with $k$ coupons, let $S=(s_1,\ldots,s_k)$ be a seed
 tuple, where coupon $j$ is initially assigned to node $s_j$.
 Each coupon then follows its own forwarding path until it is redeemed,
@@ -356,19 +334,40 @@ coupon if
   \mathrm{Adopt}_u(S) = \bigvee_{j=1}^{k} \mathrm{Adopt}_{u,j}(s_j).
 \]
 
+\textbf{Comparison with related settings.}
+The coupon influence model differs from the closest diffusion and
+simulation settings in the following aspects.
+\begin{itemize}[leftmargin=*]
+  \item \emph{Classical influence maximization.}
+  IC and LT diffusion models describe copyable influence: once a user is
+  activated, the influence attempt may branch to multiple neighbors.
+  In CIM, each coupon is non-replicable and moves to at most one
+  out-neighbor at each step, so the diffusion trace of one coupon is a
+  path rather than a cascade.
+
+  \item \emph{Standard Monte Carlo evaluation.}
+  A forward Monte Carlo simulation can estimate the adoption spread of a
+  fixed seed tuple by sampling coupon trajectories.
+  CIM is an optimization problem over seed tuples, so the estimator used
+  for search must preserve coupon identities: seed $s_j$ can only be
+  evaluated under the realization of coupon $j$.
+
+  \item \emph{Boundary cases and overlap.}
+  The realization-space view fixes the behavior of each node for each
+  coupon.
+  Therefore, if the same coupon revisits a node through transfer actions,
+  it enters a deterministic transfer cycle and contributes zero adoption
+  in that realization.
+  Different coupons may also reach or be redeemed by the same user.
+  These events are evaluated under independent realizations, but the
+  adoption spread counts the user only once.
+\end{itemize}
+
 \textbf{Challenge.}
-The above formulation differs from a standard Monte Carlo simulation in
-an important way.
-A forward simulation can estimate the outcome of a fixed seed tuple by
-sampling $k$ coupon trajectories and counting the users who redeem them.
-However, CIM asks us to search over seed tuples, and the search must
-preserve the identity of each coupon.
-Coupon $j$ can only use its own realization $W_j$, seed $s_j$ must be
-evaluated with that realization, and different coupons that end at the
-same user contribute only one adopting user to $\sigma(S)$.
-Thus the difficulty is not only to simulate coupon walks, but also to
-estimate marginal gains while respecting independent coupon
-realizations, coupon identities, and distinct-user coverage.
+The difficulty is therefore not only to simulate coupon walks, but also
+to estimate marginal gains while respecting independent coupon
+realizations, coupon identities, transfer cycles, and distinct-user
+coverage.
 
 \subsection{Problem Formulation}
 
