@@ -227,9 +227,7 @@ $p_u^a+p_u^d+p_u^t=1$.
 Each edge $(u,v)\in E$ is associated with a forwarding probability
 $p(u,v)$, indicating the probability mass with which user $u$ transfers
 a coupon to user $v$.
-A campaign starts by assigning $k$ coupons to $k$ seed users, and these
-coupons then propagate independently according to the coupon influence
-process.
+
 
 \paragraph{Remark.}
 Coupon promotion differs from ordinary advertising in two aspects.
@@ -239,15 +237,17 @@ other users.
 By contrast, each coupon in our setting is a single redeemable object,
 and its usage rate is generally less than one because a recipient may
 discard or forward the coupon without redeeming it.
-Second, the value of a coupon campaign is tied to incremental adoption
-rather than mere exposure.
+Second, advertising exposure may create incremental value by increasing
+awareness or preference even before a purchase occurs, whereas a coupon
+has a clear usage event: it is useful to the campaign only when it is
+redeemed.
 For example, suppose a company issues ten coupons to potential customers.
 If six users only see or forward the coupons, two users redeem coupons
 themselves, and two coupons are eventually redeemed by the same referred
 friend, then the campaign records coupon redemptions but gains only
 three distinct adopting users, with a coupon usage rate of $4/10$.
 This is why our model counts users who actually redeem at least one
-coupon, rather than users who merely receive promotional content.
+coupon, rather than users who merely receive or forward it.
 
 \paragraph{Single-coupon propagation.}
 The propagation process of one coupon starts from a seed node
