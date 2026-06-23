@@ -180,68 +180,6 @@ and the algorithmic framework.
 \section{Related Work}
 \label{sec:related}
 
-\paragraph{Influence maximization.}
-The IM problem was formalized by Domingos and
-Richardson~\cite{domingos2001mining,richardson2002mining} as
-probabilistic inference over social networks.
-Kempe, Kleinberg, and Tardos~\cite{kempe2003maximizing} gave the
-foundational treatment: they proved IM is NP-hard under IC and LT,
-showed that adoption spread is monotone and submodular, and established
-a greedy $(1{-}1/e)$-approximation.
-CELF~\cite{leskovec2007celf} and CELF++~\cite{goyal2011celf} reduced
-the cost of greedy via lazy evaluation.
-All of these methods assume \emph{broadcast} diffusion, in which an
-activated node may simultaneously attempt to influence all neighbors;
-they are structurally inapplicable to non-replicable coupon propagation.
-
-\paragraph{Reverse influence sampling.}
-Borgs et al.~\cite{borgs2014maximizing} introduced the RIS framework,
-providing $(1{-}1/e{-}\epsilon)$-approximation in expected near-linear
-time.
-TIM/TIM+~\cite{tang2014influence} and IMM~\cite{tang2015influence}
-developed practical algorithms with tight sample complexity.
-SSA~\cite{nguyen2016stop} achieved asymptotically optimal bounds.
-All of these methods construct a \emph{single} RR set per root,
-corresponding to all broadcast paths to a target node in one possible
-world.
-In our coupon model, $k$ coupons propagate through $k$
-\emph{independently sampled} worlds; a correct RR estimator must
-generate $k$ separate reverse walks per root and pair each walk with its
-own seed.
-Classical single-RR-set construction either ignores this independence
-(overcounting activations) or reduces to a single-coupon problem
-(undercounting the union coverage).
-Our $k$-joint RR sets resolve this gap.
-
-\paragraph{Competitive and multi-item diffusion.}
-A line of work studies competitive IM with multiple
-items~\cite{budak2011limiting,chen2011influence,lu2015competition}, and
-IM for simultaneous multi-item
-seeding~\cite{bharathi2007competitive,goyal2012competitive}.
-These models still employ broadcast diffusion for each item; competition
-arises from nodes adopting at most one item among concurrently spreading
-broadcasts.
-In our model, items do not compete for a node — they simply propagate
-via non-replicable walks, and the objective is to maximize the union of
-reached users.
-Sun et al.~\cite{sun2018multi} extend RIS to multi-round IM, which
-similarly requires reasoning about $k$ independent propagation
-instances; however, within each round, diffusion remains broadcast-style
-IC.
-None of these works handle non-replicable propagation.
-
-\paragraph{Random-walk models in networks.}
-Random walks underpin node centrality measures such as
-PageRank~\cite{page1999pagerank} and have been used as heuristics for
-seed selection.
-However, these methods lack formal guarantees within an IM framework:
-PageRank reflects stationary reachability, not adoption probability
-under a given seed set.
-Our work is the first to rigorously embed random-walk-style propagation
-into the IM possible-world framework, establishing the Coverage
-Lemma (Lemma~\ref{lem:coverage}) that connects reverse walks to
-adoption events and enabling provably correct approximation guarantees.
-
 %% ============================================================
 %% 3. MODEL AND PROBLEM DEFINITION
 %% ============================================================
