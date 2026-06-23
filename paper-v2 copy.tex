@@ -1064,7 +1064,102 @@ independent-world structure of CIM: a $k$-joint RR sample must contain
 one reverse reachable set for each coupon world.
 
 %% ============================================================
-%% 6. EXPERIMENTS
+%% 6. OTHER VARIANTS
+%% ============================================================
+\section{Other Variants}
+\label{sec:variants}
+
+In this section, we discuss two natural variants of the coupon influence
+model.
+The model and algorithm in the previous sections focus on the basic
+setting where redeeming a coupon terminates its propagation and where a
+user may redeem more than one coupon.
+In practice, both assumptions may change depending on the campaign rule.
+We show that the possible-world view remains useful for these variants,
+although the objective and the reverse-sampling procedure need to be
+adjusted accordingly.
+
+\subsection{Forwarding after Coupon Adoption}
+\label{sec:variant-adopt-forward}
+
+The basic model assumes that once a user redeems a coupon, the coupon is
+consumed and the propagation terminates.
+Some campaigns, however, deliberately encourage a user to share the
+promotion after redemption.
+For example, after using a discount coupon, a customer may receive a
+``share with a friend'' option or a small reward for forwarding the
+campaign to one more potential customer.
+In this case, adoption does not necessarily stop propagation; instead,
+adoption may increase the willingness of the user to forward the
+promotion.
+
+This variant can be modeled by replacing the three terminal outcomes at
+node $u$ with an adoption-and-forwarding rule.
+Let $p_u^a$ be the probability that $u$ redeems the coupon, and let
+$q_u^0$ and $q_u^1$ be the forwarding probabilities before and after
+redemption, respectively, with $q_u^1\geq q_u^0$.
+When coupon $j$ reaches $u$, the model first determines whether $u$
+redeems the coupon.
+If $u$ does not redeem it, the coupon is forwarded with probability
+$q_u^0$ and otherwise discarded.
+If $u$ redeems it, $u$ is counted as an adopted user and the campaign
+continues forwarding the coupon with probability $q_u^1$.
+The forwarding neighbor is then chosen according to the normalized
+edge-level forwarding probabilities of $u$.
+The original model is recovered as the special case $q_u^1=0$ and
+$q_u^0=p_u^t/(1-p_u^a)$, with the non-adoption branch split into
+discarding and forwarding according to probabilities $p_u^d$ and
+$p_u^t$.
+
+The objective $\sigma(S)$ can still be defined as the expected number of
+distinct users who redeem at least one coupon.
+The main technical change is that an adopting node is no longer an
+absorbing endpoint of a coupon walk.
+Consequently, the reverse sample for coupon $j$ must allow a live path
+to pass through adopting nodes, while separately recording whether the
+root node adopts the coupon.
+The same $k$-joint construction can be used after replacing the
+single-coupon transition kernel by this adoption-and-forwarding kernel.
+
+\subsection{At-Most-One Coupon Adoption per User}
+\label{sec:variant-one-coupon}
+
+Another common campaign rule is that each user can redeem at most one
+coupon.
+For example, a platform may restrict every account to one new-user
+discount, even if the user receives several coupons through different
+friends.
+This rule changes the interaction among coupons: in the basic model,
+different coupons propagate independently and the same user may redeem
+several coupons; in this variant, once a user redeems one coupon, all
+later coupon redemption attempts by the same user are rejected.
+
+To formalize this setting, we introduce a tie-breaking rule among
+coupons that reach the same user.
+A simple choice is first-arrival priority: the first coupon that reaches
+and is accepted by user $u$ is redeemed, and subsequent coupons reaching
+$u$ are treated as discarded at $u$.
+If several coupons reach $u$ at the same time, the tie can be resolved by
+coupon index or by an independent random priority.
+Under this rule, the adoption spread objective remains the number of
+distinct adopted users, but the coupon usage-rate objective changes
+because at most one coupon can be redeemed by each user.
+
+This variant is more coupled than the basic CIM model.
+The adoption event of coupon $j$ at node $u$ no longer depends only on
+world $W_j$ and seed $s_j$; it also depends on whether another coupon
+arrives at $u$ earlier and consumes the user's one redemption
+opportunity.
+As a result, the independence that supports the basic $k$-joint RR
+estimator is weakened.
+One can still simulate the forward process and optimize the resulting
+objective by Monte Carlo greedy methods, or extend reverse sampling by
+augmenting each sample with arrival-time and priority information.
+We leave the full approximation analysis of this coupled variant as
+future work.
+
+%% ============================================================
+%% 7. EXPERIMENTS
 %% ============================================================
 \section{Experiments}
 \label{sec:exp}
@@ -1379,7 +1474,7 @@ launches — this cost is well justified.
 \end{figure*}
 
 %% ============================================================
-%% 7. CONCLUSION
+%% 8. CONCLUSION
 %% ============================================================
 \section{Conclusion}
 \label{sec:conclusion}
