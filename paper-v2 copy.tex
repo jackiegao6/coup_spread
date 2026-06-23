@@ -216,6 +216,24 @@ so that the expected adoption spread is maximized.
 The coupon influence model describes non-replicable coupons that move
 through a social network one edge at a time, forming a forwarding path
 rather than a broadcast cascade.
+This setting differs from ordinary advertising.
+Advertising content is usually copyable: showing an advertisement to one
+user does not prevent the same content from being shown to many other
+users, and an exposure may create incremental value even before a
+purchase occurs.
+A coupon, by contrast, is a single redeemable object in our setting.
+It produces campaign value only when it is redeemed, and its usage rate
+can be less than one because a recipient may discard or forward it
+without redeeming it.
+For example, suppose a company issues ten coupons to potential
+customers.
+If six coupons are never redeemed, two coupons are redeemed by their
+initial recipients, and the remaining two coupons are forwarded and
+redeemed by the same referred user, then the campaign records four
+coupon redemptions but gains only three distinct adopting users.
+Thus the distinct-user adoption rate is $3/10$, while the coupon usage
+rate is $4/10$.
+
 We model the social network as a directed graph $G=(V,E)$, where $V$ is
 the set of $n=|V|$ users and $E$ is the set of $m=|E|$ directed
 forwarding relationships.
@@ -228,9 +246,8 @@ Each edge $(u,v)\in E$ is associated with a forwarding probability
 $p(u,v)$, indicating the probability mass with which user $u$ transfers
 a coupon to user $v$.
 
-\paragraph{Single-coupon propagation.}
-The propagation process of one coupon starts from a seed node
-$s\in V$ in discrete time steps.
+Starting from a seed node $s\in V$, a coupon evolves in discrete time
+steps.
 At step $\tau=0$, only node $s$ holds the coupon.
 At step $\tau\geq 0$, suppose node $u$ holds the coupon.
 Then $u$ adopts the coupon with probability $p_u^a$, in which
@@ -247,24 +264,17 @@ time step.
 The treatment of repeated visits and transfer cycles is specified below
 under the possible-world view.
 
-One important distinction of the coupon influence model is that coupon
-propagation and user adoption are separated.
-The propagation part is governed by the transfer action, where the
-coupon can move to at most one neighbor in each step; the adoption
-part is governed by the adoption action, where only the user who redeems
-the coupon is counted by the campaign.
-Thus a forwarding user may help the coupon reach later users without
-adopting it, while an adopting user redeems once and terminates
-the coupon walk.
-This distinction makes coupon influence fundamentally different from
-classical IC or LT diffusion, where activation and propagation are
-coupled through a branching cascade.
+In this process, propagation and adoption are separated.
+A forwarding user may help the coupon reach later users without adopting
+it, because forwarding only moves the coupon to one neighbor.
+An adopting user contributes to the campaign only by redemption, after
+which the coupon walk terminates.
+This separation is absent from classical IC or LT diffusion, where
+activation and propagation are coupled through a branching cascade.
 
-\paragraph{Possible-world formalization.}
-To analyze the coupon influence model, we use the standard
-possible-world view of random diffusion processes.
-For every coupon $j\in[k]$, we independently instantiate one possible
-world $W_j$ that fixes all random choices made by this coupon.
+We use the standard possible-world view to analyze the random process.
+For every coupon $j\in[k]$, an independent possible world $W_j$ fixes
+all random choices made by this coupon.
 Specifically, for each node $u\in V$ and coupon $j$, we draw an
 independent random number $r_{u,j}\sim\mathrm{Uniform}[0,1]$.
 We use this number to choose the action of $u$ by partitioning the unit
@@ -285,28 +295,25 @@ $\Phi_j(w)=u$.
 \end{definition}
 
 Under this construction, coupon $j$ seeded at $s_j$ makes node $u$ adopt
-if and only if the following two events both occur:
-\begin{enumerate}[label=(\roman*)]
-  \item $r_{u,j} \leq p_u^a$, i.e., $u$ adopts in world $W_j$
-    (event $A_{u,j}$); and
-  \item there is a live-edge path $s_j \to w_1 \to \cdots \to u$ in
-    $W_j$.
-\end{enumerate}
-We denote the conjunction of these two events by
-$\mathrm{Adopt}_{u,j}(s_j)$.
-Notice that the adoption event $A_{u,j}$ depends only on $r_{u,j}$,
+if and only if $u$ adopts in world $W_j$ and there is a live-edge path
+from $s_j$ to $u$ in $W_j$.
+Let $A_{u,j}$ denote the event $r_{u,j}\leq p_u^a$.
+We write
+\[
+  \mathrm{Adopt}_{u,j}(s_j)
+  = A_{u,j}\wedge
+    \{s_j \leadsto u \text{ through live edges in } W_j\}.
+\]
+Here $A_{u,j}$ depends only on the random number of the target node,
 whereas the live-edge reachability event depends only on the random
-choices of nodes other than $u$.
-Thus the possible-world construction cleanly separates whether a coupon
-can reach a node from whether the node adopts the coupon.
+choices of nodes before $u$ on the forwarding path.
+The possible-world construction therefore separates whether a coupon can
+reach a node from whether the node redeems the coupon.
 
-\paragraph{Boundary cases.}
-The above process also specifies how to handle repeated visits.
-First, the same coupon may return to a node that it has visited before.
-Under the possible-world view above, the behavior of node $u$ for coupon
-$j$ is fixed once $W_j$ is instantiated.
-Therefore, if coupon $j$ reaches $u$ again, $u$ takes the same action as
-in the previous visit.
+The same coupon may return to a node that it has visited before.
+Since the behavior of node $u$ for coupon $j$ is fixed once $W_j$ is
+instantiated, if coupon $j$ reaches $u$ again, $u$ takes the same action
+as in the previous visit.
 If this action is adoption or discard, the coupon would have terminated
 at the first visit; hence a genuine revisit can only occur through
 transfer actions and implies that the coupon has entered a deterministic
@@ -317,21 +324,18 @@ state in this possible world.
 We therefore treat this coupon as contributing zero adoption in this
 world; an implementation can stop the walk once a repeated node is
 detected.
-Second, the same user may receive multiple different coupons.
+Different coupons may also reach the same user.
 These events are evaluated independently because coupon $j$ and coupon
 $\ell$ use different possible worlds $W_j$ and $W_\ell$.
 The user may redeem more than one coupon, but the adoption spread counts
-this user only once.
-Thus repeated receipt affects coupon trajectories and redemption counts,
-whereas the objective $\sigma(S)$ is a distinct-user coverage objective.
+this user only once; repeated receipt affects coupon trajectories and
+redemption counts, whereas $\sigma(S)$ is a distinct-user coverage
+objective.
 
-\paragraph{From one coupon to $k$ coupons.}
-The multi-coupon campaign is obtained by running the above single-coupon
-process $k$ times independently.
-Let $S=(s_1,\ldots,s_k)$ be a seed tuple, where coupon $j$ is initially
-assigned to node $s_j$.
-Starting from $s_j$, coupon $j$ follows its own forwarding path until it
-is redeemed, discarded, or trapped in a transfer cycle.
+For a campaign with $k$ coupons, let $S=(s_1,\ldots,s_k)$ be a seed
+tuple, where coupon $j$ is initially assigned to node $s_j$.
+Each coupon then follows its own forwarding path until it is redeemed,
+discarded, or trapped in a transfer cycle.
 The paths of different coupons do not block or modify one another: a
 user receiving coupon $j$ does not prevent the same user from later
 receiving coupon $\ell$, and the action taken for one coupon does not
@@ -351,31 +355,7 @@ coupon if
   \mathrm{Adopt}_u(S) = \bigvee_{j=1}^{k} \mathrm{Adopt}_{u,j}(s_j).
 \]
 
-\paragraph{Remark.}
-Coupon promotion differs from ordinary advertising in two aspects.
-First, advertising content is usually copyable: showing an advertisement
-to one user does not prevent the same content from being shown to many
-other users.
-By contrast, each coupon in our setting is a single redeemable object,
-and its usage rate is generally less than one because a recipient may
-discard or forward the coupon without redeeming it.
-Second, advertising exposure may create incremental value by increasing
-awareness or preference even before a purchase occurs, whereas a coupon
-has a clear usage event: it is useful to the campaign only when it is
-redeemed.
-For example, suppose a company issues ten coupons to potential
-customers.
-Among them, six coupons are never redeemed, two coupons are redeemed by
-their initial recipients, and the remaining two coupons are forwarded
-and redeemed by the same referred user.
-Then the campaign records four coupon redemptions but gains only three
-distinct adopting users.
-Thus the distinct-user adoption rate is $3/10$, while the coupon usage
-rate is $4/10$.
-This is why our model counts users who actually redeem at least one
-coupon, rather than users who merely receive or forward it.
-
-\subsection{Adoption Spread, Coupon Usage, and Problem Definitions}
+\subsection{Problem Formulation}
 
 We define the adoption spread of a seed tuple $S$ as the expected
 number of distinct users who adopt at least one coupon:
