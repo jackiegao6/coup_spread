@@ -85,7 +85,7 @@
 Word-of-mouth and viral marketing have become important strategies for
 product promotion in social networks.
 By selecting a small set of influential seed users, a company can
-trigger adoption along social connections, a problem commonly referred
+promote adoption along social connections, a problem commonly referred
 to as influence maximization (IM)~\cite{kempe2003maximizing}.
 Over the past two decades, IM has been extensively studied under
 classical models such as the Independent Cascade (IC) and Linear
@@ -98,14 +98,14 @@ receives a coupon may redeem it, discard it, or forward it to at most
 one other user.
 A similar pattern appears in invitation-code campaigns, where an unused
 code can be passed to only one specific friend.
-In both scenarios, the promotional object moves as a single copy rather
+In both scenarios, the promotional object moves as a single item rather
 than being broadcast to all neighbors.
 Despite its practical relevance, this coupon diffusion setting remains
-underexplored, because existing IM frameworks are inherently tailored to
+underexplored, because existing IM frameworks are inherently related to
 copyable information and cannot capture non-replicable coupon
 propagation.
 
-Consider the following motivating example.
+Consider the following example.
 A company wants to promote a new service and issues $k$ digital coupons
 to selected users.
 After receiving a coupon, a user may redeem it for a discounted purchase,
@@ -115,7 +115,7 @@ sender no longer keeps another copy.
 Therefore, the campaign does not create a broadcast cascade in which one
 activated user simultaneously influences all neighbors.
 Moreover, merely receiving the coupon does not imply adoption: the
-campaign gains value only when the coupon is actually redeemed.
+action gains value only when the coupon is actually redeemed.
 When several coupons are issued, different coupons may also end at the
 same user, so the campaign should count distinct adopted users rather
 than simply summing the outcomes of individual coupon walks.
