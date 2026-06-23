@@ -356,6 +356,20 @@ coupon if
   \mathrm{Adopt}_u(S) = \bigvee_{j=1}^{k} \mathrm{Adopt}_{u,j}(s_j).
 \]
 
+\textbf{Challenge.}
+The above formulation differs from a standard Monte Carlo simulation in
+an important way.
+A forward simulation can estimate the outcome of a fixed seed tuple by
+sampling $k$ coupon trajectories and counting the users who redeem them.
+However, CIM asks us to search over seed tuples, and the search must
+preserve the identity of each coupon.
+Coupon $j$ can only use its own realization $W_j$, seed $s_j$ must be
+evaluated with that realization, and different coupons that end at the
+same user contribute only one adopting user to $\sigma(S)$.
+Thus the difficulty is not only to simulate coupon walks, but also to
+estimate marginal gains while respecting independent coupon
+realizations, coupon identities, and distinct-user coverage.
+
 \subsection{Problem Formulation}
 
 We define the adoption spread of a seed tuple $S$ as the expected
