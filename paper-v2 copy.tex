@@ -48,36 +48,9 @@
 %% ABSTRACT
 %% ============================================================
 \begin{abstract}
-Influence maximization (IM) has been extensively studied under the
-Independent Cascade (IC) and Linear Threshold (LT) models, where an
-activated node broadcasts influence to all neighbors simultaneously.
-Many real-world promotional campaigns, however, involve
-\emph{non-replicable} coupons that can be redeemed once and passed to at
-most one recipient at each step.
-We formalize this setting as the \emph{Coupon Influence Maximization
-(CIM)} problem, in which $k$ coupons are seeded at selected nodes and
-each propagates independently as a random walk: at each visited node,
-the coupon is either adopted (activating the user and terminating the
-walk), discarded, or forwarded to exactly one neighbor.
-The objective is to select $k$ seed nodes maximizing the expected number
-of distinct users who adopt at least one coupon.
-We prove CIM is NP-hard and establish that the adoption spread
-function is monotone and submodular, admitting a greedy
-$(1{-}1/e)$-approximation.
-The core technical challenge is that evaluating marginal gains exactly
-is \#P-hard, and classical RR-set construction does not extend to this
-setting.
-We address this by developing \emph{$k$-joint RR sets} — $k$
-independent reverse random walks rooted at a common node — and prove
-they yield an unbiased estimator of adoption spread.
-Our \CIMRIS{} algorithm combines $k$-joint sampling with an
-adaptive stopping criterion, achieving a
-$(1/2{-}\epsilon)$-approximation in expected near-linear time.
-Experiments on five real-world social networks show that \CIMRIS{}
-consistently matches a Monte Carlo oracle and substantially outperforms
-both structural heuristics and IC-model baselines, confirming both the
-importance of the diffusion model formulation and the effectiveness of
-the proposed algorithm.
+
+  
+
 \end{abstract}
 
 \begin{CCSXML}
