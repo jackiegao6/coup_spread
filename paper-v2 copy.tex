@@ -173,21 +173,21 @@ estimators cannot be directly applied, and why coupon identity must be
 preserved in the reverse-sampling construction.
 
 In summary, our contributions are as follows.
-First, we initiate the formal study of coupon influence maximization, a
-practically motivated setting that captures the single-copy,
-multi-coupon nature of real-world coupon campaigns.
-Second, we propose the coupon influence model and define two campaign
-objectives: activation-spread maximization and coupon usage-rate
-maximization.
-Third, we prove that CIM is NP-hard and show that the adoption spread
-function is monotone and submodular over node-coupon pairs.
-Fourth, we develop a tailored reverse influence sampling scheme based on
+First, we initiate the formal study of coupon influence maximization by
+proposing the coupon influence model, which captures the single-copy,
+multi-coupon nature of real-world coupon campaigns, and by defining two
+campaign objectives: activation-spread maximization and coupon
+usage-rate maximization.
+Second, we prove that CIM is NP-hard and show that the adoption spread
+function is monotone and submodular under the seed-node and coupon-index
+representation.
+Third, we develop a tailored reverse influence sampling scheme based on
 $k$-joint RR sets and build the \CIMRIS{} algorithm for scalable seed
-selection with a $(1/2{-}\epsilon)$ approximation guarantee.
-Finally, experiments on real-world social networks show that \CIMRIS{}
-matches a Monte Carlo oracle and consistently outperforms structural
-heuristics and IC-model baselines, validating both the model formulation
-and the algorithmic framework.
+selection.
+% Finally, experiments on real-world social networks show that \CIMRIS{}
+% matches a Monte Carlo oracle and consistently outperforms structural
+% heuristics and IC-model baselines, validating both the model formulation
+% and the algorithmic framework.
 
 %% ============================================================
 %% 2. RELATED WORK
