@@ -340,6 +340,31 @@ This distinction makes coupon influence fundamentally different from
 classical IC or LT diffusion, where activation and propagation are
 coupled through a branching cascade.
 
+\paragraph{Boundary cases.}
+The above process also specifies how to handle repeated visits.
+First, the same coupon may return to a node that it has visited before.
+Under the possible-world view below, the behavior of node $u$ for coupon
+$j$ is fixed once $W_j$ is instantiated.
+Therefore, if coupon $j$ reaches $u$ again, $u$ takes the same action as
+in the previous visit.
+If this action is adoption or discard, the coupon would have terminated
+at the first visit; hence a genuine revisit can only occur through
+transfer actions and implies that the coupon has entered a deterministic
+transfer cycle.
+Since all nodes on this cycle take transfer actions for coupon $j$, the
+coupon will keep circulating and will not reach an adopting or discarding
+state in this possible world.
+We therefore treat this coupon as contributing zero adoption in this
+world; an implementation can stop the walk once a repeated node is
+detected.
+Second, the same user may receive multiple different coupons.
+These events are evaluated independently because coupon $j$ and coupon
+$\ell$ use different possible worlds $W_j$ and $W_\ell$.
+The user may redeem more than one coupon, but the adoption spread counts
+this user only once.
+Thus repeated receipt affects coupon trajectories and redemption counts,
+whereas the objective $\sigma(S)$ is a distinct-user coverage objective.
+
 \paragraph{Possible-world formalization.}
 To analyze the coupon influence model, we use the standard
 possible-world view of random diffusion processes.
