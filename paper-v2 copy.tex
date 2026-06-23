@@ -113,14 +113,14 @@ ignore it, or forward it to one friend who may be more likely to use it.
 Once the coupon is redeemed, it is consumed; once it is forwarded, the
 sender no longer keeps another copy.
 Therefore, the campaign does not create a broadcast cascade in which one
-activated user simultaneously influences all neighbors.
+adopting user simultaneously influences all neighbors.
 Moreover, merely receiving the coupon does not imply adoption: the
 action gains value only when the coupon is actually redeemed.
 When several coupons are issued, different coupons may also end at the
-same user, so the campaign should count distinct adopted users rather
+same user, so the campaign should count distinct adopting users rather
 than simply summing the outcomes of individual coupon walks.
 This example shows that coupon-based promotion must model single-copy
-forwarding, redemption-based activation, and overlap among multiple
+forwarding, redemption-based adoption, and overlap among multiple
 coupons.
 
 To formalize the above setting, we propose the \emph{coupon influence
@@ -129,7 +129,7 @@ In our model, $k$ coupons are distributed to $k$ selected seed nodes, and
 each coupon propagates independently through the network as a random
 walk.
 When a coupon arrives at a node, one of three outcomes occurs: the node
-redeems the coupon and becomes activated, the node discards the coupon,
+redeems the coupon and becomes an adopting user, the node discards the coupon,
 or the node forwards the coupon to exactly one out-neighbor.
 In the first two cases, the propagation of this coupon terminates; in the
 third case, the coupon continues to move through the network.
@@ -163,8 +163,8 @@ not a direct application of classical influence maximization.
 First, the diffusion structure is different: IC and LT generate
 branching cascades, whereas a non-replicable coupon traces a single
 forwarding path.
-Second, the activation semantics are different: exposure to a coupon is
-not activation, and only redemption contributes to adoption.
+Second, the adoption semantics are different: exposure to a coupon is
+not adoption, and only redemption contributes to adoption.
 Third, multiple coupons create a coverage situation: the same user may
 receive or redeem more than one coupon, but the adoption spread counts
 this user only once.
@@ -176,7 +176,7 @@ In summary, our contributions are as follows.
 First, we initiate the formal study of coupon influence maximization by
 proposing the coupon influence model, which captures the single-copy,
 multi-coupon nature of real-world coupon campaigns, and by defining two
-campaign objectives: activation-spread maximization and coupon
+campaign objectives: adoption-spread maximization and coupon
 usage-rate maximization.
 Second, we prove that CIM is NP-hard and show that the adoption spread
 function is monotone and submodular under the seed-node and coupon-index
@@ -205,8 +205,7 @@ In this section, we introduce the coupon influence model, which
 integrates non-replicable coupons with single-path random-walk
 propagation in social networks.
 The model describes how $k$ coupons, each issued to one seed user, move
-through the network: a coupon can be adopted, discarded, or transferred
-to exactly one neighbor, while the campaign counts distinct users who
+through the network, while the campaign counts distinct users who
 eventually adopt at least one coupon.
 Based on this model, we define the Coupon Influence Maximization (CIM)
 problem, which characterizes how to select the initial coupon recipients
@@ -246,7 +245,7 @@ For example, suppose a company issues ten coupons to potential customers.
 If six users only see or forward the coupons, two users redeem coupons
 themselves, and two coupons are eventually redeemed by the same referred
 friend, then the campaign records coupon redemptions but gains only
-three distinct adopted users, with a coupon usage rate of $4/10$.
+three distinct adopting users, with a coupon usage rate of $4/10$.
 This is why our model counts users who actually redeem at least one
 coupon, rather than users who merely receive promotional content.
 
@@ -256,10 +255,10 @@ $s\in V$ in discrete time steps.
 At step $\tau=0$, only node $s$ holds the coupon.
 At step $\tau\geq 0$, suppose node $u$ holds the coupon.
 Then $u$ adopts the coupon with probability $p_u^a$, in which
-case the coupon is redeemed, node $u$ is counted as an activated user,
+case the coupon is redeemed, node $u$ is counted as an adopting user,
 and the propagation terminates.
 With probability $p_u^d$, node $u$ discards the coupon, in
-which case the propagation also terminates but no new user is activated.
+which case the propagation also terminates but no new user adopts.
 With the remaining probability $p_u^t=1-p_u^a-p_u^d$, node $u$
 transfers the coupon to exactly one out-neighbor $v$, chosen according
 to edge probabilities satisfying
@@ -270,13 +269,13 @@ The treatment of repeated visits and transfer cycles is specified below
 under the possible-world view.
 
 One important distinction of the coupon influence model is that coupon
-propagation and user activation are separated.
+propagation and user adoption are separated.
 The propagation part is governed by the transfer action, where the
-coupon can move to at most one neighbor in each step; the activation
+coupon can move to at most one neighbor in each step; the adoption
 part is governed by the adoption action, where only the user who redeems
 the coupon is counted by the campaign.
 Thus a forwarding user may help the coupon reach later users without
-being activated, while an adopting user activates once and terminates
+adopting it, while an adopting user redeems once and terminates
 the coupon walk.
 This distinction makes coupon influence fundamentally different from
 classical IC or LT diffusion, where activation and propagation are
@@ -323,7 +322,7 @@ single-coupon realizations placed on the same graph.
 The only coupling among coupons appears in the campaign objective.
 If several coupons are redeemed by the same user, the campaign may
 record several redemptions, but the adoption spread counts this user once
-because it measures the number of distinct adopted users.
+because it measures the number of distinct adopting users.
 This transition from one coupon to multiple coupons is the main reason
 why CIM cannot be solved by optimizing each coupon separately.
 
@@ -351,7 +350,7 @@ Edge $(w,u) \in E$ is a \emph{live edge} in world $W_j$ if\/
 $\Phi_j(w)=u$.
 \end{definition}
 
-Under this construction, coupon $j$ seeded at $s_j$ activates node $u$
+Under this construction, coupon $j$ seeded at $s_j$ makes node $u$ adopt
 if and only if the following two events both occur:
 \begin{enumerate}[label=(\roman*)]
   \item $r_{u,j} \leq p_u^a$, i.e., $u$ adopts in world $W_j$
@@ -382,7 +381,7 @@ number of distinct users who adopt at least one coupon:
   = \sum_{u \in V}
     \Pr\!\left[\bigvee_{j=1}^{k} \mathrm{Adopt}_{u,j}(s_j)\right].
 \]
-This objective measures the number of newly activated users and counts
+This objective measures the number of newly adopting users and counts
 each user at most once, even if the user redeems multiple coupons.
 We also define the expected total number of redeemed coupons as
 \[
@@ -399,7 +398,7 @@ The corresponding coupon usage rate is
   \eta(S)=\frac{\rho(S)}{k}.
 \]
 The two quantities capture different campaign goals: $\sigma(S)$
-emphasizes how many distinct users become adopted users, while
+emphasizes how many distinct users adopt coupons, while
 $\eta(S)$ emphasizes what fraction of issued coupons are actually used.
 We use $S=(s_1,\ldots,s_k)$ to denote that coupon $j$ is initially
 assigned to seed node $s_j$, and we allow two coupons to have the same
@@ -410,7 +409,7 @@ Note that $\sigma(S)$ is not the sum of $k$ individual coupon spreads,
 because the same user may be reached by multiple coupons but is counted
 only once.
 
-\begin{definition}[CIM: Activation-Spread Maximization]
+\begin{definition}[CIM: Adoption-Spread Maximization]
 \label{def:cim}
 Given (a) a directed social network $G=(V,E)$, (b) node behavior
 parameters $\{(p_u^a,p_u^d,p_u^t)\}_{u\in V}$, (c) edge forwarding
@@ -436,7 +435,7 @@ maximizes the expected coupon usage rate $\eta(S)$, i.e.,
 \]
 \end{definition}
 
-In this paper, CIM refers to the activation-spread maximization problem
+In this paper, CIM refers to the adoption-spread maximization problem
 unless otherwise stated.
 The usage-rate objective is a complementary objective that is useful
 when the organizer mainly cares about how many issued coupons are
@@ -444,11 +443,11 @@ redeemed.
 Under the seed-tuple formulation above, if repeated seed nodes are
 allowed, maximizing $\eta(S)$ alone may repeatedly choose the best
 single-coupon seed, because $\rho(S)$ counts coupon redemptions rather
-than distinct adopted users.
+than distinct adopting users.
 This is different from maximizing $\sigma(S)$, where overlapping
 redemptions by the same user create a coverage effect.
 
-For the activation-spread objective, it may not be wise to select the
+For the adoption-spread objective, it may not be wise to select the
 individually best seed for every coupon, since different coupons may end
 at the same adopting user, which is only counted once in $\sigma(S)$.
 On the other hand, selecting seeds only to be far apart in the graph may
@@ -471,9 +470,9 @@ There are two independent possible worlds in this example: coupon~1 is
 seeded at $s_1$ in world $W_1$, and coupon~2 is seeded at $s_2$ in
 world $W_2$.
 In world $W_1$, the live-edge path from $s_1$ reaches node $u$, and
-the adoption event $A_{u,1}$ occurs, so coupon~1 activates $u$.
+the adoption event $A_{u,1}$ occurs, so $u$ adopts coupon~1.
 In world $W_2$, coupon~2 follows a different live-edge path and
-activates node $v$.
+is adopted by node $v$.
 Node $w$ lies on the forwarding chains but does not adopt either
 coupon, which means that it helps propagation but does not contribute
 to the objective.
@@ -536,7 +535,7 @@ Selecting the same seed node more than once can only duplicate the same
 incident-edge distribution; hence, when comparing against the vertex
 cover threshold below, it is sufficient to consider solutions that use
 $K$ distinct seed nodes.
-The probability that the adoption node of $e$ is activated is
+The probability that the adoption node of $e$ adopts is
 $1-(1-p)^{c_e(S)}$.
 Since $H$ is cubic, $\sum_{e\in E_H} c_e(S)=3K$ for every size-$K$
 selection.
@@ -585,8 +584,8 @@ selected node-coupon pairs.
 \begin{proof}[Proof sketch]
 Fix a realization $\mathcal{W}=(W_1,\ldots,W_k)$ of all coupon worlds.
 For every node $u$, let $T_u(\mathcal{W})$ be the set of node-coupon
-pairs $(w,j)$ such that coupon $j$ would activate $u$ if it were seeded
-at node $w$.
+pairs $(w,j)$ such that node $u$ would adopt coupon $j$ if coupon $j$
+were seeded at node $w$.
 For this fixed realization, node $u$ is adopted by seed tuple $S$ if and
 only if $S$ intersects $T_u(\mathcal{W})$, where $S$ is viewed as the
 set of selected node-coupon pairs $(s_j,j)$.
@@ -651,7 +650,7 @@ turned into a maximum coverage problem over sampled \emph{reverse
 reachable (RR) sets}.
 In this section, we adapt this construction to the coupon influence
 model.
-The main difference is that a coupon activates a node only when two
+The main difference is that a node adopts a coupon only when two
 events occur simultaneously: the seed reaches the node through a
 live-edge path, and the node adopts the coupon in the corresponding
 coupon world.
@@ -660,7 +659,7 @@ coupon world.
 Fix a coupon index $j$ and its possible world $W_j$.
 For a target node $u$, we define the reverse reachable set
 $R_j(u,W_j)$ as the set of seed nodes that can make coupon $j$ reach
-and activate $u$ in this world.
+node $u$ and be adopted there in this world.
 Formally,
 \[
   R_j(u, W_j) =
@@ -671,14 +670,14 @@ Formally,
   \end{cases}
 \]
 The condition $A_{u,j}=1$ is the adoption gate at the root node $u$.
-If this gate does not fire, then no seed can activate $u$ in world
+If this gate does not fire, then no seed can make $u$ adopt coupon $j$ in world
 $W_j$, and the reverse reachable set is empty.
 If it does fire, then $R_j(u,W_j)$ contains exactly the nodes that can
 reach $u$ through live edges in $W_j$.
 
 \begin{lemma}[Coverage lemma]
 \label{lem:coverage}
-Seed $s$ activates node $u$ via coupon $j$ in world $W_j$ if and only
+Seed $s$ makes node $u$ adopt coupon $j$ in world $W_j$ if and only
 if $s \in R_j(u, W_j)$.
 \end{lemma}
 
@@ -691,12 +690,12 @@ and condition (ii) is precisely $s \in R_j(u, W_j)$.
 
 Lemma~\ref{lem:coverage} is the single-coupon analogue of the standard
 RR-set coverage property: testing whether $s$ belongs to
-$R_j(u,W_j)$ is equivalent to testing whether seed $s$ activates target
-node $u$ in world $W_j$.
+$R_j(u,W_j)$ is equivalent to testing whether seed $s$ makes target
+node $u$ adopt coupon $j$ in world $W_j$.
 
 \paragraph{Why a naive union fails for $k$ coupons.}
 For $k$ coupons seeded at $(s_1, \ldots, s_k)$ under independent worlds
-$(W_1, \ldots, W_k)$, node $v$ is activated iff
+$(W_1, \ldots, W_k)$, node $v$ adopts at least one coupon iff
 $\bigvee_{j=1}^k \{s_j \in R_j(v, W_j)\}$.
 A tempting approach is to generate the union
 $Q(v)=\bigcup_{j=1}^k R_j(v,W_j)$ and check whether any selected seed
@@ -1022,7 +1021,7 @@ When coupon $j$ reaches $u$, the model first determines whether $u$
 redeems the coupon.
 If $u$ does not redeem it, the coupon is forwarded with probability
 $q_u^0$ and otherwise discarded.
-If $u$ redeems it, $u$ is counted as an adopted user and the campaign
+If $u$ redeems it, $u$ is counted as an adopting user and the campaign
 continues forwarding the coupon with probability $q_u^1$.
 The forwarding neighbor is then chosen according to the normalized
 edge-level forwarding probabilities of $u$.
@@ -1065,7 +1064,7 @@ $u$ are treated as discarded at $u$.
 If several coupons reach $u$ at the same time, the tie can be resolved by
 coupon index or by an independent random priority.
 Under this rule, the adoption spread objective remains the number of
-distinct adopted users, but the coupon usage-rate objective changes
+distinct adopting users, but the coupon usage-rate objective changes
 because at most one coupon can be redeemed by each user.
 
 This variant is more coupled than the basic CIM model.
@@ -1186,11 +1185,11 @@ settings, as summarized in Table~\ref{tab:scenarios}:
   \item \textbf{Scenario II (High Absorption):}
     $\E[p_u^a + p_u^d] \approx 0.95$; coupons terminate within
     one or two hops.
-    Activation is dominated by seed locality; long-range structure
+    Adoption is dominated by seed locality; long-range structure
     plays little role.
   \item \textbf{Scenario III (High Forwarding):}
     $\E[p_u^t] \geq 0.88$; coupons trace long random walks.
-    Activation is rare per-step but coupons travel far, amplifying
+    Adoption is rare per-step but coupons travel far, amplifying
     the value of global coverage optimization.
 \end{itemize}
 
@@ -1276,7 +1275,7 @@ spread optimization generalize beyond unique-user coverage.
   \centering
   \includegraphics[width=\textwidth]{assets/fig_normal_redemption}
   \caption{Total coupon redemptions vs.\ $k$ under Scenario~I.
-    Redemption curves mirror activation-spread curves; \CIMRIS{} leads
+    Redemption curves mirror adoption-spread curves; \CIMRIS{} leads
     on both primary and secondary metrics.}
   \label{fig:normal_redemp}
 \end{figure*}
@@ -1406,7 +1405,7 @@ We introduced the coupon influence model and formalized CIM, capturing the
 single-path, non-replicable dynamics of digital coupon campaigns that
 fall outside the scope of classical IC/LT influence maximization.
 The key structural distinction is twofold: the coupon moves to exactly
-one neighbor at each step, and a user is activated only upon adoption
+one neighbor at each step, and a user adopts only upon redemption
 — not upon receipt.
 We proved CIM is NP-hard and that adoption spread is monotone and
 submodular, then bridged the gap between theory and practice by
