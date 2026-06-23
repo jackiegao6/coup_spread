@@ -109,97 +109,102 @@ the proposed algorithm.
 \section{Introduction}
 \label{sec:intro}
 
-Word-of-mouth and viral marketing have become important strategies for
-product promotion in social networks.
-By selecting a small set of influential seed users, a company can
-trigger adoption along social connections, a problem commonly referred
-to as influence maximization (IM)~\cite{kempe2003maximizing}.
-Over the past two decades, IM has been extensively studied under
-classical models such as the Independent Cascade (IC) and Linear
-Threshold (LT) models, where activated nodes attempt to influence their
-neighbors in a broadcast manner~\cite{domingos2001mining,borgs2014maximizing,tang2015influence}.
-However, many real-world promotional campaigns deviate from this
-paradigm.
-For example, when a company distributes digital coupons, a user who does
-not redeem or discard a coupon may forward it to at most one other user.
-A similar pattern appears in invitation-code campaigns, where an unused
-code can be passed to only one specific friend.
-In both scenarios, the coupon propagates through a single-copy,
-one-to-one forwarding process rather than a broadcast cascade.
-Despite its practical relevance, this coupon diffusion setting remains
-underexplored, because existing IM frameworks are inherently tailored to
-copyable information and cannot capture non-replicable coupon
-propagation.
+Influence maximization (IM) is the problem of finding a subset of nodes
+(seed nodes) in a social network that maximizes the expected spread of
+influence~\cite{kempe2003maximizing}.
+It is a well-studied problem with applications in viral marketing,
+information diffusion, and social-network based
+promotion~\cite{domingos2001mining,borgs2014maximizing,tang2015influence}.
+While most studies treat influence maximization as a broadcast diffusion
+problem, in this paper, we explore how to use influence maximization for
+non-replicable coupons that can be redeemed once and forwarded to only
+one recipient.
 
-Coupon propagation changes both the diffusion mechanism and the
-objective landscape.
-First, the diffusion structure is different.
-In the IC and LT models, an activated node may attempt to influence all
-its neighbors, producing a branching cascade that can rapidly fan out
-over the network.
-In coupon diffusion, however, each coupon is passed to at most one
-neighbor at each step and therefore traces a chain-like random walk.
-Second, activation is decoupled from mere exposure.
-In classical IM, a node is typically regarded as activated once the
-influence reaches it.
-In coupon campaigns, a user who only receives and forwards a coupon does
-not become an activated user; only a user who finally redeems the coupon
-contributes to adoption.
-Consequently, intermediate forwarding users do not contribute to the
-final spread unless they redeem a coupon themselves.
-Third, multiple coupons propagate independently, and the same user may
-encounter more than one coupon.
-The campaign objective should therefore count distinct users who redeem
-at least one coupon, rather than counting every coupon trajectory or
-every exposed user.
-These differences fall outside the modeling scope of classical IM and
-call for a problem formulation tailored to non-replicable coupons.
+Consider the following motivating example.
+A company launches a new food-delivery service in a city already served
+by a large incumbent platform.
+To acquire early users, the company distributes $k$ unique discount
+coupons to selected customers.
+A customer receiving a coupon may redeem it for a discounted order, let
+it expire, or forward it to exactly one friend who may be more likely to
+use it.
+Once the coupon is redeemed, it is consumed; once it is forwarded, the
+sender no longer holds another copy.
+Thus the promotion does not create a broadcast cascade in which one
+activated user simultaneously influences all neighbors.
+Similar situations occur in closed-beta invitation campaigns, referral
+codes tied to individual accounts, and donation vouchers that can be
+claimed only once.
+Different from classical viral marketing, the coupon is non-replicable,
+meaning that each coupon exists as a single moving object in the social
+network.
+This constraint makes the coupon follow a forwarding chain rather than a
+branching influence tree.
+Therefore, coupon-based promotion needs to incorporate the
+non-replicable nature of the coupon when deciding which users should
+receive the initial coupons.
 
-To address these challenges, we formalize the Coupon Influence
-Maximization (CIM) problem under a coupon influence model.
-In our model, $k$ coupons are distributed to $k$ selected seed nodes, and
-each coupon propagates independently through the network as a random
-walk.
-When a coupon arrives at a node, one of three outcomes occurs: the node
-redeems the coupon and becomes activated, the node discards the coupon,
-or the node forwards the coupon to exactly one out-neighbor.
-In the first two cases, the propagation of this coupon terminates; in
-the third case, the coupon continues to move through the network.
-The objective is to select $k$ seed nodes that maximize the expected
-number of distinct users who redeem at least one coupon.
-Since the $k$ coupons propagate independently, each coupon induces its
-own possible world, and the overall diffusion outcome is determined by
-the joint configuration of these $k$ possible worlds.
-We prove that CIM is NP-hard, and we establish that the adoption spread
-function is monotone and submodular.
-This structural property implies that a greedy algorithm obtains a
-$(1{-}1/e)$ approximation when the objective can be evaluated exactly.
-To make the greedy approach scalable, we develop a reverse influence
-sampling framework tailored to coupon diffusion.
-Unlike classical RR-set construction, which samples one reverse
-reachable set for a target under broadcast diffusion, our framework
-samples $k$ independent reverse walks from a common root, one for each
-coupon.
-Based on these $k$-joint RR sets, we design the \CIMRIS{} algorithm and
-prove that it achieves a $(1/2{-}\epsilon)$ approximation in expected
-near-linear time.
+To formalize the above setting, we integrate non-replicable coupon
+propagation with influence maximization into a coherent model called the
+\emph{coupon influence model}.
+In particular, a directed social network $G=(V,E)$ specifies who may
+forward a coupon to whom, while node-level probabilities specify whether
+a user adopts, discards, or transfers a received coupon.
+In this model, a coupon seeded at node $u$ performs a random walk: at
+each visited node, it is either redeemed and stops, discarded and stops,
+or forwarded to exactly one out-neighbor.
+Thus the diffusion topology of one coupon is a path rather than a tree,
+and the activation event is redemption rather than mere receipt.
+More specifically, in a $k$-coupon campaign, we model the propagation of
+$k$ coupons through $k$ independent possible worlds.
+We use $S=(s_1,\ldots,s_k)$ to denote the seed tuple, where coupon $j$
+starts from seed node $s_j$ and evolves according to its own possible
+world.
+A node contributes to the campaign objective if at least one coupon is
+eventually redeemed by this node.
+We define $\sigma(S)$ as the expected number of distinct adopting users
+under seed tuple $S$.
+The campaign task is defined as the following Coupon Influence
+Maximization (CIM) problem: given the network, the adoption, discard,
+and forwarding probabilities, and a coupon budget $k$, find $k$ seed
+nodes such that $\sigma(S)$ is maximized.
 
-Our contributions are summarized as follows.
-First, we initiate the formal study of coupon influence maximization, a
-practically motivated setting that captures the single-copy,
-multi-coupon nature of real-world coupon campaigns.
-Second, we propose the coupon influence model and define the CIM problem
-by distinguishing coupon redemption from coupon receipt and forwarding.
-Third, we prove that CIM is NP-hard and show that the adoption spread
-function is monotone and submodular, thereby justifying greedy
-optimization under exact evaluation.
-Fourth, we develop a tailored reverse influence sampling scheme based on
-$k$-joint RR sets and build the \CIMRIS{} algorithm for scalable seed
-selection.
-Finally, experiments on real-world social networks show that \CIMRIS{}
-matches a Monte Carlo oracle and consistently outperforms structural
-heuristics and IC-model baselines, validating both the model formulation
-and the algorithmic framework.
+For the CIM problem, we show that selecting the optimal seed tuple is
+NP-hard, while the adoption spread function is monotone and submodular,
+indicating that a greedy algorithm gives a $(1{-}1/e)$ approximation if
+the objective can be evaluated exactly.
+However, exact evaluation of the adoption spread is \#P-hard, making
+direct greedy optimization computationally infeasible on large social
+networks.
+To provide an efficient solution, we design \emph{$k$-joint reverse
+reachable (RR) sets}, which sample $k$ independent reverse random walks
+from a common root and give an unbiased estimator of the distinct
+adoption probability.
+We then develop a \CIMRIS{} algorithm based on the reverse influence
+sampling approach and an adaptive stopping framework, and prove that it
+achieves a $(1/2{-}\epsilon)$ approximation in expected near-linear time.
+Our empirical evaluation further demonstrates that \CIMRIS{}
+consistently matches a Monte Carlo oracle and outperforms coupon-aware
+heuristics and IC-model baselines.
+
+One important point we demonstrate both theoretically and empirically is
+that coupon-based influence maximization is tightly dependent on the
+non-replicable nature of the coupon.
+This point indicates that CIM is quite different from classical
+influence maximization: the campaign has to consider single-path
+forwarding, adoption-versus-receipt semantics, and overlap among
+independent coupons, while classical influence maximization mainly
+targets increasing the spread of a branching activation cascade.
+
+In summary, our contributions include: (a) proposing a coupon influence
+model that captures non-replicable coupon propagation; (b) defining the
+CIM problem and studying its hardness, monotonicity, and submodularity;
+and (c) designing the \CIMRIS{} algorithm based on $k$-joint RR sets to
+solve CIM efficiently.
+To the best of our knowledge, this is the first study that treats
+coupons as non-replicable objects in an influence
+maximization framework and provides an algorithmic study of seed
+selection under such a coupon diffusion model.
 
 %% ============================================================
 %% 2. RELATED WORK
