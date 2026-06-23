@@ -513,42 +513,86 @@ The CIM problem is NP-hard.
 \end{theorem}
 
 \begin{proof}[Proof sketch]
-We reduce from vertex cover in cubic graphs.
-Given a cubic graph $H=(V_H,E_H)$ and an integer $K$, we construct a
-two-layer coupon influence instance.
-For every vertex $x\in V_H$, we create a candidate seed node, and for
-every edge $e\in E_H$, we create an adoption node.
-If vertex $x$ is incident to edge $e$ in $H$, we add a directed edge
-from the seed node of $x$ to the adoption node of $e$ with transfer
-probability $p$, where $p\leq 1/3$.
-Each adoption node adopts with probability $1$, and all other
-probability mass at a candidate seed node, namely $1-3p$, is assigned
-to discard.
-Thus each coupon chooses at most one incident edge node and then
-terminates.
-
-For a selected seed set $S$ of size $K$, let $c_e(S)\in\{0,1,2\}$ be
-the number of selected endpoints of edge $e$.
-Selecting the same seed node more than once can only duplicate the same
-incident-edge distribution; hence, when comparing against the vertex
-cover threshold below, it is sufficient to consider solutions that use
-$K$ distinct seed nodes.
-The probability that the adoption node of $e$ adopts is
-$1-(1-p)^{c_e(S)}$.
-Since $H$ is cubic, $\sum_{e\in E_H} c_e(S)=3K$ for every size-$K$
-selection.
-Thus the expected adoption spread is
+We follow the reduction through a bipartite probabilistic adoption
+problem, which is a restricted case of CIM.
+In this restricted case, the candidate seed set is fixed, each selected
+source receives at most one coupon, and each adoption node accepts at
+most one coupon.
+For such a fixed coupon influence instance, let $q_{ji}$ denote the
+probability that a coupon initially assigned to source node $i$ is
+eventually accepted by node $j$.
+These probabilities form a matrix $Q=(q_{ji})$.
+Since each adoption node accepts at most one coupon in this restricted
+case, node $j$ is counted once whenever at least one selected source
+successfully sends a coupon to $j$.
+Thus, on a bipartite graph whose left nodes are candidate sources and
+whose right nodes are adoption nodes, choosing $K$ sources maximizes
 \[
-  \sum_{e\in E_H}\!\left(1-(1-p)^{c_e(S)}\right)
-  = 3Kp - p^2\cdot |\{e:c_e(S)=2\}|.
+  \sum_j \left(1-\prod_{i\in S}(1-q_{ji})\right).
 \]
-Equivalently, using
-$|\{e:c_e(S)=2\}| = 3K-|E_H|+|\{e:c_e(S)=0\}|$, maximizing the spread is
-the same as minimizing the number of uncovered edges.
-Therefore, among size-$K$ selections, the spread reaches the threshold
-$3Kp-p^2(3K-|E_H|)$ exactly when no edge is uncovered, i.e., when the
-selected vertices form a vertex cover of $H$.
-Since vertex cover in cubic graphs is NP-hard, CIM is NP-hard.
+This bipartite probabilistic adoption problem is a special case of CIM:
+given any such bipartite instance with
+\(\sum_j q_{ji}\leq 1\) for each source $i$, we create a source node
+with adoption probability $0$, assign transfer probability mass
+$q_{ji}$ to each outgoing edge from source $i$ to adoption node $j$, put
+the remaining probability mass on discard, and set every adoption node
+to adopt with probability $1$.
+Therefore, it suffices to show that the bipartite probabilistic adoption
+problem is NP-hard.
+
+We reduce from vertex cover in cubic graphs.
+Given a cubic graph $H=(V_H,E_H)$ and an integer $K$, construct a
+bipartite graph as follows.
+For each vertex $x\in V_H$, create a left node $a_x$.
+For each edge $e\in E_H$, create a right node $b_e$.
+If $x$ is incident to $e$, connect $a_x$ to $b_e$ with probability $p$,
+where $0<p\leq 1/3$ is a fixed small constant.
+Since $H$ is cubic, every left node has total outgoing probability
+exactly $3p\leq 1$, so the instance can be realized by the coupon model
+above.
+
+For a selected set $S$ of $K$ left nodes, let
+$c_e(S)\in\{0,1,2\}$ be the number of selected endpoints of edge $e$.
+The adoption probability of right node $b_e$ is
+\[
+  1-(1-p)^{c_e(S)}.
+\]
+Hence the expected number of adopted right nodes is
+\[
+  F(S)=\sum_{e\in E_H}\left(1-(1-p)^{c_e(S)}\right).
+\]
+Because $H$ is cubic,
+\[
+  \sum_{e\in E_H} c_e(S)=3K
+\]
+for every $K$-node selection.
+Let $n_0,n_1,n_2$ be the numbers of edges with
+$c_e(S)=0,1,2$, respectively.
+Then
+\[
+  n_0+n_1+n_2=|E_H|,
+  \qquad
+  n_1+2n_2=3K,
+\]
+and
+\[
+  F(S)=n_1p+n_2(2p-p^2)
+      =3Kp-n_2p^2.
+\]
+Using $n_2=3K-|E_H|+n_0$, we obtain
+\[
+  F(S)=3Kp-(3K-|E_H|)p^2-n_0p^2 .
+\]
+Therefore, among all selections of size $K$, maximizing $F(S)$ is
+equivalent to minimizing the number $n_0$ of uncovered edges.
+In particular, there exists a selection $S$ with
+\[
+  F(S)\geq 3Kp-(3K-|E_H|)p^2
+\]
+if and only if $n_0=0$, i.e., if and only if the selected vertices form
+a vertex cover of $H$.
+Since vertex cover in cubic graphs is NP-hard, the bipartite
+probabilistic adoption problem is NP-hard, and thus CIM is NP-hard.
 \end{proof}
 
 \subsection{Monotonicity and Submodularity}
@@ -566,7 +610,7 @@ decreases as the selected set grows.
 For a monotone submodular function under a cardinality constraint, the
 classical greedy algorithm achieves a $(1-1/e)$
 approximation~\cite{nemhauser1978analysis}.
-For our seed-tuple formulation, the feasible node-coupon pairs also
+For the coupon-indexed representation, the feasible node-coupon pairs
 respect a coupon-index constraint: at most one pair can be selected for
 each coupon.
 Thus the objective structure remains submodular, while the feasible
@@ -584,7 +628,7 @@ Fix a joint realization $\mathcal{W}=(W_1,\ldots,W_k)$ of all coupons.
 For every node $u$, let $T_u(\mathcal{W})$ be the set of node-coupon
 pairs $(w,j)$ such that node $u$ would adopt coupon $j$ if coupon $j$
 were seeded at node $w$.
-For this fixed realization, node $u$ is adopted by seed tuple $S$ if and
+For this fixed realization, node $u$ is adopted by seed set $S$ if and
 only if $S$ intersects $T_u(\mathcal{W})$, where $S$ is viewed as the
 set of selected node-coupon pairs $(s_j,j)$.
 Thus the contribution of $u$ is the coverage indicator
@@ -602,8 +646,8 @@ Theorem~\ref{thm:monosub} shows that CIM can be viewed as a coverage
 problem over node-coupon pairs.
 If the feasible solution were any $k$ node-coupon pairs, the classical
 greedy algorithm would give a $(1{-}1/e)$ approximation.
-In the actual tuple form of CIM, however, coupon index $j$ must be paired
-with one seed $s_j$.
+In the coupon-indexed form of CIM, however, coupon index $j$ must be
+paired with one seed $s_j$.
 This induces a partition-matroid constraint, for which the greedy
 selection used in our RIS algorithm gives the $1/2$ coverage guarantee
 used in Theorem~\ref{thm:approx}.
@@ -692,7 +736,7 @@ $R_j(u,W_j)$ is equivalent to testing whether seed $s$ makes target
 node $u$ adopt coupon $j$ in realization $W_j$.
 
 \paragraph{Why a naive union fails for $k$ coupons.}
-For $k$ coupons seeded at $(s_1, \ldots, s_k)$ under independent realizations
+For $k$ coupons seeded at an ordered seed set $(s_1, \ldots, s_k)$ under independent realizations
 $(W_1, \ldots, W_k)$, node $v$ adopts at least one coupon iff
 $\bigvee_{j=1}^k \{s_j \in R_j(v, W_j)\}$.
 A tempting approach is to generate the union
@@ -714,7 +758,7 @@ rooted at $v$ as the tuple
 where $W_1,\ldots,W_k$ are sampled independently.
 The tuple keeps the correspondence between coupon index $j$ and its
 own reverse reachable set $R_j(v,W_j)$.
-For a seed tuple $S=(s_1,\ldots,s_k)$, the sample is covered if
+For an ordered seed set $S=(s_1,\ldots,s_k)$, the sample is covered if
 \[
   \bigvee_{j=1}^k \{s_j\in R_j(v,W_j)\}
 \]
@@ -726,7 +770,7 @@ This is the basic estimator used by \CIMRIS{}.
 Let $v$ be drawn uniformly from $V$, and let
 $(R_1(v, W_1), \ldots, R_k(v, W_k))$ be generated from $k$ independent
 realizations rooted at $v$.
-For any seed tuple $S=(s_1,\ldots,s_k)$, we have
+For any ordered seed set $S=(s_1,\ldots,s_k)$, we have
 \[
   \sigma(S)
   = n\cdot
@@ -852,7 +896,7 @@ $k$-joint RR samples,
   \mathcal{F} =
   \{((R_1^{(t)},\ldots,R_k^{(t)}),\, v^{(t)})\}_{t=1}^T .
 \]
-For a seed tuple $S=(s_1,\ldots,s_k)$ and a sample $t$, define
+For an ordered seed set $S=(s_1,\ldots,s_k)$ and a sample $t$, define
 \[
   Y_t(S)=
   \I\!\left[\bigvee_{j=1}^{k} \{s_j \in R_j^{(t)}\}\right].
@@ -890,7 +934,7 @@ gain:
 \]
 where $\mathrm{Cov}_t(P)$ denotes that sample $t$ is already covered by
 some pair in $P$.
-The resulting selected pairs are then read as the seed tuple
+The resulting selected pairs are then read as the ordered seed set
 $S=(s_1,\ldots,s_k)$.
 The required sample count $T$ is determined adaptively by an IMM-style
 stopping criterion.
@@ -919,7 +963,7 @@ determine the final sample size $T = \lceil\lambda^*/\mathrm{LB}\rceil$.
     \State $\mathcal{F} \gets \mathcal{F} \cup \{\mathcal{R}\}$
   \EndWhile
   \State Partition-greedy coverage on $\mathcal{F}$
-    $\Rightarrow$ seed tuple $S_i$
+    $\Rightarrow$ ordered seed set $S_i$
   \If{$\hat{\sigma}(S_i) \geq (1+\epsilon')\,x_i$}
     \State $\mathrm{LB} \gets \hat{\sigma}(S_i)/(1+\epsilon')$;\ \
       \textbf{break}
@@ -937,7 +981,7 @@ determine the final sample size $T = \lceil\lambda^*/\mathrm{LB}\rceil$.
 
 \begin{theorem}
 \label{thm:approx}
-With probability at least $1-\delta$, \CIMRIS{} returns a seed tuple
+With probability at least $1-\delta$, \CIMRIS{} returns a seed set
 $\hat{S}$ satisfying
 \[
   \sigma(\hat{S}) \;\geq\; (1/2-\epsilon)\cdot\sigma(S^*),
@@ -949,8 +993,8 @@ $\ell = \log(1/\delta)$.
 
 \begin{proof}[Proof sketch]
 \textit{Correctness.} Lemma~\ref{lem:unbiased} ensures $\hat{\sigma}$
-is an unbiased estimator of $\sigma(S)$ for every seed tuple $S$.
-The feasible seed tuples form a partition matroid over the ground set
+is an unbiased estimator of $\sigma(S)$ for every ordered seed set $S$.
+The feasible coupon-indexed seed sets form a partition matroid over the ground set
 $V\times[k]$, since at most one node-coupon pair can be selected for
 each coupon index.
 The partition-greedy procedure gives a $1/2$ approximation on the
