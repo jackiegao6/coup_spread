@@ -306,6 +306,24 @@ A campaign starts by assigning $k$ coupons to $k$ seed users, and these
 coupons then propagate independently according to the coupon influence
 process.
 
+\paragraph{Remark.}
+Coupon promotion differs from ordinary advertising in two aspects.
+First, advertising content is usually copyable: showing an advertisement
+to one user does not prevent the same content from being shown to many
+other users.
+By contrast, each coupon in our setting is a single redeemable object,
+and its usage rate is generally less than one because a recipient may
+discard or forward the coupon without redeeming it.
+Second, the value of a coupon campaign is tied to incremental adoption
+rather than mere exposure.
+For example, suppose a company issues ten coupons to potential customers.
+If six users only see or forward the coupons, two users redeem coupons
+themselves, and two coupons are eventually redeemed by the same referred
+friend, then the campaign records coupon redemptions but gains only
+three distinct adopted users.
+This is why our model counts users who actually redeem at least one
+coupon, rather than users who merely receive promotional content.
+
 \paragraph{Single-coupon propagation.}
 The propagation process of one coupon starts from a seed node
 $s\in V$ in discrete time steps.
