@@ -365,6 +365,26 @@ this user only once.
 Thus repeated receipt affects coupon trajectories and redemption counts,
 whereas the objective $\sigma(S)$ is a distinct-user coverage objective.
 
+\paragraph{From one coupon to $k$ coupons.}
+The multi-coupon campaign is obtained by running the above single-coupon
+process $k$ times independently.
+Let $S=(s_1,\ldots,s_k)$ be a seed tuple, where coupon $j$ is initially
+assigned to node $s_j$.
+Starting from $s_j$, coupon $j$ follows its own forwarding path until it
+is redeemed, discarded, or trapped in a transfer cycle.
+The paths of different coupons do not block or modify one another: a
+user receiving coupon $j$ does not prevent the same user from later
+receiving coupon $\ell$, and the action taken for one coupon does not
+determine the action taken for another coupon.
+Therefore, a $k$-coupon realization can be viewed as $k$ independent
+single-coupon realizations placed on the same graph.
+The only coupling among coupons appears in the campaign objective.
+If several coupons are redeemed by the same user, the campaign may
+record several redemptions, but the adoption spread counts this user once
+because it measures the number of distinct adopted users.
+This transition from one coupon to multiple coupons is the main reason
+why CIM cannot be solved by optimizing each coupon separately.
+
 \paragraph{Possible-world formalization.}
 To analyze the coupon influence model, we use the standard
 possible-world view of random diffusion processes.
