@@ -293,7 +293,7 @@ For example, suppose a company issues ten coupons to potential customers.
 If six users only see or forward the coupons, two users redeem coupons
 themselves, and two coupons are eventually redeemed by the same referred
 friend, then the campaign records coupon redemptions but gains only
-three distinct adopted users.
+three distinct adopted users, with a coupon usage rate of $4/10$.
 This is why our model counts users who actually redeem at least one
 coupon, rather than users who merely receive promotional content.
 
@@ -313,10 +313,8 @@ to edge probabilities satisfying
 $\sum_{v:(u,v)\in E}p(u,v)=p_u^t$.
 The coupon then moves to $v$ and the same process repeats at the next
 time step.
-Under the possible-world view introduced below, the behavior of a node
-is fixed for each coupon world; therefore, if a coupon enters a transfer
-cycle without reaching an adopting node, it activates no additional user
-and contributes zero to the objective.
+The treatment of repeated visits and transfer cycles is specified below
+under the possible-world view.
 
 One important distinction of the coupon influence model is that coupon
 propagation and user activation are separated.
@@ -455,11 +453,6 @@ The corresponding coupon usage rate is
 The two quantities capture different campaign goals: $\sigma(S)$
 emphasizes how many distinct users become adopted users, while
 $\eta(S)$ emphasizes what fraction of issued coupons are actually used.
-Without the coupon promotion mechanism, this adoption spread would be
-zero.
-Thus, from the campaign organizer's perspective, it wants to increase
-this spread as much as possible by choosing good initial coupon
-recipients, but it certainly has a limited coupon budget.
 We use $S=(s_1,\ldots,s_k)$ to denote that coupon $j$ is initially
 assigned to seed node $s_j$, and we allow two coupons to have the same
 seed node unless otherwise specified.
@@ -507,9 +500,9 @@ than distinct adopted users.
 This is different from maximizing $\sigma(S)$, where overlapping
 redemptions by the same user create a coverage effect.
 
-Note that it may not be wise to select the individually best seed for
-every coupon, since different coupons may end at the same adopting user,
-which is only counted once in the adoption spread.
+For the activation-spread objective, it may not be wise to select the
+individually best seed for every coupon, since different coupons may end
+at the same adopting user, which is only counted once in $\sigma(S)$.
 On the other hand, selecting seeds only to be far apart in the graph may
 not be a good choice either, since a distant seed with a low adoption
 probability may contribute little to the final objective.
@@ -560,8 +553,8 @@ We study the theoretical properties of CIM in this section.
 We first show that CIM is NP-hard, indicating that exact optimization
 is computationally difficult.
 We then show that the adoption spread function is monotone and
-submodular, which allows a greedy algorithm to achieve a
-$(1{-}1/e)$ approximation if the objective value can be evaluated.
+submodular over node-coupon pairs, which provides the structural basis
+for greedy optimization under the coupon-index constraint.
 Finally, we explain why direct greedy is still inefficient and motivate
 the reverse-sampling algorithm developed in Section~\ref{sec:algo}.
 
@@ -625,16 +618,20 @@ $x\in\mathcal{U}\setminus Q$,
 \]
 Submodularity means that the marginal value of a node-coupon pair
 decreases as the selected set grows.
-Maximizing a monotone and submodular set function under a cardinality
-constraint can be achieved by a simple greedy algorithm with an
-approximation ratio of $1-1/e$~\cite{nemhauser1978analysis}.
-Fortunately, unlike the exact popularity ratio objective in PRM, the
-adoption spread objective in CIM has this structure.
+For a monotone submodular function under a cardinality constraint, the
+classical greedy algorithm achieves a $(1-1/e)$
+approximation~\cite{nemhauser1978analysis}.
+For our seed-tuple formulation, the feasible node-coupon pairs also
+respect a coupon-index constraint: at most one pair can be selected for
+each coupon.
+Thus the objective structure remains submodular, while the feasible
+family is a partition matroid.
 
 \begin{theorem}
 \label{thm:monosub}
 For any coupon influence instance, the adoption spread function
-$\sigma(S)$ is monotone and submodular.
+$\sigma(S)$ is monotone and submodular when $S$ is viewed as a set of
+selected node-coupon pairs.
 \end{theorem}
 
 \begin{proof}[Proof sketch]
@@ -656,17 +653,18 @@ Taking expectation over $\mathcal{W}$ also preserves both properties,
 and therefore $\sigma(S)$ is monotone and submodular.
 \end{proof}
 
-By the classical result of Nemhauser et al.~\cite{nemhauser1978analysis},
-Theorem~\ref{thm:monosub} immediately yields a
-\emph{$(1{-}1/e)$-approximation by greedy} for the cardinality version:
-starting from $S=\emptyset$, iteratively add the node-coupon pair with
-the largest marginal gain until $|S|=k$.
-For the tuple form of CIM, where coupon index $j$ must be paired with
-one seed $s_j$, this coverage view is still the key structural property
-used by our partition-greedy RIS algorithm.
+Theorem~\ref{thm:monosub} shows that CIM can be viewed as a coverage
+problem over node-coupon pairs.
+If the feasible solution were any $k$ node-coupon pairs, the classical
+greedy algorithm would give a $(1{-}1/e)$ approximation.
+In the actual tuple form of CIM, however, coupon index $j$ must be paired
+with one seed $s_j$.
+This induces a partition-matroid constraint, for which the greedy
+selection used in our RIS algorithm gives the $1/2$ coverage guarantee
+used in Theorem~\ref{thm:approx}.
 
-However, the above greedy algorithm cannot be implemented directly,
-because evaluating $\sigma(S)$ exactly is computationally expensive.
+However, an exact greedy implementation is still inefficient, because
+evaluating $\sigma(S)$ exactly is computationally expensive.
 One may compute the adoption probabilities of the $k$ coupon walks by
 solving linear systems over the graph, but this costs $O(kn^3)$ for one
 objective evaluation and is already prohibitive for medium-size
@@ -954,7 +952,7 @@ Let
 \[
   \lambda^* = \frac{(8+2\epsilon)\,n}{\epsilon^2}
   \left[
-    \frac{1}{2}\sqrt{\ln\tbinom{n}{k} + \ln\tfrac{2}{\delta}}
+    \frac{1}{2}\sqrt{k\ln n + \ln\tfrac{2}{\delta}}
     + \sqrt{\ln\tfrac{2}{\delta}}
   \right]^2.
 \]
@@ -1049,8 +1047,8 @@ setting where redeeming a coupon terminates its propagation and where a
 user may redeem more than one coupon.
 In practice, both assumptions may change depending on the campaign rule.
 We show that the possible-world view remains useful for these variants,
-although the objective and the reverse-sampling procedure need to be
-adjusted accordingly.
+although the objective, the transition kernel, or the reverse-sampling
+procedure may need to be adjusted accordingly.
 
 \subsection{Forwarding after Coupon Adoption}
 \label{sec:variant-adopt-forward}
@@ -1091,8 +1089,11 @@ absorbing endpoint of a coupon walk.
 Consequently, the reverse sample for coupon $j$ must allow a live path
 to pass through adopting nodes, while separately recording whether the
 root node adopts the coupon.
-The same $k$-joint construction can be used after replacing the
-single-coupon transition kernel by this adoption-and-forwarding kernel.
+The $k$-joint sampling idea can still be used at a high level, but the
+single-coupon RR-set construction must be regenerated from this
+adoption-and-forwarding kernel.
+The approximation analysis then follows the same route only when the
+resulting objective remains a coverage function over node-coupon pairs.
 
 \subsection{At-Most-One Coupon Adoption per User}
 \label{sec:variant-one-coupon}
