@@ -141,15 +141,15 @@ non-replicable coupons, where each coupon can be consumed, dropped, or
 transferred to only one neighbor, and the objective is to maximize the
 expected number of final activated users.
 Second, we provide a theoretical analysis of CIM.
-We prove that CIM is NP-hard and further show that the objective
-function is monotone and submodular under the node-coupon representation,
-which provides the structural foundation for approximation algorithms.
+We prove that CIM is NP-hard, and further show that its objective
+function is monotone and submodular, which provides the structural
+foundation for a greedy approximation.
 Third, we design a CIM-specific reverse influence sampling framework.
-Unlike classical IM, the RR-set generation and the induced set-cover
-problem must preserve coupon identities and independent coupon
-diffusions.
-Based on this framework, we develop the \CIMRIS{} algorithm for scalable
-seed selection with a provable approximation guarantee.
+Unlike classical IM, both the RR-set generation and the induced set-cover
+problem must preserve coupon identities and the independence of the $k$
+coupon diffusions.
+Based on this framework, we develop the \CIMRIS{} algorithm, which selects
+seeds in a scalable manner with a $1-1/e$ approximation guarantee.
 
 
 %% ============================================================
