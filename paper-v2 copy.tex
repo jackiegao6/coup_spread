@@ -13,19 +13,33 @@
 \acmConference[SIGMOD '25]{ACM International Conference on Management of Data}{June 2025}{Berlin, Germany}
 \acmISBN{978-1-4503-XXXX-X/2025/06}
 
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{amsfonts}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{booktabs}
-\usepackage{graphicx}
-\usepackage{microtype}
-\usepackage{xcolor}
+%%\usepackage[utf8]{inputenc}
+%%\usepackage[T1]{fontenc}
+%\usepackage{amsmath}
+%\usepackage{amsfonts}
+%%\usepackage{amssymb}
+%\usepackage{booktabs}
+%\usepackage{graphicx}
+%\usepackage{microtype}
+%\usepackage{xcolor}
+%\usepackage{algorithm}
+%\usepackage{algpseudocode}
+%\usepackage{enumitem}
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{amsmath,dsfont}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{graphicx}
+\usepackage{colortbl}
+\usepackage{wrapfig}
+\usepackage{balance}
 \usepackage{enumitem}
-
 %% Handy shorthands
 \newcommand{\CIMRIS}{\textsc{CIM-RIS}}
 \newcommand{\pa}{p_u^a}
@@ -37,8 +51,7 @@
 
 \begin{document}
 
-\title{Coupon Spread Maximization: Influence Maximization\\
-       under Non-Replicable Coupon Diffusion}
+\title{Coupon influence maximization under random walk diffusion in social network}
 
 \author{Anonymous Author(s)}
 
@@ -85,92 +98,121 @@
 Word-of-mouth and viral marketing have become important strategies for
 product promotion in social networks.
 By selecting a small set of influential seed users, a company can
-promote adoption along social connections, a problem commonly referred
+promote products' adoption by word-of-mouth marketing along social connections.
+However, how to choose the best initial seed users is a challenge,
+ a problem commonly referred
 to as influence maximization (IM)~\cite{kempe2003maximizing}.
 Over the past two decades, IM has been extensively studied under
 classical models such as the Independent Cascade (IC) and Linear
-Threshold (LT) models, where activated nodes attempt to influence their
-neighbors in a broadcast manner~\cite{domingos2001mining,borgs2014maximizing,tang2015influence}.
+Threshold (LT) models, where activated nodes attempt to trigger their
+neighbors in a broadcast manner, i.e., one node could trigger multiple neighbors~\cite{domingos2001mining,borgs2014maximizing,tang2015influence}.
 However, many real-world promotional campaigns deviate from this
 paradigm.
-For example, digital coupons are often non-replicable: a user who
-receives a coupon may redeem it, discard it, or forward it to at most
-one other user.
-A similar pattern appears in invitation-code campaigns, where an unused
-code can be passed to only one specific friend.
-In both scenarios, the promotional object moves as a single item rather
-than being broadcast to all neighbors.
-Despite its practical relevance, this coupon diffusion setting remains
-underexplored, because existing IM frameworks are inherently related to
-copyable information and cannot capture non-replicable coupon
-propagation.
+For example, a company sends some digital coupons for product promotion in the online social network (e.g., Social Media Promo Code from Amazon, Percentage Off from various e-commerce platforms,
+promotion codes form Google Play). The diffusion model of digital coupons is quite  different from the classical IM: A digital coupon could only be passed from one user to only one neighbor, where the diffusion follows random walk-like mechanism rather than IM's broadcast manner. Once a digital coupon is consumed by a user, the coupon cannot be further transferred in the social network. A user who consumes at least one coupon could be treated as activated. The aim is  to activate as more as possible users for future potential consumption. However, since a user might consume multiple coupons, how to choose the best initial seed users to activate most final users is a challenge, which we define as coupon influence maximization(CIM for short). Though IM has been well studied, the solution to IM could not be explicitly applied to CIM, because of the different underlying  diffusion mechanism. However, the CIM is rarely investigated in previous works.
 
-Consider the following example.
-A company wants to promote a new service and issues $k$ digital coupons
-to selected users.
-After receiving a coupon, a user may consume it, ignore it, or forward
-it to one friend who may be more likely to use it.
-Once the coupon is redeemed, it is consumed; once it is forwarded, the
-sender no longer keeps another copy.
-Therefore, the campaign does not create a broadcast cascade in which one
-adopting user simultaneously influences all neighbors.
-Moreover, merely receiving the coupon does not imply adoption: the
-action gains value only when the coupon is actually redeemed.
-When several coupons are issued, different coupons may also end at the
-same user, so the campaign should count distinct adopting users rather
-than simply summing the outcomes of individual coupon walks.
-This example shows that coupon-based promotion must model single-copy
-forwarding, redemption-based adoption, and overlap among multiple
-coupons.
 
-To formalize the above setting, we propose the \emph{coupon influence
-model} and define the Coupon Influence Maximization (CIM) problem.
-In our model, $k$ coupons are distributed to $k$ selected seed nodes, and
-each coupon propagates independently through the network as a random
-walk.
-When a coupon arrives at a node, one of three outcomes occurs: the node
-redeems the coupon and becomes an adopting user, the node discards the coupon,
-or the node forwards the coupon to exactly one out-neighbor.
-In the first two cases, the propagation of this coupon terminates; in the
-third case, the coupon continues to move through the network.
+%digital coupons are often non-replicable: a user who
+%receives a coupon may redeem it, discard it, or forward it to at most
+%one other user.
+%A similar pattern appears in invitation-code campaigns, where an unused
+%code can be passed to only one specific friend.
+%In both scenarios, the promotional object moves as a single item rather
+%than being broadcast to all neighbors.
+%Despite its practical relevance, this coupon diffusion setting remains
+%underexplored, because existing IM frameworks are inherently related to
+%copyable information and cannot capture non-replicable coupon
+%propagation.
+
+We consider a concrete example:
+A company wants to promote a new product and issues $k$ digital coupons of Percentage off
+to $k$ seed users. We first consider the diffusion of one coupon. When a user receives the coupon, he/she has three candidate actions: consuming action, dropping action, and transferring action. For the consuming action, if the user didn't consume coupons previously, he/she consumes the coupon and becomes to activation state; if the user has consume other coupons previously, he/she keeps in the activation state, i.e., we allow the consumption of multiple coupons. After the consuming action, the diffusion of the coupon terminates at the user.
+ For the dropping action, the user refuses to consume\&transfer the coupon, and the user keep its state unchanged. Meanwhile, the diffusion of the coupon terminates at the user.
+ For the transferring action, the user refuse to consume\&drop the coupon, and transfer the coupon to only one random neighbor. Meanwhile, the user keep its state unchanged. The coupon diffuses in the social network following the above mechanism until termination. We now turn to the diffusion of multiple coupons: each coupon follows the same diffusion mechanism introduced above.
+  For simplification, we assume that different coupon diffuses independently. Hence, a user may consume multiple coupons, but only be counted as one activated user. Note that the users who only transfer coupons, but do not consume any coupon, are counted as inactive. 
+ When the diffusion of all coupons terminates, we count the activated users. 
 The primary objective is to select $k$ seed nodes that maximize the
-expected number of distinct users who redeem at least one coupon.
-We also define the coupon usage rate, i.e., the expected fraction of
-issued coupons that are eventually redeemed, as a complementary objective
-for campaigns that care about coupon utilization.
+expected number of final activated nodes. Inappropriate seed nodes would lead to either the scenario that one user consume too many coupons, or the scenario that too many coupons are dropped. Hence, the CIM problem is a parallel important problem of IM. However, we still lack a strict analysis of CIM and the solution to the problem.
+%We also define the coupon usage rate, i.e., the expected fraction of
+%issued coupons that are eventually redeemed, as a complementary objective
+%for campaigns that care about coupon utilization.
 
-The CIM problem introduces both structural and algorithmic challenges.
-Since the $k$ coupons propagate independently, each coupon induces its
-own realization, and the overall diffusion outcome is determined by the
-joint configuration of these $k$ realizations.
-We prove that CIM is NP-hard and show that the adoption spread function
-is monotone and submodular when viewed over node-coupon pairs.
-This coverage structure is useful, but exact greedy optimization is still
-inefficient because evaluating the adoption spread repeatedly is
-computationally expensive.
-To make the approach scalable, we develop a reverse influence sampling
-framework tailored to coupon diffusion.
-Unlike classical RR-set construction, which samples one reverse
-reachable set for a target under broadcast diffusion, our framework
-samples $k$ independent reverse walks from a common root, one for each
-coupon.
-Based on these $k$-joint RR sets, we design the \CIMRIS{} algorithm and
-prove that it achieves a $(1/2{-}\epsilon)$ approximation in expected
-near-linear time.
+
+%
+%After receiving a coupon, a user may consume it, ignore it, or forward
+%it to one friend who may be more likely to use it.
+%Once the coupon is redeemed, it is consumed; once it is forwarded, the
+%sender no longer keeps another copy.
+%Therefore, the campaign does not create a broadcast cascade in which one
+%adopting user simultaneously influences all neighbors.
+%Moreover, merely receiving the coupon does not imply adoption: the
+%action gains value only when the coupon is actually redeemed.
+%When several coupons are issued, different coupons may also end at the
+%same user, so the campaign should count distinct adopting users rather
+%than simply summing the outcomes of individual coupon walks.
+%This example shows that coupon-based promotion must model single-copy
+%forwarding, redemption-based adoption, and overlap among multiple
+%coupons.
+%
+%
+%
+%
+%To formalize the above setting, we propose the \emph{coupon influence
+%model} and define the Coupon Influence Maximization (CIM) problem.
+%In our model, $k$ coupons are distributed to $k$ selected seed nodes, and
+%each coupon propagates independently through the network as a random
+%walk.
+%When a coupon arrives at a node, one of three outcomes occurs: the node
+%redeems the coupon and becomes an adopting user, the node discards the coupon,
+%or the node forwards the coupon to exactly one out-neighbor.
+%In the first two cases, the propagation of this coupon terminates; in the
+%third case, the coupon continues to move through the network.
+%The primary objective is to select $k$ seed nodes that maximize the
+%expected number of distinct users who redeem at least one coupon.
+%We also define the coupon usage rate, i.e., the expected fraction of
+%issued coupons that are eventually redeemed, as a complementary objective
+%for campaigns that care about coupon utilization.
+
+%The CIM problem introduces both structural and algorithmic challenges.
+%Since the $k$ coupons propagate independently, each coupon induces its
+%own realization, and the overall diffusion outcome is determined by the
+%joint configuration of these $k$ realizations.
+%We prove that CIM is NP-hard and show that the adoption spread function
+%is monotone and submodular when viewed over node-coupon pairs.
+%This coverage structure is useful, but exact greedy optimization is still
+%inefficient because evaluating the adoption spread repeatedly is
+%computationally expensive.
+%To make the approach scalable, we develop a reverse influence sampling
+%framework tailored to coupon diffusion.
+%Unlike classical RR-set construction, which samples one reverse
+%reachable set for a target under broadcast diffusion, our framework
+%samples $k$ independent reverse walks from a common root, one for each
+%coupon.
+%Based on these $k$-joint RR sets, we design the \CIMRIS{} algorithm and
+%prove that it achieves a $(1/2{-}\epsilon)$ approximation in expected
+%near-linear time.
+
+In the paper, we propose the strict formalism of the CIM problem. We investigate the influence of network structure on CIM and prove that CIM problem is NP-hard. We further analytically shown that 
+the objective function(expected number of activated users) is monotone and submodular. Based on the NP-hard and submodular properties,  a plausible solution is greedy algorithm. The IM algorithm first samples RR sets and transfers IM problem into set covering problem, based on which greedy algorithm is performed. Inspired by the process, we first provide the special generation process for RR sets based on the diffusion mechanism of CIM. We then demonstrate that the induced set covering problem of CIM is quite different from IM. We then propose a dedicated greedy algorithm for the induced set cover problem of CIM. We prove that our algorithm could reach an approximation ratio $1-1/e$ and has time complexity \textcolor[rgb]{1.00,0.00,0.00}{$xxxx$}. At last, Experiments in various datasets demonstrate the effectiveness and efficiency of our algorithm. 
 
 An important point of our study is that coupon influence maximization is
-not a direct application of classical influence maximization.
-First, the diffusion structure is different: IC and LT generate
-branching cascades, whereas a non-replicable coupon traces a single
-forwarding path.
-Second, the adoption semantics are different: exposure to a coupon is
-not adoption, and only redemption contributes to adoption.
-Third, multiple coupons create a coverage situation: the same user may
-receive or redeem more than one coupon, but the adoption spread counts
-this user only once.
-These differences explain why IC-model algorithms and ordinary RR-set
-estimators cannot be directly applied, and why coupon identity must be
-preserved in the reverse-sampling construction.
+completely different from classical IM:
+(a) The diffusion mechanism is different. In classical IM, the information spreads in a broadcast manner, where one user could trigger multiple neighbors. However, in CIM, the information spreads in a random walk-like manner, where one user could only transfer to at most one neighbor(or consume/drop it). Moreover, the users that only transfer information(not consume information) are treated inactive in CIM, whereas all users on a spreading path are treated active. (b) In the solution algorithm, the RR set generation process and the induced set cover problem of CIM is more complex than these of IM. 
+We design a dedicated RR set generation process and the corresponding greedy algorithm for CIM.
+
+
+
+%First, the diffusion structure is different: IC and LT generate
+%branching cascades, whereas a non-replicable coupon traces a single
+%forwarding path.
+%Second, the adoption semantics are different: exposure to a coupon is
+%not adoption, and only redemption contributes to adoption.
+%Third, multiple coupons create a coverage situation: the same user may
+%receive or redeem more than one coupon, but the adoption spread counts
+%this user only once.
+%These differences explain why IC-model algorithms and ordinary RR-set
+%estimators cannot be directly applied, and why coupon identity must be
+%preserved in the reverse-sampling construction.
 
 In summary, our contributions are as follows.
 First, we initiate the formal study of coupon influence maximization by
@@ -237,32 +279,23 @@ rate is $4/10$.
 We model the social network as a directed graph $G=(V,E)$, where $V$ is
 the set of $n=|V|$ users and $E$ is the set of $m=|E|$ directed
 forwarding relationships.
-Each node $u\in V$ has three behavior probabilities: an adoption
+Each node $u\in V$ is associated with three behavior probabilities: an adoption
 probability $p_u^a$, a discard probability $p_u^d$, and a transfer
-probability $p_u^t$.
-These probabilities are non-negative and satisfy
+probability $p_u^t$, satisfying
 $p_u^a+p_u^d+p_u^t=1$.
-Each edge $(u,v)\in E$ is associated with a forwarding probability
-$p(u,v)$, indicating the probability mass with which user $u$ transfers
-a coupon to user $v$.
+Each edge $(u,v)\in E$ is associated with a transferring probability
+$p(u,v)$, indicating the probability that user $u$ transfers
+a coupon to user $v$, satisfying $\sum_{v:(u,v)\in E}p(u,v)=p_u^t$.
 
-Starting from a seed node $s\in V$, a coupon evolves in discrete time
+Given a coupon starting from the seed node $s\in V$, the coupon transfers in discrete time
 steps.
-At step $\tau=0$, only node $s$ holds the coupon.
-At step $\tau\geq 0$, suppose node $u$ holds the coupon.
-Then $u$ adopts the coupon with probability $p_u^a$, in which
-case the coupon is redeemed, node $u$ is counted as an adopting user,
-and the propagation terminates.
-With probability $p_u^d$, node $u$ discards the coupon, in
-which case the propagation also terminates but no new user adopts.
-With the remaining probability $p_u^t=1-p_u^a-p_u^d$, node $u$
-transfers the coupon to exactly one out-neighbor $v$, chosen according
-to edge probabilities satisfying
-$\sum_{v:(u,v)\in E}p(u,v)=p_u^t$.
-The coupon then moves to $v$ and the same process repeats at the next
-time step.
-The treatment of repeated visits and transfer cycles is specified below
-under the realization-space view.
+At time step $\tau>0$, we suppose that node $u$ holds the coupon. $u$ adopts the coupon and is counted as an activated user with probability $p_u^a$,
+leading to the termination of coupon diffusion.
+With probability $p_u^d$, node $u$ drops the coupon and terminates the diffusion.
+With the probability $p_u^t$, node $u$
+transfers the coupon to one random out-neighbor $v$ with probability $p(u,v)$.
+The coupon follows the above diffusion mechanism until termination. 
+%The treatment of repeated visits and transfer cycles is specified below under the realization-space view.
 
 In this process, propagation and adoption are separated.
 A forwarding user may help the coupon reach later users without adopting
@@ -290,24 +323,20 @@ The collection $W_j=\{r_{u,j}\}_{u\in V}$ is the realization of
 coupon $j$, and the tuple $\mathcal{W}=(W_1,\ldots,W_k)$ fully
 determines the propagation outcome of all $k$ coupons.
 
-\begin{definition}[Live edge]
-Edge $(w,u) \in E$ is a \emph{live edge} in realization $W_j$ if\/
-$\Phi_j(w)=u$.
-\end{definition}
-
 Under this construction, coupon $j$ seeded at $s_j$ makes node $u$ adopt
-if and only if $u$ adopts in realization $W_j$ and there is a live-edge path
-from $s_j$ to $u$ in $W_j$.
+if and only if the coupon reaches $u$ under realization $W_j$ and $u$
+adopts in that realization.
 Let $A_{u,j}$ denote the event $r_{u,j}\leq p_u^a$.
 We write
 \[
   \mathrm{Adopt}_{u,j}(s_j)
   = A_{u,j}\wedge
-    \{s_j \leadsto u \text{ through live edges in } W_j\}.
+    \{\text{coupon }j\text{ starting from }s_j
+      \text{ reaches }u\text{ in }W_j\}.
 \]
 Here $A_{u,j}$ depends only on the random number of the target node,
-whereas the live-edge reachability event depends only on the random
-choices of nodes before $u$ on the forwarding path.
+whereas the reachability event depends only on the random choices of
+nodes before $u$ on the forwarding path.
 The realization-space construction therefore separates whether a coupon can
 reach a node from whether the node redeems the coupon.
 
@@ -337,7 +366,7 @@ coupon if
 \textbf{Comparison with related settings.}
 The coupon influence model differs from the closest diffusion and
 simulation settings in the following aspects.
-\begin{itemize}[leftmargin=*]
+\begin{itemize}%[leftmargin=*]
   \item \emph{Classical influence maximization.}
   IC and LT diffusion models describe copyable influence: once a user is
   activated, the influence attempt may branch to multiple neighbors.
@@ -467,24 +496,23 @@ influence model with two coupons.
 There are two independent realizations in this example: coupon~1 is
 seeded at $s_1$ in realization $W_1$, and coupon~2 is seeded at $s_2$ in
 realization $W_2$.
-In realization $W_1$, the live-edge path from $s_1$ reaches node $u$, and
+In realization $W_1$, the forwarding path from $s_1$ reaches node $u$, and
 the adoption event $A_{u,1}$ occurs, so $u$ adopts coupon~1.
-In realization $W_2$, coupon~2 follows a different live-edge path and
+In realization $W_2$, coupon~2 follows a different forwarding path and
 is adopted by node $v$.
 Node $w$ lies on the forwarding chains but does not adopt either
 coupon, which means that it helps propagation but does not contribute
 to the objective.
-Therefore, in this realization, the adoption spread is
-$\sigma(S)=2$.
+Therefore, in this realization, the number of adopting users is two.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\columnwidth]{assets/fig_example}
+  %\includegraphics[width=\columnwidth]{assets/fig_example}
   \caption{An example of the coupon influence model with $k=2$ coupons
-    in two independent realizations $W_1, W_2$.  Live edges (solid arrows)
-    trace single-path chains; nodes that transfer without adopting are
-    shown in grey.  The adoption spread is $\sigma(S) = 2$ in this
-    realization.}
+    in two independent realizations $W_1, W_2$.  Forwarding edges (solid
+    arrows) trace single-path chains; nodes that transfer without adopting
+    are shown in grey.  In this realization, the number of adopting users
+    is $2$.}
   \label{fig:example}
 \end{figure}
 
@@ -512,7 +540,8 @@ The following theorem states the computational hardness of CIM.
 The CIM problem is NP-hard.
 \end{theorem}
 
-\begin{proof}[Proof sketch]
+\begin{proof}%[Proof sketch]
+\emph{Proof:}
 We follow the reduction through a bipartite probabilistic adoption
 problem, which is a restricted case of CIM.
 In this restricted case, the candidate seed set is fixed, each selected
@@ -550,6 +579,7 @@ where $0<p\leq 1/3$ is a fixed small constant.
 Since $H$ is cubic, every left node has total outgoing probability
 exactly $3p\leq 1$, so the instance can be realized by the coupon model
 above.
+
 
 For a selected set $S$ of $K$ left nodes, let
 $c_e(S)\in\{0,1,2\}$ be the number of selected endpoints of edge $e$.
@@ -748,6 +778,11 @@ The main difference is that a node adopts a coupon only when two
 events occur simultaneously: the seed reaches the node through a
 live-edge path, and the node adopts the coupon in the corresponding
 coupon realization.
+
+\begin{definition}[Live edge]
+Edge $(w,u) \in E$ is a \emph{live edge} in realization $W_j$ if\/
+$\Phi_j(w)=u$.
+\end{definition}
 
 \paragraph{Single-coupon RR set.}
 Fix a coupon index $j$ and its realization $W_j$.
@@ -1349,7 +1384,7 @@ information to diversify placements across the network.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=\textwidth]{assets/fig_normal_spread}
+  %\includegraphics[width=\textwidth]{assets/fig_normal_spread}
   \caption{Adoption spread vs.\ seed budget $k$ under Scenario~I
     (Normal) across four datasets.
     \CIMRIS{} closely tracks the MC-CELF oracle;
@@ -1367,7 +1402,7 @@ spread optimization generalize beyond unique-user coverage.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=\textwidth]{assets/fig_normal_redemption}
+  %\includegraphics[width=\textwidth]{assets/fig_normal_redemption}
   \caption{Total coupon redemptions vs.\ $k$ under Scenario~I.
     Redemption curves mirror adoption-spread curves; \CIMRIS{} leads
     on both primary and secondary metrics.}
@@ -1392,12 +1427,12 @@ neighbor; high out-degree confers no advantage over the single forward
 it actually makes.
 \CIMRIS{}, built around the actual single-path dynamics, correctly
 identifies seeds that maximize adoption reach under coupon diffusion.
-This result demonstrates that model fidelity — not just algorithmic
-sophistication — is decisive for coupon campaign optimization.
+This result demonstrates that model fidelity-not just algorithmic
+sophistication-is decisive for coupon campaign optimization.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=\textwidth]{assets/fig_ic_comparison}
+  %\includegraphics[width=\textwidth]{assets/fig_ic_comparison}
   \caption{Adoption spread of \CIMRIS{} vs.\ IC-model baselines (IMM,
     OPIM) under Scenario~I.
     Despite their theoretical guarantees for IC, both baselines
@@ -1425,7 +1460,7 @@ long-range.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=\textwidth]{assets/fig_high_forwarding}
+  %\includegraphics[width=\textwidth]{assets/fig_high_forwarding}
   \caption{Adoption spread vs.\ $k$ under Scenario~III (High
     Forwarding, $\E[p_u^t] \geq 0.88$).
     Long walks amplify the importance of global coverage; the gap
@@ -1439,14 +1474,14 @@ two hops.
 Absolute spread is higher than Scenario I because immediate adoption is
 likely.
 Methods cluster more tightly because optimization reduces nearly to
-covering disjoint one-hop neighborhoods — even simple heuristics
+covering disjoint one-hop neighborhoods-even simple heuristics
 approximate this well.
-\CIMRIS{} retains the lead, but the margin over 1Hop-Sort and Alpha-Sort
+\CIMRIS{} retains the lead, but the margin over 1 Hop-Sort and Alpha-Sort
 narrows, consistent with the reduced role of long-range structure.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=\textwidth]{assets/fig_high_absorption}
+  %\includegraphics[width=\textwidth]{assets/fig_high_absorption}
   \caption{Adoption spread vs.\ $k$ under Scenario~II (High
     Absorption, $\E[p_u^a + p_u^d] \approx 0.95$).
     Short walks reduce the long-range optimization advantage; methods
@@ -1463,7 +1498,7 @@ MC-CELF is omitted because it is prohibitively slow even on the
 smallest graph.
 
 Alpha-Sort and 1Hop-Sort complete in ${\sim}10^2$\,ms regardless of
-$k$ or network size — both reduce to a single linear scan followed by
+$k$ or network size-both reduce to a single linear scan followed by
 a sort.
 PageRank requires iterative convergence and lands in the
 $10^3$--$10^4$\,ms range on larger graphs.
@@ -1473,16 +1508,16 @@ with the $O(k(k+\ell)(m+n)\log n/\epsilon^2)$ bound of
 Theorem~\ref{thm:approx}, running time grows with both $k$ and
 network size.
 
-The results highlight a clear quality–efficiency trade-off.
+The results highlight a clear quality-efficiency trade-off.
 Heuristics sacrifice spread quality, especially at large $k$ and under
 High Forwarding, where long-range structure matters.
 \CIMRIS{} pays a higher cost and in return matches the oracle.
-For the intended use case — offline seed selection before a campaign
-launches — this cost is well justified.
+For the intended use case-offline seed selection before a campaign
+launches-this cost is well justified.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=\textwidth]{assets/fig_runtime}
+  %\includegraphics[width=\textwidth]{assets/fig_runtime}
   \caption{Running time (ms, log scale) vs.\ $k$ across four datasets.
     \CIMRIS{} is slower than heuristics due to $k$-joint RR-set
     sampling, but far faster than the MC-CELF oracle.}
@@ -1500,7 +1535,7 @@ single-path, non-replicable dynamics of digital coupon campaigns that
 fall outside the scope of classical IC/LT influence maximization.
 The key structural distinction is twofold: the coupon moves to exactly
 one neighbor at each step, and a user adopts only upon redemption
-— not upon receipt.
+-not upon receipt.
 We proved CIM is NP-hard and that adoption spread is monotone and
 submodular, then bridged the gap between theory and practice by
 developing $k$-joint RR sets with a provable unbiasedness lemma.
@@ -1508,13 +1543,13 @@ Our algorithm \CIMRIS{} runs in near-linear expected time with a
 $(1/2{-}\epsilon)$-approximation guarantee.
 Experiments on five real-world networks confirm that \CIMRIS{} matches
 the Monte Carlo oracle while substantially outperforming both
-model-mismatched IC baselines and coupon-aware heuristics — validating
+model-mismatched IC baselines and coupon-aware heuristics-validating
 that model fidelity is indispensable for optimizing non-replicable
 coupon campaigns.
 
 Several directions remain open.
-First, extending the model to \emph{adaptive} seeding — where the
-seed set of later stages depends on observed early adoptions — could
+First, extending the model to \emph{adaptive} seeding-where the
+seed set of later stages depends on observed early adoptions-could
 reduce budget waste in time-sensitive campaigns.
 Second, the current model assumes the forwarding target is chosen
 uniformly among neighbors; modeling biased forwarding
