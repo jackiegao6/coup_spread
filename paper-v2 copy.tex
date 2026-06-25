@@ -215,17 +215,22 @@ We design a dedicated RR set generation process and the corresponding greedy alg
 %preserved in the reverse-sampling construction.
 
 In summary, our contributions are as follows.
-First, we initiate the formal study of coupon influence maximization by
-proposing the coupon influence model, which captures the single-copy,
-multi-coupon nature of real-world coupon campaigns, and by defining two
-campaign objectives: adoption-spread maximization and coupon
-usage-rate maximization.
-Second, we prove that CIM is NP-hard and show that the adoption spread
-function is monotone and submodular under the seed-node and coupon-index
-representation.
-Third, we develop a tailored reverse influence sampling scheme based on
-$k$-joint RR sets and build the \CIMRIS{} algorithm for scalable seed
-selection.
+First, we give a formal definition of the coupon influence maximization
+problem.
+The proposed model captures the random-walk-like diffusion of
+non-replicable coupons, where each coupon can be consumed, dropped, or
+transferred to only one neighbor, and the objective is to maximize the
+expected number of final activated users.
+Second, we provide a theoretical analysis of CIM.
+We prove that CIM is NP-hard and further show that the objective
+function is monotone and submodular under the node-coupon representation,
+which provides the structural foundation for approximation algorithms.
+Third, we design a CIM-specific reverse influence sampling framework.
+Unlike classical IM, the RR-set generation and the induced set-cover
+problem must preserve coupon identities and independent coupon
+diffusions.
+Based on this framework, we develop the \CIMRIS{} algorithm for scalable
+seed selection with a provable approximation guarantee.
 % Finally, experiments on real-world social networks show that \CIMRIS{}
 % matches a Monte Carlo oracle and consistently outperforms structural
 % heuristics and IC-model baselines, validating both the model formulation
@@ -255,26 +260,22 @@ so that the expected adoption spread is maximized.
 
 \subsection{Coupon Influence Model}
 
-The coupon influence model describes non-replicable coupons that move
-through a social network one edge at a time, forming a forwarding path
-rather than a broadcast cascade.
-This setting differs from ordinary advertising.
-Advertising content is usually copyable: showing an advertisement to one
-user does not prevent the same content from being shown to many other
-users, and an exposure may create incremental value even before a
-purchase occurs.
-A coupon, by contrast, is a single redeemable object in our setting.
-It produces campaign value only when it is redeemed, and its usage rate
-can be less than one because a recipient may discard or forward it
-without redeeming it.
-For example, suppose a company issues ten coupons to potential
-customers.
-If six coupons are never redeemed, two coupons are redeemed by their
-initial recipients, and the remaining two coupons are forwarded and
-redeemed by the same referred user, then the campaign records four
-coupon redemptions but gains only three distinct adopting users.
-Thus the distinct-user adoption rate is $3/10$, while the coupon usage
-rate is $4/10$.
+Classical IM models a broadcast-style stochastic cascade.
+Under the IC model, once a seed set is activated, each newly activated
+node independently attempts to activate its out-neighbors through random
+edges, and the reverse reachable (RR) set framework estimates influence
+by sampling a target node and collecting the nodes that can activate it.
+Thus, seed selection can be transformed into a coverage problem over
+sampled RR sets.
+CIM follows the same high-level goal of choosing initial users, but its
+diffusion primitive is different: each coupon is a non-replicable object
+that moves along a single path and can be consumed, dropped, or
+transferred to only one neighbor.
+Consequently, the RR-set generation process and the induced coverage
+problem for CIM must be redesigned to preserve coupon identities and
+single-path coupon dynamics.
+We first define the forward coupon diffusion model below and then develop
+the corresponding RR-set framework in Section~\ref{sec:algo}.
 
 We model the social network as a directed graph $G=(V,E)$, where $V$ is
 the set of $n=|V|$ users and $E$ is the set of $m=|E|$ directed
