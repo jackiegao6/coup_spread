@@ -112,17 +112,6 @@ For example, a company sends some digital coupons for product promotion in the o
 promotion codes form Google Play). The diffusion model of digital coupons is quite  different from the classical IM: A digital coupon could only be passed from one user to only one neighbor, where the diffusion follows random walk-like mechanism rather than IM's broadcast manner. Once a digital coupon is consumed by a user, the coupon cannot be further transferred in the social network. A user who consumes at least one coupon could be treated as activated. The aim is  to activate as more as possible users for future potential consumption. However, since a user might consume multiple coupons, how to choose the best initial seed users to activate most final users is a challenge, which we define as coupon influence maximization(CIM for short). Though IM has been well studied, the solution to IM could not be explicitly applied to CIM, because of the different underlying  diffusion mechanism. However, the CIM is rarely investigated in previous works.
 
 
-%digital coupons are often non-replicable: a user who
-%receives a coupon may redeem it, discard it, or forward it to at most
-%one other user.
-%A similar pattern appears in invitation-code campaigns, where an unused
-%code can be passed to only one specific friend.
-%In both scenarios, the promotional object moves as a single item rather
-%than being broadcast to all neighbors.
-%Despite its practical relevance, this coupon diffusion setting remains
-%underexplored, because existing IM frameworks are inherently related to
-%copyable information and cannot capture non-replicable coupon
-%propagation.
 
 We consider a concrete example:
 A company wants to promote a new product and issues $k$ digital coupons of Percentage off
@@ -133,64 +122,7 @@ to $k$ seed users. We first consider the diffusion of one coupon. When a user re
  When the diffusion of all coupons terminates, we count the activated users. 
 The primary objective is to select $k$ seed nodes that maximize the
 expected number of final activated nodes. Inappropriate seed nodes would lead to either the scenario that one user consume too many coupons, or the scenario that too many coupons are dropped. Hence, the CIM problem is a parallel important problem of IM. However, we still lack a strict analysis of CIM and the solution to the problem.
-%We also define the coupon usage rate, i.e., the expected fraction of
-%issued coupons that are eventually redeemed, as a complementary objective
-%for campaigns that care about coupon utilization.
 
-
-%
-%After receiving a coupon, a user may consume it, ignore it, or forward
-%it to one friend who may be more likely to use it.
-%Once the coupon is redeemed, it is consumed; once it is forwarded, the
-%sender no longer keeps another copy.
-%Therefore, the campaign does not create a broadcast cascade in which one
-%adopting user simultaneously influences all neighbors.
-%Moreover, merely receiving the coupon does not imply adoption: the
-%action gains value only when the coupon is actually redeemed.
-%When several coupons are issued, different coupons may also end at the
-%same user, so the campaign should count distinct adopting users rather
-%than simply summing the outcomes of individual coupon walks.
-%This example shows that coupon-based promotion must model single-copy
-%forwarding, redemption-based adoption, and overlap among multiple
-%coupons.
-%
-%
-%
-%
-%To formalize the above setting, we propose the \emph{coupon influence
-%model} and define the Coupon Influence Maximization (CIM) problem.
-%In our model, $k$ coupons are distributed to $k$ selected seed nodes, and
-%each coupon propagates independently through the network as a random
-%walk.
-%When a coupon arrives at a node, one of three outcomes occurs: the node
-%redeems the coupon and becomes an adopting user, the node discards the coupon,
-%or the node forwards the coupon to exactly one out-neighbor.
-%In the first two cases, the propagation of this coupon terminates; in the
-%third case, the coupon continues to move through the network.
-%The primary objective is to select $k$ seed nodes that maximize the
-%expected number of distinct users who redeem at least one coupon.
-%We also define the coupon usage rate, i.e., the expected fraction of
-%issued coupons that are eventually redeemed, as a complementary objective
-%for campaigns that care about coupon utilization.
-
-%The CIM problem introduces both structural and algorithmic challenges.
-%Since the $k$ coupons propagate independently, each coupon induces its
-%own realization, and the overall diffusion outcome is determined by the
-%joint configuration of these $k$ realizations.
-%We prove that CIM is NP-hard and show that the adoption spread function
-%is monotone and submodular when viewed over node-coupon pairs.
-%This coverage structure is useful, but exact greedy optimization is still
-%inefficient because evaluating the adoption spread repeatedly is
-%computationally expensive.
-%To make the approach scalable, we develop a reverse influence sampling
-%framework tailored to coupon diffusion.
-%Unlike classical RR-set construction, which samples one reverse
-%reachable set for a target under broadcast diffusion, our framework
-%samples $k$ independent reverse walks from a common root, one for each
-%coupon.
-%Based on these $k$-joint RR sets, we design the \CIMRIS{} algorithm and
-%prove that it achieves a $(1/2{-}\epsilon)$ approximation in expected
-%near-linear time.
 
 In the paper, we propose the strict formalism of the CIM problem. We investigate the influence of network structure on CIM and prove that CIM problem is NP-hard. We further analytically shown that 
 the objective function(expected number of activated users) is monotone and submodular. Based on the NP-hard and submodular properties,  a plausible solution is greedy algorithm. The IM algorithm first samples RR sets and transfers IM problem into set covering problem, based on which greedy algorithm is performed. Inspired by the process, we first provide the special generation process for RR sets based on the diffusion mechanism of CIM. We then demonstrate that the induced set covering problem of CIM is quite different from IM. We then propose a dedicated greedy algorithm for the induced set cover problem of CIM. We prove that our algorithm could reach an approximation ratio $1-1/e$ and has time complexity \textcolor[rgb]{1.00,0.00,0.00}{$xxxx$}. At last, Experiments in various datasets demonstrate the effectiveness and efficiency of our algorithm. 
@@ -200,19 +132,6 @@ completely different from classical IM:
 (a) The diffusion mechanism is different. In classical IM, the information spreads in a broadcast manner, where one user could trigger multiple neighbors. However, in CIM, the information spreads in a random walk-like manner, where one user could only transfer to at most one neighbor(or consume/drop it). Moreover, the users that only transfer information(not consume information) are treated inactive in CIM, whereas all users on a spreading path are treated active. (b) In the solution algorithm, the RR set generation process and the induced set cover problem of CIM is more complex than these of IM. 
 We design a dedicated RR set generation process and the corresponding greedy algorithm for CIM.
 
-
-
-%First, the diffusion structure is different: IC and LT generate
-%branching cascades, whereas a non-replicable coupon traces a single
-%forwarding path.
-%Second, the adoption semantics are different: exposure to a coupon is
-%not adoption, and only redemption contributes to adoption.
-%Third, multiple coupons create a coverage situation: the same user may
-%receive or redeem more than one coupon, but the adoption spread counts
-%this user only once.
-%These differences explain why IC-model algorithms and ordinary RR-set
-%estimators cannot be directly applied, and why coupon identity must be
-%preserved in the reverse-sampling construction.
 
 In summary, our contributions are as follows.
 First, we give a formal definition of the coupon influence maximization
@@ -231,10 +150,7 @@ problem must preserve coupon identities and independent coupon
 diffusions.
 Based on this framework, we develop the \CIMRIS{} algorithm for scalable
 seed selection with a provable approximation guarantee.
-% Finally, experiments on real-world social networks show that \CIMRIS{}
-% matches a Monte Carlo oracle and consistently outperforms structural
-% heuristics and IC-model baselines, validating both the model formulation
-% and the algorithmic framework.
+
 
 %% ============================================================
 %% 2. RELATED WORK
