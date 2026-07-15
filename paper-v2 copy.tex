@@ -24,6 +24,27 @@
 \usepackage{graphicx}
 \usepackage{enumitem}
 \usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,backgrounds,calc,fit,positioning}
+
+\definecolor{cimTeal}{HTML}{1F6F78}
+\definecolor{cimGold}{HTML}{C28B2C}
+\definecolor{cimRed}{HTML}{A95050}
+\definecolor{cimBlue}{HTML}{496F9B}
+\definecolor{cimGray}{HTML}{667078}
+\definecolor{cimLight}{HTML}{F3F5F5}
+\tikzset{
+  cimnode/.style={circle,draw=cimGray,fill=white,minimum size=5.8mm,
+                  inner sep=0pt,font=\scriptsize},
+  cimseed/.style={cimnode,draw=cimBlue,very thick,fill=cimBlue!10},
+  cimadopt/.style={cimnode,draw=cimTeal,very thick,fill=cimTeal!13},
+  cimdrop/.style={cimnode,draw=cimRed,very thick,fill=cimRed!10},
+  cimset/.style={rounded corners=2pt,draw=cimGray,fill=cimLight,
+                 inner xsep=5pt,inner ysep=4pt,font=\scriptsize},
+  cimarrow/.style={-{Latex[length=2mm]},semithick,cimGray},
+  cimlabel/.style={font=\scriptsize,align=center}
+}
 
 \newcommand{\CIMRIS}{\textsc{CIM-RIS}}
 \newcommand{\E}{\mathbb{E}}
@@ -59,7 +80,7 @@ Their coverage gives unbiased spread and marginal-gain estimators.
 Based on these estimators, \CIMRIS{} returns a
 $(1-1/e-\epsilon)$-approximate allocation with high probability and runs
 in expected time linear in the graph size when the budget, accuracy, and
-normalized spread lower bound are fixed.
+spread lower bound are fixed.
 \end{abstract}
 
 \begin{CCSXML}
@@ -348,6 +369,66 @@ coupon if
   \mathrm{Adopt}_u(S) = \bigvee_{j=1}^{k} \mathrm{Adopt}_{u,j}(s_j).
 \]
 
+\begin{figure*}[t]
+  \centering
+  \begin{tikzpicture}[x=1cm,y=1cm]
+    \begin{scope}
+      \node[cimlabel,font=\small\bfseries] at (2.7,1.65)
+        {(a) One non-replicable coupon};
+      \node[cimseed] (u) at (0.5,0) {$u$};
+      \node[cimlabel,below=2pt of u] {current holder};
+      \node[cimadopt] (a) at (3.0,0.95) {$u$};
+      \node[cimdrop] (d) at (3.0,0) {$\times$};
+      \node[cimnode,draw=cimGold,very thick,fill=cimGold!12]
+        (v) at (3.0,-0.95) {$v$};
+      \node[cimnode] (w) at (5.0,-0.95) {$w$};
+      \draw[cimarrow,cimTeal] (u) -- node[above,sloped,cimlabel]
+        {redeem: $p_u^a$} (a);
+      \draw[cimarrow,cimRed] (u) -- node[above,cimlabel]
+        {discard: $p_u^d$} (d);
+      \draw[cimarrow,cimGold] (u) -- node[below,sloped,cimlabel]
+        {transfer: $p(u,v)$} (v);
+      \draw[cimarrow,cimGold] (v) -- node[above,cimlabel]
+        {same coupon} (w);
+      \node[cimlabel,right=3pt of a] {adopter\\coupon terminates};
+      \node[cimlabel,right=3pt of d] {no adopter\\coupon terminates};
+      \node[cimlabel,below=2pt of v] {non-adopter};
+    \end{scope}
+
+    \begin{scope}[xshift=8.0cm]
+      \node[cimlabel,font=\small\bfseries] at (2.8,1.65)
+        {(b) Independent coupons, coupled coverage};
+      \node[cimseed] (s1) at (0,0.9) {$s_1$};
+      \node[cimseed] (s2) at (0,0) {$s_2$};
+      \node[cimseed] (s3) at (0,-0.9) {$s_3$};
+      \node[cimnode] (m1) at (1.8,0.9) {};
+      \node[cimnode] (m2) at (1.8,0) {};
+      \node[cimnode] (m3) at (1.8,-0.9) {};
+      \node[cimadopt] (x) at (3.8,0.45) {$x$};
+      \node[cimadopt] (y) at (3.8,-0.9) {$y$};
+      \draw[-{Latex[length=2mm]},semithick,cimBlue]
+        (s1) -- (m1) -- (x);
+      \draw[-{Latex[length=2mm]},semithick,cimGold]
+        (s2) -- (m2) -- (x);
+      \draw[-{Latex[length=2mm]},semithick,cimTeal]
+        (s3) -- (m3) -- (y);
+      \node[cimlabel,above=2pt of m1,text=cimBlue] {coupon 1};
+      \node[cimlabel,above=2pt of m2,text=cimGold] {coupon 2};
+      \node[cimlabel,below=2pt of m3,text=cimTeal] {coupon 3};
+      \node[cimlabel,right=8pt of x] {two redemptions,\\one distinct adopter};
+      \node[cimlabel,right=8pt of y] {one redemption,\\one distinct adopter};
+      \node[cimset,fit=(x)(y),inner sep=7pt,
+            label={[cimlabel]below:distinct adopters in this realization: $2$}] {};
+    \end{scope}
+  \end{tikzpicture}
+  \caption{Coupon diffusion and multi-coupon overlap.
+  Redemption and discard terminate a coupon, whereas transfer moves the
+  same coupon to one neighbor.
+  Coupons diffuse independently, but multiple redemptions by the same
+  user contribute only one distinct adopter.}
+  \label{fig:model-overview}
+\end{figure*}
+
 \textbf{Comparison and boundary cases.}
 The coupon model differs from related diffusion and simulation settings
 in three respects.
@@ -522,6 +603,8 @@ The CIM problem is NP-hard.
 \begin{proof}
 We reduce from vertex cover on cubic graphs.
 Let $H=(V_H,E_H)$ be a cubic graph and let $K\leq |V_H|$.
+A vertex cover of size at most $K$ can be padded to size exactly $K$, so
+we use the exact-size form below.
 For every vertex $x\in V_H$, create an eligible source node $a_x$ and a
 private adoption node $z_x$.
 For every edge $e\in E_H$, create an edge-adoption node $b_e$.
@@ -535,7 +618,43 @@ of the three edge nodes $b_e$ incident to $x$ with probability $p$.
 The remaining probability $1-\alpha-3p$ is assigned to discard.
 Every $z_x$ and $b_e$ adopts with probability $1$.
 Thus every coupon takes at most one transfer step, and the construction
-is a valid CIM instance.
+is a valid CIM instance; Figure~\ref{fig:hardness-gadget} shows the
+gadget associated with one vertex $x$.
+
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[x=1cm,y=0.82cm]
+    \node[cimseed] (ax) at (0,0) {$a_x$};
+    \node[cimlabel,above=3pt of ax,text=cimBlue] {eligible source};
+    \node[cimadopt] (zx) at (3.15,1.55) {$z_x$};
+    \node[cimadopt] (b1) at (3.15,0.50) {$b_{e_1}$};
+    \node[cimadopt] (b2) at (3.15,-0.50) {$b_{e_2}$};
+    \node[cimadopt] (b3) at (3.15,-1.50) {$b_{e_3}$};
+    \node[cimdrop] (drop) at (0,-1.65) {$\times$};
+
+    \draw[cimarrow,cimTeal] (ax) -- node[above,sloped,cimlabel]
+      {$\alpha$} (zx);
+    \draw[cimarrow,cimGold] (ax) -- node[above,sloped,cimlabel]
+      {$p$} (b1);
+    \draw[cimarrow,cimGold] (ax) -- node[above,cimlabel]
+      {$p$} (b2);
+    \draw[cimarrow,cimGold] (ax) -- node[below,sloped,cimlabel]
+      {$p$} (b3);
+    \draw[cimarrow,cimRed,dashed] (ax) -- node[left,cimlabel]
+      {$1-\alpha-3p$} (drop);
+
+    \node[cimlabel,right=5pt of zx] {private node};
+    \node[cimlabel,right=5pt of b1,anchor=west] {three incident-edge nodes};
+    \node[cimlabel,right=5pt of drop] {discard};
+    \node[cimlabel,above=5pt of zx,text=cimTeal]
+      {all right-hand nodes adopt with probability $1$};
+  \end{tikzpicture}
+  \caption{The reduction gadget for a vertex $x$ in the cubic graph.
+  Only $a_x$ is eligible for coupon allocation; a coupon reaches either
+  the private node $z_x$, one of the three incident-edge nodes, or the
+  discard outcome.}
+  \label{fig:hardness-gadget}
+\end{figure}
 
 We first show that an optimal allocation of $K$ coupons uses $K$
 distinct sources, even though CIM permits repeated seeds.
@@ -745,7 +864,68 @@ For an ordered seed set $S=(s_1,\ldots,s_k)$, the sample is covered if
   \bigvee_{j=1}^k \{s_j\in R_j(v,W_j)\}
 \]
 holds.
+Figure~\ref{fig:joint-rr} illustrates why this index correspondence is
+part of the sample rather than a bookkeeping detail.
 This is the basic estimator used by \CIMRIS{}.
+
+\begin{figure*}[t]
+  \centering
+  \begin{tikzpicture}[x=1cm,y=1cm]
+    \begin{scope}
+      \node[cimlabel,font=\small\bfseries] at (3.1,2.0)
+        {(a) One indexed joint RR sample};
+      \node[cimseed] (s2r1) at (0.7,0.85) {$s_2$};
+      \node[cimnode] (a1) at (2.35,0.85) {$a$};
+      \node[cimadopt] (r1) at (4.0,0.85) {$r$};
+      \draw[cimarrow,cimBlue] (s2r1) -- (a1);
+      \draw[cimarrow,cimBlue] (a1) -- (r1);
+
+      \node[cimseed,draw=cimGold,fill=cimGold!10] (s1r2)
+        at (0.7,-0.85) {$s_1$};
+      \node[cimnode] (a2) at (2.35,-0.85) {$b$};
+      \node[cimadopt] (r2) at (4.0,-0.85) {$r$};
+      \draw[cimarrow,cimGold] (s1r2) -- (a2);
+      \draw[cimarrow,cimGold] (a2) -- (r2);
+
+      \begin{scope}[on background layer]
+        \node[cimset,draw=cimBlue!75,fill=cimBlue!5,dashed,
+              fit=(s2r1)(a1)(r1),inner sep=7pt,
+              label={[cimlabel,text=cimBlue]above:$R_1(r,W_1)$}] {};
+        \node[cimset,draw=cimGold!85,fill=cimGold!7,dashed,
+              fit=(s1r2)(a2)(r2),inner sep=7pt,
+              label={[cimlabel,text=cimGold]below:$R_2(r,W_2)$}] {};
+      \end{scope}
+      \draw[densely dotted,cimGray] (4.55,0.85) -- (4.55,-0.85);
+      \node[cimlabel,anchor=west] at (4.72,0)
+        {same root $r$;\\independent realizations};
+    \end{scope}
+
+    \begin{scope}[xshift=8.2cm]
+      \node[cimlabel,font=\small\bfseries] at (3.0,2.0)
+        {(b) Coupon-index matching};
+      \node[cimset,draw=cimBlue!75,fill=cimBlue!5] (test1)
+        at (1.55,0.72) {coupon 1 tests $s_1\in R_1$: \textcolor{cimRed}{false}};
+      \node[cimset,draw=cimGold!85,fill=cimGold!7] (test2)
+        at (1.55,-0.18) {coupon 2 tests $s_2\in R_2$: \textcolor{cimRed}{false}};
+      \node[cimlabel,text=cimRed,anchor=west] (correct) at (4.2,0.27)
+        {joint sample\\not covered};
+      \draw[cimarrow,cimRed] (test1.east) -- (correct.west);
+      \draw[cimarrow,cimRed] (test2.east) -- (correct.west);
+
+      \draw[densely dashed,cimGray] (0,-0.92) -- (6.2,-0.92);
+      \node[cimset,draw=cimGray,fill=cimLight] (union)
+        at (1.75,-1.48) {$s_1,s_2\in R_1\cup R_2$};
+      \node[cimlabel,text=cimRed,anchor=west] (wrong) at (4.2,-1.48)
+        {naive union: covered\\(false cross-index match)};
+      \draw[cimarrow,cimRed,dashed] (union.east) -- (wrong.west);
+    \end{scope}
+  \end{tikzpicture}
+  \caption{A $k$-joint RR sample preserves the correspondence between
+  coupon index $j$ and realization $W_j$ (shown for $k=2$).
+  Coverage must test $s_j\in R_j$ with matching indices; taking the
+  union of the RR sets can create a false cross-index match.}
+  \label{fig:joint-rr}
+\end{figure*}
 
 \begin{lemma}[Unbiasedness]
 \label{lem:unbiased}
@@ -789,12 +969,27 @@ The last equality follows from the definition of adoption spread.
 
 \subsection{Sampling Procedure}
 
-We now describe how to generate one $k$-joint RR sample.
-The sampling procedure has three steps: (a) sample a root node $v$
-uniformly from $V$; (b) sample the $k$ adoption gates
-$A_{v,1},\ldots,A_{v,k}$ at the root; and (c) for every coupon index $j$ with
-$A_{v,j}=1$, generate the reverse reachable set $R_j(v,W_j)$ by a
-backward traversal over live in-edges.
+The uniform-root construction in Lemma~\ref{lem:unbiased} is conceptually
+simple, but it generates an empty joint sample whenever none of the root
+adoption gates fires.
+We remove these zero-contribution samples by conditioning on their
+complement.
+For a root $v$, define
+\[
+  C_v=\bigvee_{j=1}^k A_{v,j},\qquad
+  w_v=\Pr[C_v]=1-(1-p_v^a)^k,\qquad
+  W=\sum_{v\in V}w_v.
+\]
+If $W=0$, no node can adopt and the optimal spread is zero, so assume
+$W>0$.
+One conditioned joint sample is generated by (a) drawing root $v$ with
+probability $w_v/W$; (b) drawing the vector of $k$ Bernoulli adoption
+gates from its product distribution conditioned on $C_v$; and (c) for
+every index $j$ whose gate fires,
+generating $R_j(v,W_j)$ by a backward traversal over live in-edges.
+The conditioned gate vector can be drawn in $O(k)$ time by sampling its
+first firing index from the corresponding truncated geometric
+distribution and then sampling all later gates independently.
 Algorithm~\ref{alg:kernel} gives the deterministic transition kernel
 for one node once the random number $r_{u,j}$ has been fixed.
 This kernel is used lazily during the backward traversal so that the
@@ -820,12 +1015,8 @@ realization.
 \end{algorithmic}
 \end{algorithm}
 
-Algorithm~\ref{alg:rrset} implements the above sampling procedure.
-If none of the root adoption gates fires, the sample is a
-zero-contribution sample; it is kept as an empty sample in the estimator
-rather than conditioned away.
-Otherwise, for each coupon index $j$ with $A_{v,j}=1$, the algorithm performs
-a backward BFS.
+Algorithm~\ref{alg:rrset} implements the conditioned procedure.
+For each coupon index $j$ with $A_{v,j}=1$, it performs a backward BFS.
 When the traversal examines an in-neighbor $w$ of the current node, it
 generates $r_{w,j}$ only if this random number has not been generated
 before, and then checks whether $(w,u)$ is the live edge selected by
@@ -833,21 +1024,15 @@ $w$ in realization $W_j$.
 If so, $w$ is added to $R_j$; otherwise, this in-neighbor is ignored.
 
 \begin{algorithm}[t]
-\caption{$k$-Joint RR Sample Generation}
+\caption{Conditioned $k$-Joint RR Sample Generation}
 \label{alg:rrset}
 \begin{algorithmic}[1]
 \Require Graph $G=(V,E)$; parameters $\{p_u^a, p_u^d, p(u,v)\}$;
-  coupon count $k$
+  coupon count $k$; root weights $\{w_v\}$ and $W$
 \Ensure $k$-joint RR sample $((R_1,\ldots,R_k),\; v)$
-\State Sample root $v$ uniformly from $V$
-\State Sample $r_{v,1},\ldots,r_{v,k} \sim \mathrm{Uniform}[0,1]$
-\For{$j = 1$ to $k$}
-  \State $A_{v,j} \gets \I[r_{v,j} \leq p_v^a]$
-\EndFor
-\If{$A_{v,j} = 0$ for all $j$}
-  \State \Return $((\emptyset,\ldots,\emptyset),\; v)$
-    \Comment{Zero-contribution sample}
-\EndIf
+\State Sample root $v$ with probability $w_v/W$
+\State Sample $(A_{v,1},\ldots,A_{v,k})$ from their product
+  $\mathrm{Bernoulli}(p_v^a)$ distribution conditioned on $C_v$
 \State $R_1, \ldots, R_k \gets \emptyset$
 \For{$j = 1$ to $k$}
   \If{$A_{v,j} = 1$}
@@ -855,12 +1040,14 @@ If so, $w$ is added to $R_j$; otherwise, this in-neighbor is ignored.
     \While{$\text{queue} \neq \emptyset$}
       \State $u \gets \text{queue.dequeue()}$
       \For{each in-neighbor $w$ of $u$}
-        \If{$r_{w,j}$ not yet sampled}
-          \State $r_{w,j} \sim \mathrm{Uniform}[0,1]$
-        \EndIf
-        \If{$(w,u)$ is a live edge in $W_j$ \textbf{and} $w \notin R_j$}
-          \State $R_j \gets R_j \cup \{w\}$;\ \
-            $\text{queue.enqueue}(w)$
+        \If{$w \notin R_j$}
+          \If{$r_{w,j}$ not yet sampled}
+            \State $r_{w,j} \sim \mathrm{Uniform}[0,1]$
+          \EndIf
+          \If{$\Phi_j(w)=u$}
+            \State $R_j \gets R_j \cup \{w\}$;\ \
+              $\text{queue.enqueue}(w)$
+          \EndIf
         \EndIf
       \EndFor
     \EndWhile
@@ -870,19 +1057,38 @@ If so, $w$ is added to $R_j$; otherwise, this in-neighbor is ignored.
 \end{algorithmic}
 \end{algorithm}
 
-\paragraph{Rejecting zero-contribution samples.}
-Algorithm~\ref{alg:rrset} keeps empty samples to make the uniform-root
-estimator explicit.
-Our implementation uses an equivalent importance-sampling optimization.
-For root $v$, let
-$w_v=1-(1-p_v^a)^k$ and $W=\sum_vw_v$.
-It samples $v$ with probability $w_v/W$ and samples the $k$ root gates
-conditioned on at least one gate firing.
-For any seed tuple $S$, the weighted indicator
-$W\,Y_t(S)$ remains unbiased for $\sigma(S)$, because coverage at $v$
-implies that at least one root gate fires.
-This removes all zero-contribution samples without changing the greedy
-ordering or the coverage semantics.
+\begin{lemma}[Conditioned-root estimator]
+\label{lem:importance}
+Let $\mathcal{R}$ be generated by Algorithm~\ref{alg:rrset}, and let
+\[
+  Y(S_i)=\I\!\left[\bigvee_{j=1}^i\{s_j\in R_j\}\right]
+\]
+for any prefix $S_i=(s_1,\ldots,s_i)$ with $i\leq k$.
+Then
+\[
+  \E[W Y(S_i)]=\sigma(S_i),
+\]
+where $\sigma(S_i)$ is the spread produced by the $i$ coupons in the
+prefix.
+\end{lemma}
+
+\begin{proof}
+For a fixed root $v$ with $w_v>0$, let $Y_v(S_i)$ be the coverage event
+under the unconditioned realizations.
+Coverage implies that at least one root adoption gate fires, so
+$Y_v(S_i)\subseteq C_v$ and
+$\Pr[Y_v(S_i)\mid C_v]=\Pr[Y_v(S_i)]/w_v$.
+Taking expectation over the importance-sampled root gives
+\begin{align*}
+  \E[W Y(S_i)]
+  &=\sum_{v\in V}\frac{w_v}{W}\,W\,
+    \Pr[Y_v(S_i)\mid C_v]\\
+  &=\sum_{v\in V}\Pr[Y_v(S_i)]
+   =\sigma(S_i),
+\end{align*}
+where the final equality follows from Lemma~\ref{lem:coverage} and the
+definition of adoption spread.
+\end{proof}
 
 \subsection{The \CIMRIS{} Algorithm}
 
@@ -897,14 +1103,14 @@ For a prefix $S_i=(s_1,\ldots,s_i)$ and sample $t$, define
   Y_t(S_i)=
   \I\!\left[\bigvee_{j=1}^{i}\{s_j\in R_j^{(t)}\}\right].
 \]
-By Lemma~\ref{lem:unbiased},
-$\hat{\sigma}(S_i)=n\sum_tY_t(S_i)/T$ is an unbiased spread estimator.
+By Lemma~\ref{lem:importance},
+$\hat{\sigma}(S_i)=W\sum_tY_t(S_i)/T$ is an unbiased spread estimator.
 At round $i$, assigning coupon $i$ to $u$ newly covers sample $t$ exactly
 when $Y_t(S_{i-1})=0$ and $u\in R_i^{(t)}$.
 We therefore estimate its marginal gain by
 \[
   \widehat{\Delta}_i(u\mid S_{i-1})
-  =\frac{n}{T}\sum_{t=1}^{T}
+  =\frac{W}{T}\sum_{t=1}^{T}
     \I[Y_t(S_{i-1})=0]\,\I[u\in R_i^{(t)}].
 \]
 
@@ -920,21 +1126,27 @@ $u\in V_s$ with $x_u(S_{i-1})<c_u$,
 \end{lemma}
 
 \begin{proof}
-For a uniformly sampled root, the first indicator means that none of the
-first $i-1$ coupons is adopted at the root, while the second means that
-an independent coupon seeded at $u$ is adopted there.
-Their conjunction therefore represents exactly a new adopter created by
-the additional coupon.
-Summing over the roots and applying Lemma~\ref{lem:coverage} proves the
-claim.
+For a fixed root $v$, the first indicator means that none of the first
+$i-1$ coupons is adopted at $v$, while the second means that coupon $i$
+seeded at $u$ is adopted there.
+Their conjunction is exactly the event that the additional coupon makes
+$v$ a new adopter, and this event implies $C_v$.
+The same importance-reweighting calculation as in
+Lemma~\ref{lem:importance} therefore gives
+\[
+  \E\!\left[W\I[Y_t(S_{i-1})=0]\I[u\in R_i^{(t)}]\right]
+  =\sum_{v\in V}\Pr[v\text{ is newly adopted}].
+\]
+The sum on the right is the stated marginal gain.
 \end{proof}
 
 Let $N=|V_s|$, let $\mathrm{OPT}=\sigma(\bm{x}^*)$, and let
+$\epsilon,\delta\in(0,1)$ and
 $\mathrm{LB}\in(0,\mathrm{OPT}]$ be a valid lower bound.
 We set
 \[
   T=\left\lceil
-    \frac{2k^2n^2}{\epsilon^2\mathrm{LB}^2}
+    \frac{16k^2W}{\epsilon^2\mathrm{LB}^2}
     \left(k\ln N+\ln\frac{2k}{\delta}\right)
   \right\rceil.
 \]
@@ -948,7 +1160,8 @@ A deterministic choice is
 the largest probability of following one seed-to-adopter path.
 If this value is zero, then $\mathrm{OPT}=0$; otherwise it is a positive
 lower bound on $\mathrm{OPT}$.
-Pilot RR samples can give a tighter lower confidence bound in practice.
+Independent pilot RR samples can give a tighter lower confidence bound in
+practice.
 With these samples, \CIMRIS{} processes coupon indices in order and
 selects the candidate with the largest empirical marginal gain.
 Using inverted lists from node--coupon pairs to samples, the gains in
@@ -959,8 +1172,14 @@ candidate--sample pairs.
 \caption{\CIMRIS{}$(G,V_s,\bm{c},k,\epsilon,\delta,\mathrm{LB})$}
 \label{alg:cim-ris}
 \begin{algorithmic}[1]
+\State Compute $w_v\gets1-(1-p_v^a)^k$ for all $v$ and
+  $W\gets\sum_v w_v$
+\If{$W=0$}
+  \State \Return any feasible allocation with spread $0$
+\EndIf
 \State Set $T$ according to the sample-size equation above
-\State Generate $T$ independent $k$-joint RR samples $\mathcal{F}$
+\State Generate $T$ independent conditioned samples $\mathcal{F}$
+  using Algorithm~\ref{alg:rrset}
 \State $S_0\gets()$;\ $\bm{x}\gets\bm{0}$;\
   $\mathrm{covered}[t]\gets\mathrm{false}$ for every $t$
 \For{$i=1$ to $k$}
@@ -993,31 +1212,49 @@ probability at least $1-\delta$,
 Its expected running time is
 \[
   O\!\left(
-    \frac{k^3n(m+n)}{\epsilon^2\mathrm{LB}^2}
+    \frac{k^3(m+n)}{\epsilon^2\mathrm{LB}^2}
     \left(k\ln |V_s|+\ln\frac{k}{\delta}\right)
     +k|V_s|
   \right).
 \]
 \end{theorem}
 
-\begin{proof}[Proof sketch]
+\begin{proof}
 \textit{Approximation.}
 Lemma~\ref{lem:marginal} shows that every coverage count used by the
 algorithm is an unbiased estimate of the corresponding true marginal
 gain.
 There are at most $k|V_s|^k$ prefix--candidate combinations over all
 possible executions.
-For each fixed combination, Hoeffding's inequality gives
+For a fixed combination, define
+\[
+  Z_t=W\I[Y_t(S_{i-1})=0]\I[u\in R_i^{(t)}].
+\]
+Then $0\leq Z_t\leq W$, $\E[Z_t]=\Delta_u(\bm{x}(S_{i-1}))$,
+and this marginal is at most one because one additional coupon can
+create at most one new adopter.
+Consequently,
+$\operatorname{Var}(Z_t)\leq\E[Z_t^2]\leq W\E[Z_t]\leq W$.
+Bernstein's inequality therefore gives
 \[
   \Pr\!\left[
     |\widehat{\Delta}_i(u\mid S_{i-1})
       -\Delta_u(\bm{x}(S_{i-1}))|>\tau
   \right]
-  \leq 2\exp\!\left(-\frac{2T\tau^2}{n^2}\right).
+  \leq
+  2\exp\!\left(
+    -\frac{T\tau^2}{2W+(2/3)W\tau}
+  \right).
 \]
-Setting $\tau=\epsilon\mathrm{LB}/(2k)$ and applying a union bound shows
-that the stated $T$ makes every such estimate accurate within $\tau$
-simultaneously, except with probability $\delta$.
+Set $\tau=\epsilon\mathrm{LB}/(2k)$.
+Since $\mathrm{LB}\leq\mathrm{OPT}\leq k$, we have $\tau\leq1/2$.
+Let $L=k\ln|V_s|+\ln(2k/\delta)$.
+The denominator in the Bernstein exponent is at most $7W/3$, whereas
+$T\tau^2\geq4WL$.
+Thus the failure probability for one combination is at most
+$2e^{-L}=\delta/(k|V_s|^k)$.
+A union bound makes every marginal estimate accurate within $\tau$
+simultaneously with probability at least $1-\delta$.
 On this event, the candidate selected in each round has true marginal
 gain at least the largest feasible marginal minus
 $2\tau=\epsilon\mathrm{LB}/k$.
@@ -1044,20 +1281,41 @@ $\mathrm{LB}\leq\mathrm{OPT}$ gives
 $\sigma(\bm{x}_k)\geq(1-1/e-\epsilon)\mathrm{OPT}$.
 
 \textit{Complexity.}
-For one single-coupon RR set $R$, Lemma~\ref{lem:coverage} gives
+Let $q_{wv}$ be the probability that one coupon seeded at $w$ is adopted
+by $v$.
+For coupon index $j$, the event $w\in R_j(v,W_j)$ implies $C_v$, and
+hence, for every root with $w_v>0$,
 \[
-  \E[|R|]
-  =\frac{1}{n}\sum_{w\in V}\sum_{u\in V}q_{wu}\leq 1,
+  \Pr[w\in R_j(v,W_j)\mid C_v]=\frac{q_{wv}}{w_v}.
 \]
-because a coupon seeded at $w$ can be redeemed by at most one user.
-Similarly, the expected number of scanned in-edges is
+After averaging over the root distribution $w_v/W$, the expected total
+number of node memberships in one conditioned joint sample is
 \[
-  \frac{1}{n}\sum_{w\in V}d^-(w)\sum_{u\in V}q_{wu}
-  \leq \frac{m}{n}.
+  \frac{k}{W}\sum_{w\in V}\sum_{v\in V}q_{wv}
+  \leq\frac{kn}{W}.
 \]
-One $k$-joint sample therefore costs $O(k(1+m/n))$ in expectation.
-Multiplying by $T$, and adding $O(k|V_s|)$ for the candidate scans,
-gives the claimed bound.
+The inequality holds because a coupon seeded at $w$ can be adopted by at
+most one node, so $\sum_vq_{wv}\leq1$.
+The corresponding expected number of scanned in-edges is
+\[
+  \frac{k}{W}\sum_{w\in V}d^-(w)\sum_{v\in V}q_{wv}
+  \leq\frac{km}{W}.
+\]
+Sampling the conditioned root gates takes $O(k)$ time, which is absorbed
+because $W\leq n$.
+An alias table for the root distribution takes $O(n)$ preprocessing time
+and then samples each root in $O(1)$ time.
+Thus one conditioned joint sample costs
+$O(k(m+n)/W)$ in expectation.
+Multiplying by $T$ cancels $W$ and gives the first term in the stated
+bound.
+The ceiling in $T$ does not change this order.
+Indeed, $\mathrm{OPT}\leq k$ because each coupon creates at most one
+adopter, and $\mathrm{OPT}\leq W$ because adoption at root $v$ implies
+$C_v$; hence $\mathrm{LB}\leq\min\{k,W\}$.
+Finally, inverted RR-membership lists account for the sample-processing
+work, while initializing candidate gains in each round costs
+$O(k|V_s|)$.
 \end{proof}
 
 Compared with classical RIS, the additional dependence on $k$ is caused
@@ -1345,7 +1603,7 @@ spread and marginal-gain estimates.
 The resulting \CIMRIS{} algorithm achieves a
 $(1-1/e-\epsilon)$ approximation with high probability and has expected
 running time linear in the graph size when the budget, accuracy, and
-normalized spread lower bound are fixed.
+spread lower bound are fixed.
 
 Several directions remain open.
 First, extending the model to \emph{adaptive} allocation, where later
