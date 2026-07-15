@@ -1,0 +1,9 @@
+{
+  "protocol_version": "validated-v2.2",
+  "dataset": "Netscience",
+  "scenario": "forwarding-heavy",
+  "trajectories_per_source": 100000,
+  "seed": 5553638655519633316,
+  "elapsed_seconds": 141.27142875699792,
+  "status": "REAL_EXPERIMENT"
+}

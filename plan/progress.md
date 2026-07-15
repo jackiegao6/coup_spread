@@ -1,5 +1,72 @@
 # Progress
 
+## 2026-07-15 - Real Experiment Rebuild
+
+- Stage: S3 Experiments, beginning with an S2 method-to-code audit and ending
+  with an S5 review.
+- Status: complete for the validated simulation scope.
+- Objective: replace the historical mock-result workflow and the provisional
+  reference runner with a validated implementation and genuinely reproducible
+  simulation experiments on the stored real network topologies.
+- Scientific boundary: network structures are observed datasets, while node
+  behavior probabilities remain controlled synthetic parameters; the paper
+  must describe these as simulations on real networks, not field experiments.
+- Current task packet:
+  `plan/task-packets/2026-07-15-real-experiment-rebuild.md`.
+
+### Artifacts
+
+- Audited the historical pipeline and documented the invalid root-event mode,
+  unseeded evaluation, stale-cache/append behavior, and inadequate historical
+  Monte Carlo budgets in `plan/review/implementation-audit.md`.
+- Added exact-realization tests for the forward simulator and conditioned RR
+  estimator, plus a tiny-instance optimum-recovery test.
+- Added the locked `validated-v2.2` runner, aggregation, scalability, claim
+  verification, and reproducible dependency files under `experiments/`.
+- Ran 360 dataset--scenario--budget--seed configurations, producing 2,610
+  method-level raw rows and 522 five-run summaries. All accepted rows carry
+  `REAL_EXPERIMENT` status and the locked protocol key.
+- Generated submission figures from the validated CSVs only and revised the
+  manuscript setup, result discussion, abstract, Introduction, and Conclusion.
+- Recorded the negative findings: IC-RIS is tied or slightly stronger in two
+  scenarios, and 1Hop-Sort is slightly stronger in the adoption-heavy setting.
+
+### Review gates
+
+- Spec compliance: passed. No historical mock/synthetic result supports a
+  manuscript claim; all five selection seeds and 10,000 forward evaluations
+  per allocation are present, and CIM-RIS and IC-RIS use the same sample
+  budgets.
+- Quality review: passed for simulation evidence. Exact tests connect the code
+  to the fixed-realization model, the claim checker independently recomputes
+  manuscript values, and the limitations on external validity and baseline
+  coverage are explicit.
+
+### Capability-use audit
+
+- Required skills: paper-orchestration, experiment-results-planning,
+  statistical-analysis, figures-python, peer-review, latex-output, and
+  verification.
+- Skills actually used: all required skills for task scoping, protocol
+  locking, repeated-run summaries, data-bound plotting, manuscript integration,
+  independent review, and final compilation checks.
+- Inputs consumed: the current manuscript; supplied theory and RIS PDFs; graph
+  files and checksums; historical `gzc-impl` and reference experiment code;
+  validated raw JSON/CSV outputs; and the ACM LaTeX build log.
+- Inputs not used and why: historical mock figures, synthetic planning values,
+  stale caches, and old append-mode CSVs were excluded because their provenance
+  or estimator semantics cannot support scientific claims.
+- Artifacts produced: implementation audit, exact tests, locked protocol,
+  corrected runners, raw and aggregate results, checksum manifest, publication
+  figures, revised manuscript/PDF, traceability map, and peer-review record.
+- Verification run: exact/unit tests; 360-job and 2,610-row integrity checks;
+  protocol/status/seed checks; independent claim recomputation; figure-source
+  validation; Python syntax checks; and full ACM LaTeX compilation/log scan.
+- Remaining risk: behavior probabilities are controlled synthetic settings
+  rather than estimates from campaign logs; MC-Greedy is limited to
+  Netscience; experiments impose distinct seeds (`c_v=1`); and venue-specific
+  metadata/page limits remain unknown.
+
 ## 2026-07-15 - Residual Risk Closure
 
 - Stage: S3 Experiments, S1 Evidence, then S5 Review.

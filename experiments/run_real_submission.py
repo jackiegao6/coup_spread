@@ -185,7 +185,9 @@ def reverse_coupon_set(
 ) -> set[int]:
     rr_set = {root}
     queue = [root]
-    choices: dict[int, int] = {}
+    # The root gate has already fixed the root action to adoption. Marking it
+    # terminal keeps the lazy possible world internally consistent on cycles.
+    choices: dict[int, int] = {root: -1}
     cursor = 0
     while cursor < len(queue):
         current = queue[cursor]
@@ -401,6 +403,44 @@ def evaluate(
     m2 = 0.0
     redemption_mean = 0.0
     for _ in range(simulations):
+        adopters: set[int] = set()
+        redemptions = 0
+        for start in seeds:
+            adopter = single_coupon_adopter(graph, start, alpha, discard, rng)
+            if adopter >= 0:
+                adopters.add(adopter)
+                redemptions += 1
+        value = float(len(adopters))
+        count += 1
+        delta = value - mean
+        mean += delta / count
+        m2 += delta * (value - mean)
+        redemption_mean += (redemptions - redemption_mean) / count
+    variance = m2 / (count - 1) if count > 1 else 0.0
+    ci95 = 1.96 * math.sqrt(variance / count) if count else 0.0
+    return mean, ci95, variance, redemption_mean
+
+
+def evaluate_with_streams(
+    graph: Graph,
+    seeds: Sequence[int],
+    alpha: np.ndarray,
+    discard: np.ndarray,
+    simulation_seeds: Sequence[int],
+) -> tuple[float, float, float, float]:
+    """Evaluate one allocation using reusable realization-level streams.
+
+    Allocations compared in the same configuration start each forward
+    realization from the same random-generator state. Path-dependent random
+    consumption means that this is a partial common-random-number coupling,
+    while every method retains the correct marginal simulation distribution.
+    """
+    count = 0
+    mean = 0.0
+    m2 = 0.0
+    redemption_mean = 0.0
+    for simulation_seed in simulation_seeds:
+        rng = random.Random(simulation_seed)
         adopters: set[int] = set()
         redemptions = 0
         for start in seeds:

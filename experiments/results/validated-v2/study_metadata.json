@@ -1,0 +1,51 @@
+{
+  "status": "REAL_EXPERIMENT",
+  "protocol_version": "validated-v2.2",
+  "datasets": [
+    "Netscience",
+    "NetFacebookEgo",
+    "DoubanRandom",
+    "EmailEnron"
+  ],
+  "scenarios": [
+    "balanced",
+    "adoption-heavy",
+    "forwarding-heavy"
+  ],
+  "budgets": [
+    10,
+    25,
+    50,
+    100,
+    150,
+    200
+  ],
+  "selection_seeds": [
+    20260715,
+    20260716,
+    20260717,
+    20260718,
+    20260719
+  ],
+  "eval_simulations": 10000,
+  "oracle_trajectories_per_source": 100000,
+  "sample_budget": {
+    "10": 100000,
+    "25": 100000,
+    "50": 100000,
+    "100": 50000,
+    "150": 50000,
+    "200": 50000
+  },
+  "master_seed": 20260715,
+  "hardware": {
+    "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.29",
+    "python": "3.8.10",
+    "numpy": "1.24.4",
+    "cpu_model": "AMD EPYC 9654 96-Core Processor",
+    "logical_cpus": 8,
+    "memory_kib": 16336896,
+    "parallelism_per_job": 1
+  },
+  "completed_jobs": 360
+}

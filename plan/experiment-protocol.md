@@ -1,6 +1,32 @@
 # Experiment Protocol
 
-> STATUS: REAL RUN COMPLETE. Submission claims use only CSV rows marked `REAL_EXPERIMENT`; synthetic planning files remain excluded from the manuscript.
+> STATUS: VALIDATED-V2.2 COMPLETE. The repeated-seed study is the sole source
+> of revised submission claims. Earlier `real_*` outputs remain reproducible
+> reference artifacts but are superseded; synthetic planning files remain
+> excluded from the manuscript.
+
+## Validated-v2 locked protocol
+
+- Quality datasets: Netscience, NetFacebookEgo, DoubanRandom, and EmailEnron.
+- Scenarios: balanced, adoption-heavy, and forwarding-heavy, with parameters
+  fixed before method comparison.
+- Budgets: `k in {10, 25, 50, 100, 150, 200}`.
+- Independent selection seeds: `20260715`--`20260719`.
+- Joint RR samples: 100,000 for `k<=50` and 50,000 for `k>=100`. This rule was
+  fixed from a Netscience forwarding-heavy convergence diagnostic before the
+  repeated cross-method run; it is not changed by later outcomes.
+- Forward evaluation: 10,000 realizations per allocation. Methods in the same
+  configuration start each realization from a common random-generator state;
+  this is a partial common-random-number coupling because path lengths differ.
+- MC-Greedy reference: Netscience only, using a separately cached matrix with
+  100,000 trajectories per source.
+- Raw-data unit: one JSON file per dataset--scenario--budget--selection-seed
+  configuration. Aggregation reads only files with a matching protocol key and
+  `REAL_EXPERIMENT` status.
+- Reporting: means and standard deviations across five selection runs; retain
+  all negative, tied, and positive method comparisons.
+- Scientific scope: real graph topologies with controlled synthetic behavior
+  probabilities, not observed coupon-campaign outcomes.
 
 ## Evaluation questions
 
@@ -17,7 +43,11 @@ Use Netscience, NetFacebookEgo, DoubanRandom, EmailEnron, and network.douban as 
 
 CIM-RIS, MC-Greedy where computationally feasible, 1Hop-Sort, Alpha-Sort, DegreeTopM, PageRank, Random, and IC-RIS. All methods use the same eligible set, capacity policy, budget, diffusion parameters, and Monte Carlo evaluator.
 
-## Real-run protocol
+## Superseded reference-run protocol
+
+The settings below document the earlier single-seed reference run. They are
+retained for auditability and do not override the validated-v2.2 protocol or
+support the revised manuscript claims.
 
 - Budgets: k in {10, 25, 50, 100, 150, 200}, clipped below the eligible-node count.
 - Scenarios: Balanced, Adoption-heavy, and Forwarding-heavy.

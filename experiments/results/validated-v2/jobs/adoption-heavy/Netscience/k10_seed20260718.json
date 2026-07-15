@@ -1,0 +1,191 @@
+{
+  "status": "REAL_EXPERIMENT",
+  "key": {
+    "protocol_version": "validated-v2.2",
+    "dataset": "Netscience",
+    "scenario": "adoption-heavy",
+    "k": 10,
+    "selection_seed": 20260718,
+    "rr_samples": 100000,
+    "eval_simulations": 10000
+  },
+  "evaluation_seed": 11119448893900674145,
+  "methods": [
+    {
+      "method": "DegreeTopM",
+      "seeds": [
+        3,
+        4,
+        58,
+        5,
+        72,
+        219,
+        119,
+        13,
+        7,
+        106
+      ],
+      "mean_adopters": 7.159300000000005,
+      "ci95": 0.0276278126750006,
+      "forward_variance": 1.9869222022202306,
+      "mean_redemptions": 7.251199999999999,
+      "selection_seconds": 0.007452382007613778,
+      "cim_estimated_spread": null,
+      "rr_memberships": null
+    },
+    {
+      "method": "Alpha-Sort",
+      "seeds": [
+        22,
+        67,
+        85,
+        91,
+        128,
+        132,
+        136,
+        154,
+        158,
+        179
+      ],
+      "mean_adopters": 8.077600000000023,
+      "ci95": 0.02453944259967431,
+      "forward_variance": 1.5675349934993497,
+      "mean_redemptions": 8.089999999999986,
+      "selection_seconds": 0.007452382007613778,
+      "cim_estimated_spread": null,
+      "rr_memberships": null
+    },
+    {
+      "method": "1Hop-Sort",
+      "seeds": [
+        91,
+        154,
+        310,
+        317,
+        374,
+        199,
+        281,
+        333,
+        318,
+        321
+      ],
+      "mean_adopters": 8.09450000000002,
+      "ci95": 0.024484517400170096,
+      "forward_variance": 1.5605258025802589,
+      "mean_redemptions": 8.102899999999988,
+      "selection_seconds": 0.007452382007613778,
+      "cim_estimated_spread": null,
+      "rr_memberships": null
+    },
+    {
+      "method": "PageRank",
+      "seeds": [
+        58,
+        3,
+        4,
+        119,
+        72,
+        5,
+        142,
+        106,
+        53,
+        219
+      ],
+      "mean_adopters": 7.181700000000007,
+      "ci95": 0.027485334857352956,
+      "forward_variance": 1.966481758175816,
+      "mean_redemptions": 7.263599999999988,
+      "selection_seconds": 0.007452382007613778,
+      "cim_estimated_spread": null,
+      "rr_memberships": null
+    },
+    {
+      "method": "Random",
+      "seeds": [
+        188,
+        376,
+        11,
+        25,
+        304,
+        235,
+        331,
+        189,
+        44,
+        32
+      ],
+      "mean_adopters": 7.62190000000003,
+      "ci95": 0.026521077749196018,
+      "forward_variance": 1.8309234823482408,
+      "mean_redemptions": 7.626699999999985,
+      "selection_seconds": 0.007452382007613778,
+      "cim_estimated_spread": null,
+      "rr_memberships": null
+    },
+    {
+      "method": "IC-RIS",
+      "seeds": [
+        232,
+        178,
+        81,
+        72,
+        250,
+        3,
+        119,
+        7,
+        140,
+        92
+      ],
+      "mean_adopters": 7.402900000000001,
+      "ci95": 0.027297991502094113,
+      "forward_variance": 1.9397655665566493,
+      "mean_redemptions": 7.405500000000018,
+      "selection_seconds": 1.6627842120360583,
+      "cim_estimated_spread": null,
+      "rr_memberships": null
+    },
+    {
+      "method": "CIM-RIS",
+      "seeds": [
+        309,
+        91,
+        104,
+        147,
+        342,
+        369,
+        60,
+        366,
+        344,
+        339
+      ],
+      "mean_adopters": 7.905899999999992,
+      "ci95": 0.025534331406920456,
+      "forward_variance": 1.6972149114911612,
+      "mean_redemptions": 7.909200000000006,
+      "selection_seconds": 2.927190722897649,
+      "cim_estimated_spread": 9.421079663509792,
+      "rr_memberships": 777731
+    },
+    {
+      "method": "MC-Greedy",
+      "seeds": [
+        91,
+        317,
+        154,
+        281,
+        343,
+        278,
+        85,
+        321,
+        179,
+        199
+      ],
+      "mean_adopters": 8.099199999999968,
+      "ci95": 0.02447030942472807,
+      "forward_variance": 1.5587152315231558,
+      "mean_redemptions": 8.099300000000005,
+      "selection_seconds": null,
+      "cim_estimated_spread": null,
+      "rr_memberships": null
+    }
+  ]
+}

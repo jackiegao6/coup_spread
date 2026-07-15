@@ -66,7 +66,9 @@ def estimate_batch(
 
 
 def run(args: argparse.Namespace) -> None:
-    seed_records = json.load(open(args.seed_file, encoding="utf-8"))
+    seed_records = None
+    if not args.validated_job_dir:
+        seed_records = json.load(open(args.seed_file, encoding="utf-8"))
     datasets = [item.strip() for item in args.datasets.split(",") if item.strip()]
     budgets = [int(item) for item in args.budgets.split(",") if item]
     rows: list[dict[str, object]] = []
@@ -75,14 +77,30 @@ def run(args: argparse.Namespace) -> None:
         graph = load_graph(dataset)
         alpha, discard, _ = node_probabilities(graph, args.scenario)
         for budget in budgets:
-            seeds = next(
-                record["seeds"]
-                for record in seed_records
-                if record["dataset"] == dataset
-                and record["scenario"] == args.scenario
-                and record["k"] == budget
-                and record["method"] == "CIM-RIS"
-            )
+            if args.validated_job_dir:
+                job_path = (
+                    Path(args.validated_job_dir)
+                    / args.scenario
+                    / dataset
+                    / f"k{budget}_seed{args.selection_seed}.json"
+                )
+                payload = json.loads(job_path.read_text(encoding="utf-8"))
+                if payload.get("status") != "REAL_EXPERIMENT":
+                    raise ValueError(f"Incomplete validated job: {job_path}")
+                seeds = next(
+                    method["seeds"]
+                    for method in payload["methods"]
+                    if method["method"] == "CIM-RIS"
+                )
+            else:
+                seeds = next(
+                    record["seeds"]
+                    for record in seed_records
+                    if record["dataset"] == dataset
+                    and record["scenario"] == args.scenario
+                    and record["k"] == budget
+                    and record["method"] == "CIM-RIS"
+                )
             for conditioned in (False, True):
                 label = "Conditioned root" if conditioned else "Uniform root"
                 estimates: list[float] = []
@@ -115,6 +133,8 @@ def run(args: argparse.Namespace) -> None:
                     "coefficient_of_variation": f"{(std / mean if mean else 0.0):.8f}",
                     "mean_zero_fraction": f"{statistics.mean(zero_fractions):.8f}",
                     "mean_batch_seconds": f"{statistics.mean(elapsed_values):.8f}",
+                    "selection_seed": args.selection_seed,
+                    "protocol_version": args.protocol_version,
                     "status": "REAL_EXPERIMENT",
                 })
             print(f"{dataset} k={budget} complete", flush=True)
@@ -134,6 +154,13 @@ def parse_args() -> argparse.Namespace:
         "--seed-file",
         default=str(ROOT / "experiments/results/forwarding-heavy/real_seeds_forwarding-heavy.json"),
     )
+    parser.add_argument(
+        "--validated-job-dir",
+        default="",
+        help="Directory containing scenario/dataset/k*_seed*.json jobs.",
+    )
+    parser.add_argument("--selection-seed", type=int, default=20260715)
+    parser.add_argument("--protocol-version", default="validated-v2.2")
     parser.add_argument("--datasets", default="Netscience,EmailEnron")
     parser.add_argument("--budgets", default="10,50,200")
     parser.add_argument("--scenario", default="forwarding-heavy")

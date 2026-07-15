@@ -14,6 +14,20 @@ All outputs contain the visible label: SYNTHETIC PLANNING DATA - NOT FOR SUBMISS
 
 ## Real experiment artifacts
 
+### Validated-v2 submission evidence
+
+| Figure | Data file | Status | Source | Script | Outputs |
+|---|---|---|---|---|---|
+| Balanced quality | ../experiments/results/validated-v2/validated_summary.csv | Real experiment, five selection runs | run_validated_study.py + aggregate_validated_study.py | experiments/validated_study_figures.py | validated_quality_balanced PNG/SVG |
+| Forwarding-heavy quality | ../experiments/results/validated-v2/validated_summary.csv | Real experiment, five selection runs | run_validated_study.py + aggregate_validated_study.py | experiments/validated_study_figures.py | validated_quality_forwarding_heavy PNG/SVG |
+| Combined quality (manuscript) | ../experiments/results/validated-v2/validated_summary.csv | Real experiment, five selection runs | run_validated_study.py + aggregate_validated_study.py | experiments/validated_study_figures.py | validated_quality_combined PNG/SVG |
+| Runtime budget scaling | validated_summary.csv plus validated_scalability.csv | Real experiment, five selection runs | run_validated_study.py + run_validated_scalability.py | experiments/validated_study_figures.py | validated_runtime_scalability PNG/SVG |
+| Conditioned-sampler ablation | ../experiments/results/validated-v2/validated_sampler_ablation.csv | Real experiment, 30 independent batches | run_real_sampler_ablation.py with validated-v2 allocations | experiments/validated_study_figures.py | validated_sampler_ablation PNG/SVG |
+
+The files below are the earlier traceable reference run. They remain archived
+for audit purposes but are superseded by validated-v2 and must not support the
+revised manuscript.
+
 | Figure | Data file | Status | Source | Script | Outputs |
 |---|---|---|---|---|---|
 | Balanced quality | ../experiments/results/balanced/real_quality_balanced.csv | Real experiment | run_real_submission.py | experiments/real_submission_figures.py | real_quality_balanced PNG/SVG |

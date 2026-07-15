@@ -1,0 +1,9 @@
+{
+  "protocol_version": "validated-v2.2",
+  "dataset": "Netscience",
+  "scenario": "adoption-heavy",
+  "trajectories_per_source": 100000,
+  "seed": 16424668291473421875,
+  "elapsed_seconds": 21.547533900942653,
+  "status": "REAL_EXPERIMENT"
+}

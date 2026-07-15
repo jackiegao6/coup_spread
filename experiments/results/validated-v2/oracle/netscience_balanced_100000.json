@@ -1,0 +1,9 @@
+{
+  "protocol_version": "validated-v2.2",
+  "dataset": "Netscience",
+  "scenario": "balanced",
+  "trajectories_per_source": 100000,
+  "seed": 6234586461629929812,
+  "elapsed_seconds": 46.30115358706098,
+  "status": "REAL_EXPERIMENT"
+}

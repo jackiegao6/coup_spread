@@ -1,0 +1,13 @@
+dataset,scenario,k,sampler,batch_size,repeats,mean_spread_estimate,std_spread_estimate,coefficient_of_variation,mean_zero_fraction,mean_batch_seconds,selection_seed,protocol_version,status
+Netscience,forwarding-heavy,10,Uniform root,20000,30,1.31892000,0.16924537,0.12832118,0.68431667,0.25700853,20260715,validated-v2.2,REAL_EXPERIMENT
+Netscience,forwarding-heavy,10,Conditioned root,20000,30,1.36845351,0.11964554,0.08743120,0.00000000,0.39551061,20260715,validated-v2.2,REAL_EXPERIMENT
+Netscience,forwarding-heavy,50,Uniform root,20000,30,6.54659333,0.33567437,0.05127466,0.16103667,0.57962990,20260715,validated-v2.2,REAL_EXPERIMENT
+Netscience,forwarding-heavy,50,Conditioned root,20000,30,6.59825797,0.28498675,0.04319121,0.00000000,0.61146595,20260715,validated-v2.2,REAL_EXPERIMENT
+Netscience,forwarding-heavy,200,Uniform root,20000,30,24.63436833,0.70641054,0.02867581,0.00225167,1.74109846,20260715,validated-v2.2,REAL_EXPERIMENT
+Netscience,forwarding-heavy,200,Conditioned root,20000,30,24.82044900,0.63325009,0.02551324,0.00000000,1.58659319,20260715,validated-v2.2,REAL_EXPERIMENT
+EmailEnron,forwarding-heavy,10,Uniform root,20000,30,2.35872000,1.90818653,0.80899239,0.60963000,0.47928988,20260715,validated-v2.2,REAL_EXPERIMENT
+EmailEnron,forwarding-heavy,10,Conditioned root,20000,30,2.23605020,1.10047872,0.49215296,0.00000000,0.94040790,20260715,validated-v2.2,REAL_EXPERIMENT
+EmailEnron,forwarding-heavy,50,Uniform root,20000,30,11.84976000,4.56567687,0.38529699,0.08972833,1.71158071,20260715,validated-v2.2,REAL_EXPERIMENT
+EmailEnron,forwarding-heavy,50,Conditioned root,20000,30,12.16759780,3.86190553,0.31739260,0.00000000,1.75431801,20260715,validated-v2.2,REAL_EXPERIMENT
+EmailEnron,forwarding-heavy,200,Uniform root,20000,30,44.08560000,10.68389636,0.24234436,0.00034000,6.01682788,20260715,validated-v2.2,REAL_EXPERIMENT
+EmailEnron,forwarding-heavy,200,Conditioned root,20000,30,48.89955467,8.53645244,0.17457117,0.00000000,5.92701966,20260715,validated-v2.2,REAL_EXPERIMENT

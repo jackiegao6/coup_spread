@@ -1,0 +1,169 @@
+{
+  "status": "REAL_EXPERIMENT",
+  "key": {
+    "protocol_version": "validated-v2.2",
+    "dataset": "DoubanRandom",
+    "scenario": "balanced",
+    "k": 10,
+    "selection_seed": 20260719,
+    "rr_samples": 100000,
+    "eval_simulations": 10000
+  },
+  "evaluation_seed": 7754215506835852877,
+  "methods": [
+    {
+      "method": "DegreeTopM",
+      "seeds": [
+        1392,
+        1843,
+        121,
+        3687,
+        4335,
+        1572,
+        4050,
+        1370,
+        2056,
+        2173
+      ],
+      "mean_adopters": 5.780399999999992,
+      "ci95": 0.03059621851721472,
+      "forward_variance": 2.4368195219521893,
+      "mean_redemptions": 5.803999999999988,
+      "selection_seconds": 0.056208734982647,
+      "cim_estimated_spread": null,
+      "rr_memberships": null
+    },
+    {
+      "method": "Alpha-Sort",
+      "seeds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        12,
+        15
+      ],
+      "mean_adopters": 6.5139000000000005,
+      "ci95": 0.029313832818753927,
+      "forward_variance": 2.2368304730473105,
+      "mean_redemptions": 6.5139000000000005,
+      "selection_seconds": 0.056208734982647,
+      "cim_estimated_spread": null,
+      "rr_memberships": null
+    },
+    {
+      "method": "1Hop-Sort",
+      "seeds": [
+        147,
+        208,
+        378,
+        575,
+        594,
+        1169,
+        1173,
+        1239,
+        1303,
+        1338
+      ],
+      "mean_adopters": 6.321400000000025,
+      "ci95": 0.029743814233129506,
+      "forward_variance": 2.302932333233333,
+      "mean_redemptions": 6.321400000000025,
+      "selection_seconds": 0.056208734982647,
+      "cim_estimated_spread": null,
+      "rr_memberships": null
+    },
+    {
+      "method": "PageRank",
+      "seeds": [
+        1392,
+        1843,
+        121,
+        4050,
+        4335,
+        1572,
+        1798,
+        1414,
+        3687,
+        1370
+      ],
+      "mean_adopters": 5.691199999999978,
+      "ci95": 0.030942508200386295,
+      "forward_variance": 2.492291789178918,
+      "mean_redemptions": 5.701900000000023,
+      "selection_seconds": 0.056208734982647,
+      "cim_estimated_spread": null,
+      "rr_memberships": null
+    },
+    {
+      "method": "Random",
+      "seeds": [
+        2275,
+        2230,
+        958,
+        1134,
+        356,
+        1137,
+        3267,
+        2352,
+        3831,
+        4582
+      ],
+      "mean_adopters": 6.414699999999987,
+      "ci95": 0.029449283171132244,
+      "forward_variance": 2.257549664966506,
+      "mean_redemptions": 6.414699999999987,
+      "selection_seconds": 0.056208734982647,
+      "cim_estimated_spread": null,
+      "rr_memberships": null
+    },
+    {
+      "method": "IC-RIS",
+      "seeds": [
+        1726,
+        70,
+        836,
+        1679,
+        1429,
+        62,
+        381,
+        2077,
+        2435,
+        2651
+      ],
+      "mean_adopters": 6.561499999999974,
+      "ci95": 0.029170695565721032,
+      "forward_variance": 2.215039253925387,
+      "mean_redemptions": 6.56400000000003,
+      "selection_seconds": 1.5479917699703947,
+      "cim_estimated_spread": null,
+      "rr_memberships": null
+    },
+    {
+      "method": "CIM-RIS",
+      "seeds": [
+        3900,
+        3084,
+        4393,
+        1869,
+        520,
+        264,
+        1445,
+        482,
+        328,
+        2125
+      ],
+      "mean_adopters": 6.527300000000025,
+      "ci95": 0.029567314791911683,
+      "forward_variance": 2.2756822782278205,
+      "mean_redemptions": 6.528699999999993,
+      "selection_seconds": 2.491696750978008,
+      "cim_estimated_spread": 13.611545728417578,
+      "rr_memberships": 642290
+    }
+  ]
+}

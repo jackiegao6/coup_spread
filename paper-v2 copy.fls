@@ -443,6 +443,10 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/NewTXMI.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/stxscr.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineT-tlf-sc-t1.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-sc-t1--base.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/newtx/nxlmia.vf
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/LibertineMathRM.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/txmiaSTbb.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/txmiaX.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineT-tlf-ts1.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-ts1--base.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineTB-tlf-t1.vf
@@ -463,10 +467,6 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinBiolinumT-tlf-
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinBiolinumT-tlf-t1.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinBiolinumT-tlf-t1.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinBiolinumT-tlf-t1--base.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/newtx/nxlmia.vf
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/LibertineMathRM.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/txmiaSTbb.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/txmiaX.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/newtx/nxlmi7.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/LibertineMathMI7.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/NewTXMI7.tfm
@@ -556,20 +556,17 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineTI-tl
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineTI-tlf-ot1.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineTI-tlf-ot1--base.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineTB-tlf-sc-t1.tfm
-INPUT figures/experiments/real_quality_balanced.png
-INPUT ./figures/experiments/real_quality_balanced.png
-INPUT ./figures/experiments/real_quality_balanced.png
-INPUT figures/experiments/real_quality_forwarding_heavy.png
-INPUT ./figures/experiments/real_quality_forwarding_heavy.png
-INPUT ./figures/experiments/real_quality_forwarding_heavy.png
+INPUT figures/experiments/validated_quality_combined.png
+INPUT ./figures/experiments/validated_quality_combined.png
+INPUT ./figures/experiments/validated_quality_combined.png
+INPUT figures/experiments/validated_sampler_ablation.png
+INPUT ./figures/experiments/validated_sampler_ablation.png
+INPUT ./figures/experiments/validated_sampler_ablation.png
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineTB-tlf-sc-t1.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineTB-tlf-sc-t1--base.tfm
-INPUT figures/experiments/real_sampler_ablation.png
-INPUT ./figures/experiments/real_sampler_ablation.png
-INPUT ./figures/experiments/real_sampler_ablation.png
-INPUT figures/experiments/real_runtime_scalability.png
-INPUT ./figures/experiments/real_runtime_scalability.png
-INPUT ./figures/experiments/real_runtime_scalability.png
+INPUT figures/experiments/validated_runtime_scalability.png
+INPUT ./figures/experiments/validated_runtime_scalability.png
+INPUT ./figures/experiments/validated_runtime_scalability.png
 INPUT paper-v2 copy.bbl
 INPUT paper-v2 copy.bbl
 INPUT paper-v2 copy.aux

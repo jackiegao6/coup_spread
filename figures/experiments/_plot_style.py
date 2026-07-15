@@ -94,11 +94,21 @@ def add_synthetic_notice(fig: plt.Figure) -> None:
     )
 
 
-def save_outputs(fig: plt.Figure, script_path: str) -> None:
+def save_outputs(
+    fig: plt.Figure,
+    script_path: str,
+    description: str | None = None,
+) -> None:
     output = Path(script_path).resolve().with_suffix("")
+    if description is None:
+        description = (
+            "SYNTHETIC PLANNING DATA - NOT FOR SUBMISSION"
+            if output.name.startswith("synthetic_")
+            else "Research figure generated from recorded experiment data."
+        )
     metadata = {
         "Title": output.name,
-        "Description": "SYNTHETIC PLANNING DATA - NOT FOR SUBMISSION",
+        "Description": description,
     }
     fig.savefig(output.with_suffix(".png"), bbox_inches="tight", dpi=450, metadata=metadata)
     fig.savefig(output.with_suffix(".svg"), bbox_inches="tight", metadata=metadata)

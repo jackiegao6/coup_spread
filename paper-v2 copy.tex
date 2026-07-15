@@ -84,12 +84,12 @@ $(1-1/e-\epsilon)$-approximate allocation with high probability and runs
 in expected near-linear time in the graph size when the budget, accuracy,
 and spread lower bound are fixed.
 Experiments on five real-network graph instances show competitive
-solution quality and practical scalability. On Netscience, \CIMRIS{}
-remains within $2.1$--$4.9\%$ of a high-precision Monte Carlo greedy
-reference in the balanced setting. Across three diffusion scenarios,
-it outperforms both degree and PageRank baselines at all 72
-graph--budget pairs, while conditioned root sampling reduces the
-variance--time product by up to $3.5\times$ when adoption events are rare.
+solution quality and practical scalability. Across three scenarios on
+Netscience, \CIMRIS{} remains within $1.1$--$4.4\%$ of a high-precision
+Monte Carlo greedy reference. It outperforms both degree and PageRank
+baselines at all 72 graph--scenario--budget configurations, while
+conditioned root sampling improves the variance--time product by
+$1.3\times$ and $1.5\times$ at $k=10$ on Netscience and EmailEnron.
 \end{abstract}
 
 \begin{CCSXML}
@@ -207,7 +207,8 @@ Experiments on five real-network graph instances evaluate its solution quality,
 scalability, and the variance reduction obtained by conditioned root
 sampling. In particular, \CIMRIS{} remains close to Monte Carlo greedy,
 consistently improves over topology-only seed rankings, and selects 200
-seeds on the 154,907-node Douban instance in 5.7 seconds.
+seeds on the 154,907-node Douban instance in 31.2 seconds using the
+validated sample budget.
 
 
 %% ============================================================
@@ -1483,6 +1484,12 @@ settings, as summarized in Table~\ref{tab:scenarios}:
     multi-hop graph structure more relevant.
 \end{itemize}
 
+These degree-conditioned probabilities are controlled stress-test
+parameters rather than estimates from observed coupon campaigns.
+Accordingly, the experiments establish behavior under the stated model
+on real network topologies, not external validity for a particular
+commercial deployment.
+
 \paragraph{Baselines.}
 \CIMRIS{} is compared against two groups of methods.
 
@@ -1491,8 +1498,7 @@ settings, as summarized in Table~\ref{tab:scenarios}:
   \item \textbf{MC-Greedy}: Estimates the single-coupon adoption
     probabilities $q_{vu}$ from independent forward trajectories and
     applies exact greedy to the resulting estimated objective.
-    We use $20{,}000$ trajectories per source in the balanced scenario
-    and $30{,}000$ in the other scenarios.
+    We use $100{,}000$ trajectories per source in every scenario.
     Because constructing the full estimated matrix is expensive, this
     quality reference is run only on Netscience.
   \item \textbf{1Hop-Sort}: Ranks nodes by expected one-step adoption
@@ -1535,23 +1541,22 @@ We use $k\in\{10,25,50,100,150,200\}$.
 \paragraph{Implementation and reproducibility.}
 All methods are implemented in Python~3.8 and evaluated on a machine with
 eight AMD EPYC 9654 cores and 16~GB of memory; the reported selection
-times use one process. The main curves use master random seed $20260715$.
-We use $10{,}000$ joint RR samples in the balanced scenario and
-$20{,}000$ in the adoption- and forwarding-heavy scenarios.
+times use one process. We use five independent selection seeds
+($20260715$--$20260719$).
+The joint-sample budget is fixed before the cross-method comparison:
+$100{,}000$ samples for $k\leq50$ and $50{,}000$ samples for $k\geq100$.
 IC-RIS uses the same sample budget as \CIMRIS{}.
 These fixed budgets support a controlled empirical comparison; they are
 not presented as the generally conservative sample count in
 Theorem~\ref{thm:approx} for a particular $(\epsilon,\delta)$ pair.
-Every quality point is evaluated with $10{,}000$ fresh forward
-realizations. The reported 95\% confidence intervals quantify evaluation
-uncertainty conditional on the selected allocation; they are omitted from
-the figures because they are narrower than the markers at the displayed
-scale. We separately rerun \CIMRIS{} with five independent selection
-seeds ($20260715$--$20260719$), evaluating the five allocations for each
-configuration with a common set of $10{,}000$ fresh forward realizations.
+Every selected allocation is evaluated with $10{,}000$ fresh forward
+realizations, and methods within one configuration start each realization
+from a common random-generator state.
+Figure error bars for \CIMRIS{} show 95\% confidence intervals over the
+five selection runs.
 Across the 72 graph--scenario--budget configurations, the adoption spread
-has a mean cross-seed coefficient of variation of $0.57\%$ and a maximum
-of $2.64\%$; the mean relative range is $1.42\%$.
+has a mean cross-seed coefficient of variation of $0.51\%$ and a maximum
+of $3.07\%$; the mean relative range is $1.27\%$.
 
 \subsection{Solution Quality}
 \label{sec:exp-quality}
@@ -1559,7 +1564,7 @@ of $2.64\%$; the mean relative range is $1.42\%$.
 Table~\ref{tab:aggregate-quality} summarizes the mean relative difference
 between \CIMRIS{} and each baseline across the three scenarios.
 It complements the budget-level results in
-Figures~\ref{fig:real-balanced} and~\ref{fig:real-forwarding} and reports
+Figure~\ref{fig:real-quality} and reports
 the adoption-heavy results without adding another four-panel figure.
 
 \begin{table}[t]
@@ -1574,76 +1579,63 @@ the adoption-heavy results without adding another four-panel figure.
     \toprule
     Scenario & MC-Greedy & 1Hop-Sort & IC-RIS & DegreeTopM & PageRank \\
     \midrule
-    Balanced         & $-3.7$ & $+4.6$ & $-0.4$ & $+11.4$ & $+11.9$ \\
-    Adoption-heavy   & $-2.8$ & $-0.8$ & $+0.8$ & $ +9.2$ & $ +8.6$ \\
-    Forwarding-heavy & $-4.8$ & $+7.0$ & $-0.8$ & $+23.8$ & $+28.5$ \\
+    Balanced         & $-2.3$ & $+5.8$ & $-0.1$ & $+12.6$ & $+13.3$ \\
+    Adoption-heavy   & $-2.3$ & $-0.6$ & $+1.4$ & $ +9.5$ & $ +8.9$ \\
+    Forwarding-heavy & $-3.4$ & $+8.5$ & $-0.7$ & $+25.5$ & $+30.2$ \\
     \bottomrule
   \end{tabular}}
 \end{table}
 
-Figure~\ref{fig:real-balanced} reports the budget-level adoption spread in
+The upper row of Figure~\ref{fig:real-quality} reports the budget-level adoption spread in
 the balanced scenario.
 On Netscience, the only graph on which the high-precision MC-Greedy
-reference is practical, \CIMRIS{} is within $2.1$--$4.9\%$ of that
-reference over all six budgets, with a mean gap of $3.7\%$.
-Across the four quality graphs, \CIMRIS{} outperforms 1Hop-Sort at 22 of
-24 graph--budget pairs, with a mean relative improvement of $4.6\%$.
-It also outperforms DegreeTopM and PageRank at every pair, by $11.4\%$
-and $11.9\%$ on average, respectively.
-IC-RIS remains close in this scenario, with a $0.4\%$ mean advantage over
-\CIMRIS{}.
+reference is practical, \CIMRIS{} is within $1.1$--$3.8\%$ of that
+reference over all six budgets, with a mean gap of $2.3\%$.
+Across the four quality graphs, \CIMRIS{} outperforms 1Hop-Sort at 23 of
+24 graph--budget pairs, with a mean relative improvement of $5.8\%$.
+It also outperforms DegreeTopM and PageRank at every pair, by $12.6\%$
+and $13.3\%$ on average, respectively.
+IC-RIS is effectively tied in this scenario: each method wins 12 of the
+24 graph--budget comparisons and the mean difference is $0.1\%$ in favor
+of IC-RIS.
 This result is consistent with the balanced parameters, under which
 immediate adoption is common and local scores already provide useful
 seed information.
 The secondary redemption counts also confirm that the distinct-adopter
 objective is not interchangeable with coupon utilization.
 For example, at $k=200$ on NetFacebookEgo, \CIMRIS{} produces an average
-of 128.4 redemptions but only 104.3 distinct adopters; duplicate
-redemptions account for $18.8\%$ of the redeemed coupons.
+of 128.8 redemptions but only 105.4 distinct adopters; duplicate
+redemptions account for $18.1\%$ of the redeemed coupons.
 
-\begin{figure*}[t]
-  \centering
-  \includegraphics[width=0.82\textwidth]{figures/experiments/real_quality_balanced}
-  \caption{Adoption spread under the balanced scenario. Each point is
-  evaluated using $10{,}000$ fresh forward realizations. MC-Greedy is
-  reported only on Netscience because it estimates a full source--adopter
-  probability matrix.}
-  \Description{Four line charts show distinct adopters versus coupon
-  budget for eight methods on Netscience, NetFacebookEgo, DoubanRandom,
-  and EmailEnron in the balanced scenario.}
-  \label{fig:real-balanced}
-\end{figure*}
-
-Figure~\ref{fig:real-forwarding} shows the forwarding-heavy stress test.
+The lower row of Figure~\ref{fig:real-quality} shows the forwarding-heavy stress test.
 Absolute spread is lower because per-visit adoption is rare.
-The mean gap from MC-Greedy on Netscience is $4.8\%$ and decreases to
-$1.7\%$ at $k=200$.
-Across all graph--budget pairs, \CIMRIS{} outperforms 1Hop-Sort at 18 of
-24 points and by $7.0\%$ on average.
-Its mean improvements over DegreeTopM and PageRank increase to $23.8\%$
-and $28.5\%$, respectively, and it wins all 24 comparisons against each.
-IC-RIS remains competitive and is $0.8\%$ higher on average, showing that
+The mean gap from MC-Greedy on Netscience is $3.4\%$ and decreases to
+$1.5\%$ at $k=200$.
+Across all graph--budget pairs, \CIMRIS{} outperforms 1Hop-Sort at 20 of
+24 points and by $8.5\%$ on average.
+Its mean improvements over DegreeTopM and PageRank increase to $25.5\%$
+and $30.2\%$, respectively, and it wins all 24 comparisons against each.
+IC-RIS remains competitive and is $0.7\%$ higher on average, showing that
 model fidelity does not imply uniform empirical dominance at a fixed
 sample budget.
 The adoption-heavy scenario gives an intermediate pattern: the mean
-Netscience gap to MC-Greedy is $2.8\%$, while \CIMRIS{} outperforms
-IC-RIS at 19 of 24 points and by $0.8\%$ on average.
+Netscience gap to MC-Greedy is $2.3\%$, while \CIMRIS{} outperforms
+IC-RIS at 23 of 24 points and by $1.4\%$ on average.
 It again beats both topology-only rankings at all 24 points, although
-1Hop-Sort is $0.8\%$ higher on average when immediate adoption dominates.
+1Hop-Sort is $0.6\%$ higher on average when immediate adoption dominates.
 
-\begin{figure*}[t]
+\begin{figure*}[!t]
   \centering
-  \includegraphics[width=0.82\textwidth]{figures/experiments/real_quality_forwarding_heavy}
-  \caption{Adoption spread under the forwarding-heavy scenario.
-  Longer forwarding paths increase the effect of graph structure, while
-  low adoption probabilities also increase sampling variance.}
-  \Description{Four line charts show distinct adopters versus coupon
-  budget for eight methods on Netscience, NetFacebookEgo, DoubanRandom,
-  and EmailEnron in the forwarding-heavy scenario.}
-  \label{fig:real-forwarding}
+  \includegraphics[width=0.87\textwidth]{figures/experiments/validated_quality_combined}
+  \caption{Adoption spread in the balanced (top) and forwarding-heavy
+  (bottom) scenarios. Each point is the mean of five selection runs, each
+  evaluated using $10{,}000$ forward realizations; \CIMRIS{} error bars
+  show 95\% confidence intervals across runs. MC-Greedy is reported only
+  on Netscience.}
+  \Description{Eight line charts compare distinct adopters versus coupon
+  budget across four networks and two diffusion scenarios.}
+  \label{fig:real-quality}
 \end{figure*}
-
-\FloatBarrier
 
 \subsection{Conditioned Sampling and Scalability}
 \label{sec:exp-efficiency}
@@ -1654,17 +1646,19 @@ At $k=10$, uniform-root sampling spends $68.4\%$ of its Netscience
 samples and $61.0\%$ of its EmailEnron samples on realizations in which
 no root adoption gate fires.
 Conditioning removes this work and reduces the coefficient of variation
-from $0.101$ to $0.062$ on Netscience and from $1.085$ to $0.435$ on
+from $0.128$ to $0.087$ on Netscience and from $0.809$ to $0.492$ on
 EmailEnron.
 After accounting for sampling time, the corresponding variance--time
-improvements are $1.6\times$ and $3.5\times$.
-As $k$ grows, the probability that at least one gate fires approaches
-one, so the advantage naturally diminishes; this agrees with the role of
-$w_v=1-(1-p_v^a)^k$ in the estimator.
+improvements are $1.30\times$ and $1.53\times$.
+Across all six measured conditions, the observed variance--time ratio is
+between $1.30\times$ and $1.59\times$ in favor of conditioning.
+By $k=200$, however, fewer than $0.3\%$ of uniform-root samples have no
+firing gate, so differences in empirical variance should be interpreted
+with the finite 30-batch sample size in mind.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\columnwidth]{figures/experiments/real_sampler_ablation}
+  \includegraphics[width=\columnwidth]{figures/experiments/validated_sampler_ablation}
   \caption{Uniform-root versus conditioned-root estimation in the
   forwarding-heavy scenario. Each statistic uses 30 independent batches
   of $20{,}000$ samples. Relative efficiency is the ratio of the
@@ -1678,19 +1672,23 @@ $w_v=1-(1-p_v^a)^k$ in the estimator.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\columnwidth]{figures/experiments/real_runtime_scalability}
+  \includegraphics[width=\columnwidth]{figures/experiments/validated_runtime_scalability}
   \caption{Single-process \CIMRIS{} selection time in the balanced
-  scenario with $10{,}000$ joint RR samples on five graph instances.}
+  scenario, averaged over five runs. The sample budget is $100{,}000$ for
+  $k\leq50$ and $50{,}000$ for $k\geq100$; error bars show one standard
+  deviation.}
   \Description{A line chart plots selection time versus coupon budget
   for five graph instances on a logarithmic vertical scale.}
   \label{fig:real-runtime}
 \end{figure}
 
 Figure~\ref{fig:real-runtime} reports end-to-end \CIMRIS{} selection time,
-including sample generation and greedy coverage, for a fixed budget of
-$10{,}000$ samples.
-Runtime increases with $k$ on every graph.
-At $k=200$, selection takes 10.9 seconds on EmailEnron and 5.7 seconds on
+including sample generation and greedy coverage.
+The drop from $k=50$ to $k=100$ on several graphs is caused by the
+preregistered halving of the sample budget rather than a faster
+per-sample computation.
+At $k=200$, mean selection time is 51.9 seconds on EmailEnron and
+31.2 seconds on
 the larger network.douban graph.
 The non-monotone ordering across real graphs reflects different degree
 distributions and RR-set sizes; the result should therefore be read as
@@ -1717,16 +1715,16 @@ The resulting \CIMRIS{} algorithm achieves a
 $(1-1/e-\epsilon)$ approximation with high probability and has expected
 running time near-linear in the graph size when the budget, accuracy, and
 spread lower bound are fixed.
-Experiments show that \CIMRIS{} stays within $2.1$--$4.9\%$ of the
-Monte Carlo greedy reference in the balanced Netscience setting.
+Experiments show that \CIMRIS{} stays within $1.1$--$4.4\%$ of the
+Monte Carlo greedy reference across three Netscience scenarios.
 Across all three scenarios, it outperforms DegreeTopM and PageRank at
 every one of the 72 graph--budget pairs, with its largest average gains
 appearing in the forwarding-heavy scenario.
 Local and broadcast baselines remain competitive on some instances, so
 no method dominates every graph and budget.
-Conditioned root sampling is most beneficial when adoption events are
-rare, reducing the measured variance--time product by up to $3.5\times$
-at $k=10$.
+Conditioned root sampling removes zero-contribution samples and improves
+the measured variance--time product by $1.3$--$1.5\times$ at $k=10$ on
+the two tested graphs.
 
 Several directions remain open.
 First, extending the model to \emph{adaptive} allocation, where later
