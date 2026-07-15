@@ -80,14 +80,15 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
             seeds_num=m,
             alpha_distribution=succ_dis
         ),      
-        'ris_path_aware': lambda: SSR_method.deliverers_ris_path_aware(
+        'cim_ris': lambda: SSR_method.deliverers_ris_coverage(
             adj=data["adj"],
             tranProMatrix=data["init_tran_matrix"],
             seeds_num=m,
             num_samples=config.num_samples,
             alpha=succ_dis,
             beta=dis_dis,
-            is_optimized=True
+            is_optimized=True,
+            root_event_mode="alpha"
         ),
         # 【新增】：注册传统 IMM-IC 算法
         'imm_ic': lambda: SSR_method.deliverers_imm_ic(
@@ -211,9 +212,9 @@ if __name__ == '__main__':
     my_config = ExperimentConfig(
         data_set='network.netDog', 
         simulation_times=[600],  
-        methods=['ris_path_aware'],
-        # methods=['random', 'degreeTopM', 'pageRank', 'imm_ic', 'ris_path_aware'],
-        # methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'ris_path_aware', '1hop_sort'],
+        methods=['cim_ris'],
+        # methods=['random', 'degreeTopM', 'pageRank', 'imm_ic', 'cim_ris'],
+        # methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'cim_ris', '1hop_sort'],
         monte_carlo_L=100,
         distribution_type='log_continuous', 
         personalization='None',  

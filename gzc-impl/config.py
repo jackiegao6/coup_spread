@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 import numpy as np
 
 @dataclass
@@ -9,7 +10,7 @@ class ExperimentConfig:
     monte_carlo_L: int = 100 # 蒙特卡洛模拟次数
     distribution_type: str = 'log_continuous'
     personalization: str = 'None'
-    data_prefix: str = '/root/work/coupon/coup_spread'
+    data_prefix: str = str(Path(__file__).resolve().parents[1])
     method_type: str = 'None'
     num_samples: int = 50000
 

@@ -6,7 +6,7 @@ import os
 import re
 from matplotlib.ticker import FuncFormatter, AutoMinorLocator
 
-def draw_ssr_convergence_plot(csv_dir, target_method="ris_path_aware", target_seed_num=100):
+def draw_ssr_convergence_plot(csv_dir, target_method="cim_ris", target_seed_num=100):
     # 1. 获取目录下所有相关的 CSV 文件
     all_files = glob.glob(os.path.join(csv_dir, "*SSRNum-*.csv"))
     if not all_files:

@@ -83,11 +83,11 @@ def draw_paper_ready_plots(csv_dir, start=8, end=201, step=12):
     # =========================
     method_styles = {
         "monterCarlo_CELF": {
-            "color": "#4C78A8", "marker": "s", "label": "MC-CELF (Upper Bound)",
+            "color": "#4C78A8", "marker": "s", "label": "MC-CELF",
             "linewidth": 2.0, "markersize": 6.2, "zorder": 3, "alpha": 0.95
         },
-        "ris_path_aware": {
-            "color": "#E45756", "marker": "*", "label": "RIS-Optimized (Ours)",
+        "cim_ris": {
+            "color": "#E45756", "marker": "*", "label": "CIM-RIS",
             "linewidth": 2.8, "markersize": 10.5, "zorder": 6, "alpha": 0.98
         },
         "pageRank": {
@@ -187,9 +187,9 @@ def draw_paper_ready_plots(csv_dir, start=8, end=201, step=12):
                 solid_joinstyle="round",
             )
 
-    ax2.set_title(r"(b) Expected Aedemption Coupons vs. Seed Size", pad=8)
+    ax2.set_title(r"(b) Expected Coupon Redemptions vs. Seed Size", pad=8)
     ax2.set_xlabel(r"Seed Budget $k$")
-    ax2.set_ylabel(r"Comprehensive Score, $\text{E-ROI}(k)$")
+    ax2.set_ylabel(r"Expected Coupon Redemptions")
 
     ax2.set_xticks(xticks)
     ax2.xaxis.set_minor_locator(AutoMinorLocator(2))

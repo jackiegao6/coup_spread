@@ -13,7 +13,7 @@ def draw_time_consumption_plot(time_csv_path):
     df = pd.read_csv(time_csv_path)
 
     # 2. 过滤出我们要对比的两个方法
-    target_methods = ["monterCarlo_CELF", "ris_path_aware", "pageRank", "degreeTopM", "random","alpha_sort","1hop_sort"]
+    target_methods = ["monterCarlo_CELF", "cim_ris", "pageRank", "degreeTopM", "random","alpha_sort","1hop_sort"]
     df_plot = df[df["method"].isin(target_methods)].copy()
     
     if df_plot.empty:
@@ -41,11 +41,11 @@ def draw_time_consumption_plot(time_csv_path):
     # 4. 样式定义
     styles = {
         "monterCarlo_CELF": {
-            "color": "#4C78A8", "marker": "s", "label": "MC-CELF (Upper Bound)",
+            "color": "#4C78A8", "marker": "s", "label": "MC-CELF",
             "linewidth": 2.0, "markersize": 6.2, "zorder": 3, "alpha": 0.95
         },
-        "ris_path_aware": {
-            "color": "#E45756", "marker": "*", "label": "RIS-Optimized (Ours)",
+        "cim_ris": {
+            "color": "#E45756", "marker": "*", "label": "CIM-RIS",
             "linewidth": 2.8, "markersize": 10.5, "zorder": 6, "alpha": 0.98
         },
         "pageRank": {

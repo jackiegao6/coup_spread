@@ -83,11 +83,11 @@ def draw_paper_ready_plots(csv_dir, start=10, end=100, step=10):
     # =========================
     method_styles = {
         "monterCarlo_CELF": {
-            "color": "#4C78A8", "marker": "s", "label": "MC-CELF (Upper Bound)",
+            "color": "#4C78A8", "marker": "s", "label": "MC-CELF",
             "linewidth": 2.0, "markersize": 6.2, "zorder": 3, "alpha": 0.95
         },
-        "ris_path_aware": {
-            "color": "#E45756", "marker": "*", "label": "RIS-Optimized (Ours)",
+        "cim_ris": {
+            "color": "#E45756", "marker": "*", "label": "CIM-RIS",
             "linewidth": 2.8, "markersize": 10.5, "zorder": 6, "alpha": 0.98
         },
         "pageRank": {

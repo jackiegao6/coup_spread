@@ -6,7 +6,7 @@ import os
 import numpy as np
 from matplotlib.ticker import AutoMinorLocator
 
-def draw_elegant_ablation_plot(csv_dir, target_method="ris_path_aware"):
+def draw_elegant_ablation_plot(csv_dir, target_method="cim_ris"):
     # =========================
     # 1. 读取并合并数据
     # =========================
@@ -158,4 +158,4 @@ def draw_elegant_ablation_plot(csv_dir, target_method="ris_path_aware"):
 if __name__ == "__main__":
     # ⚠️ 替换为你的 CSV 目录
     CSV_DIRECTORY = "/root/work/coupon/coup_spread/gzc-impl/results/network.netscience/paper-netscience-h-test/" 
-    draw_elegant_ablation_plot(CSV_DIRECTORY, target_method="ris_path_aware")
+    draw_elegant_ablation_plot(CSV_DIRECTORY, target_method="cim_ris")

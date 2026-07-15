@@ -9,4 +9,4 @@ dependencies:
   - pandas
   - matplotlib
   - seaborn
-prefix: /root/miniconda3/envs/coupon
+  - tqdm

@@ -5,7 +5,7 @@ import glob
 import os
 from matplotlib.ticker import AutoMinorLocator
 
-def draw_h_ablation_plot(csv_dir, target_method="ris_path_aware"):
+def draw_h_ablation_plot(csv_dir, target_method="cim_ris"):
     # 1. 读取并合并 CSV（不变）
     all_files = glob.glob(os.path.join(csv_dir, "*.csv"))
     if not all_files:
@@ -106,7 +106,7 @@ def draw_h_ablation_plot(csv_dir, target_method="ris_path_aware"):
     print(f"图表已保存至: {output_pdf}")
     plt.show()
 
-def draw_h_ablation_plot2(csv_dir, target_method="ris_path_aware"):
+def draw_h_ablation_plot2(csv_dir, target_method="cim_ris"):
     # 1. 读取并合并 CSV
     all_files = glob.glob(os.path.join(csv_dir, "*.csv"))
     if not all_files:
@@ -200,4 +200,4 @@ def draw_h_ablation_plot2(csv_dir, target_method="ris_path_aware"):
 if __name__ == "__main__":
     # 替换为你的 CSV 所在目录
     CSV_DIRECTORY = "/root/work/coupon/coup_spread/gzc-impl/results/network.netscience/paper-netscience-h-test/" 
-    draw_h_ablation_plot2(CSV_DIRECTORY, target_method="ris_path_aware")
+    draw_h_ablation_plot2(CSV_DIRECTORY, target_method="cim_ris")

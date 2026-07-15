@@ -61,9 +61,17 @@ def monteCarlo_singleTime_improved2(
 
         current_user = start_user
         current_coupon_steps = 0 # 单张券的步数
+        visited_users = set()
 
         # 模拟单张优惠券的随机游走过程 一旦使用 || 丢弃 循环将就break
         while True:
+            # A node-coupon action is fixed within one realization.
+            # Revisiting a node therefore closes a deterministic transfer
+            # cycle, which contributes no adoption for this coupon.
+            if current_user in visited_users:
+                break
+            visited_users.add(current_user)
+
             current_coupon_steps += 1 # 每经历一个节点，步数+1
             rand_pro = np.random.rand()
             p_succ = succ_distribution[current_user]

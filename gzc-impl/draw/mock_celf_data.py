@@ -7,8 +7,13 @@ import draw_plot  # 确保 draw_plot.py 在同一目录下或者已正确安装�
 
 def generate_mock_celf_data(csv_directory):
     """
-    自动为缺失 monterCarlo_CELF 的 CSV 文件智能生成高逼真度的数据
+    Disabled: paper results must come from measured experiment output.
     """
+    raise RuntimeError(
+        "Synthetic CELF rows and post-hoc score scaling are disabled. "
+        "Run the actual baselines and regenerate figures from raw CSV files."
+    )
+
     # 获取目录下所有 csv 文件
     csv_files = glob.glob(os.path.join(csv_directory, "*.csv"))
     

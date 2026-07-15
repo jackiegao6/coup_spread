@@ -410,7 +410,13 @@ def deliverers_ris_path_aware(
     workers: int | None = None,
     chunksize: int = 512,
 ) -> list:
-    """便捷别名：直接调用 path-aware root 事件版本。"""
+    """
+    Backward-compatible alias for the valid adoption-root estimator.
+
+    A downstream-success gate at the RR root counts successful path
+    prefixes rather than final adopters, so it must not be used for CIM's
+    distinct-adopter objective.
+    """
     return deliverers_ris_coverage(
         adj=adj,
         tranProMatrix=tranProMatrix,
@@ -419,7 +425,7 @@ def deliverers_ris_path_aware(
         alpha=alpha,
         beta=beta,
         is_optimized=is_optimized,
-        root_event_mode="path_aware",
+        root_event_mode="alpha",
         path_max_iter=path_max_iter,
         path_tol=path_tol,
         workers=workers,
