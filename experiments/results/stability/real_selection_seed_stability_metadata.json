@@ -1,0 +1,38 @@
+{
+  "status": "REAL_EXPERIMENT",
+  "runner": "experiments/run_selection_seed_stability.py",
+  "datasets": [
+    "Netscience",
+    "NetFacebookEgo",
+    "DoubanRandom",
+    "EmailEnron"
+  ],
+  "scenarios": [
+    "balanced",
+    "adoption-heavy",
+    "forwarding-heavy"
+  ],
+  "budgets": [
+    10,
+    25,
+    50,
+    100,
+    150,
+    200
+  ],
+  "selection_seeds": [
+    20260715,
+    20260716,
+    20260717,
+    20260718,
+    20260719
+  ],
+  "original_seed_reuses_saved_allocation": 20260715,
+  "evaluation_seed_master": 20260715,
+  "eval_simulations": 10000,
+  "rr_samples": {
+    "balanced": 10000,
+    "adoption-heavy": 20000,
+    "forwarding-heavy": 20000
+  }
+}

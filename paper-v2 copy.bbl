@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{22}
+\begin{thebibliography}{23}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -175,6 +175,25 @@
   Conference on Management of Data}}. \bibinfo{publisher}{ACM},
   \bibinfo{pages}{87--98}.
 \newblock
+
+
+\bibitem[\protect\citeauthoryear{Liao, Bi, Wu, Zhang, Zhou, Mao, and Chen}{Liao
+  et~al\mbox{.}}{2023}]%
+        {liao2023popularity}
+\bibfield{author}{\bibinfo{person}{Hao Liao}, \bibinfo{person}{Sheng Bi},
+  \bibinfo{person}{Jiao Wu}, \bibinfo{person}{Wei Zhang},
+  \bibinfo{person}{Mingyang Zhou}, \bibinfo{person}{Rui Mao}, {and}
+  \bibinfo{person}{Wei Chen}.} \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{Popularity Ratio Maximization: Surpassing
+  Competitors through Influence Propagation}.
+\newblock \bibinfo{journal}{\emph{Proceedings of the {ACM} on Management of
+  Data}} \bibinfo{volume}{1}, \bibinfo{number}{2}, Article
+  \bibinfo{articleno}{164} (\bibinfo{year}{2023}),
+  \bibinfo{numpages}{39}~pages.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/3589309}
+\showDOI{\tempurl}
 
 
 \bibitem[\protect\citeauthoryear{Lov{\'{a}}sz}{Lov{\'{a}}sz}{1993}]%

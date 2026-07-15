@@ -30,6 +30,7 @@
 \citation{nguyen2016stop,huang2017revisiting}
 \citation{tang2018online}
 \citation{budak2011limiting,li2014efficient,lu2015competition,seeman2013adaptive,sun2018multi}
+\citation{liao2023popularity}
 \citation{lovasz1993random}
 \citation{kempe2003maximizing}
 \citation{borgs2014maximizing,tang2015influence}
@@ -40,62 +41,62 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Coupon Influence Model}{2}{subsection.3.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Problem Formulation}{3}{subsection.3.2}\protected@file@percent }
 \newlabel{def:cim}{{3.1}{3}{CIM: Adoption-Spread Maximization}{theorem.3.1}{}}
-\newlabel{def:usage-rate}{{3.2}{3}{Coupon Usage-Rate Maximization}{theorem.3.2}{}}
 \citation{garey1976simplified}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Coupon diffusion and multi-coupon overlap. Redemption and discard terminate a coupon, whereas transfer moves the same coupon to one neighbor. Coupons diffuse independently, but multiple redemptions by the same user contribute only one distinct adopter.\relax }}{4}{figure.caption.5}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{fig:model-overview}{{1}{4}{Coupon diffusion and multi-coupon overlap. Redemption and discard terminate a coupon, whereas transfer moves the same coupon to one neighbor. Coupons diffuse independently, but multiple redemptions by the same user contribute only one distinct adopter.\relax }{figure.caption.5}{}}
+\newlabel{def:usage-rate}{{3.2}{4}{Coupon Usage-Rate Maximization}{theorem.3.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4}Theoretical Analysis}{4}{section.4}\protected@file@percent }
 \newlabel{sec:theory}{{4}{4}{Theoretical Analysis}{section.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The reduction gadget for a vertex $x$ in the cubic graph. Only $a_x$ is eligible for coupon allocation; a coupon reaches either the private node $z_x$, one of the three incident-edge nodes, or the discard outcome.\relax }}{4}{figure.caption.6}\protected@file@percent }
-\newlabel{fig:hardness-gadget}{{2}{4}{The reduction gadget for a vertex $x$ in the cubic graph. Only $a_x$ is eligible for coupon allocation; a coupon reaches either the private node $z_x$, one of the three incident-edge nodes, or the discard outcome.\relax }{figure.caption.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Computational Hardness}{4}{subsection.4.1}\protected@file@percent }
 \newlabel{thm:nphard}{{4.1}{4}{}{theorem.4.1}{}}
 \citation{nemhauser1978analysis}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The reduction gadget for a vertex $x$ in the cubic graph. Only $a_x$ is eligible for coupon allocation; a coupon reaches either the private node $z_x$, one of the three incident-edge nodes, or the discard outcome.\relax }}{5}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:hardness-gadget}{{2}{5}{The reduction gadget for a vertex $x$ in the cubic graph. Only $a_x$ is eligible for coupon allocation; a coupon reaches either the private node $z_x$, one of the three incident-edge nodes, or the discard outcome.\relax }{figure.caption.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Monotonicity and Submodularity}{5}{subsection.4.2}\protected@file@percent }
 \newlabel{thm:monosub}{{4.2}{5}{}{theorem.4.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5}Algorithm: \textsc  {CIM-RIS}{}}{5}{section.5}\protected@file@percent }
 \newlabel{sec:algo}{{5}{5}{Algorithm: \CIMRIS {}}{section.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Reverse Reachable Sets for Coupon Diffusion}{5}{subsection.5.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Single-coupon RR set.}{5}{section*.7}\protected@file@percent }
-\newlabel{lem:coverage}{{5.2}{5}{Coverage lemma}{theorem.5.2}{}}
+\newlabel{lem:coverage}{{5.2}{6}{Coverage lemma}{theorem.5.2}{}}
 \@writefile{toc}{\contentsline {paragraph}{Why a naive union fails for $k$ coupons.}{6}{section*.8}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{$k$-joint RR sets.}{6}{section*.9}\protected@file@percent }
 \newlabel{lem:unbiased}{{5.3}{6}{Unbiasedness}{theorem.5.3}{}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Single-Node Transition Kernel\relax }}{6}{algorithm.1}\protected@file@percent }
 \newlabel{alg:kernel}{{1}{6}{Single-Node Transition Kernel\relax }{algorithm.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Sampling Procedure}{6}{subsection.5.2}\protected@file@percent }
-\newlabel{lem:importance}{{5.4}{6}{Conditioned-root estimator}{theorem.5.4}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces A $k$-joint RR sample preserves the correspondence between coupon index $j$ and realization $W_j$ (shown for $k=2$). Coverage must test $s_j\in R_j$ with matching indices; taking the union of the RR sets can create a false cross-index match.\relax }}{7}{figure.caption.10}\protected@file@percent }
 \newlabel{fig:joint-rr}{{3}{7}{A $k$-joint RR sample preserves the correspondence between coupon index $j$ and realization $W_j$ (shown for $k=2$). Coverage must test $s_j\in R_j$ with matching indices; taking the union of the RR sets can create a false cross-index match.\relax }{figure.caption.10}{}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Conditioned $k$-Joint RR Sample Generation\relax }}{7}{algorithm.2}\protected@file@percent }
 \newlabel{alg:rrset}{{2}{7}{Conditioned $k$-Joint RR Sample Generation\relax }{algorithm.2}{}}
+\newlabel{lem:importance}{{5.4}{7}{Conditioned-root estimator}{theorem.5.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.3}The \textsc  {CIM-RIS}{} Algorithm}{7}{subsection.5.3}\protected@file@percent }
 \newlabel{lem:marginal}{{5.5}{7}{Marginal-gain estimator}{theorem.5.5}{}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces \textsc  {CIM-RIS}{}$(G,V_s,\bm  {c},k,\epsilon ,\delta ,\mathrm  {LB})$\relax }}{8}{algorithm.3}\protected@file@percent }
 \newlabel{alg:cim-ris}{{3}{8}{\CIMRIS {}$(G,V_s,\bm {c},k,\epsilon ,\delta ,\mathrm {LB})$\relax }{algorithm.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Theoretical Guarantees}{8}{subsection.5.4}\protected@file@percent }
 \newlabel{thm:approx}{{5.6}{8}{}{theorem.5.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Experiments}{8}{section.6}\protected@file@percent }
-\newlabel{sec:exp}{{6}{8}{Experiments}{section.6}{}}
 \citation{kunegis2013konect}
 \citation{page1999pagerank}
 \citation{borgs2014maximizing,tang2015influence}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Datasets used in the experiments.\relax }}{9}{table.caption.12}\protected@file@percent }
 \newlabel{tab:datasets}{{1}{9}{Datasets used in the experiments.\relax }{table.caption.12}{}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Degree-Based Node Probability Generation\relax }}{9}{algorithm.4}\protected@file@percent }
-\newlabel{alg:gendist}{{4}{9}{Degree-Based Node Probability Generation\relax }{algorithm.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Parameter settings for the three diffusion scenarios.\relax }}{9}{table.caption.14}\protected@file@percent }
+\newlabel{tab:scenarios}{{2}{9}{Parameter settings for the three diffusion scenarios.\relax }{table.caption.14}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Experiments}{9}{section.6}\protected@file@percent }
+\newlabel{sec:exp}{{6}{9}{Experiments}{section.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Experimental Setup}{9}{subsection.6.1}\protected@file@percent }
 \newlabel{sec:exp-setup}{{6.1}{9}{Experimental Setup}{subsection.6.1}{}}
 \@writefile{toc}{\contentsline {paragraph}{Datasets.}{9}{section*.11}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Diffusion parameters.}{9}{section*.13}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Parameter settings for the three diffusion scenarios.\relax }}{9}{table.caption.14}\protected@file@percent }
-\newlabel{tab:scenarios}{{2}{9}{Parameter settings for the three diffusion scenarios.\relax }{table.caption.14}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Degree-Based Node Probability Generation\relax }}{9}{algorithm.4}\protected@file@percent }
+\newlabel{alg:gendist}{{4}{9}{Degree-Based Node Probability Generation\relax }{algorithm.4}{}}
 \@writefile{toc}{\contentsline {paragraph}{Baselines.}{9}{section*.15}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Evaluation metrics.}{9}{section*.16}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Implementation and reproducibility.}{9}{section*.17}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Mean relative adoption-spread difference (\%) between \textsc  {CIM-RIS}{} and each baseline. Positive values favor \textsc  {CIM-RIS}{}. Baseline comparisons average 24 graph--budget pairs per scenario; MC-Greedy averages the six Netscience budgets.\relax }}{10}{table.caption.18}\protected@file@percent }
 \newlabel{tab:aggregate-quality}{{3}{10}{Mean relative adoption-spread difference (\%) between \CIMRIS {} and each baseline. Positive values favor \CIMRIS {}. Baseline comparisons average 24 graph--budget pairs per scenario; MC-Greedy averages the six Netscience budgets.\relax }{table.caption.18}{}}
+\@writefile{toc}{\contentsline {paragraph}{Implementation and reproducibility.}{10}{section*.17}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Solution Quality}{10}{subsection.6.2}\protected@file@percent }
 \newlabel{sec:exp-quality}{{6.2}{10}{Solution Quality}{subsection.6.2}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Adoption spread under the balanced scenario. Each point is evaluated using $10{,}000$ fresh forward realizations. MC-Greedy is reported only on Netscience because it estimates a full source--adopter probability matrix.\relax }}{11}{figure.caption.19}\protected@file@percent }
@@ -121,17 +122,18 @@
 \bibcite{kunegis2013konect}{{9}{2013}{{Kunegis}}{{Kunegis}}}
 \bibcite{leskovec2007celf}{{10}{2007}{{Leskovec et~al\mbox  {.}}}{{Leskovec, Krause, Guestrin, Faloutsos, VanBriesen, and Glance}}}
 \bibcite{li2014efficient}{{11}{2014}{{Li et~al\mbox  {.}}}{{Li, Chen, Feng, Tan, and Li}}}
-\bibcite{lovasz1993random}{{12}{1993}{{Lov{\'{a}}sz}}{{Lov{\'{a}}sz}}}
-\bibcite{lu2015competition}{{13}{2015}{{Lu et~al\mbox  {.}}}{{Lu, Chen, and Lakshmanan}}}
-\bibcite{nemhauser1978analysis}{{14}{1978}{{Nemhauser et~al\mbox  {.}}}{{Nemhauser, Wolsey, and Fisher}}}
-\bibcite{nguyen2016stop}{{15}{2016}{{Nguyen et~al\mbox  {.}}}{{Nguyen, Thai, and Dinh}}}
-\bibcite{page1999pagerank}{{16}{1999}{{Page et~al\mbox  {.}}}{{Page, Brin, Motwani, and Winograd}}}
-\bibcite{richardson2002mining}{{17}{2002}{{Richardson and Domingos}}{{Richardson and Domingos}}}
-\bibcite{seeman2013adaptive}{{18}{2013}{{Seeman and Singer}}{{Seeman and Singer}}}
-\bibcite{sun2018multi}{{19}{2018}{{Sun et~al\mbox  {.}}}{{Sun, Huang, Yu, and Chen}}}
-\bibcite{tang2015influence}{{20}{2015}{{Tang et~al\mbox  {.}}}{{Tang, Shi, and Xiao}}}
-\bibcite{tang2018online}{{21}{2018}{{Tang et~al\mbox  {.}}}{{Tang, Shi, and Xiao}}}
-\bibcite{tang2014influence}{{22}{2014}{{Tang et~al\mbox  {.}}}{{Tang, Xiao, and Shi}}}
+\bibcite{liao2023popularity}{{12}{2023}{{Liao et~al\mbox  {.}}}{{Liao, Bi, Wu, Zhang, Zhou, Mao, and Chen}}}
+\bibcite{lovasz1993random}{{13}{1993}{{Lov{\'{a}}sz}}{{Lov{\'{a}}sz}}}
+\bibcite{lu2015competition}{{14}{2015}{{Lu et~al\mbox  {.}}}{{Lu, Chen, and Lakshmanan}}}
+\bibcite{nemhauser1978analysis}{{15}{1978}{{Nemhauser et~al\mbox  {.}}}{{Nemhauser, Wolsey, and Fisher}}}
+\bibcite{nguyen2016stop}{{16}{2016}{{Nguyen et~al\mbox  {.}}}{{Nguyen, Thai, and Dinh}}}
+\bibcite{page1999pagerank}{{17}{1999}{{Page et~al\mbox  {.}}}{{Page, Brin, Motwani, and Winograd}}}
+\bibcite{richardson2002mining}{{18}{2002}{{Richardson and Domingos}}{{Richardson and Domingos}}}
+\bibcite{seeman2013adaptive}{{19}{2013}{{Seeman and Singer}}{{Seeman and Singer}}}
+\bibcite{sun2018multi}{{20}{2018}{{Sun et~al\mbox  {.}}}{{Sun, Huang, Yu, and Chen}}}
+\bibcite{tang2015influence}{{21}{2015}{{Tang et~al\mbox  {.}}}{{Tang, Shi, and Xiao}}}
+\bibcite{tang2018online}{{22}{2018}{{Tang et~al\mbox  {.}}}{{Tang, Shi, and Xiao}}}
+\bibcite{tang2014influence}{{23}{2014}{{Tang et~al\mbox  {.}}}{{Tang, Xiao, and Shi}}}
 \newlabel{tocindent-1}{0pt}
 \newlabel{tocindent0}{0pt}
 \newlabel{tocindent1}{4.62497pt}

@@ -1,5 +1,55 @@
 # Progress
 
+## 2026-07-15 - Residual Risk Closure
+
+- Stage: S3 Experiments, S1 Evidence, then S5 Review.
+- Status: selection-seed and closest-work risks closed; venue-specific
+  metadata/page-limit work awaits the target conference name and year.
+
+### Artifacts
+
+- Added `experiments/run_selection_seed_stability.py` and real stability
+  artifacts under `experiments/results/stability/`.
+- Evaluated five independent CIM-RIS selection seeds over all 72
+  graph--scenario--budget configurations. Across configurations, the mean
+  cross-seed coefficient of variation is 0.57%, its maximum is 2.64%, and
+  the mean relative range is 1.42%.
+- Added the verified closest coupon-motivated seed-allocation work, Liao et
+  al.'s PRM paper (DOI `10.1145/3589309`), and explicitly distinguished its
+  copyable PA-IC cascade from non-replicable coupon transfer.
+- Updated the experiment protocol, evidence map, coverage review, Related
+  Work blueprint, bibliography, and reproducibility paragraph.
+
+### Review gates
+
+- Spec compliance: passed for completed scope. All 360 stability rows and 72
+  summaries are marked `REAL_EXPERIMENT`; every manuscript stability number
+  was independently recomputed.
+- Quality review: passed. The closest-work paragraph states a narrow,
+  verifiable contrast and avoids a universal novelty claim.
+
+### Capability-use audit
+
+- Required skills: paper-orchestration, experiment-results-planning,
+  statistical-analysis, evidence-driven-writing, literature-review,
+  peer-review, latex-output, verification.
+- Skills actually used: all listed skills for task scoping, repeated-run
+  protocol, descriptive stability analysis, evidence mapping, manuscript
+  revision, and compile verification.
+- Inputs consumed: real graph files and checksum manifest; existing saved
+  CIM-RIS allocations; five master selection seeds; PRM author repository,
+  full paper, title/authors/abstract, and DOI.
+- Inputs not used and why: generic web search endpoints were inaccessible;
+  no unverified coupon-diffusion citation was introduced.
+- Artifacts produced: stability runner/raw CSV/summary/metadata, PRM BibTeX
+  entry and Related Work paragraph, updated evidence and protocol records,
+  and a recompiled 13-page PDF.
+- Verification run: runner smoke test and full run; row/status/seed/count and
+  numerical-summary checks; BibTeX/citation compile with `acmart` 2026;
+  unresolved-reference and overfull-box scan.
+- Remaining risk: target-specific page limit and official ACM conference
+  metadata cannot be verified or applied until the venue and year are known.
+
 ## 2026-07-15 - Final Submission Audit
 
 - Stage: S5 Review.

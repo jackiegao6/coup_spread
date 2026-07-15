@@ -250,6 +250,13 @@ IM has also been studied under competitive diffusion, misinformation
 control, location constraints, adaptive seeding, and multi-round
 campaigns
 ~\cite{budak2011limiting,li2014efficient,lu2015competition,seeman2013adaptive,sun2018multi}.
+Most directly related to our application, Liao et
+al.~\cite{liao2023popularity} use coupon distribution as the motivation
+for allocating promotional seeds across rounds to improve a product's
+popularity ratio.
+Their PA-IC model nevertheless propagates copyable promotional
+information through an IC cascade; it does not model each coupon as the
+single object being forwarded and consumed.
 Random-walk processes provide a classical foundation for single-path
 movement on graphs~\cite{lovasz1993random}, but standard random-walk
 objectives do not capture the combination of terminal adoption,
@@ -1528,8 +1535,7 @@ We use $k\in\{10,25,50,100,150,200\}$.
 \paragraph{Implementation and reproducibility.}
 All methods are implemented in Python~3.8 and evaluated on a machine with
 eight AMD EPYC 9654 cores and 16~GB of memory; the reported selection
-times use one process. A master random seed of $20260715$ determines all
-stochastic selection and evaluation streams.
+times use one process. The main curves use master random seed $20260715$.
 We use $10{,}000$ joint RR samples in the balanced scenario and
 $20{,}000$ in the adoption- and forwarding-heavy scenarios.
 IC-RIS uses the same sample budget as \CIMRIS{}.
@@ -1540,7 +1546,12 @@ Every quality point is evaluated with $10{,}000$ fresh forward
 realizations. The reported 95\% confidence intervals quantify evaluation
 uncertainty conditional on the selected allocation; they are omitted from
 the figures because they are narrower than the markers at the displayed
-scale.
+scale. We separately rerun \CIMRIS{} with five independent selection
+seeds ($20260715$--$20260719$), evaluating the five allocations for each
+configuration with a common set of $10{,}000$ fresh forward realizations.
+Across the 72 graph--scenario--budget configurations, the adoption spread
+has a mean cross-seed coefficient of variation of $0.57\%$ and a maximum
+of $2.64\%$; the mean relative range is $1.42\%$.
 
 \subsection{Solution Quality}
 \label{sec:exp-quality}

@@ -22,7 +22,12 @@ CIM-RIS, MC-Greedy where computationally feasible, 1Hop-Sort, Alpha-Sort, Degree
 - Budgets: k in {10, 25, 50, 100, 150, 200}, clipped below the eligible-node count.
 - Scenarios: Balanced, Adoption-heavy, and Forwarding-heavy.
 - Evaluation: 10,000 independent forward simulations per selected allocation on the four quality graphs; the full Douban scalability run uses 1,000 evaluations, which are not used for quality claims.
-- Randomness: one reproducible master seed (`20260715`) determines stochastic selection and evaluation streams. Reported 95% confidence intervals quantify forward-evaluation uncertainty conditional on the selected allocation; algorithm-seed variability was not estimated.
+- Randomness: the main curves use reproducible master seed `20260715`.
+  Reported 95% confidence intervals quantify forward-evaluation uncertainty
+  conditional on that allocation. A separate stability study reruns CIM-RIS
+  under five independent selection seeds (`20260715`--`20260719`) and
+  evaluates each allocation with common random numbers over 10,000 fresh
+  forward realizations.
 - CIM-RIS: 10,000 joint samples in the balanced scenario and 20,000 in adoption- and forwarding-heavy scenarios. These fixed empirical budgets are not claimed to instantiate the conservative theorem-level sample count for a specified epsilon-delta pair.
 - Sampler ablation: 30 independent batches of 20,000 samples for each reported condition.
 - Hardware: record CPU model, core count, RAM, operating system, Python version, and whether parallelism is used.

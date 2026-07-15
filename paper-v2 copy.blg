@@ -28,45 +28,45 @@ Warning--empty address in sun2018multi
 Warning--empty address in tang2015influence
 Warning--empty address in tang2018online
 Warning--empty address in tang2014influence
-You've used 22 entries,
+You've used 23 entries,
             5897 wiz_defined-function locations,
-            1441 strings with 18739 characters,
-and the built_in function-call counts, 27991 in all, are:
-= -- 3236
-> -- 961
+            1449 strings with 19000 characters,
+and the built_in function-call counts, 29395 in all, are:
+= -- 3436
+> -- 1046
 < -- 1
-+ -- 314
-- -- 308
-* -- 1967
-:= -- 2763
-add.period$ -- 113
-call.type$ -- 22
-change.case$ -- 157
-chr.to.int$ -- 22
-cite$ -- 39
-duplicate$ -- 2634
-empty$ -- 1821
-format.name$ -- 388
-if$ -- 6693
++ -- 343
+- -- 336
+* -- 2095
+:= -- 2917
+add.period$ -- 118
+call.type$ -- 23
+change.case$ -- 168
+chr.to.int$ -- 23
+cite$ -- 40
+duplicate$ -- 2725
+empty$ -- 1889
+format.name$ -- 420
+if$ -- 7039
 int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 97
-newline$ -- 200
-num.names$ -- 176
-pop$ -- 1024
+missing$ -- 100
+newline$ -- 211
+num.names$ -- 184
+pop$ -- 1058
 preamble$ -- 1
-purify$ -- 355
+purify$ -- 375
 quote$ -- 0
-skip$ -- 976
+skip$ -- 1001
 stack$ -- 0
-substring$ -- 2207
-swap$ -- 305
+substring$ -- 2285
+swap$ -- 310
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 604
+type$ -- 620
 warning$ -- 17
-while$ -- 171
+while$ -- 175
 width$ -- 0
-write$ -- 415
+write$ -- 435
 (There were 17 warnings)
