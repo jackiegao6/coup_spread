@@ -32,7 +32,7 @@ def quality_rows() -> list[dict[str, object]]:
         "CIM-RIS": (0.988, 0.00006),
         "1Hop-Sort": (0.925, 0.00014),
         "Alpha-Sort": (0.885, 0.00012),
-        "IMM": (0.765, 0.00016),
+        "IC-RIS": (0.765, 0.00016),
         "Random": (0.625, 0.00010),
     }
     rows: list[dict[str, object]] = []
@@ -74,12 +74,12 @@ def runtime_rows() -> list[dict[str, object]]:
         for budget in budgets:
             values = {
                 "CIM-RIS": 0.015 + graph_scale * (0.15 + 0.00022 * budget**2),
-                "IMM": 0.010 + 0.000010 * (nodes + edges) * (1.0 + 0.002 * budget),
+                "IC-RIS": 0.010 + 0.000010 * (nodes + edges) * (1.0 + 0.002 * budget),
                 "1Hop-Sort": 0.006 + 0.0000025 * (nodes + edges),
                 "Alpha-Sort": 0.003 + 0.0000015 * nodes,
             }
             for method, seconds in values.items():
-                ci_ratio = 0.055 if method in {"CIM-RIS", "IMM"} else 0.020
+                ci_ratio = 0.055 if method in {"CIM-RIS", "IC-RIS"} else 0.020
                 rows.append(
                     {
                         "dataset": dataset,
@@ -156,4 +156,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

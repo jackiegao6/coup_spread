@@ -1,5 +1,6 @@
 from typing import Optional
 import numpy as np
+import scipy.sparse as sp
 
 def _select_next_neighbor_old(
     current_user: int,
@@ -14,12 +15,21 @@ def _select_next_neighbor_old(
     Returns:
         邻居节点编号
     """
-    # 找到邻居及其对应的转发概率
-    neighbors = np.flatnonzero(tranProMatrix[:, current_user])
+    # 找到邻居及其对应的条件转发概率。
+    if sp.issparse(tranProMatrix):
+        matrix = tranProMatrix
+        if not sp.isspmatrix_csc(matrix):
+            matrix = matrix.tocsc()
+        start = matrix.indptr[current_user]
+        end = matrix.indptr[current_user + 1]
+        neighbors = matrix.indices[start:end]
+        probabilities = matrix.data[start:end]
+    else:
+        neighbors = np.flatnonzero(tranProMatrix[:, current_user])
+        probabilities = tranProMatrix[neighbors, current_user]
+
     if neighbors.size == 0:
         return None
-
-    probabilities = tranProMatrix[neighbors, current_user]
     prob_sum = np.sum(probabilities)
 
     if prob_sum == 0:
@@ -51,6 +61,11 @@ def monteCarlo_singleTime_improved2(
     """
 
     n = tranProMatrix.shape[0]
+    transition_matrix = (
+        tranProMatrix.tocsc(copy=False)
+        if sp.issparse(tranProMatrix)
+        else tranProMatrix
+    )
     activatedUsers = set()
     # 新增：记录这批种子总共走了多少步
     total_steps_batch = 0 
@@ -106,7 +121,7 @@ def monteCarlo_singleTime_improved2(
             # 为了在转发给不同邻居时依然能公平地利用这个随机数，代码将其线性映射回了 [0, 1] 区间 在逻辑上保证了单次决策中概率空间的完整性
             rescaled_rand_pro = (rand_pro - threshold) / remaining_prob
 
-            next_node = _select_next_neighbor_old(current_user, tranProMatrix, rescaled_rand_pro)
+            next_node = _select_next_neighbor_old(current_user, transition_matrix, rescaled_rand_pro)
 
             if next_node is None:
                 # 没有邻居可转发，游走中断

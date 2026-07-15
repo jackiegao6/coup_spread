@@ -1,0 +1,25 @@
+{
+  "status": "REAL_EXPERIMENT",
+  "datasets": [
+    "Netscience",
+    "NetFacebookEgo",
+    "DoubanRandom",
+    "EmailEnron"
+  ],
+  "budgets": [
+    10,
+    25,
+    50,
+    100,
+    150,
+    200
+  ],
+  "scenario": "adoption-heavy",
+  "rr_samples": 20000,
+  "eval_simulations": 10000,
+  "oracle_trajectories_per_source": 30000,
+  "seed": 20260715,
+  "runner": "experiments/run_real_submission.py",
+  "python": "3.8.10 (default, Mar 18 2025, 20:04:55) \n[GCC 9.4.0]",
+  "numpy": "1.24.4"
+}

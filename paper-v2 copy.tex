@@ -1,17 +1,18 @@
 %%
-%% SIGMOD 2025 — New version following PRM writing style
+%% Anonymous ACM submission
 %%
 \documentclass[sigconf]{acmart}
 
 \AtBeginDocument{%
   \providecommand\BibTeX{{Bib\TeX}}}
 
-\setcopyright{acmlicensed}
-\copyrightyear{2025}
-\acmYear{2025}
-\acmDOI{XXXXXXX.XXXXXXX}
-\acmConference[SIGMOD '25]{ACM International Conference on Management of Data}{June 2025}{Berlin, Germany}
-\acmISBN{978-1-4503-XXXX-X/2025/06}
+\setcopyright{none}
+\settopmatter{printacmref=true}
+\acmYear{2026}
+\acmConference[Anonymous Submission]{Anonymous Submission}{2026}{Venue withheld for review}
+\acmBooktitle{Anonymous Submission}
+\acmDOI{}
+\acmISBN{}
 
 \usepackage{hyperref}
 \usepackage{url}
@@ -23,6 +24,7 @@
 \usepackage{algpseudocode}
 \usepackage{graphicx}
 \usepackage{enumitem}
+\usepackage{placeins}
 \usepackage{microtype}
 \usepackage{xcolor}
 \usepackage{tikz}
@@ -79,8 +81,15 @@ coupon identities and separate root adoption from reverse reachability.
 Their coverage gives unbiased spread and marginal-gain estimators.
 Based on these estimators, \CIMRIS{} returns a
 $(1-1/e-\epsilon)$-approximate allocation with high probability and runs
-in expected time linear in the graph size when the budget, accuracy, and
-spread lower bound are fixed.
+in expected near-linear time in the graph size when the budget, accuracy,
+and spread lower bound are fixed.
+Experiments on five real-network graph instances show competitive
+solution quality and practical scalability. On Netscience, \CIMRIS{}
+remains within $2.1$--$4.9\%$ of a high-precision Monte Carlo greedy
+reference in the balanced setting. Across three diffusion scenarios,
+it outperforms both degree and PageRank baselines at all 72
+graph--budget pairs, while conditioned root sampling reduces the
+variance--time product by up to $3.5\times$ when adoption events are rare.
 \end{abstract}
 
 \begin{CCSXML}
@@ -105,6 +114,13 @@ spread lower bound are fixed.
           reverse influence sampling, submodular optimization}
 
 \maketitle
+
+\hypersetup{
+  pdftitle={Coupon Influence Maximization under Non-Replicable Diffusion},
+  pdfauthor={Anonymous Author(s)},
+  pdfkeywords={influence maximization, coupon diffusion, random walk,
+    reverse influence sampling, submodular optimization}
+}
 
 %% ============================================================
 %% 1. INTRODUCTION
@@ -187,6 +203,11 @@ supports a $(1-1/e)$ greedy approximation when marginal gains are exact.
 Third, we develop coupon-aware RR sampling and the scalable \CIMRIS{}
 algorithm, which estimates these marginal gains and retains a
 $(1-1/e-\epsilon)$ approximation guarantee with high probability.
+Experiments on five real-network graph instances evaluate its solution quality,
+scalability, and the variance reduction obtained by conditioned root
+sampling. In particular, \CIMRIS{} remains close to Monte Carlo greedy,
+consistently improves over topology-only seed rankings, and selects 200
+seeds on the 154,907-node Douban instance in 5.7 seconds.
 
 
 %% ============================================================
@@ -426,6 +447,9 @@ coupon if
   same coupon to one neighbor.
   Coupons diffuse independently, but multiple redemptions by the same
   user contribute only one distinct adopter.}
+  \Description{Two panels illustrate coupon diffusion. The first shows
+  redeem, discard, and one-neighbor transfer outcomes. The second shows
+  three independent coupons ending at two distinct adopters.}
   \label{fig:model-overview}
 \end{figure*}
 
@@ -601,7 +625,8 @@ The CIM problem is NP-hard.
 \end{theorem}
 
 \begin{proof}
-We reduce from vertex cover on cubic graphs.
+We reduce from vertex cover on cubic graphs, which is
+NP-hard~\cite{garey1976simplified}.
 Let $H=(V_H,E_H)$ be a cubic graph and let $K\leq |V_H|$.
 A vertex cover of size at most $K$ can be padded to size exactly $K$, so
 we use the exact-size form below.
@@ -653,6 +678,9 @@ gadget associated with one vertex $x$.
   Only $a_x$ is eligible for coupon allocation; a coupon reaches either
   the private node $z_x$, one of the three incident-edge nodes, or the
   discard outcome.}
+  \Description{A source node has one edge to a private adopter, three
+  edges to adopter nodes representing incident cubic-graph edges, and a
+  dashed edge to a discard outcome.}
   \label{fig:hardness-gadget}
 \end{figure}
 
@@ -807,11 +835,12 @@ Formally,
 \[
   R_j(u, W_j) =
   \begin{cases}
-    \{w \in V : \exists \text{ live-edge path } w \to \cdots \to u
-      \text{ in } W_j\} & \text{if } A_{u,j} = 1, \\
-    \emptyset & \text{otherwise.}
+    \{w \in V : w \xrightarrow{*} u \text{ in } W_j\},
+      & \text{if } A_{u,j} = 1, \\
+    \emptyset, & \text{otherwise,}
   \end{cases}
 \]
+where $w\xrightarrow{*}u$ denotes a live-edge path from $w$ to $u$.
 The condition $A_{u,j}=1$ is the adoption gate at the root node $u$.
 If this gate does not fire, then no seed can make $u$ adopt coupon $j$
 in realization $W_j$, and the reverse reachable set is empty.
@@ -837,7 +866,7 @@ $R_j(u,W_j)$ is equivalent to testing whether seed $s$ makes target
 node $u$ adopt coupon $j$ in realization $W_j$.
 
 \paragraph{Why a naive union fails for $k$ coupons.}
-For $k$ coupons seeded at an ordered seed set $(s_1, \ldots, s_k)$ under independent realizations
+For $k$ coupons seeded at an ordered seed tuple $(s_1, \ldots, s_k)$ under independent realizations
 $(W_1, \ldots, W_k)$, node $v$ adopts at least one coupon iff
 $\bigvee_{j=1}^k \{s_j \in R_j(v, W_j)\}$.
 A tempting approach is to generate the union
@@ -859,7 +888,7 @@ rooted at $v$ as the tuple
 where $W_1,\ldots,W_k$ are sampled independently.
 The tuple keeps the correspondence between coupon index $j$ and its
 own reverse reachable set $R_j(v,W_j)$.
-For an ordered seed set $S=(s_1,\ldots,s_k)$, the sample is covered if
+For an ordered seed tuple $S=(s_1,\ldots,s_k)$, the sample is covered if
 \[
   \bigvee_{j=1}^k \{s_j\in R_j(v,W_j)\}
 \]
@@ -924,6 +953,9 @@ This is the basic estimator used by \CIMRIS{}.
   coupon index $j$ and realization $W_j$ (shown for $k=2$).
   Coverage must test $s_j\in R_j$ with matching indices; taking the
   union of the RR sets can create a false cross-index match.}
+  \Description{Two indexed reverse-reachable components share a root.
+  Crossed seed memberships fail the index-matched coverage test but would
+  be incorrectly accepted by an unindexed union.}
   \label{fig:joint-rr}
 \end{figure*}
 
@@ -932,7 +964,7 @@ This is the basic estimator used by \CIMRIS{}.
 Let $v$ be drawn uniformly from $V$, and let
 $(R_1(v, W_1), \ldots, R_k(v, W_k))$ be generated from $k$ independent
 realizations rooted at $v$.
-For any ordered seed set $S=(s_1,\ldots,s_k)$, we have
+For any ordered seed tuple $S=(s_1,\ldots,s_k)$, we have
 \[
   \sigma(S)
   = n\cdot
@@ -960,8 +992,8 @@ independent realizations $W_1,\ldots,W_k$.
      \Pr\!\left[\bigvee_{j=1}^k \{s_j \in R_j(u,W_j)\}\right] \\
   &\stackrel{(*)}{=}
      \frac{1}{n}\sum_{u\in V}
-     \Pr\!\left[\bigvee_{j=1}^k \mathrm{Adopt}_{u,j}(s_j)\right]
-  = \frac{\sigma(S)}{n},
+     \Pr\!\left[\bigvee_{j=1}^k \mathrm{Adopt}_{u,j}(s_j)\right] \\
+  &= \frac{\sigma(S)}{n},
 \end{align*}
 where step $(*)$ applies Lemma~\ref{lem:coverage} to each coupon realization.
 The last equality follows from the definition of adoption spread.
@@ -1000,8 +1032,9 @@ realization.
 \caption{Single-Node Transition Kernel}
 \label{alg:kernel}
 \begin{algorithmic}[1]
-\Require Node $u$; coupon index $j$; parameters $p_u^a$, $p_u^d$,
-  $\{p(u,v)\}_{v:(u,v)\in E}$; random number $r_{u,j}$
+\Require Node $u$; coupon index $j$; random number $r_{u,j}$
+\Require Parameters $p_u^a$, $p_u^d$,
+  $\{p(u,v)\}_{v:(u,v)\in E}$
 \Ensure Action
   $\Phi_j(u)\in\{\mathtt{adopt},\mathtt{discard}\}\cup N^+(u)$
 \If{$r_{u,j} \leq p_u^a$}
@@ -1325,130 +1358,31 @@ probabilities can be arbitrarily small: unlike classical IM, a seed user
 is not automatically counted as an adopter.
 
 %% ============================================================
-%% 6. OTHER VARIANTS
-%% ============================================================
-\section{Other Variants}
-\label{sec:variants}
-
-In this section, we discuss two natural variants of the coupon influence
-model.
-The model and algorithm in the previous sections focus on the basic
-setting where redeeming a coupon terminates its propagation and where a
-user may redeem more than one coupon.
-In practice, both assumptions may change depending on the campaign rule.
-We show that the realization-space view remains useful for these variants,
-although the objective, the transition kernel, or the reverse-sampling
-procedure may need to be adjusted accordingly.
-
-\subsection{Forwarding after Coupon Adoption}
-\label{sec:variant-adopt-forward}
-
-The basic model assumes that once a user redeems a coupon, the coupon is
-consumed and the propagation terminates.
-Some campaigns, however, deliberately encourage a user to share the
-promotion after redemption.
-For example, after using a discount coupon, a customer may receive a
-``share with a friend'' option or a small reward for forwarding the
-campaign to one more potential customer.
-In this case, adoption does not necessarily stop propagation; instead,
-adoption may increase the willingness of the user to forward the
-promotion.
-
-This variant can be modeled by replacing the three terminal outcomes at
-node $u$ with an adoption-and-forwarding rule.
-Let $p_u^a$ be the probability that $u$ redeems the coupon, and let
-$q_u^0$ and $q_u^1$ be the forwarding probabilities before and after
-redemption, respectively, with $q_u^1\geq q_u^0$.
-When coupon $j$ reaches $u$, the model first determines whether $u$
-redeems the coupon.
-If $u$ does not redeem it, the coupon is forwarded with probability
-$q_u^0$ and otherwise discarded.
-If $u$ redeems it, $u$ is counted as an adopter and a referral token
-carrying the same promotion is forwarded with probability $q_u^1$.
-The forwarding neighbor is then chosen according to the normalized
-edge-level forwarding probabilities of $u$.
-The original model is recovered as the special case $q_u^1=0$ and
-$q_u^0=p_u^t/(1-p_u^a)$, with the non-adoption branch split into
-discarding and forwarding according to probabilities $p_u^d$ and
-$p_u^t$.
-
-The objective $\sigma(\bm{x})$ can still be defined as the expected number of
-distinct users who redeem at least one coupon.
-The main technical change is that an adopting node is no longer an
-absorbing endpoint of a coupon walk.
-Consequently, the reverse sample for coupon $j$ must allow a live path
-to pass through adopting nodes, while separately recording whether the
-root node adopts the coupon.
-The $k$-joint sampling idea can still be used at a high level, but the
-single-coupon RR-set construction must be regenerated from this
-adoption-and-forwarding kernel.
-As long as different initial coupons remain independent, the allocation
-formula in Section~\ref{sec:model} and its DR property still hold after
-$q_{vu}$ is reinterpreted as the probability that a token from $v$ makes
-$u$ adopt.
-The RR generator and its expected-size analysis, however, must be
-rederived for the new transition kernel.
-
-\subsection{At-Most-One Coupon Adoption per User}
-\label{sec:variant-one-coupon}
-
-Another common campaign rule is that each user can redeem at most one
-coupon.
-For example, a platform may restrict every account to one new-user
-discount, even if the user receives several coupons through different
-friends.
-This rule changes the interaction among coupons: in the basic model,
-different coupons propagate independently and the same user may redeem
-several coupons; in this variant, once a user redeems one coupon, all
-later coupon redemption attempts by the same user are rejected.
-
-To formalize this setting, we introduce a tie-breaking rule among
-coupons that reach the same user.
-A simple choice is first-arrival priority: the first coupon that reaches
-and is accepted by user $u$ is redeemed, and subsequent coupons reaching
-$u$ are treated as discarded at $u$.
-If several coupons reach $u$ at the same time, the tie can be resolved by
-coupon index or by an independent random priority.
-Under this rule, the adoption spread objective remains the number of
-distinct adopters, but the coupon usage-rate objective changes
-because at most one coupon can be redeemed by each user.
-
-This variant is more coupled than the basic CIM model.
-The adoption event of coupon $j$ at node $u$ no longer depends only on
-realization $W_j$ and seed $s_j$; it also depends on whether another coupon
-arrives at $u$ earlier and consumes the user's one redemption
-opportunity.
-As a result, the independence that supports the basic $k$-joint RR
-estimator is weakened.
-One can still simulate the forward process and optimize the resulting
-objective by Monte Carlo greedy methods, or extend reverse sampling by
-augmenting each sample with arrival-time and priority information.
-We leave the full approximation analysis of this coupled variant as
-future work.
-
-%% ============================================================
-%% 7. EXPERIMENTS
+%% 6. EXPERIMENTS
 %% ============================================================
 \section{Experiments}
 \label{sec:exp}
 
-Our evaluation is designed to answer three questions:
+Our evaluation is designed to answer four questions:
 (Q1) how closely does \CIMRIS{} approach Monte Carlo greedy;
-(Q2) how much is lost by applying broadcast-IM algorithms to coupon
-diffusion; and (Q3) how does the running time scale with the coupon budget
+(Q2) how do broadcast-IM and structural baselines behave under coupon
+diffusion; (Q3) when does conditioned root sampling improve estimator
+efficiency; and (Q4) how does running time scale with the coupon budget
 and graph size?
-We use five real-world networks and three balances among adoption,
-discard, and forwarding probabilities.
+We use five real-network graph instances and three balances among
+adoption, discard, and forwarding probabilities.
 
 \subsection{Experimental Setup}
 \label{sec:exp-setup}
 
 \paragraph{Datasets.}
-We apply five real-world directed network datasets in our experiments,
-with basic statistics shown in Table~\ref{tab:datasets}.
+We use five graph instances derived from real networks in the KONECT
+collection~\cite{kunegis2013konect}, with basic statistics shown in
+Table~\ref{tab:datasets}.
 The Netscience dataset is a scientific collaboration network, EmailEnron
-is an email communication network, and NetFacebookEgo, DoubanRandom, and
-network.douban are online social networks.
+is an email communication network, and NetFacebookEgo and Douban are
+online social networks. DoubanRandom is a sampled Douban instance.
+We represent each undirected contact by two directed edges.
 The four smaller graphs form the primary quality suite, while
 network.douban is reserved for scalability tests.
 
@@ -1473,7 +1407,8 @@ network.douban is reserved for scalability tests.
 \paragraph{Diffusion parameters.}
 Node probabilities are generated by the degree-based log-continuous
 procedure in Algorithm~\ref{alg:gendist}, which creates heterogeneous
-behavior in which high-degree hubs forward more and adopt less.
+behavior in which high-degree hubs adopt less and discard more; their
+transfer probability depends on the scenario parameters.
 The normalized log-degree $\hat{d}_u$ controls how $p_u^a$ and $p_u^d$
 scale with degree.
 
@@ -1537,19 +1472,22 @@ settings, as summarized in Table~\ref{tab:scenarios}:
   \item \textbf{Scenario III (Forwarding-heavy):}
     The parameterization gives $p_u^t=0.93$ for every node, so coupons
     trace substantially longer forwarding paths.
-    Adoption is rare per-step but coupons travel far, amplifying
-    the value of global coverage optimization.
+    Adoption is rare per-step but coupons travel farther, making
+    multi-hop graph structure more relevant.
 \end{itemize}
 
 \paragraph{Baselines.}
 \CIMRIS{} is compared against two groups of methods.
 
-\smallskip\noindent\textit{Coupon-aware and structural heuristics.}
+\noindent\textit{Coupon-aware and structural heuristics.}
 \begin{itemize}[leftmargin=*]
-  \item \textbf{MC-CELF}: Greedy with marginal gains estimated by
-    $10{,}000$ Monte Carlo simulations of the coupon influence process,
-    using CELF lazy evaluation~\cite{leskovec2007celf}.
-    It is run only on graphs where its cost is practical.
+  \item \textbf{MC-Greedy}: Estimates the single-coupon adoption
+    probabilities $q_{vu}$ from independent forward trajectories and
+    applies exact greedy to the resulting estimated objective.
+    We use $20{,}000$ trajectories per source in the balanced scenario
+    and $30{,}000$ in the other scenarios.
+    Because constructing the full estimated matrix is expensive, this
+    quality reference is run only on Netscience.
   \item \textbf{1Hop-Sort}: Ranks nodes by expected one-step adoption
     score $p_u^a + \sum_{v \in N^+(u)} p(u,v)\,p_v^a$ and selects
     top-$k$.
@@ -1561,16 +1499,19 @@ settings, as summarized in Table~\ref{tab:scenarios}:
     lower-bound reference.
 \end{itemize}
 
-\smallskip\noindent\textit{IC-model adaptations (model-mismatch baselines).}
+\noindent\textit{IC-model adaptation (model-mismatch baseline).}
 \begin{itemize}[leftmargin=*]
-  \item \textbf{IMM}~\cite{tang2015influence}: Applies the IMM
-    algorithm with edge weights $p(u,v)$ as IC propagation
-    probabilities.  Included to test whether a state-of-the-art IM
-    solver can compensate for model mismatch.
+  \item \textbf{IC-RIS}: Generates standard RR sets under the IC model
+    with edge probabilities $p(u,v)$ and applies greedy maximum coverage
+    using the same sample budget as \CIMRIS{}.
+    This baseline follows the core RIS construction used by scalable IM
+    methods~\cite{borgs2014maximizing,tang2015influence} while isolating
+    the effect of replacing single-path coupon diffusion with broadcast
+    diffusion.
 \end{itemize}
 
-The IC baseline tests whether a strong broadcast-IM solver can compensate
-for model mismatch.
+The IC baseline tests whether broadcast-oriented reverse sampling can
+compensate for model mismatch.
 
 \paragraph{Evaluation metrics.}
 We set $V_s=V$ and $c_v=1$ for all methods, matching the conventional
@@ -1582,10 +1523,171 @@ independent Monte Carlo simulations of the $k$-coupon influence process:
 (a) \emph{adoption spread}: distinct users who adopt at least one
 coupon (primary objective); and (b) \emph{total redemptions}: total
 coupon adoptions, counting multiply-reached users (secondary metric).
-We vary $k$ from 1 to 200.
+We use $k\in\{10,25,50,100,150,200\}$.
+
+\paragraph{Implementation and reproducibility.}
+All methods are implemented in Python~3.8 and evaluated on a machine with
+eight AMD EPYC 9654 cores and 16~GB of memory; the reported selection
+times use one process. A master random seed of $20260715$ determines all
+stochastic selection and evaluation streams.
+We use $10{,}000$ joint RR samples in the balanced scenario and
+$20{,}000$ in the adoption- and forwarding-heavy scenarios.
+IC-RIS uses the same sample budget as \CIMRIS{}.
+These fixed budgets support a controlled empirical comparison; they are
+not presented as the generally conservative sample count in
+Theorem~\ref{thm:approx} for a particular $(\epsilon,\delta)$ pair.
+Every quality point is evaluated with $10{,}000$ fresh forward
+realizations. The reported 95\% confidence intervals quantify evaluation
+uncertainty conditional on the selected allocation; they are omitted from
+the figures because they are narrower than the markers at the displayed
+scale.
+
+\subsection{Solution Quality}
+\label{sec:exp-quality}
+
+Table~\ref{tab:aggregate-quality} summarizes the mean relative difference
+between \CIMRIS{} and each baseline across the three scenarios.
+It complements the budget-level results in
+Figures~\ref{fig:real-balanced} and~\ref{fig:real-forwarding} and reports
+the adoption-heavy results without adding another four-panel figure.
+
+\begin{table}[t]
+  \caption{Mean relative adoption-spread difference (\%) between
+  \CIMRIS{} and each baseline. Positive values favor \CIMRIS{}.
+  Baseline comparisons average 24 graph--budget pairs per scenario;
+  MC-Greedy averages the six Netscience budgets.}
+  \label{tab:aggregate-quality}
+  \centering
+  \resizebox{\columnwidth}{!}{%
+  \begin{tabular}{lrrrrr}
+    \toprule
+    Scenario & MC-Greedy & 1Hop-Sort & IC-RIS & DegreeTopM & PageRank \\
+    \midrule
+    Balanced         & $-3.7$ & $+4.6$ & $-0.4$ & $+11.4$ & $+11.9$ \\
+    Adoption-heavy   & $-2.8$ & $-0.8$ & $+0.8$ & $ +9.2$ & $ +8.6$ \\
+    Forwarding-heavy & $-4.8$ & $+7.0$ & $-0.8$ & $+23.8$ & $+28.5$ \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+Figure~\ref{fig:real-balanced} reports the budget-level adoption spread in
+the balanced scenario.
+On Netscience, the only graph on which the high-precision MC-Greedy
+reference is practical, \CIMRIS{} is within $2.1$--$4.9\%$ of that
+reference over all six budgets, with a mean gap of $3.7\%$.
+Across the four quality graphs, \CIMRIS{} outperforms 1Hop-Sort at 22 of
+24 graph--budget pairs, with a mean relative improvement of $4.6\%$.
+It also outperforms DegreeTopM and PageRank at every pair, by $11.4\%$
+and $11.9\%$ on average, respectively.
+IC-RIS remains close in this scenario, with a $0.4\%$ mean advantage over
+\CIMRIS{}.
+This result is consistent with the balanced parameters, under which
+immediate adoption is common and local scores already provide useful
+seed information.
+The secondary redemption counts also confirm that the distinct-adopter
+objective is not interchangeable with coupon utilization.
+For example, at $k=200$ on NetFacebookEgo, \CIMRIS{} produces an average
+of 128.4 redemptions but only 104.3 distinct adopters; duplicate
+redemptions account for $18.8\%$ of the redeemed coupons.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.82\textwidth]{figures/experiments/real_quality_balanced}
+  \caption{Adoption spread under the balanced scenario. Each point is
+  evaluated using $10{,}000$ fresh forward realizations. MC-Greedy is
+  reported only on Netscience because it estimates a full source--adopter
+  probability matrix.}
+  \Description{Four line charts show distinct adopters versus coupon
+  budget for eight methods on Netscience, NetFacebookEgo, DoubanRandom,
+  and EmailEnron in the balanced scenario.}
+  \label{fig:real-balanced}
+\end{figure*}
+
+Figure~\ref{fig:real-forwarding} shows the forwarding-heavy stress test.
+Absolute spread is lower because per-visit adoption is rare.
+The mean gap from MC-Greedy on Netscience is $4.8\%$ and decreases to
+$1.7\%$ at $k=200$.
+Across all graph--budget pairs, \CIMRIS{} outperforms 1Hop-Sort at 18 of
+24 points and by $7.0\%$ on average.
+Its mean improvements over DegreeTopM and PageRank increase to $23.8\%$
+and $28.5\%$, respectively, and it wins all 24 comparisons against each.
+IC-RIS remains competitive and is $0.8\%$ higher on average, showing that
+model fidelity does not imply uniform empirical dominance at a fixed
+sample budget.
+The adoption-heavy scenario gives an intermediate pattern: the mean
+Netscience gap to MC-Greedy is $2.8\%$, while \CIMRIS{} outperforms
+IC-RIS at 19 of 24 points and by $0.8\%$ on average.
+It again beats both topology-only rankings at all 24 points, although
+1Hop-Sort is $0.8\%$ higher on average when immediate adoption dominates.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.82\textwidth]{figures/experiments/real_quality_forwarding_heavy}
+  \caption{Adoption spread under the forwarding-heavy scenario.
+  Longer forwarding paths increase the effect of graph structure, while
+  low adoption probabilities also increase sampling variance.}
+  \Description{Four line charts show distinct adopters versus coupon
+  budget for eight methods on Netscience, NetFacebookEgo, DoubanRandom,
+  and EmailEnron in the forwarding-heavy scenario.}
+  \label{fig:real-forwarding}
+\end{figure*}
+
+\FloatBarrier
+
+\subsection{Conditioned Sampling and Scalability}
+\label{sec:exp-efficiency}
+
+Figure~\ref{fig:real-sampler} isolates the conditioned-root sampler in
+the forwarding-heavy scenario.
+At $k=10$, uniform-root sampling spends $68.4\%$ of its Netscience
+samples and $61.0\%$ of its EmailEnron samples on realizations in which
+no root adoption gate fires.
+Conditioning removes this work and reduces the coefficient of variation
+from $0.101$ to $0.062$ on Netscience and from $1.085$ to $0.435$ on
+EmailEnron.
+After accounting for sampling time, the corresponding variance--time
+improvements are $1.6\times$ and $3.5\times$.
+As $k$ grows, the probability that at least one gate fires approaches
+one, so the advantage naturally diminishes; this agrees with the role of
+$w_v=1-(1-p_v^a)^k$ in the estimator.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/experiments/real_sampler_ablation}
+  \caption{Uniform-root versus conditioned-root estimation in the
+  forwarding-heavy scenario. Each statistic uses 30 independent batches
+  of $20{,}000$ samples. Relative efficiency is the ratio of the
+  variance--time products of uniform and conditioned sampling; values
+  above one favor conditioning.}
+  \Description{Three panels compare zero-contribution samples,
+  coefficient of variation, and variance-time efficiency for uniform and
+  conditioned root sampling on Netscience and EmailEnron.}
+  \label{fig:real-sampler}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/experiments/real_runtime_scalability}
+  \caption{Single-process \CIMRIS{} selection time in the balanced
+  scenario with $10{,}000$ joint RR samples on five graph instances.}
+  \Description{A line chart plots selection time versus coupon budget
+  for five graph instances on a logarithmic vertical scale.}
+  \label{fig:real-runtime}
+\end{figure}
+
+Figure~\ref{fig:real-runtime} reports end-to-end \CIMRIS{} selection time,
+including sample generation and greedy coverage, for a fixed budget of
+$10{,}000$ samples.
+Runtime increases with $k$ on every graph.
+At $k=200$, selection takes 10.9 seconds on EmailEnron and 5.7 seconds on
+the larger network.douban graph.
+The non-monotone ordering across real graphs reflects different degree
+distributions and RR-set sizes; the result should therefore be read as
+practical scalability evidence rather than a direct empirical fit of the
+worst-case bound.
 
 %% ============================================================
-%% 8. CONCLUSION
+%% 7. CONCLUSION
 %% ============================================================
 \section{Conclusion}
 \label{sec:conclusion}
@@ -1602,8 +1704,18 @@ We then developed $k$-joint RR samples whose coverage gives unbiased
 spread and marginal-gain estimates.
 The resulting \CIMRIS{} algorithm achieves a
 $(1-1/e-\epsilon)$ approximation with high probability and has expected
-running time linear in the graph size when the budget, accuracy, and
+running time near-linear in the graph size when the budget, accuracy, and
 spread lower bound are fixed.
+Experiments show that \CIMRIS{} stays within $2.1$--$4.9\%$ of the
+Monte Carlo greedy reference in the balanced Netscience setting.
+Across all three scenarios, it outperforms DegreeTopM and PageRank at
+every one of the 72 graph--budget pairs, with its largest average gains
+appearing in the forwarding-heavy scenario.
+Local and broadcast baselines remain competitive on some instances, so
+no method dominates every graph and budget.
+Conditioned root sampling is most beneficial when adoption events are
+rare, reducing the measured variance--time product by up to $3.5\times$
+at $k=10$.
 
 Several directions remain open.
 First, extending the model to \emph{adaptive} allocation, where later
@@ -1615,10 +1727,6 @@ arrival order and user state.
 Third, tighter lower-bound estimation and variance reduction for very
 small adoption probabilities may further improve the practical cost of
 \CIMRIS{}.
-
-\begin{acks}
-Acknowledgments omitted for anonymous review.
-\end{acks}
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}

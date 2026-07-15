@@ -19,7 +19,7 @@ from _plot_style import (
 
 DATA_FILE = Path(__file__).resolve().parents[1] / "data" / "synthetic_runtime_scalability.csv"
 DATASETS = ["Netscience", "NetFacebookEgo", "DoubanRandom", "EmailEnron", "network.douban"]
-METHODS = ["CIM-RIS", "IMM", "1Hop-Sort", "Alpha-Sort"]
+METHODS = ["CIM-RIS", "IC-RIS", "1Hop-Sort", "Alpha-Sort"]
 
 
 def load_rows() -> list[dict[str, object]]:
@@ -79,7 +79,7 @@ def main() -> None:
             [row["time"] for row in selected],
             color=METHOD_COLORS[method],
             marker=METHOD_MARKERS[method],
-            markerfacecolor="white" if method == "IMM" else METHOD_COLORS[method],
+            markerfacecolor="white" if method == "IC-RIS" else METHOD_COLORS[method],
             markeredgewidth=0.8,
             label=method,
         )
@@ -97,4 +97,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

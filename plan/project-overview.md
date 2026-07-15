@@ -3,8 +3,8 @@
 - Paper type: Computer-science conference research paper (ACM SIGMOD style).
 - Topic: Coupon influence maximization under non-replicable, single-path diffusion.
 - Main manuscript: `paper-v2 copy.tex` (monolithic ACM LaTeX source).
-- Current objective: complete the importance-sampling proof and add restrained conceptual figures without fabricating experimental results.
-- Core claims affected: unbiased RR estimation, approximate greedy guarantee, and expected graph-linear running time under fixed parameters.
+- Current objective: complete the final submission audit using only traceable real experiment outputs, compile the ACM PDF, and remove correctness, presentation, and submission-compliance risks.
+- Core claims affected: approximation and runtime guarantees, theorem-to-implementation boundaries, empirical quality and efficiency claims, and anonymous-review metadata.
 
 ## Chapter Structure
 
@@ -16,4 +16,3 @@
 6. Other Variants
 7. Experiments
 8. Conclusion
-

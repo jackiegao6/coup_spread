@@ -36,7 +36,7 @@ def load_experiment_data(config: "ExperimentConfig") -> Dict[str, Any]:
 
 def load_contribution_and_tran_matrix(config: "ExperimentConfig", adj, n: int) -> Dict[str, Any]:
     distribution_res = gd.get_distribution_degree_aware(
-        config.distribution_file(m=config.seeds_num),
+        config.distribution_file(),
         config.distribution_type,
         adj,
         config = config)
@@ -78,7 +78,8 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
         '1hop_sort': lambda: get_seeds.deliverers_teacher_alpha_1hop_sort(
             tranProMatrix=data["init_tran_matrix"],
             seeds_num=m,
-            alpha_distribution=succ_dis
+            alpha_distribution=succ_dis,
+            beta_distribution=dis_dis,
         ),      
         'cim_ris': lambda: SSR_method.deliverers_ris_coverage(
             adj=data["adj"],
@@ -90,12 +91,12 @@ def get_seed_sets(methods: list, config: ExperimentConfig, data: dict):
             is_optimized=True,
             root_event_mode="alpha"
         ),
-        # 【新增】：注册传统 IMM-IC 算法
-        'imm_ic': lambda: SSR_method.deliverers_imm_ic(
+        'ic_ris': lambda: SSR_method.deliverers_ic_ris(
             tranProMatrix=data["init_tran_matrix"],
             seeds_num=m,
             num_samples=config.num_samples,
             alpha=succ_dis,
+            beta=dis_dis,
             workers=16
         ),
     }
@@ -213,7 +214,7 @@ if __name__ == '__main__':
         data_set='network.netDog', 
         simulation_times=[600],  
         methods=['cim_ris'],
-        # methods=['random', 'degreeTopM', 'pageRank', 'imm_ic', 'cim_ris'],
+        # methods=['random', 'degreeTopM', 'pageRank', 'ic_ris', 'cim_ris'],
         # methods=['random', 'degreeTopM', 'pageRank', 'alpha_sort', 'cim_ris', '1hop_sort'],
         monte_carlo_L=100,
         distribution_type='log_continuous', 

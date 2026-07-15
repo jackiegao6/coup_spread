@@ -297,7 +297,8 @@ import scipy.sparse as sp
 def deliverers_teacher_alpha_1hop_sort(
         tranProMatrix: np.ndarray,
         seeds_num: int,
-        alpha_distribution: np.ndarray
+        alpha_distribution: np.ndarray,
+        beta_distribution: np.ndarray,
 ) -> list:
     """
     公式: Score_i = alpha_i + sum_j (p_{ij} * alpha_j)
@@ -315,7 +316,12 @@ def deliverers_teacher_alpha_1hop_sort(
     # 2. 矩阵乘法极限加速
     # M_T (N x N) 点乘 alpha_distribution (N x 1)
     # 等价于对每个节点 i 执行：sum_j (p_ij * alpha_j)
-    neighbor_influence = M_T.dot(alpha_distribution)
+    transfer_probability = np.clip(
+        1.0 - alpha_distribution - beta_distribution,
+        0.0,
+        1.0,
+    )
+    neighbor_influence = transfer_probability * M_T.dot(alpha_distribution)
 
     # 3. 最终得分计算
     # 得分 = 自身的转化率 + 邻居的期望转化率

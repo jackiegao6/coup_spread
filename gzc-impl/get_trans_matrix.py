@@ -3,7 +3,7 @@ import numpy as np
 import scipy.sparse as sp
 
 # [i,j] = i -> j
-def getTranProMatrix(adj) -> np.ndarray:
+def getTranProMatrix(adj):
     """
     生成转移概率矩阵（列归一化）。
     这里假设 adj 为标准邻接矩阵：adj[i, j]=1 表示 i->j (Row=Source, Col=Target)。
@@ -36,4 +36,7 @@ def getTranProMatrix(adj) -> np.ndarray:
 
     # 结果矩阵 M，其中 M[:, j] sum 为 1 (如果度>0)
     tran_matrix_sparse = adj_t.dot(D_inv_diag)
-    return tran_matrix_sparse.toarray()
+    # Column j stores the conditional forwarding distribution from j.
+    # CSC supports O(out-degree) access during forward simulation and
+    # avoids the O(n^2) memory blow-up of the former dense conversion.
+    return tran_matrix_sparse.tocsc()

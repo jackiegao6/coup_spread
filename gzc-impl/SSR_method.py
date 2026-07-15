@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import logging
 import os
 import random
 import time
+from collections import defaultdict
 from multiprocessing import Pool
 from typing import List, Set, Tuple
 from tqdm import tqdm
@@ -68,19 +71,41 @@ def compute_path_success_probabilities(
 
     return q
 
-def _sample_root_success_flags(p_success: float, k: int, is_optimized: bool) -> List[bool]:
-    """为根节点的 k 张券采样“这张券最终是否会产生一次成功核销”事件。"""
+def _sample_root_success_flags(
+    p_success: float,
+    k: int,
+    is_optimized: bool,
+    rng: random.Random,
+) -> List[bool]:
+    """Sample root adoption gates, directly conditioning on one success."""
     p_success = float(np.clip(p_success, 0.0, 1.0))
 
     if p_success <= 0.0:
         return [False] * k
 
     if not is_optimized:
-        return [random.random() < p_success for _ in range(k)]
+        return [rng.random() < p_success for _ in range(k)]
 
+    # Draw the first successful gate from its truncated geometric
+    # distribution, then draw all later gates independently. This is
+    # exactly the product Bernoulli distribution conditioned on at least
+    # one success and takes O(k), even when p_success is very small.
     flags = [False] * k
-    while not any(flags):
-        flags = [random.random() < p_success for _ in range(k)]
+    normalizer = -np.expm1(k * np.log1p(-p_success)) if p_success < 1.0 else 1.0
+    target = rng.random() * normalizer
+    probability = p_success
+    cumulative = 0.0
+    first_success = k - 1
+    for index in range(k):
+        cumulative += probability
+        if target <= cumulative:
+            first_success = index
+            break
+        probability *= 1.0 - p_success
+
+    flags[first_success] = True
+    for index in range(first_success + 1, k):
+        flags[index] = rng.random() < p_success
     return flags
 
 
@@ -108,10 +133,12 @@ def run_single_ssr_generation_worker(args: Tuple) -> List[Set[int]]:
         k,
         root_node_v,
         is_optimized,
+        sample_seed,
     ) = args
 
+    rng = random.Random(sample_seed)
     p_root_success = root_event_probs[root_node_v]
-    success_flags = _sample_root_success_flags(p_root_success, k, is_optimized)
+    success_flags = _sample_root_success_flags(p_root_success, k, is_optimized, rng)
 
     ssr_list: List[Set[int]] = []
 
@@ -140,7 +167,7 @@ def run_single_ssr_generation_worker(args: Tuple) -> List[Set[int]]:
                     beta_w = beta[w]
 
                     # w 如果自用或丢弃，则不可能继续把券传到 curr_node
-                    if random.random() < (alpha_w + beta_w):
+                    if rng.random() < (alpha_w + beta_w):
                         w_choices[w] = -1
                     else:
                         w_start = out_indptr[w]
@@ -148,7 +175,7 @@ def run_single_ssr_generation_worker(args: Tuple) -> List[Set[int]]:
                         if w_start == w_end:
                             w_choices[w] = -1
                         else:
-                            choice_rand = random.random()
+                            choice_rand = rng.random()
                             cumulative = 0.0
                             chosen = -1
                             for out_idx in range(w_start, w_end):
@@ -181,10 +208,12 @@ class CouponInfluenceMaximizer:
         root_event_mode: str = "alpha",
         path_max_iter: int = 100,
         path_tol: float = 1e-10,
+        random_seed: int = 1,
     ):
         self.k = k
         self.is_optimized = is_optimized
         self.root_event_mode = root_event_mode
+        self.random_seed = random_seed
 
         self.num_nodes = adj.shape[0]
         self.nodes = list(range(self.num_nodes))
@@ -200,7 +229,8 @@ class CouponInfluenceMaximizer:
         self.out_indptr = self.out_csr.indptr
         self.out_data = self.out_csr.data
 
-        self.node_coverage = [[[] for _ in range(self.num_nodes)] for _ in range(self.k)]
+        self.node_coverage = [defaultdict(list) for _ in range(self.k)]
+        self.empty_coverage = np.asarray([], dtype=np.int32)
         self.total_samples = 0
 
         self.root_event_probs = self._build_root_event_probs(
@@ -260,9 +290,12 @@ class CouponInfluenceMaximizer:
         self.total_samples = N
 
         if self.is_optimized:
-            sampled_vs = random.choices(range(self.num_nodes), weights=self.v_probs, k=N)
+            master_rng = random.Random(self.random_seed)
+            sampled_vs = master_rng.choices(range(self.num_nodes), weights=self.v_probs, k=N)
         else:
-            sampled_vs = [random.randint(0, self.num_nodes - 1) for _ in range(N)]
+            master_rng = random.Random(self.random_seed)
+            sampled_vs = [master_rng.randrange(self.num_nodes) for _ in range(N)]
+        sample_seeds = [master_rng.getrandbits(64) for _ in range(N)]
 
         def args_generator():
             for i in range(N):
@@ -279,6 +312,7 @@ class CouponInfluenceMaximizer:
                     self.k,
                     sampled_vs[i],
                     self.is_optimized,
+                    sample_seeds[i],
                 )
 
         with Pool(processes=workers) as pool:
@@ -304,11 +338,8 @@ class CouponInfluenceMaximizer:
                 del ssr_list  # 及时释放内存
 
         for j in range(self.k):
-            for v in range(self.num_nodes):
-                if self.node_coverage[j][v]:
-                    self.node_coverage[j][v] = np.asarray(self.node_coverage[j][v], dtype=np.int32)
-                else:
-                    self.node_coverage[j][v] = np.asarray([], dtype=np.int32)
+            for node, sample_ids in list(self.node_coverage[j].items()):
+                self.node_coverage[j][node] = np.asarray(sample_ids, dtype=np.int32)
 
         logging.info("SSR 生成完成。耗时: %.2f 秒。", time.time() - start_time)
 
@@ -328,7 +359,7 @@ class CouponInfluenceMaximizer:
                 if node in selected_set:
                     continue
 
-                node_ssrs = self.node_coverage[coupon_idx][node]
+                node_ssrs = self.node_coverage[coupon_idx].get(node, self.empty_coverage)
                 if node_ssrs.size == 0:
                     continue
 
@@ -345,7 +376,7 @@ class CouponInfluenceMaximizer:
             selected_seeds.append(best_node)
             selected_set.add(best_node)
 
-            best_node_ssrs = self.node_coverage[coupon_idx][best_node]
+            best_node_ssrs = self.node_coverage[coupon_idx].get(best_node, self.empty_coverage)
             if best_node_ssrs.size > 0:
                 covered_flags[best_node_ssrs] = True
 
@@ -380,6 +411,7 @@ def deliverers_ris_coverage(
     path_tol: float = 1e-10,
     workers: int | None = None,
     chunksize: int = 512,
+    random_seed: int = 1,
 ) -> list:
     maximizer = CouponInfluenceMaximizer(
         adj=adj,
@@ -391,6 +423,7 @@ def deliverers_ris_coverage(
         root_event_mode=root_event_mode,
         path_max_iter=path_max_iter,
         path_tol=path_tol,
+        random_seed=random_seed,
     )
     maximizer.generate_rr_sets_parallel(N=num_samples, workers=workers, chunksize=chunksize)
     selected_seeds, _ = maximizer.select_seeds()
@@ -434,64 +467,57 @@ def deliverers_ris_path_aware(
 
 
 
-# ==========================================
-# 新增：传统 IC 模型 (IMM/TIM+) 的 Baseline 实现
-# ==========================================
-def run_single_ic_rr_generation_worker(args: Tuple) -> List[Set[int]]:
-    """
-    传统 IC 模型的 RR-set 生成逻辑（广播模式）
-    """
-    (num_nodes, in_indices, in_indptr, in_data, alpha, k, root_node_v) = args
-    
-    ssr_list = []
-    for j in range(k):
-        # 为了公平对比，根节点依然需要满足核销概率 alpha 才能算作有效转化
-        if random.random() > alpha[root_node_v]:
-            ssr_list.append(set())
-            continue
-            
-        rr_set = {root_node_v}
-        queue = [root_node_v]
-        idx = 0
-        
-        while idx < len(queue):
-            curr_node = queue[idx]
-            idx += 1
-            
-            # 在反向图中，寻找指向 curr_node 的节点 u (即原图中的 u -> curr_node)
-            start_ptr = in_indptr[curr_node]
-            end_ptr = in_indptr[curr_node + 1]
-            
-            for i in range(start_ptr, end_ptr):
-                u = in_indices[i]
-                p_uv = in_data[i] # 原图中 u 转发给 curr_node 的概率
-                
-                if u not in rr_set:
-                    # 【核心差异】：IC 模型下，每条边独立抛硬币（广播假设）
-                    # 而不是像 Random Walk 那样在所有邻居中只选一个
-                    if random.random() < p_uv:
-                        rr_set.add(u)
-                        queue.append(u)
-                        
-        ssr_list.append(rr_set)
-    return ssr_list
+# Broadcast-IC fixed-budget RIS baseline.
+def run_single_ic_rr_generation_worker(args: Tuple) -> Set[int]:
+    """Generate one standard RR set under the broadcast IC model."""
+    (
+        num_nodes,
+        in_indices,
+        in_indptr,
+        in_data,
+        transfer_probability,
+        root_node_v,
+        sample_seed,
+    ) = args
+    rng = random.Random(sample_seed)
+    rr_set = {root_node_v}
+    queue = [root_node_v]
+    idx = 0
 
-def deliverers_imm_ic(
+    while idx < len(queue):
+        curr_node = queue[idx]
+        idx += 1
+        start_ptr = in_indptr[curr_node]
+        end_ptr = in_indptr[curr_node + 1]
+
+        for i in range(start_ptr, end_ptr):
+            u = in_indices[i]
+            p_uv = transfer_probability[u] * in_data[i]
+            if u not in rr_set and rng.random() < p_uv:
+                rr_set.add(u)
+                queue.append(u)
+
+    return rr_set
+
+
+def deliverers_ic_ris(
     tranProMatrix: np.ndarray,
     seeds_num: int,
     num_samples: int = 100000,
     alpha: np.ndarray = None,
+    beta: np.ndarray = None,
     workers: int = 16,
     chunksize: int = 512,
+    random_seed: int = 1,
 ) -> list:
-    """
-    模拟传统 IMM 算法 (基于独立级联 IC 模型)
-    """
-    logging.info("--- Running: Traditional IMM (IC Model Baseline) ---")
+    """Fixed-budget RIS baseline under the broadcast IC model."""
+    logging.info("--- Running: IC-RIS broadcast baseline ---")
     start_time = time.time()
     
     num_nodes = tranProMatrix.shape[0]
     alpha_np = _to_numpy_prob(alpha, num_nodes, "alpha")
+    beta_np = _to_numpy_prob(beta, num_nodes, "beta")
+    transfer_probability = np.clip(1.0 - alpha_np - beta_np, 0.0, 1.0)
     
     # 构建 CSR 矩阵提取数据
     in_csr = sp.csr_matrix(tranProMatrix) if not sp.issparse(tranProMatrix) else tranProMatrix.tocsr()
@@ -499,39 +525,47 @@ def deliverers_imm_ic(
     in_indptr = in_csr.indptr
     in_data = in_csr.data # 转移概率
     
-    # 1. 均匀采样根节点
-    sampled_vs = [random.randint(0, num_nodes - 1) for _ in range(num_samples)]
+    master_rng = random.Random(random_seed)
+    sampled_vs = [master_rng.randrange(num_nodes) for _ in range(num_samples)]
+    sample_seeds = [master_rng.getrandbits(64) for _ in range(num_samples)]
     
     def args_generator():
         for i in range(num_samples):
-            yield (num_nodes, in_indices, in_indptr, in_data, alpha_np, seeds_num, sampled_vs[i])
+            yield (
+                num_nodes,
+                in_indices,
+                in_indptr,
+                in_data,
+                transfer_probability,
+                sampled_vs[i],
+                sample_seeds[i],
+            )
             
-    # 2. 并行生成 IC 模型的 RR-sets
-    node_coverage = [[[] for _ in range(num_nodes)] for _ in range(seeds_num)]
+    # Generate standard (unindexed) IC RR sets.
+    node_coverage = defaultdict(list)
     
     with Pool(processes=workers) as pool:
         iterator = pool.imap_unordered(run_single_ic_rr_generation_worker, args_generator(), chunksize=chunksize)
-        for ssr_idx, ssr_list in enumerate(tqdm(iterator, total=num_samples, desc="生成 IC RR-sets")):
-            for coupon_j, rr_set in enumerate(ssr_list):
-                for node in rr_set:
-                    node_coverage[coupon_j][node].append(ssr_idx)
-                    
-    for j in range(seeds_num):
-        for v in range(num_nodes):
-            node_coverage[j][v] = np.asarray(node_coverage[j][v], dtype=np.int32)
+        for rr_idx, rr_set in enumerate(tqdm(iterator, total=num_samples, desc="生成 IC RR-sets")):
+            for node in rr_set:
+                node_coverage[node].append(rr_idx)
+
+    for node, sample_ids in list(node_coverage.items()):
+        node_coverage[node] = np.asarray(sample_ids, dtype=np.int32)
+    empty_coverage = np.asarray([], dtype=np.int32)
             
-    # 3. 标准贪心覆盖选种
+    # Standard greedy coverage.
     selected_seeds = []
     selected_set = set()
     covered_flags = np.zeros(num_samples, dtype=bool)
     
-    for coupon_idx in range(seeds_num):
+    for _ in range(seeds_num):
         best_node = -1
         max_gain = -1
         
         for node in range(num_nodes):
             if node in selected_set: continue
-            node_ssrs = node_coverage[coupon_idx][node]
+            node_ssrs = node_coverage.get(node, empty_coverage)
             if node_ssrs.size == 0: continue
             
             gain = int(np.count_nonzero(~covered_flags[node_ssrs]))
@@ -546,9 +580,14 @@ def deliverers_imm_ic(
         selected_seeds.append(best_node)
         selected_set.add(best_node)
         
-        best_node_ssrs = node_coverage[coupon_idx][best_node]
+        best_node_ssrs = node_coverage.get(best_node, empty_coverage)
         if best_node_ssrs.size > 0:
             covered_flags[best_node_ssrs] = True
             
-    logging.info(f"IMM-IC 选种完成。耗时: {time.time() - start_time:.2f} 秒。")
+    logging.info("IC-RIS seed selection finished in %.2f seconds.", time.time() - start_time)
     return selected_seeds
+
+
+# Compatibility alias for old experiment scripts. New papers and logs must
+# call the method IC-RIS because this fixed-budget implementation is not IMM.
+deliverers_imm_ic = deliverers_ic_ris

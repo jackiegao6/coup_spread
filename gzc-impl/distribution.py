@@ -25,12 +25,8 @@ def _min_max_scale(v: np.ndarray) -> np.ndarray:
     return (v - min_val) / range_val
 
 def _generate_continuous_log_degree_distributions(n: int, degrees: np.ndarray, config) -> dict:
-    import logging
-    import numpy as np
     logging.info(f"===> Generating 'Log-Continuous' distributions (AlphaSlope={config.log_alpha_slope}, BetaSlope={config.log_beta_slope}, h={config.degree_power_h})...")
-    
-    rng = np.random.default_rng(config.rng)
-    
+
     log_degrees = np.log1p(degrees) 
     max_log = np.max(log_degrees)
     if max_log == 0: max_log = 1.0
@@ -50,27 +46,15 @@ def _generate_continuous_log_degree_distributions(n: int, degrees: np.ndarray, c
     expected_alpha = config.log_alpha_base + config.log_alpha_slope * (1.0 - norm_deg)  
     
     sum_ab = expected_alpha + expected_beta
-    overflow_mask = sum_ab > 0.95
-    expected_alpha[overflow_mask] = (expected_alpha[overflow_mask] / sum_ab[overflow_mask]) * 0.95
-    expected_beta[overflow_mask]  = (expected_beta[overflow_mask] / sum_ab[overflow_mask]) * 0.95
-    
-    expected_tran = 1.0 - expected_alpha - expected_beta
-    
-    gamma = 20.0 
-    
-    dirichlet_params = np.vstack([
-        expected_alpha * gamma + 1e-3, 
-        expected_beta * gamma + 1e-3, 
-        expected_tran * gamma + 1e-3
-    ]).T 
-    
-    probs = np.zeros((n, 3))
-    for i in range(n):
-        probs[i] = rng.dirichlet(dirichlet_params[i])
-        
-    succ_dist = probs[:, 0]
-    dis_dist  = probs[:, 1]
-    tran_dist = probs[:, 2]
+    if np.any(sum_ab > 1.0):
+        raise ValueError("Invalid diffusion parameters: p_a + p_d exceeds 1")
+
+    # Match Algorithm 4 in the manuscript exactly. Earlier code sampled
+    # a Dirichlet perturbation, which changed the model across runs and
+    # made the reported scenario parameters unreproducible.
+    succ_dist = expected_alpha
+    dis_dist = expected_beta
+    tran_dist = 1.0 - succ_dist - dis_dist
     
     const_factor_dist = np.ones(n, dtype=float)
     

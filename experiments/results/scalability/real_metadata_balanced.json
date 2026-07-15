@@ -1,0 +1,20 @@
+{
+  "status": "REAL_EXPERIMENT",
+  "datasets": [
+    "network.douban"
+  ],
+  "budgets": [
+    10,
+    50,
+    100,
+    200
+  ],
+  "scenario": "balanced",
+  "rr_samples": 10000,
+  "eval_simulations": 1000,
+  "oracle_trajectories_per_source": 0,
+  "seed": 20260715,
+  "runner": "experiments/run_real_submission.py",
+  "python": "3.8.10 (default, Mar 18 2025, 20:04:55) \n[GCC 9.4.0]",
+  "numpy": "1.24.4"
+}

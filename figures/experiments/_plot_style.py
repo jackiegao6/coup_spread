@@ -10,9 +10,12 @@ import matplotlib.pyplot as plt
 METHOD_COLORS = {
     "CIM-RIS": "#007C7A",
     "MC-CELF": "#252525",
+    "MC-Greedy": "#252525",
     "1Hop-Sort": "#D18B00",
     "Alpha-Sort": "#4C78A8",
-    "IMM": "#B24C4C",
+    "IC-RIS": "#B24C4C",
+    "DegreeTopM": "#7A5195",
+    "PageRank": "#4F8A5B",
     "Random": "#7A7A7A",
     "Uniform root": "#6F7782",
     "Conditioned root": "#007C7A",
@@ -20,9 +23,12 @@ METHOD_COLORS = {
 METHOD_MARKERS = {
     "CIM-RIS": "o",
     "MC-CELF": "s",
+    "MC-Greedy": "s",
     "1Hop-Sort": "^",
     "Alpha-Sort": "D",
-    "IMM": "v",
+    "IC-RIS": "v",
+    "DegreeTopM": "P",
+    "PageRank": "h",
     "Random": "X",
     "Uniform root": "s",
     "Conditioned root": "o",
@@ -96,4 +102,3 @@ def save_outputs(fig: plt.Figure, script_path: str) -> None:
     }
     fig.savefig(output.with_suffix(".png"), bbox_inches="tight", dpi=450, metadata=metadata)
     fig.savefig(output.with_suffix(".svg"), bbox_inches="tight", metadata=metadata)
-

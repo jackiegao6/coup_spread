@@ -36,8 +36,11 @@ class ExperimentConfig:
     @property
     def param_str(self):
         if self.distribution_type == 'log_continuous':
-            # 【关键修改】：把 h 的值加入到文件名后缀中！
-            return f"_aSlope{self.log_alpha_slope}_bSlope{self.log_beta_slope}_h{self.degree_power_h}"
+            return (
+                f"_aBase{self.log_alpha_base}_aSlope{self.log_alpha_slope}"
+                f"_bBase{self.log_beta_base}_bSlope{self.log_beta_slope}"
+                f"_h{self.degree_power_h}"
+            )
         return ""
     
     @property
@@ -50,7 +53,9 @@ class ExperimentConfig:
         return f"{self.data_prefix}/gzc-impl/results/{self.data_set}/{self.version}/TimeCost_{self.distribution_type}_SSRNum-{self.num_samples}.csv"
 
     def distribution_file(self, m = 0):
-        return f"{self.data_prefix}/{self.data_set}/{self.version}/distribution-in-{self.data_set}/{self.distribution_type}_{self.param_str}_seedNum-{m}.pkl"
+        # Node behavior is an instance property and must not change with
+        # the coupon budget. Keep m only for backward call compatibility.
+        return f"{self.data_prefix}/{self.data_set}/{self.version}/distribution-in-{self.data_set}/{self.distribution_type}_{self.param_str}_node-probabilities.pkl"
 
     def deliverers_cache_file(self, method, m = 0):
         return f"{self.data_prefix}/{self.data_set}/{self.version}/seeds-with-{self.data_set}/{self.distribution_type}_{self.param_str}_{method}_seedNum-{m}_SSRNum-{self.num_samples}.txt"

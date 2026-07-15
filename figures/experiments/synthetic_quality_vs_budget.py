@@ -12,7 +12,7 @@ from _plot_style import METHOD_COLORS, METHOD_MARKERS, add_synthetic_notice, app
 
 DATA_FILE = Path(__file__).resolve().parents[1] / "data" / "synthetic_quality_vs_budget.csv"
 DATASETS = ["Netscience", "NetFacebookEgo", "DoubanRandom", "EmailEnron"]
-METHODS = ["MC-CELF", "CIM-RIS", "1Hop-Sort", "Alpha-Sort", "IMM", "Random"]
+METHODS = ["MC-CELF", "CIM-RIS", "1Hop-Sort", "Alpha-Sort", "IC-RIS", "Random"]
 
 
 def load_rows() -> list[dict[str, object]]:
@@ -53,7 +53,7 @@ def main() -> None:
                 y,
                 color=METHOD_COLORS[method],
                 marker=METHOD_MARKERS[method],
-                markerfacecolor="white" if method in {"MC-CELF", "IMM"} else METHOD_COLORS[method],
+                markerfacecolor="white" if method in {"MC-CELF", "IC-RIS"} else METHOD_COLORS[method],
                 markeredgewidth=0.8,
                 label=method,
             )
@@ -85,4 +85,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

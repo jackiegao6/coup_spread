@@ -1,5 +1,44 @@
 # Progress
 
+## 2026-07-15 - Final Submission Audit
+
+- Stage: S5 Review.
+- Status: manuscript, real figures, and compiled PDF verified; target-specific conference metadata remains intentionally generic.
+- Submission boundary: only CSV rows marked `REAL_EXPERIMENT` support empirical claims. Synthetic planning artifacts remain visibly labeled and are not referenced by the manuscript.
+
+### Artifacts
+
+- Compiled `paper-v2 copy.pdf` in ACM `sigconf` format (13 pages).
+- Removed the speculative `Other Variants` section so that the paper moves
+  directly from the proved method to its empirical evaluation.
+- Added an aggregate three-scenario comparison table computed from the real
+  result CSVs and strengthened the abstract, Introduction, Results, and
+  Conclusion with traceable numerical claims.
+- Replaced stale SIGMOD 2025/placeholder DOI metadata with anonymous generic ACM metadata.
+- Added KONECT dataset provenance and cubic-vertex-cover hardness citations.
+- Added ACM image descriptions to all seven figures.
+- Corrected the RR-set formula overflow and the linear/near-linear runtime wording.
+- Replaced the weak cross-graph runtime fit with a focused single-column
+  budget-scaling plot and reformatted the sampler ablation for single-column
+  readability.
+- Recorded the master random seed, the conditional interpretation of simulation confidence intervals, and fixed-sample/theorem boundary.
+- Added `experiments/results/dataset_manifest.csv` with graph-file SHA-256 checksums.
+
+### Review gates
+
+- Spec compliance: passed. No mock/synthetic artifact is cited; all numerical manuscript claims were recomputed from real CSVs.
+- Quality review: passed with residual risks below. The PDF has no unresolved references, missing citations, missing graphics, missing figure descriptions, or overfull boxes. All seven figures appear before the Conclusion and References.
+
+### Capability-use audit
+
+- Required skills: paper-orchestration, peer-review, verification, latex-output, evidence-driven-writing, literature-review, experiment-results-planning, figures-python.
+- Skills actually used: all required skills were read and applied to task scoping, evidence mapping, result-boundary review, figure correction, LaTeX compilation, and final verification.
+- Inputs consumed: current manuscript and bibliography; corrected experiment runners; all real result CSV/JSON files; KONECT provenance in the supplied NeurIPS paper; current ACM class; compiled PDF and LaTeX log.
+- Inputs not used and why: synthetic/mock outputs were excluded from evidence; no closest-work citation was added because external scholarly search endpoints were unavailable and no unverified reference was introduced.
+- Artifacts produced: revised manuscript and bibliography, aggregate quality table, corrected real runtime and sampler figures, compiled PDF, evidence map/blueprint/review, dataset checksum manifest, and final audit records.
+- Verification run: full `latexmk` compile with `acmart` 2026 and ACM fonts; static label/citation/environment/graphic checks; independent claim-to-CSV recomputation; Python syntax parsing; 450-DPI image inspection; dataset checksum verification; PDF page/order/font inspection; manual first-page and result-page review.
+- Remaining risk: the exact target venue and page limit are unspecified; the header therefore says anonymous submission. The quality experiments use one reproducible stochastic selection seed, so their confidence intervals cover forward-evaluation uncertainty but not algorithm-seed variability. Related Work lacks a verified closest non-replicable-coupon citation. IC-RIS and local heuristics remain competitive on some graph--budget pairs, so the manuscript deliberately avoids a universal empirical-dominance claim.
+
 ## 2026-07-15 - Proof and Figure Revision
 
 - Stage: S2 Method, followed by S5 Review.
