@@ -31,3 +31,26 @@
 - Artifacts produced: revised manuscript, two TikZ figures, task packet, and project progress records.
 - Verification run: git diff check; environment nesting; brace balance; label/reference resolution; BibTeX key resolution; targeted stale-formula search; exact conditioned-estimator enumeration.
 - Remaining risk: no TeX engine or local TeX container is available, so PDF compilation, float placement, and final overfull-box inspection remain unverified. Experimental result figures still require corrected, traceable runs.
+
+## 2026-07-15 - Synthetic Experiment Figure Planning
+
+- Stage: S3 Experiments.
+- Status: planning artifacts generated; no synthetic value was inserted into the manuscript.
+- Outputs: quality-versus-budget, runtime/scalability, and conditioned-sampler-ablation figures in PNG and SVG.
+- Data boundary: every CSV, script, and output uses the synthetic_ prefix; rendered figures contain a visible NOT FOR SUBMISSION notice.
+- Environment: Matplotlib 3.7.5 and NumPy 1.24.4 were installed under /tmp/coup-plot-libs for rendering only.
+
+### Review gates
+
+- Spec compliance: passed. Protocol, traceability map, table schema, data manifest, generator, CSVs, scripts, and outputs exist.
+- Quality review: passed after replacing repeated long x-axis labels in the sampler figure with one shared label.
+
+### Capability-use audit
+
+- Required skills: experiment-results-planning, figures-python, environment-setup, verification.
+- Skills actually used: all required skills.
+- Inputs consumed: current experiment setup and model constraints in paper-v2 copy.tex.
+- Inputs not used and why: old mock result files were not reused because their estimator semantics are not trusted.
+- Artifacts produced: three synthetic CSV files, three plotting scripts, six rendered outputs, protocol, traceability map, and data manifest.
+- Verification run: deterministic regeneration; Python syntax compilation; CSV schema/status/range checks; 450-DPI PNG checks; SVG notice checks; manual image inspection.
+- Remaining risk: these figures provide layout only. Their numerical trends, confidence intervals, and runtime values must all be replaced by corrected real runs before submission.

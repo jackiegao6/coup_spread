@@ -2,3 +2,5 @@
 *.iml
 /doc/
 *.log
+__pycache__/
+*.pyc
