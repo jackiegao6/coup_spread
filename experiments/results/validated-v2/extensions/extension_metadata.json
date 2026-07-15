@@ -1,0 +1,60 @@
+{
+  "status": "REAL_EXPERIMENT",
+  "protocol_version": "validated-v2.3-extension",
+  "selection_seeds": [
+    20260715,
+    20260716,
+    20260717,
+    20260718,
+    20260719
+  ],
+  "datasets": [
+    "Netscience",
+    "NetFacebookEgo"
+  ],
+  "scenarios": [
+    "balanced",
+    "adoption-heavy",
+    "forwarding-heavy"
+  ],
+  "main_budgets": [
+    10,
+    25,
+    50,
+    100,
+    150,
+    200
+  ],
+  "oracle_trajectories_per_source": {
+    "Netscience": 100000,
+    "NetFacebookEgo": 50000
+  },
+  "capacity_budgets": [
+    200
+  ],
+  "capacity_policies": [
+    "distinct",
+    "capacity-2",
+    "unrestricted"
+  ],
+  "sensitivity_scenarios": [
+    "forwarding-heavy"
+  ],
+  "sensitivity_budgets": [
+    10,
+    50,
+    200
+  ],
+  "sensitivity_samples": [
+    5000,
+    20000,
+    50000,
+    100000
+  ],
+  "evaluation_simulations": 10000,
+  "oracle_workers": 8,
+  "oracle_matrices": 6,
+  "strong_benchmark_raw_rows": 180,
+  "capacity_raw_rows": 90,
+  "sensitivity_raw_rows": 120
+}

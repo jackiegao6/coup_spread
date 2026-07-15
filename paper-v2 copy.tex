@@ -84,9 +84,9 @@ $(1-1/e-\epsilon)$-approximate allocation with high probability and runs
 in expected near-linear time in the graph size when the budget, accuracy,
 and spread lower bound are fixed.
 Experiments on five real-network graph instances show competitive
-solution quality and practical scalability. Across three scenarios on
-Netscience, \CIMRIS{} remains within $1.1$--$4.4\%$ of a high-precision
-Monte Carlo greedy reference. It outperforms both degree and PageRank
+solution quality and practical scalability. Across two graphs and three
+scenarios with high-precision Monte Carlo greedy references, the observed
+gap is $0.3$--$11.1\%$; on Netscience it is $1.1$--$4.4\%$. It outperforms both degree and PageRank
 baselines at all 72 graph--scenario--budget configurations, while
 conditioned root sampling improves the variance--time product by
 $1.3\times$ and $1.5\times$ at $k=10$ on Netscience and EmailEnron.
@@ -204,9 +204,10 @@ Third, we develop coupon-aware RR sampling and the scalable \CIMRIS{}
 algorithm, which estimates these marginal gains and retains a
 $(1-1/e-\epsilon)$ approximation guarantee with high probability.
 Experiments on five real-network graph instances evaluate its solution quality,
-scalability, and the variance reduction obtained by conditioned root
-sampling. In particular, \CIMRIS{} remains close to Monte Carlo greedy,
-consistently improves over topology-only seed rankings, and selects 200
+scalability, sensitivity to the sampling budget, capacity-aware placement,
+and the variance reduction obtained by conditioned root sampling. In
+particular, \CIMRIS{} is competitive with Monte Carlo greedy, consistently
+improves over topology-only seed rankings, and selects 200
 seeds on the 154,907-node Douban instance in 31.2 seconds using the
 validated sample budget.
 
@@ -787,9 +788,10 @@ gives
 
 However, an exact greedy implementation is still inefficient, because
 evaluating $\sigma(S)$ exactly is computationally expensive.
-One may first compute the full matrix $Q=(q_{vu})$ by solving global
-hitting-probability systems and then evaluate all greedy marginals, but a
-dense implementation requires $O(n^3+kn^2)$ time and $O(n^2)$ space.
+One may first estimate the full matrix $Q=(q_{vu})$ using many independent
+single-coupon trajectories from every candidate seed and then evaluate all
+greedy marginals, but this requires $O(n^2)$ storage and a large number of
+forward simulations before seed selection begins.
 One may also estimate $\sigma(S)$ by Monte Carlo simulation, but a
 greedy algorithm would require repeated simulations for many candidate
 seeds and many rounds, leading to a cost of
@@ -1498,9 +1500,11 @@ commercial deployment.
   \item \textbf{MC-Greedy}: Estimates the single-coupon adoption
     probabilities $q_{vu}$ from independent forward trajectories and
     applies exact greedy to the resulting estimated objective.
-    We use $100{,}000$ trajectories per source in every scenario.
-    Because constructing the full estimated matrix is expensive, this
-    quality reference is run only on Netscience.
+    We use $100{,}000$ trajectories per source on Netscience and
+    $50{,}000$ per source on NetFacebookEgo in every scenario.
+    Reference construction and final forward evaluation use independent
+    random streams. Because constructing the full estimated matrix is
+    expensive, this quality reference is limited to these two graphs.
   \item \textbf{1Hop-Sort}: Ranks nodes by expected one-step adoption
     score $p_u^a + \sum_{v \in N^+(u)} p(u,v)\,p_v^a$ and selects
     top-$k$.
@@ -1541,7 +1545,9 @@ We use $k\in\{10,25,50,100,150,200\}$.
 \paragraph{Implementation and reproducibility.}
 All methods are implemented in Python~3.8 and evaluated on a machine with
 eight AMD EPYC 9654 cores and 16~GB of memory; the reported selection
-times use one process. We use five independent selection seeds
+times use one process. The NetFacebookEgo MC-Greedy matrix is generated
+in 32 chunks using eight processes; this preprocessing time is not included
+in method selection times. We use five independent selection seeds
 ($20260715$--$20260719$).
 The joint-sample budget is fixed before the cross-method comparison:
 $100{,}000$ samples for $k\leq50$ and $50{,}000$ samples for $k\geq100$.
@@ -1588,8 +1594,7 @@ the adoption-heavy results without adding another four-panel figure.
 
 The upper row of Figure~\ref{fig:real-quality} reports the budget-level adoption spread in
 the balanced scenario.
-On Netscience, the only graph on which the high-precision MC-Greedy
-reference is practical, \CIMRIS{} is within $1.1$--$3.8\%$ of that
+On Netscience, \CIMRIS{} is within $1.1$--$3.8\%$ of the MC-Greedy
 reference over all six budgets, with a mean gap of $2.3\%$.
 Across the four quality graphs, \CIMRIS{} outperforms 1Hop-Sort at 23 of
 24 graph--budget pairs, with a mean relative improvement of $5.8\%$.
@@ -1630,12 +1635,68 @@ It again beats both topology-only rankings at all 24 points, although
   \caption{Adoption spread in the balanced (top) and forwarding-heavy
   (bottom) scenarios. Each point is the mean of five selection runs, each
   evaluated using $10{,}000$ forward realizations; \CIMRIS{} error bars
-  show 95\% confidence intervals across runs. MC-Greedy is reported only
-  on Netscience.}
+  show 95\% confidence intervals across runs. MC-Greedy is reported on
+  Netscience and NetFacebookEgo.}
   \Description{Eight line charts compare distinct adopters versus coupon
   budget across four networks and two diffusion scenarios.}
   \label{fig:real-quality}
 \end{figure*}
+
+\subsection{Reference Strength, Sample Sensitivity, and Capacity}
+\label{sec:exp-robustness}
+
+We extend the strong-reference comparison from Netscience to
+NetFacebookEgo using $50{,}000$ independent trajectories per source.
+Figure~\ref{fig:extension-evidence}(a) shows that the mean gaps are
+$1.37\%$ in the balanced scenario and $0.38\%$ in the adoption-heavy
+scenario. The forwarding-heavy case is harder: the gap decreases from
+$11.1\%$ at $k=10$ to $4.4\%$ at $k=200$, with a mean of $7.2\%$.
+Across the two reference graphs, all three scenarios, and all six budgets,
+the observed gap ranges from $0.3\%$ to $11.1\%$.
+These results strengthen the comparison beyond the small Netscience graph,
+but also identify low-budget, low-adoption diffusion as the least favorable
+regime for the fixed empirical sample budget.
+
+Figures~\ref{fig:extension-evidence}(b) and
+\ref{fig:extension-evidence}(c) vary the number of joint RR samples in the
+forwarding-heavy scenario while holding the evaluation streams fixed.
+For every combination of the two graphs and $k\in\{10,50,200\}$, increasing
+the sample count from $5{,}000$ to $100{,}000$ reduces the mean gap to
+MC-Greedy. Averaged over the six combinations, the gap decreases from
+$8.90\%$ to $5.09\%$. The improvement is largest on Netscience at
+$k=10$, where the gap falls from $10.72\%$ to $3.61\%$, while
+NetFacebookEgo at $k=10$ remains the hardest case, decreasing from
+$14.29\%$ to $11.00\%$. Thus the sampling budget explains part, but not
+all, of the remaining difference from MC-Greedy.
+
+Finally, Figure~\ref{fig:extension-evidence}(d) evaluates the capacity
+formulation at $k=200$ under $c_v=1$, $c_v=2$, and $c_v=k$.
+In the balanced and adoption-heavy scenarios, both \CIMRIS{} and
+MC-Greedy almost always choose distinct seeds even when repetition is
+allowed, so relaxing capacity has no material effect.
+In the forwarding-heavy scenario, \CIMRIS{} makes on average
+$49.6$--$63.4$ repeated placements on Netscience and improves spread by
+$1.60$--$2.09\%$ over $c_v=1$; on NetFacebookEgo it makes
+$6.8$--$7.8$ repeats and improves spread by about $0.25\%$.
+Repeated placement is therefore useful when long trajectories make a
+small group of sources repeatedly valuable, but it is not uniformly
+beneficial across diffusion regimes.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.91\textwidth]{figures/experiments/validated_extension_evidence}
+  \caption{Strong-reference and robustness results. (a) Gap to
+  MC-Greedy on NetFacebookEgo. (b--c) Effect of the joint RR sample count
+  in the forwarding-heavy scenario. (d) Spread gain from relaxing the
+  per-node capacity at $k=200$; labels report the mean number of repeated
+  placements. Every reported statistic aggregates five \CIMRIS{} selection
+  seeds, with $10{,}000$ forward realizations per evaluated allocation.}
+  \Description{Four panels show the gap to Monte Carlo greedy on
+  NetFacebookEgo, sample-count sensitivity on two networks, and the gain
+  from allowing repeated coupon placement.}
+  \label{fig:extension-evidence}
+\end{figure*}
+\FloatBarrier
 
 \subsection{Conditioned Sampling and Scalability}
 \label{sec:exp-efficiency}
@@ -1656,7 +1717,7 @@ By $k=200$, however, fewer than $0.3\%$ of uniform-root samples have no
 firing gate, so differences in empirical variance should be interpreted
 with the finite 30-batch sample size in mind.
 
-\begin{figure}[H]
+\begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{figures/experiments/validated_sampler_ablation}
   \caption{Uniform-root versus conditioned-root estimation in the
@@ -1670,7 +1731,7 @@ with the finite 30-batch sample size in mind.
   \label{fig:real-sampler}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{figures/experiments/validated_runtime_scalability}
   \caption{Single-process \CIMRIS{} selection time in the balanced
@@ -1715,8 +1776,10 @@ The resulting \CIMRIS{} algorithm achieves a
 $(1-1/e-\epsilon)$ approximation with high probability and has expected
 running time near-linear in the graph size when the budget, accuracy, and
 spread lower bound are fixed.
-Experiments show that \CIMRIS{} stays within $1.1$--$4.4\%$ of the
-Monte Carlo greedy reference across three Netscience scenarios.
+Experiments show gaps of $0.3$--$11.1\%$ from high-precision Monte Carlo
+greedy across two reference graphs and three scenarios; the largest gap
+occurs for low-budget forwarding-heavy diffusion on NetFacebookEgo and
+decreases as the RR sample budget grows.
 Across all three scenarios, it outperforms DegreeTopM and PageRank at
 every one of the 72 graph--budget pairs, with its largest average gains
 appearing in the forwarding-heavy scenario.
@@ -1724,7 +1787,9 @@ Local and broadcast baselines remain competitive on some instances, so
 no method dominates every graph and budget.
 Conditioned root sampling removes zero-contribution samples and improves
 the measured variance--time product by $1.3$--$1.5\times$ at $k=10$ on
-the two tested graphs.
+the two tested graphs. Capacity experiments further show that repeated
+placement provides a modest gain in the forwarding-heavy regime but is
+rarely selected when adoption is common.
 
 Several directions remain open.
 First, extending the model to \emph{adaptive} allocation, where later

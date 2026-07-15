@@ -1,0 +1,15 @@
+{
+  "protocol_version": "validated-v2.3-extension",
+  "dataset": "NetFacebookEgo",
+  "scenario": "balanced",
+  "trajectories_per_source": 50000,
+  "master_seed": 4778423435420535940,
+  "cycle_semantics": "fixed action per node; repeated node terminates",
+  "workers": 8,
+  "elapsed_seconds": 24.914280038094148,
+  "min_entry": 0.0,
+  "max_entry": 0.3985399901866913,
+  "min_row_sum": 0.4940599969922914,
+  "max_row_sum": 0.6734800047051976,
+  "status": "REAL_EXPERIMENT"
+}

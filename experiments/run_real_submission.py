@@ -213,7 +213,10 @@ def cim_ris_seeds(
     k: int,
     samples: int,
     seed: int,
+    capacity_per_node: int = 1,
 ) -> tuple[list[int], float, float, int]:
+    if capacity_per_node < 1:
+        raise ValueError("capacity_per_node must be positive")
     started = time.perf_counter()
     rng = random.Random(seed)
     root_weights = 1.0 - np.power(1.0 - alpha, k)
@@ -235,24 +238,28 @@ def cim_ris_seeds(
                 coverage[coupon_index][node].append(sample_id)
 
     selected: list[int] = []
-    selected_set: set[int] = set()
+    selected_counts = np.zeros(graph.n, dtype=np.int32)
     covered = bytearray(samples)
     covered_count = 0
     for coupon_index in range(k):
         best_node = -1
         best_gain = -1
         for node, sample_ids in coverage[coupon_index].items():
-            if node in selected_set:
+            if selected_counts[node] >= capacity_per_node:
                 continue
             gain = sum(1 for sample_id in sample_ids if not covered[sample_id])
             if gain > best_gain or (gain == best_gain and node < best_node):
                 best_node = node
                 best_gain = gain
         if best_node < 0:
-            best_node = next(node for node in range(graph.n) if node not in selected_set)
+            best_node = next(
+                node
+                for node in range(graph.n)
+                if selected_counts[node] < capacity_per_node
+            )
             best_gain = 0
         selected.append(best_node)
-        selected_set.add(best_node)
+        selected_counts[best_node] += 1
         for sample_id in coverage[coupon_index].get(best_node, ()):
             if not covered[sample_id]:
                 covered[sample_id] = 1
@@ -480,16 +487,20 @@ def estimate_single_coupon_matrix(
     return matrix
 
 
-def mc_greedy_order(q_matrix: np.ndarray, max_k: int) -> list[int]:
+def mc_greedy_order(
+    q_matrix: np.ndarray, max_k: int, capacity_per_node: int = 1
+) -> list[int]:
+    if capacity_per_node < 1 or capacity_per_node * q_matrix.shape[0] < max_k:
+        raise ValueError("Infeasible capacity")
     residual = np.ones(q_matrix.shape[1], dtype=np.float64)
     selected: list[int] = []
-    available = np.ones(q_matrix.shape[0], dtype=bool)
+    counts = np.zeros(q_matrix.shape[0], dtype=np.int32)
     for _ in range(max_k):
         gains = q_matrix.dot(residual)
-        gains[~available] = -1.0
+        gains[counts >= capacity_per_node] = -1.0
         node = int(np.argmax(gains))
         selected.append(node)
-        available[node] = False
+        counts[node] += 1
         residual *= 1.0 - q_matrix[node]
     return selected
 

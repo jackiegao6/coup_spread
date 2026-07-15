@@ -48,7 +48,11 @@ def read_real_csv(path: Path) -> list[dict[str, str]]:
         rows = list(csv.DictReader(handle))
     if not rows or any(row.get("status") != "REAL_EXPERIMENT" for row in rows):
         raise ValueError(f"Non-real or empty source: {path}")
-    if any(row.get("protocol_version") not in (None, "", "validated-v2.2") for row in rows):
+    if any(
+        row.get("protocol_version")
+        not in (None, "", "validated-v2.2", "validated-v2.3-extension")
+        for row in rows
+    ):
         raise ValueError(f"Unexpected protocol version: {path}")
     return rows
 
@@ -123,6 +127,9 @@ def plot_quality(scenario: str, output_stem: str) -> None:
 
 def plot_quality_combined() -> None:
     rows = read_real_csv(RESULTS / "validated_summary.csv")
+    extension_rows = read_real_csv(
+        RESULTS / "extensions/strong_benchmark_summary.csv"
+    )
     apply_style()
     fig, axes = plt.subplots(2, 4, figsize=(7.1, 3.65), sharex=True)
     scenarios = ["balanced", "forwarding-heavy"]
@@ -132,20 +139,36 @@ def plot_quality_combined() -> None:
         for column_index, dataset in enumerate(DATASETS):
             ax = axes[row_index, column_index]
             for method in METHODS:
-                selected = sorted(
-                    (
-                        row
-                        for row in rows
-                        if row["dataset"] == dataset
-                        and row["scenario"] == scenario
-                        and row["method"] == method
-                    ),
-                    key=lambda row: int(row["k"]),
-                )
+                if method == "MC-Greedy" and dataset in {
+                    "Netscience",
+                    "NetFacebookEgo",
+                }:
+                    selected = sorted(
+                        (
+                            row
+                            for row in extension_rows
+                            if row["dataset"] == dataset
+                            and row["scenario"] == scenario
+                        ),
+                        key=lambda row: int(row["k"]),
+                    )
+                    value_field = "mean_mc_greedy_mean_adopters"
+                else:
+                    selected = sorted(
+                        (
+                            row
+                            for row in rows
+                            if row["dataset"] == dataset
+                            and row["scenario"] == scenario
+                            and row["method"] == method
+                        ),
+                        key=lambda row: int(row["k"]),
+                    )
+                    value_field = "mean_adopters"
                 if not selected:
                     continue
                 x = [int(row["k"]) for row in selected]
-                y = [float(row["mean_adopters"]) for row in selected]
+                y = [float(row[value_field]) for row in selected]
                 color = METHOD_COLORS[method]
                 common = dict(
                     color=color,

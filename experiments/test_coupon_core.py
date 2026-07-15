@@ -12,6 +12,7 @@ from run_real_submission import (
     Graph,
     cim_ris_seeds,
     conditioned_gates,
+    mc_greedy_order,
     reverse_coupon_set,
     single_coupon_adopter,
 )
@@ -146,6 +147,24 @@ class CouponCoreTests(unittest.TestCase):
             graph, alpha, discard, k=2, samples=20_000, seed=125
         )
         self.assertEqual(seeds, [0, 1])
+
+    def test_capacity_allows_repeated_placement(self) -> None:
+        graph = make_graph([[], [], []], name="isolates")
+        alpha = np.asarray([0.9, 0.05, 0.01])
+        discard = 1.0 - alpha
+        seeds, _, _, _ = cim_ris_seeds(
+            graph,
+            alpha,
+            discard,
+            k=2,
+            samples=50_000,
+            seed=412,
+            capacity_per_node=2,
+        )
+        q = np.diag(alpha)
+        greedy_order = mc_greedy_order(q, max_k=2, capacity_per_node=2)
+        self.assertEqual(seeds, [0, 0])
+        self.assertEqual(greedy_order, [0, 0])
 
 
 if __name__ == "__main__":

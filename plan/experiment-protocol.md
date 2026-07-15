@@ -5,6 +5,39 @@
 > reference artifacts but are superseded; synthetic planning files remain
 > excluded from the manuscript.
 
+## Validated-v2.3 extension protocol
+
+> STATUS: LOCKED BEFORE THE EXTENSION RUN.
+
+The extension addresses three prespecified evidence gaps without modifying the
+validated-v2.2 outputs.
+
+- Strong-reference datasets: Netscience and NetFacebookEgo. For each of the
+  three existing scenarios, estimate the single-coupon destination matrix from
+  100,000 trajectories per source on Netscience and 50,000 per source on
+  NetFacebookEgo, then run deterministic greedy under the distinct-seed policy.
+  Evaluate the resulting MC-Greedy allocation and each validated-v2.2 CIM-RIS
+  allocation with common evaluation streams that are independent of reference
+  construction.
+- Capacity ablation datasets: Netscience and NetFacebookEgo; all three
+  scenarios; `k=200`, where the distinct-seed constraint is most likely to
+  bind; capacities `c_v in {1, 2, k}`; five selection seeds
+  `20260715`--`20260719`; the same sample-budget rule as
+  validated-v2.2. Report independently evaluated spread, gap to MC-Greedy under
+  the same capacity, and the number of repeated placements.
+- Sample sensitivity datasets: Netscience and NetFacebookEgo; the
+  forwarding-heavy stress test; `k in {10, 50, 200}`; sample counts
+  `{5,000, 20,000, 50,000, 100,000}`; five selection seeds. Evaluate all sample
+  counts and the distinct-seed MC-Greedy reference with common forward streams.
+- Reporting: retain every prespecified result, including flat, non-monotone,
+  and unfavorable outcomes. MC-Greedy is a high-precision reference built from
+  an estimated objective; it is not labeled as exact or globally optimal.
+
+This scope was amended before any extension result was produced after a timing
+smoke test showed that the original cross-product would spend most of its time
+rerunning low-risk capacity settings. No network, scenario, or budget was
+removed in response to an observed quality result.
+
 ## Validated-v2 locked protocol
 
 - Quality datasets: Netscience, NetFacebookEgo, DoubanRandom, and EmailEnron.

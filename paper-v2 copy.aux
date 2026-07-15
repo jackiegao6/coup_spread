@@ -93,20 +93,22 @@
 \@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Degree-Based Node Probability Generation\relax }}{9}{algorithm.4}\protected@file@percent }
 \newlabel{alg:gendist}{{4}{9}{Degree-Based Node Probability Generation\relax }{algorithm.4}{}}
 \@writefile{toc}{\contentsline {paragraph}{Baselines.}{9}{section*.15}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Evaluation metrics.}{9}{section*.16}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Mean relative adoption-spread difference (\%) between \textsc  {CIM-RIS}{} and each baseline. Positive values favor \textsc  {CIM-RIS}{}. Baseline comparisons average 24 graph--budget pairs per scenario; MC-Greedy averages the six Netscience budgets.\relax }}{10}{table.caption.18}\protected@file@percent }
 \newlabel{tab:aggregate-quality}{{3}{10}{Mean relative adoption-spread difference (\%) between \CIMRIS {} and each baseline. Positive values favor \CIMRIS {}. Baseline comparisons average 24 graph--budget pairs per scenario; MC-Greedy averages the six Netscience budgets.\relax }{table.caption.18}{}}
+\@writefile{toc}{\contentsline {paragraph}{Evaluation metrics.}{10}{section*.16}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Implementation and reproducibility.}{10}{section*.17}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Solution Quality}{10}{subsection.6.2}\protected@file@percent }
 \newlabel{sec:exp-quality}{{6.2}{10}{Solution Quality}{subsection.6.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Conditioned Sampling and Scalability}{10}{subsection.6.3}\protected@file@percent }
-\newlabel{sec:exp-efficiency}{{6.3}{10}{Conditioned Sampling and Scalability}{subsection.6.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Adoption spread in the balanced (top) and forwarding-heavy (bottom) scenarios. Each point is the mean of five selection runs, each evaluated using $10{,}000$ forward realizations; \textsc  {CIM-RIS}{} error bars show 95\% confidence intervals across runs. MC-Greedy is reported only on Netscience.\relax }}{11}{figure.caption.19}\protected@file@percent }
-\newlabel{fig:real-quality}{{4}{11}{Adoption spread in the balanced (top) and forwarding-heavy (bottom) scenarios. Each point is the mean of five selection runs, each evaluated using $10{,}000$ forward realizations; \CIMRIS {} error bars show 95\% confidence intervals across runs. MC-Greedy is reported only on Netscience.\relax }{figure.caption.19}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Uniform-root versus conditioned-root estimation in the forwarding-heavy scenario. Each statistic uses 30 independent batches of $20{,}000$ samples. Relative efficiency is the ratio of the variance--time products of uniform and conditioned sampling; values above one favor conditioning.\relax }}{11}{figure.caption.20}\protected@file@percent }
-\newlabel{fig:real-sampler}{{5}{11}{Uniform-root versus conditioned-root estimation in the forwarding-heavy scenario. Each statistic uses 30 independent batches of $20{,}000$ samples. Relative efficiency is the ratio of the variance--time products of uniform and conditioned sampling; values above one favor conditioning.\relax }{figure.caption.20}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Single-process \textsc  {CIM-RIS}{} selection time in the balanced scenario, averaged over five runs. The sample budget is $100{,}000$ for $k\leq 50$ and $50{,}000$ for $k\geq 100$; error bars show one standard deviation.\relax }}{11}{figure.caption.21}\protected@file@percent }
-\newlabel{fig:real-runtime}{{6}{11}{Single-process \CIMRIS {} selection time in the balanced scenario, averaged over five runs. The sample budget is $100{,}000$ for $k\leq 50$ and $50{,}000$ for $k\geq 100$; error bars show one standard deviation.\relax }{figure.caption.21}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Reference Strength, Sample Sensitivity, and Capacity}{10}{subsection.6.3}\protected@file@percent }
+\newlabel{sec:exp-robustness}{{6.3}{10}{Reference Strength, Sample Sensitivity, and Capacity}{subsection.6.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Adoption spread in the balanced (top) and forwarding-heavy (bottom) scenarios. Each point is the mean of five selection runs, each evaluated using $10{,}000$ forward realizations; \textsc  {CIM-RIS}{} error bars show 95\% confidence intervals across runs. MC-Greedy is reported on Netscience and NetFacebookEgo.\relax }}{11}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:real-quality}{{4}{11}{Adoption spread in the balanced (top) and forwarding-heavy (bottom) scenarios. Each point is the mean of five selection runs, each evaluated using $10{,}000$ forward realizations; \CIMRIS {} error bars show 95\% confidence intervals across runs. MC-Greedy is reported on Netscience and NetFacebookEgo.\relax }{figure.caption.19}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Strong-reference and robustness results. (a) Gap to MC-Greedy on NetFacebookEgo. (b--c) Effect of the joint RR sample count in the forwarding-heavy scenario. (d) Spread gain from relaxing the per-node capacity at $k=200$; labels report the mean number of repeated placements. Every reported statistic aggregates five \textsc  {CIM-RIS}{} selection seeds, with $10{,}000$ forward realizations per evaluated allocation.\relax }}{12}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:extension-evidence}{{5}{12}{Strong-reference and robustness results. (a) Gap to MC-Greedy on NetFacebookEgo. (b--c) Effect of the joint RR sample count in the forwarding-heavy scenario. (d) Spread gain from relaxing the per-node capacity at $k=200$; labels report the mean number of repeated placements. Every reported statistic aggregates five \CIMRIS {} selection seeds, with $10{,}000$ forward realizations per evaluated allocation.\relax }{figure.caption.20}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Conditioned Sampling and Scalability}{12}{subsection.6.4}\protected@file@percent }
+\newlabel{sec:exp-efficiency}{{6.4}{12}{Conditioned Sampling and Scalability}{subsection.6.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{12}{section.7}\protected@file@percent }
+\newlabel{sec:conclusion}{{7}{12}{Conclusion}{section.7}{}}
 \bibstyle{ACM-Reference-Format}
 \bibdata{references}
 \bibcite{borgs2014maximizing}{{1}{2014}{{Borgs et~al\mbox  {.}}}{{Borgs, Brautbar, Chayes, and Lucier}}}
@@ -126,6 +128,11 @@
 \bibcite{nemhauser1978analysis}{{15}{1978}{{Nemhauser et~al\mbox  {.}}}{{Nemhauser, Wolsey, and Fisher}}}
 \bibcite{nguyen2016stop}{{16}{2016}{{Nguyen et~al\mbox  {.}}}{{Nguyen, Thai, and Dinh}}}
 \bibcite{page1999pagerank}{{17}{1999}{{Page et~al\mbox  {.}}}{{Page, Brin, Motwani, and Winograd}}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Uniform-root versus conditioned-root estimation in the forwarding-heavy scenario. Each statistic uses 30 independent batches of $20{,}000$ samples. Relative efficiency is the ratio of the variance--time products of uniform and conditioned sampling; values above one favor conditioning.\relax }}{13}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:real-sampler}{{6}{13}{Uniform-root versus conditioned-root estimation in the forwarding-heavy scenario. Each statistic uses 30 independent batches of $20{,}000$ samples. Relative efficiency is the ratio of the variance--time products of uniform and conditioned sampling; values above one favor conditioning.\relax }{figure.caption.21}{}}
+\@writefile{toc}{\contentsline {section}{References}{13}{section*.24}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Single-process \textsc  {CIM-RIS}{} selection time in the balanced scenario, averaged over five runs. The sample budget is $100{,}000$ for $k\leq 50$ and $50{,}000$ for $k\geq 100$; error bars show one standard deviation.\relax }}{13}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:real-runtime}{{7}{13}{Single-process \CIMRIS {} selection time in the balanced scenario, averaged over five runs. The sample budget is $100{,}000$ for $k\leq 50$ and $50{,}000$ for $k\geq 100$; error bars show one standard deviation.\relax }{figure.caption.22}{}}
 \bibcite{richardson2002mining}{{18}{2002}{{Richardson and Domingos}}{{Richardson and Domingos}}}
 \bibcite{seeman2013adaptive}{{19}{2013}{{Seeman and Singer}}{{Seeman and Singer}}}
 \bibcite{sun2018multi}{{20}{2018}{{Sun et~al\mbox  {.}}}{{Sun, Huang, Yu, and Chen}}}
@@ -139,7 +146,4 @@
 \newlabel{tocindent3}{0pt}
 \newlabel{tocindent4}{0pt}
 \newlabel{tocindent5}{0pt}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{12}{section.7}\protected@file@percent }
-\newlabel{sec:conclusion}{{7}{12}{Conclusion}{section.7}{}}
-\@writefile{toc}{\contentsline {section}{References}{12}{section*.23}\protected@file@percent }
-\newlabel{TotPages}{{12}{12}{}{page.12}{}}
+\newlabel{TotPages}{{14}{14}{}{page.14}{}}

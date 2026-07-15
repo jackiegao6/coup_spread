@@ -40,7 +40,8 @@ synthetic behavior probabilities, not as a field study.
 
 - Node behavior probabilities are generated from degree rather than learned
   from campaign logs, limiting external validity.
-- MC-Greedy is computationally feasible only on Netscience.
-- Experiments use the distinct-seed policy `c_v=1`; repeated placement is
-  supported by the formulation but is not empirically studied.
+- The validated-v2.3 extension adds MC-Greedy on NetFacebookEgo, but the
+  reference remains unavailable on the two larger quality graphs.
+- The validated-v2.3 extension studies repeated placement at `k=200`; capacity
+  effects at smaller budgets remain unmeasured.
 - The target venue and its page limit remain unspecified.

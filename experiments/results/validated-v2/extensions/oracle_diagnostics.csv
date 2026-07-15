@@ -1,0 +1,7 @@
+dataset,scenario,trajectories_per_source,source,elapsed_seconds,min_entry,max_entry,min_row_sum,max_row_sum,status,protocol_version
+Netscience,balanced,100000,validated-v2.2 cache,46.30115358706098,0.0,0.38383999466896057,0.558350005056127,0.673109997445863,REAL_EXPERIMENT,validated-v2.3-extension
+NetFacebookEgo,balanced,50000,validated-v2.3 new run,24.914280038094148,0.0,0.3985399901866913,0.4940599969922914,0.6734800047051976,REAL_EXPERIMENT,validated-v2.3-extension
+Netscience,adoption-heavy,100000,validated-v2.2 cache,21.547533900942653,0.0,0.7337899804115295,0.7062999970039527,0.8140999944662326,REAL_EXPERIMENT,validated-v2.3-extension
+NetFacebookEgo,adoption-heavy,50000,validated-v2.3 new run,9.351047134958208,0.0,0.7708799839019775,0.7175400039195665,0.8304600029587164,REAL_EXPERIMENT,validated-v2.3-extension
+Netscience,forwarding-heavy,100000,validated-v2.2 cache,141.27142875699792,0.0,0.05195000022649765,0.08522000017546816,0.14788000177941285,REAL_EXPERIMENT,validated-v2.3-extension
+NetFacebookEgo,forwarding-heavy,50000,validated-v2.3 new run,55.90523051901255,0.0,0.05852000042796135,0.06211999912193278,0.1429599989496637,REAL_EXPERIMENT,validated-v2.3-extension

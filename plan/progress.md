@@ -1,5 +1,75 @@
 # Progress
 
+## 2026-07-15 - Validated Experiment Extensions
+
+- Stage: S3 Experiments, followed by S5 review.
+- Status: complete under the amended-before-results validated-v2.3 extension
+  protocol.
+- Objective: add a high-precision MC-Greedy benchmark on a larger graph, test
+  repeated placement under explicit capacities, and measure sensitivity to RR
+  sample count without changing the validated-v2.2 evidence.
+- Protocol correction: a preregistration-time tiny-graph test rejected the
+  proposed absorbing-Markov linear solve because it resamples actions after a
+  revisit, whereas the paper fixes each node action per coupon and terminates
+  transfer cycles. The locked extension therefore uses model-consistent forward
+  trajectories with independent evaluation streams.
+- Pre-result feasibility amendment: a timing smoke test measured 21.8 seconds
+  for one Netscience `k=200`, 50,000-sample selection. Before any extension CSV
+  was produced, capacity testing was focused on `k=200` and sample sensitivity
+  on the forwarding-heavy stress test; the two networks, all three capacity
+  policies, four sample counts, and five seeds were retained.
+- Task packet:
+  `plan/task-packets/2026-07-15-validated-experiment-extensions.md`.
+
+### Artifacts
+
+- Added uniform-capacity support to the production CIM-RIS selector while
+  preserving `c_v=1` as the default used by validated-v2.2.
+- Added a parallel, model-consistent MC-Greedy reference on NetFacebookEgo
+  using 50,000 trajectories per source in all three scenarios; retained the
+  100,000-trajectory Netscience reference.
+- Produced 180 strong-reference rows, 90 capacity rows, and 120
+  sample-sensitivity rows, with five selection/evaluation repeats throughout.
+- Added an independent extension claim checker and a four-panel submission
+  figure; updated the main quality figure to show MC-Greedy on NetFacebookEgo.
+- Removed the incorrect claim that fixed-action cycle semantics can be handled
+  by an ordinary absorbing-Markov linear system.
+
+### Review gates
+
+- Spec compliance: passed. All extension rows use the locked protocol/status,
+  reference construction is independent of final evaluation, and no
+  validated-v2.2 artifact was overwritten.
+- Quality review: passed with explicit negative results. The manuscript reports
+  the 11.1% worst-case gap, monotone mean improvement with sample count, and the
+  small/conditional effect of repeated placement.
+
+### Capability-use audit
+
+- Required skills: paper-orchestration, experiment-results-planning,
+  statistical-analysis, figures-python, peer-review, latex-output, and
+  verification.
+- Skills actually used: all required skills for protocol amendment, repeated
+  evaluation, descriptive aggregation, publication plotting, manuscript
+  revision, adversarial review, and compile verification.
+- Inputs consumed: validated-v2.2 seed allocations and evaluation seeds; two
+  real network topologies; all three controlled diffusion scenarios; current
+  model/cycle semantics; existing oracle caches; and the ACM manuscript.
+- Inputs not used and why: the proposed sparse linear-system benchmark was
+  rejected by a tiny cyclic counterexample because it resamples actions after
+  revisits; mock/synthetic planning data and historical result files were not
+  used.
+- Artifacts produced: capacity-aware selector/tests; extension runner, oracle
+  caches, raw/summary CSVs, metadata, verifier, figure script and PNG/SVG;
+  revised manuscript/PDF; traceability, manifest, and peer-review updates.
+- Verification run: four tiny-instance tests; v2.2 and v2.3 claim checkers;
+  protocol/status/count checks; visual inspection of both revised figures;
+  Python syntax checks; forced ACM LaTeX rebuild; reference/graphic/font and
+  page-order scans.
+- Remaining risk: behavior probabilities are synthetic; MC-Greedy covers only
+  the two smaller reference graphs; sample sensitivity is limited to
+  forwarding-heavy diffusion; and capacity effects are measured at `k=200`.
+
 ## 2026-07-15 - Real Experiment Rebuild
 
 - Stage: S3 Experiments, beginning with an S2 method-to-code audit and ending
