@@ -97,6 +97,7 @@ def main() -> None:
         if any(later >= earlier for earlier, later in zip(ordered, ordered[1:])):
             raise AssertionError("A sensitivity gap does not decrease with samples")
     mean_by_samples = {}
+    time_by_samples = {}
     for sample_count in [5_000, 20_000, 50_000, 100_000]:
         values = [
             float(row["mean_gap_to_mc_greedy_percent"])
@@ -104,8 +105,19 @@ def main() -> None:
             if int(row["rr_samples"]) == sample_count
         ]
         mean_by_samples[sample_count] = statistics.mean(values)
+        time_by_samples[sample_count] = statistics.mean(
+            float(row["mean_selection_seconds"])
+            for row in sensitivity
+            if int(row["rr_samples"]) == sample_count
+        )
     close(mean_by_samples[5_000], 8.90)
+    close(mean_by_samples[20_000], 7.10)
+    close(mean_by_samples[50_000], 6.22)
     close(mean_by_samples[100_000], 5.09)
+    close(time_by_samples[5_000], 0.266, tolerance=0.006)
+    close(time_by_samples[20_000], 1.016, tolerance=0.006)
+    close(time_by_samples[50_000], 2.435, tolerance=0.006)
+    close(time_by_samples[100_000], 4.741, tolerance=0.006)
 
     capacity_index = {
         (row["dataset"], row["scenario"], row["capacity_policy"]): row

@@ -34,6 +34,10 @@
   figure; updated the main quality figure to show MC-Greedy on NetFacebookEgo.
 - Removed the incorrect claim that fixed-action cycle semantics can be handled
   by an ordinary absorbing-Markov linear system.
+- Closed the sampling-budget explanation gap: the manuscript now separates the
+  theorem-calibrated $T(\epsilon,\delta,\mathrm{LB})$ from the fixed empirical
+  schedule, explains the `k=100` budget change, and reports the measured
+  cost--accuracy curve with claim-checker coverage.
 
 ### Review gates
 

@@ -559,11 +559,11 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineTB-tl
 INPUT figures/experiments/validated_quality_combined.png
 INPUT ./figures/experiments/validated_quality_combined.png
 INPUT ./figures/experiments/validated_quality_combined.png
+INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineTB-tlf-sc-t1.vf
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineTB-tlf-sc-t1--base.tfm
 INPUT figures/experiments/validated_extension_evidence.png
 INPUT ./figures/experiments/validated_extension_evidence.png
 INPUT ./figures/experiments/validated_extension_evidence.png
-INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineTB-tlf-sc-t1.vf
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineTB-tlf-sc-t1--base.tfm
 INPUT figures/experiments/validated_sampler_ablation.png
 INPUT ./figures/experiments/validated_sampler_ablation.png
 INPUT ./figures/experiments/validated_sampler_ablation.png

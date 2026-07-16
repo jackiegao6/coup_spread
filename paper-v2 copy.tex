@@ -1205,6 +1205,16 @@ If this value is zero, then $\mathrm{OPT}=0$; otherwise it is a positive
 lower bound on $\mathrm{OPT}$.
 Independent pilot RR samples can give a tighter lower confidence bound in
 practice.
+The value of $T$ above is a sufficient theorem-level sample count: when
+$\epsilon$, $\delta$, and a valid $\mathrm{LB}$ are supplied, it is the
+quantity used to attach the high-probability guarantee in
+Theorem~\ref{thm:approx} to one run.
+Because the bound is uniform over all possible greedy prefixes, it can be
+conservative in practice, particularly when $\mathrm{LB}$ is small.
+An implementation may instead use a fixed empirical sample budget, but such a
+run should be interpreted as an approximate RIS implementation without a
+per-run $(\epsilon,\delta)$ certificate unless its budget also satisfies this
+bound.
 With these samples, \CIMRIS{} processes coupon indices in order and
 selects the candidate with the largest empirical marginal gain.
 Using inverted lists from node--coupon pairs to samples, the gains in
@@ -1552,6 +1562,11 @@ in method selection times. We use five independent selection seeds
 The joint-sample budget is fixed before the cross-method comparison:
 $100{,}000$ samples for $k\leq50$ and $50{,}000$ samples for $k\geq100$.
 IC-RIS uses the same sample budget as \CIMRIS{}.
+This two-level schedule was fixed from a pre-comparison convergence pilot.
+It limits total sampling work because one joint sample contains up to $k$ RR
+components and therefore becomes more expensive as the coupon budget grows;
+the change at $k=100$ is not an adaptive stopping decision based on the
+reported method outcomes.
 These fixed budgets support a controlled empirical comparison; they are
 not presented as the generally conservative sample count in
 Theorem~\ref{thm:approx} for a particular $(\epsilon,\delta)$ pair.
@@ -1668,6 +1683,17 @@ $k=10$, where the gap falls from $10.72\%$ to $3.61\%$, while
 NetFacebookEgo at $k=10$ remains the hardest case, decreasing from
 $14.29\%$ to $11.00\%$. Thus the sampling budget explains part, but not
 all, of the remaining difference from MC-Greedy.
+The corresponding running times expose the expected cost--accuracy trade-off.
+Averaged over the six network--budget combinations, selection time grows from
+$0.266$ seconds with $5{,}000$ samples to $1.016$, $2.435$, and $4.741$
+seconds with $20{,}000$, $50{,}000$, and $100{,}000$ samples, respectively.
+Over the same budgets, the mean gap decreases from $8.90\%$ to $7.10\%$,
+$6.22\%$, and $5.09\%$.
+Runtime is therefore approximately proportional to the number of samples,
+whereas the observed quality improvement has diminishing returns.
+This trade-off motivates the fixed two-level schedule in the main comparison,
+but does not turn that empirical schedule into the theorem-calibrated value of
+$T$.
 
 Finally, Figure~\ref{fig:extension-evidence}(d) evaluates the capacity
 formulation at $k=200$ under $c_v=1$, $c_v=2$, and $c_v=k$.

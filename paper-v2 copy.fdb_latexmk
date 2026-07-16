@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex paper-v2 copy"] 1784123138 "paper-v2 copy.aux" "paper-v2 copy.bbl" "paper-v2 copy" 1784123141
+["bibtex paper-v2 copy"] 1784172283 "paper-v2 copy.aux" "paper-v2 copy.bbl" "paper-v2 copy" 1784172285
   "/usr/share/texlive/texmf-dist/bibtex/bst/acmart/ACM-Reference-Format.bst" 1581285989 84858 b41956ef46b831208d29ea3f9c91a555 ""
-  "paper-v2 copy.aux" 1784123141 16331 8738788ccf53e34f680f6eb7a72c34c5 "pdflatex"
+  "paper-v2 copy.aux" 1784172285 16331 49a19239d3ee5804c6121ccc3fb1e829 "pdflatex"
   "references.bib" 1784102744 8566 3b9eec0496c757ddbd67067e02ae2eaf ""
   (generated)
   "paper-v2 copy.bbl"
   "paper-v2 copy.blg"
-["pdflatex"] 1784123138 "paper-v2 copy.tex" "paper-v2 copy.pdf" "paper-v2 copy" 1784123141
+["pdflatex"] 1784172283 "paper-v2 copy.tex" "paper-v2 copy.pdf" "paper-v2 copy" 1784172285
   "/etc/texmf/web2c/texmf.cnf" 1784095645 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/tmp/acmart-build/acmart.cls" 1784096273 121737 e553f62fc9642f9010f9c29ba27de8d5 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-4.enc" 1558214095 7693 0f2dce6d313c82989ec3a67fc24df2a0 ""
@@ -332,12 +332,12 @@
   "figures/experiments/validated_quality_combined.png" 1784122585 516840 cbd203673318482d2fc3b12911f85d5a ""
   "figures/experiments/validated_runtime_scalability.png" 1784122586 162694 f3e2983381e429127113cdff2200dada ""
   "figures/experiments/validated_sampler_ablation.png" 1784122587 213481 2d0c5aa6233e2331c19115065f0be690 ""
-  "paper-v2 copy.aux" 1784123141 16331 8738788ccf53e34f680f6eb7a72c34c5 "pdflatex"
-  "paper-v2 copy.bbl" 1784123138 14860 08bace258a26ca747fcb13a41f49f7f0 "bibtex paper-v2 copy"
-  "paper-v2 copy.out" 1784123141 3786 3bf6ef58deea63e813e0c33aaf38f82d "pdflatex"
-  "paper-v2 copy.tex" 1784123120 76748 333751bc3fe3f649e2470709ef0a0bcb ""
+  "paper-v2 copy.aux" 1784172285 16331 49a19239d3ee5804c6121ccc3fb1e829 "pdflatex"
+  "paper-v2 copy.bbl" 1784172283 14860 08bace258a26ca747fcb13a41f49f7f0 "bibtex paper-v2 copy"
+  "paper-v2 copy.out" 1784172285 3786 3bf6ef58deea63e813e0c33aaf38f82d "pdflatex"
+  "paper-v2 copy.tex" 1784172241 78394 52d09acefc5016f0763363c3ccb4906d ""
   (generated)
+  "paper-v2 copy.pdf"
   "paper-v2 copy.log"
   "paper-v2 copy.out"
   "paper-v2 copy.aux"
-  "paper-v2 copy.pdf"
