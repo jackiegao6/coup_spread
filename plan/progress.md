@@ -1,5 +1,75 @@
 # Progress
 
+## 2026-07-16 - Weak-Gain Code Audit
+
+- Stage: S3 Experiments and S5 Review.
+- Status: complete.
+- Objective: separate implementation error, finite-sample optimization loss,
+  and genuinely strong baselines as explanations for the weak empirical gain.
+- Task packet: `plan/task-packets/2026-07-16-weak-gain-code-audit.md`.
+
+### Findings and artifacts
+
+- Found no reproducible semantic bug in the validated simulator or RR
+  estimator; exact tests, independent fixed-allocation RR estimation, matrix
+  evaluation, and forward simulation agree.
+- Identified severe adaptive overfitting at the empirical RR budgets. In the
+  hardest `k=100` configuration, increasing samples from 50,000 to 500,000
+  reduced the matrix-reference gap from 7.46% to 5.03% and changed the
+  comparison with the strongest stored baseline from approximately tied to a
+  2.9% advantage.
+- Quantified why local baselines are intrinsically strong: immediate redemption
+  accounts for 90.1% of reference redemptions in adoption-heavy settings, and
+  96.6% of NetFacebookEgo nodes have degree one.
+- Added reproducible decomposition, holdout, high-sample, and verification
+  scripts/results under `experiments/`, plus
+  `plan/review/weak-gain-code-audit.md`.
+
+### Review gates
+
+- Spec compliance: passed. Existing experimental parameters and manuscript
+  results were not changed; all new outputs are explicitly marked
+  `POST_HOC_DIAGNOSTIC`.
+- Quality review: passed. The audit separates fixed-allocation estimator
+  correctness from adaptive selection optimism and does not call MC-Greedy
+  exact.
+
+### Capability-use audit
+
+- Required skills: paper-orchestration, experiment-results-planning,
+  peer-review, and verification.
+- Skills actually used: all required skills for scoped diagnosis, evidence
+  separation, adversarial code review, and reproducible checks.
+- Inputs consumed: current model and algorithm; validated core runner/tests;
+  v2.2/v2.3 allocations and destination matrices; v2.4 protocol; raw results;
+  graph CSR data.
+- Inputs not used and why: historical mock outputs and obsolete `gzc-impl`
+  results were excluded because they do not follow the validated semantics.
+- Artifacts produced: two audit runners, one verifier, three diagnostic CSVs,
+  this review, and progress records.
+- Verification run: core exact tests; graph-loader/direction/probability checks;
+  fixed-allocation RR holdout; matrix-versus-forward comparisons; 12
+  high-sample selections; diagnostic verifier; existing result claim checkers;
+  `git diff --check`.
+- Remaining risk: the high-sample study is post hoc and covers one hardest-case
+  configuration; a complete prespecified rerun is needed before revising
+  manuscript performance claims.
+
+## 2026-07-16 - Venue Shortlist
+
+- Stage: S5 Review and submission planning.
+- Status: complete.
+- Compared the current contribution and empirical limitations against verified
+  2027 CFP scope, deadlines, and page limits.
+- Recommended EDBT 2027 cycle 3 as the best preparation-time/fit compromise,
+  with WSDM 2027 as the aggressive immediate option; recorded scope reasons
+  not to prioritize ICDT, ECIR, ICDE, or the imminent KDD round.
+- Artifact: `plan/review/venue-shortlist-2026-07-16.md`.
+- Verification: official WSDM, EDBT/ICDT, and ICDE CFP/date pages were checked;
+  CCF categories were cross-checked against current ccf-deadlines metadata.
+- Remaining risk: PAKDD 2027, ADMA 2027, and SDM 2027 official CFPs were not
+  verifiable at this date and therefore have no asserted deadlines.
+
 ## 2026-07-16 - Appendix Parameter-Sweep Experiments
 
 - Stage: S3 Experiments, followed by S5 review.
