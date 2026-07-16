@@ -5,8 +5,8 @@ INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
 INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
 INPUT paper-v2 copy.tex
 OUTPUT paper-v2 copy.log
-INPUT /tmp/acmart-build/acmart.cls
-INPUT /tmp/acmart-build/acmart.cls
+INPUT /usr/share/texlive/texmf-dist/tex/latex/acmart/acmart.cls
+INPUT /usr/share/texlive/texmf-dist/tex/latex/acmart/acmart.cls
 INPUT /usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
 INPUT /usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
@@ -15,8 +15,6 @@ INPUT /usr/share/texlive/texmf-dist/tex/generic/xkeyval/keyval.tex
 INPUT /usr/share/texlive/texmf-dist/tex/generic/xstring/xstring.sty
 INPUT /usr/share/texlive/texmf-dist/tex/generic/xstring/xstring.sty
 INPUT /usr/share/texlive/texmf-dist/tex/generic/xstring/xstring.tex
-INPUT /usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty
-INPUT /usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/amscls/amsart.cls
 INPUT /usr/share/texlive/texmf-dist/tex/latex/amscls/amsart.cls
 INPUT /usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map
@@ -60,10 +58,14 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/environ/environ.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/environ/environ.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/trimspaces/trimspaces.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/trimspaces/trimspaces.sty
+INPUT /usr/share/texlive/texmf-dist/tex/latex/textcase/textcase.sty
+INPUT /usr/share/texlive/texmf-dist/tex/latex/textcase/textcase.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/natbib/natbib.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/natbib/natbib.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+INPUT /usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty
+INPUT /usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/pdftexcmds/pdftexcmds.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/pdftexcmds/pdftexcmds.sty
 INPUT /usr/share/texlive/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty
@@ -104,16 +106,6 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 INPUT /usr/share/texlive/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
 INPUT /usr/share/texlive/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
-INPUT /usr/share/texlive/texmf-dist/tex/latex/hyperxmp/hyperxmp.sty
-INPUT /usr/share/texlive/texmf-dist/tex/latex/hyperxmp/hyperxmp.sty
-INPUT /usr/share/texlive/texmf-dist/tex/generic/stringenc/stringenc.sty
-INPUT /usr/share/texlive/texmf-dist/tex/generic/stringenc/stringenc.sty
-INPUT /usr/share/texlive/texmf-dist/tex/generic/iftex/ifxetex.sty
-INPUT /usr/share/texlive/texmf-dist/tex/generic/iftex/ifxetex.sty
-INPUT /usr/share/texlive/texmf-dist/tex/latex/ifmtarg/ifmtarg.sty
-INPUT /usr/share/texlive/texmf-dist/tex/latex/ifmtarg/ifmtarg.sty
-INPUT /usr/share/texlive/texmf-dist/tex/generic/iftex/ifluatex.sty
-INPUT /usr/share/texlive/texmf-dist/tex/generic/iftex/ifluatex.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
@@ -151,6 +143,10 @@ OUTPUT paper-v2 copy.pdf
 INPUT /usr/share/texlive/texmf-dist/tex/latex/cmap/t1.cmap
 INPUT /usr/share/texlive/texmf-dist/tex/latex/libertine/libertine.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/libertine/libertine.sty
+INPUT /usr/share/texlive/texmf-dist/tex/generic/iftex/ifxetex.sty
+INPUT /usr/share/texlive/texmf-dist/tex/generic/iftex/ifxetex.sty
+INPUT /usr/share/texlive/texmf-dist/tex/generic/iftex/ifluatex.sty
+INPUT /usr/share/texlive/texmf-dist/tex/generic/iftex/ifluatex.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/textcomp.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/textcomp.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
@@ -167,14 +163,6 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/oberdiek/centernot.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/oberdiek/centernot.sty
 INPUT /usr/share/texlive/texmf-dist/tex/generic/kastrup/binhex.tex
 INPUT /usr/share/texlive/texmf-dist/tex/generic/kastrup/binhex.tex
-INPUT /usr/share/texlive/texmf-dist/tex/latex/psnfss/pifont.sty
-INPUT /usr/share/texlive/texmf-dist/tex/latex/psnfss/pifont.sty
-INPUT /usr/share/texlive/texmf-dist/tex/latex/psnfss/upzd.fd
-INPUT /usr/share/texlive/texmf-dist/tex/latex/psnfss/upzd.fd
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/adobe/zapfding/pzdr.tfm
-INPUT /usr/share/texlive/texmf-dist/tex/latex/psnfss/upsy.fd
-INPUT /usr/share/texlive/texmf-dist/tex/latex/psnfss/upsy.fd
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/adobe/symbol/psyr.tfm
 INPUT /usr/share/texlive/texmf-dist/tex/latex/caption/caption.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/caption/caption.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/caption/caption3.sty
@@ -373,12 +361,6 @@ INPUT paper-v2 copy.out
 INPUT ./paper-v2 copy.out
 INPUT ./paper-v2 copy.out
 OUTPUT paper-v2 copy.out
-INPUT /usr/share/texlive/texmf-dist/tex/generic/stringenc/se-pdfdoc.def
-INPUT /usr/share/texlive/texmf-dist/tex/generic/stringenc/se-pdfdoc.def
-INPUT /usr/share/texlive/texmf-dist/tex/generic/stringenc/se-pdfdoc.def
-INPUT /usr/share/texlive/texmf-dist/tex/generic/stringenc/se-utf8.def
-INPUT /usr/share/texlive/texmf-dist/tex/generic/stringenc/se-utf8.def
-INPUT /usr/share/texlive/texmf-dist/tex/generic/stringenc/se-utf8.def
 INPUT /usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
@@ -464,6 +446,10 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineTI-tl
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineT-tlf-t1.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-t1--base.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinBiolinumT-tlf-t1.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-t1.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinBiolinumT-tlf-t1.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-t1.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinBiolinumT-tlf-t1.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinBiolinumT-tlf-t1.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinBiolinumT-tlf-t1.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinBiolinumT-tlf-t1--base.tfm
@@ -482,10 +468,6 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/NewTXMI5.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/stxscr.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineT-tlf-ot1.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-ot1--base.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-t1.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinBiolinumT-tlf-t1.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-t1.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinBiolinumT-tlf-t1.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-t1.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-ot1.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/nxlmi7.tfm
@@ -513,19 +495,6 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/NewTXBMI.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/newtx/ntxsym.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/txfonts/txsyb.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/txfonts/txsya.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/newtx/nxlmi7.vf
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/LibertineMathMI7.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/NewTXMI7.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/stxscr.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineT-tlf-t1.vf
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-t1--base.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/newtx/ntxsy7.vf
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/txsys.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/txex-bar.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineT-tlf-ot1.vf
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-ot1--base.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineT-tlf-ot1.vf
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-ot1--base.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/newtx/nxlbmi7.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/LibertineMathBMI7.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/NewTXBMI7.tfm
@@ -533,6 +502,19 @@ INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/newtx/ntxsym.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/txfonts/txsyb.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/txfonts/txsya.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/newtx/ntxsy5.vf
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/txsys.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/txex-bar.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineT-tlf-ot1.vf
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-ot1--base.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineT-tlf-t1.vf
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-t1--base.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineT-tlf-ot1.vf
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-ot1--base.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/newtx/nxlmi7.vf
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/LibertineMathMI7.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/NewTXMI7.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/stxscr.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/newtx/ntxsy7.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/txsys.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/txex-bar.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineTB-tlf-sc-t1.tfm
@@ -555,10 +537,10 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineTI-tl
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineTI-tlf-ot1.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineTI-tlf-ot1.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineTI-tlf-ot1--base.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineTB-tlf-sc-t1.tfm
 INPUT figures/experiments/validated_quality_combined.png
 INPUT ./figures/experiments/validated_quality_combined.png
 INPUT ./figures/experiments/validated_quality_combined.png
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineTB-tlf-sc-t1.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineTB-tlf-sc-t1.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineTB-tlf-sc-t1--base.tfm
 INPUT figures/experiments/validated_extension_evidence.png

@@ -1,5 +1,70 @@
 # Progress
 
+## 2026-07-16 - Independent Proof and Language Audit
+
+- Stage: S5 Review, with S2 corrections if the proof audit finds a substantive
+  issue.
+- Status: complete.
+- Objective: independently re-derive every theorem and estimator argument,
+  then perform a conservative sentence-level English edit without changing
+  supported claims.
+- Task packet: `plan/task-packets/2026-07-16-proof-language-audit.md`.
+
+### Artifacts
+
+- Added a theorem-by-theorem independent audit covering the model identities,
+  NP-hardness reduction, DR-submodularity, conditioned RR estimators,
+  concentration argument, recurrence, and expected running time.
+- Made the repeated-source exchange loss explicit and stated the final
+  vertex-cover threshold equivalence.
+- Expanded the greedy residual bound through the componentwise join and
+  expanded the approximation recurrence to its final ratio.
+- Clarified why conditioning on all k root gates remains unbiased for every
+  greedy prefix and marginal event.
+- Added constant-time node-action sampling via alias preprocessing to close the
+  implementation assumption in the expected-time proof.
+- Completed a conservative sentence-level English pass and a terminology
+  audit without changing experimental values or strengthening claims.
+- Corrected the model figure's hidden adopter nodes and moved the full-width
+  result figures so that the final 14-page PDF no longer contains consecutive
+  half-empty float pages.
+
+### Review gates
+
+- Spec compliance: passed. The proof audit, corrected manuscript, language
+  record, compiled PDF, and residual-risk notes are present; mathematical and
+  empirical claims were not silently changed.
+- Quality review: passed with one recorded typesetting residual. Independent
+  derivations found no fatal proof error, the experiment claim checkers and
+  core tests pass, and the final PDF has no unresolved references, missing
+  graphics, or visible overlap. The ACM bibliography balancing step reports a
+  non-visible 1.166 pt vertical overfull box on the final reference page.
+
+### Capability-use audit
+
+- Required skills: paper-orchestration, peer-review, writing-core,
+  prompts-collection, latex-output, and verification.
+- Skills actually used: all required skills for task control, theorem-level
+  adversarial review, conservative English editing, LaTeX preservation, and
+  evidence-based completion checks.
+- Inputs consumed: the current manuscript; model and proof invariants from the
+  supplied theory/RIS material; exact tiny-instance tests; validated-v2.2 and
+  validated-v2.3 claim checkers; experiment figures; LaTeX log; and rendered
+  PDF pages.
+- Inputs not used and why: historical mock results and ordinary
+  absorbing-Markov evaluation were excluded because they do not support the
+  fixed-action model; no new literature or empirical claim was needed.
+- Artifacts produced: revised manuscript/PDF, independent proof audit,
+  independent language audit, and updated project notes/progress.
+- Verification run: K4 hardness enumeration; four coupon-core tests; both
+  experiment claim checkers; terminology and spelling scans; repeated forced
+  ACM compilation; reference/error/font/page scans; and visual inspection of
+  theory and result pages.
+- Remaining risk: the theorem requires a valid positive spread lower bound;
+  fixed empirical sample budgets do not automatically inherit its certificate;
+  behavior probabilities remain controlled synthetic parameters; and the final
+  reference page has the minor vertical box warning noted above.
+
 ## 2026-07-15 - Validated Experiment Extensions
 
 - Stage: S3 Experiments, followed by S5 review.
