@@ -190,6 +190,8 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/enumitem/enumitem.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/enumitem/enumitem.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/placeins/placeins.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/placeins/placeins.sty
+INPUT /usr/share/texlive/texmf-dist/tex/latex/preprint/balance.sty
+INPUT /usr/share/texlive/texmf-dist/tex/latex/preprint/balance.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty
@@ -290,8 +292,6 @@ INPUT /usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries
 INPUT /usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryfit.code.tex
 INPUT /usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex
 INPUT /usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex
-INPUT /usr/share/texlive/texmf-dist/tex/latex/preprint/balance.sty
-INPUT /usr/share/texlive/texmf-dist/tex/latex/preprint/balance.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdfmode.def
 INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdfmode.def
 INPUT paper-v2 copy.aux
@@ -552,6 +552,9 @@ INPUT ./figures/experiments/validated_sampler_ablation.png
 INPUT figures/experiments/validated_runtime_scalability.png
 INPUT ./figures/experiments/validated_runtime_scalability.png
 INPUT ./figures/experiments/validated_runtime_scalability.png
+INPUT figures/experiments/appendix_parameter_sweep.png
+INPUT ./figures/experiments/appendix_parameter_sweep.png
+INPUT ./figures/experiments/appendix_parameter_sweep.png
 INPUT paper-v2 copy.bbl
 INPUT paper-v2 copy.bbl
 INPUT paper-v2 copy.aux

@@ -1,5 +1,66 @@
 # Progress
 
+## 2026-07-16 - Appendix Parameter-Sweep Experiments
+
+- Stage: S3 Experiments, followed by S5 review.
+- Status: complete.
+- Objective: map favorable and unfavorable parameter regimes without
+  post-result filtering, quantify duplicate-redemption overlap, and add the
+  complete evidence to a manuscript appendix.
+- Task packet:
+  plan/task-packets/2026-07-16-appendix-parameter-sweep.md.
+
+### Artifacts
+
+- Added a reproducible runner and independent verifier for the complete
+  two-graph transfer-by-redemption-share grid and three-budget slice.
+- Produced 40 job records, 1,800 raw method rows, 360 method summaries, and 60
+  comparison summaries under `validated-v2.4-appendix-grid`, with checksums.
+- Added a six-panel 450-DPI PNG/SVG figure and a manuscript appendix that
+  reports both favorable and unfavorable parameter regions.
+- Used Student-t intervals for the five paired runs and retained the negative
+  duplicate-overlap mechanism result.
+- Compiled the revised ACM manuscript to a 15-page PDF; the appendix figure is
+  before the references, and the final bibliography columns are balanced.
+
+### Review gates
+
+- Spec compliance: passed. Every prespecified cell, seed, method, and budget is
+  present; all accepted rows are marked `REAL_EXPERIMENT`; no mock value,
+  MC-Greedy claim, or post-result cell filtering enters the appendix.
+- Quality review: passed. The text identifies higher means without claiming
+  statistical significance or universal superiority, reports the principal
+  failure regions, and records the two-graph and controlled-parameter limits.
+
+### Capability-use audit
+
+- Required skills: paper-orchestration, experiment-results-planning,
+  statistical-analysis, figures-python, peer-review, latex-output, and
+  verification.
+- Skills actually used: all required skills for protocol locking, repeated-run
+  aggregation, Student-t intervals, data-bound plotting, restrained result
+  prose, independent review, and final compilation checks.
+- Inputs consumed: the current manuscript; fixed-action simulator and validated
+  CIM-RIS/IC-RIS implementations; Netscience and NetFacebookEgo graph files;
+  all 40 job records; raw and summary CSVs; checksum manifest; LaTeX log; and
+  rendered appendix/reference pages.
+- Inputs not used and why: MC-Greedy was excluded by the locked scope because a
+  high-precision destination matrix for every grid cell was impractical;
+  historical mock/synthetic outputs and unprespecified graph/parameter cells
+  were excluded from evidence.
+- Artifacts produced: runner, verifier, job records, CSV summaries, metadata,
+  checksum manifest, plotting script, PNG/SVG, appendix prose, peer-review
+  record, and recompiled PDF.
+- Verification run: four coupon-core tests; validated-v2.2 and v2.3 claim
+  checkers; v2.4 row/protocol/value verifier; checksum verification;
+  deterministic figure regeneration; forced ACM compilation; unresolved
+  reference, overflow, font, page-order, visual, and `git diff --check` scans.
+- Remaining risk: behavior parameters are controlled rather than observed;
+  the sweep covers two graphs and five selection runs; displayed intervals are
+  descriptive after strongest-baseline selection; fixed RR budgets do not
+  instantiate the theorem-level stopping certificate; venue-specific metadata
+  and page limits remain unknown.
+
 ## 2026-07-16 - Independent Proof and Language Audit
 
 - Stage: S5 Review, with S2 corrections if the proof audit finds a substantive

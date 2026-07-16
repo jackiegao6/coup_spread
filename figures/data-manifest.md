@@ -24,6 +24,7 @@ All outputs contain the visible label: SYNTHETIC PLANNING DATA - NOT FOR SUBMISS
 | Runtime budget scaling | validated_summary.csv plus validated_scalability.csv | Real experiment, five selection runs | run_validated_study.py + run_validated_scalability.py | experiments/validated_study_figures.py | validated_runtime_scalability PNG/SVG |
 | Conditioned-sampler ablation | ../experiments/results/validated-v2/validated_sampler_ablation.csv | Real experiment, 30 independent batches | run_real_sampler_ablation.py with validated-v2 allocations | experiments/validated_study_figures.py | validated_sampler_ablation PNG/SVG |
 | Strong reference, sensitivity, and capacity | ../experiments/results/validated-v2/extensions/*_summary.csv | Real experiment, five selection runs | run_validated_extensions.py | experiments/validated_extension_evidence.py | validated_extension_evidence PNG/SVG |
+| Appendix parameter regimes and overlap | ../experiments/results/validated-v2/appendix-grid/comparison_summary.csv | Real experiment, five selection runs | run_appendix_parameter_sweep.py | figures/experiments/appendix_parameter_sweep.py | appendix_parameter_sweep PNG/SVG |
 
 The files below are the earlier traceable reference run. They remain archived
 for audit purposes but are superseded by validated-v2 and must not support the

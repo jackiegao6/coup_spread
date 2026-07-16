@@ -1,0 +1,59 @@
+{
+  "status": "REAL_EXPERIMENT",
+  "protocol_version": "validated-v2.4-appendix-grid",
+  "datasets": [
+    "Netscience",
+    "NetFacebookEgo"
+  ],
+  "transfer_values": [
+    0.3,
+    0.5,
+    0.7,
+    0.85,
+    0.93
+  ],
+  "central_redemption_shares": [
+    0.2,
+    0.4,
+    0.6,
+    0.8
+  ],
+  "grid_budget": 100,
+  "budget_slice_share": 0.6,
+  "budget_slice": [
+    25,
+    100,
+    200
+  ],
+  "selection_seeds": [
+    20260715,
+    20260716,
+    20260717,
+    20260718,
+    20260719
+  ],
+  "rr_samples": 20000,
+  "evaluation_simulations": 2000,
+  "degree_contrast": 0.2,
+  "methods": [
+    "CIM-RIS",
+    "IC-RIS",
+    "1Hop-Sort",
+    "Alpha-Sort",
+    "DegreeTopM",
+    "PageRank"
+  ],
+  "workers": 4,
+  "hardware": {
+    "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.29",
+    "python": "3.8.10",
+    "numpy": "1.24.4",
+    "cpu_model": "AMD EPYC 9654 96-Core Processor",
+    "logical_cpus": 8
+  },
+  "completed_cells": 40,
+  "raw_rows": 1800,
+  "method_summary_rows": 360,
+  "comparison_summary_rows": 60,
+  "elapsed_seconds_current_invocation": 0.13925021106842905
+}

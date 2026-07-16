@@ -1,5 +1,55 @@
 # Experiment Protocol
 
+## Validated-v2.4 appendix parameter sweep
+
+> STATUS: LOCKED BEFORE ANY V2.4 RESULT FILE IS PRODUCED.
+> EXECUTION: COMPLETE; THE FULL LOCKED GRID IS RETAINED IN THE APPENDIX ARTIFACTS.
+
+This appendix experiment maps where coupon-aware allocation is more or less
+effective than non-oracle alternatives. It is a robustness and mechanism
+study, not an optimality comparison.
+
+- Graphs: Netscience and NetFacebookEgo.
+- Parameterization: for each node, let d_hat be normalized log degree and set
+  the redemption share among stopping actions to
+  clip(r + 0.20(0.5-d_hat), 0.05, 0.95). For non-isolated nodes,
+  p_t=t, p_a=(1-t) redemption_share, and
+  p_d=(1-t)(1-redemption_share). Isolated-node transfer mass is reassigned to
+  discard.
+- Full grid: transfer probability
+  t in {0.30, 0.50, 0.70, 0.85, 0.93} and central redemption share
+  r in {0.20, 0.40, 0.60, 0.80}, all evaluated at k=100.
+- Budget interaction: retain all five transfer probabilities, fix r=0.60,
+  and additionally evaluate k in {25, 200}; the k=100 rows are reused from
+  the full grid.
+- Methods: CIM-RIS, IC-RIS, 1Hop-Sort, Alpha-Sort, DegreeTopM, and PageRank.
+  The best competing baseline is selected from all five non-CIM methods only
+  after each complete cell is aggregated. Random is excluded from the
+  best-baseline comparison, and MC-Greedy is not used because reconstructing a
+  high-precision destination matrix for every grid cell would dominate the
+  experiment.
+- Distinct-seed policy: V_s=V and c_v=1 for every method.
+- Independent selection seeds: 20260715--20260719.
+- Sampling: 20,000 conditioned joint samples for CIM-RIS and 20,000 standard
+  RR samples for IC-RIS in every run.
+- Forward evaluation: 2,000 fresh realizations per selected allocation.
+  Methods in the same dataset--parameter--budget--selection-seed cell use the
+  same realization-level random streams.
+- Metrics: distinct-adopter spread; total redemptions; duplicate-redemption
+  fraction (mean redemptions - mean adopters) / mean redemptions; relative
+  spread difference from the strongest non-oracle baseline; and win counts
+  over all prespecified cells.
+- Aggregation: method means and standard deviations over five selection runs.
+  Heatmaps report the relative difference between the aggregated CIM-RIS mean
+  and the largest aggregated baseline mean. Mechanism maps report the
+  best-baseline duplicate fraction minus the CIM-RIS duplicate fraction, in
+  percentage points.
+- Reporting: retain every grid cell and budget slice, including ties and
+  negative values. Conclusions are descriptive because the grid is a
+  controlled simulation study over two graph instances.
+- Output boundary: only files marked REAL_EXPERIMENT and protocol
+  validated-v2.4-appendix-grid may support appendix claims.
+
 > STATUS: VALIDATED-V2.2 COMPLETE. The repeated-seed study is the sole source
 > of revised submission claims. Earlier `real_*` outputs remain reproducible
 > reference artifacts but are superseded; synthetic planning files remain

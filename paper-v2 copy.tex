@@ -1,7 +1,7 @@
 %%
 %% Anonymous ACM submission
 %%
-\documentclass[sigconf]{acmart}
+\documentclass[sigconf,balance=false]{acmart}
 
 \AtBeginDocument{%
   \providecommand\BibTeX{{Bib\TeX}}}
@@ -25,6 +25,7 @@
 \usepackage{graphicx}
 \usepackage{enumitem}
 \usepackage{placeins}
+\usepackage{balance}
 \usepackage{microtype}
 \usepackage{xcolor}
 \usepackage{tikz}
@@ -1858,6 +1859,95 @@ arrival order and user state.
 Third, tighter lower-bound estimation and variance reduction for very
 small adoption probabilities may further improve the practical cost of
 \CIMRIS{}.
+
+\appendix
+\section{Additional Parameter-Regime Experiments}
+\label{app:parameter-sweep}
+
+The three scenarios in the main evaluation provide representative operating
+points but do not show how the relative performance changes between them.
+We therefore conduct a prespecified two-dimensional parameter sweep on
+Netscience and NetFacebookEgo. This experiment is intended to map favorable
+and unfavorable regimes rather than to establish that \CIMRIS{} dominates
+every alternative.
+
+Let $\hat d_u\in[0,1]$ be the normalized log-degree of node $u$. For a
+central redemption share $r$ and transfer probability $t$, we set
+\[
+\begin{aligned}
+  h_u &=
+    \operatorname{clip}\!\left(r+0.20(0.5-\hat d_u),0.05,0.95\right),\\
+  p_u^a&=(1-t)h_u,\qquad
+  p_u^d=(1-t)(1-h_u),\qquad
+  p_u^t=t.
+\end{aligned}
+\]
+Thus $h_u$ controls the probability of redemption conditional on stopping,
+while $t$ controls the expected persistence of a coupon walk. Transfer mass
+is reassigned to discard at isolated nodes. The full grid uses
+$t\in\{0.30,0.50,0.70,0.85,0.93\}$ and
+$r\in\{0.20,0.40,0.60,0.80\}$ at $k=100$. We additionally fix $r=0.60$ and
+evaluate $k\in\{25,100,200\}$ across all five transfer values. Every
+configuration uses five selection seeds, $20{,}000$ samples for both
+\CIMRIS{} and IC-RIS, and $2{,}000$ fresh forward realizations per allocation.
+The comparison includes IC-RIS, 1Hop-Sort, Alpha-Sort, DegreeTopM, and
+PageRank under the same distinct-seed policy. For each parameter cell, we
+compare \CIMRIS{} with the baseline having the highest mean spread in that
+cell; this is a stronger criterion than comparing against a fixed baseline.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.96\textwidth]{figures/experiments/appendix_parameter_sweep}
+  \caption{Complete parameter-regime study on two graph instances.
+  (a--b) Relative adoption-spread difference between \CIMRIS{} and the
+  strongest non-oracle baseline in each $k=100$ cell.
+  (c--d) Reduction in duplicate-redemption fraction relative to that same
+  baseline; positive values favor \CIMRIS{}.
+  (e--f) Relative spread difference for $r=0.60$ as the budget changes.
+  Heatmaps retain all prespecified cells, and line-chart error bars are
+  95\% confidence intervals over five paired selection/evaluation runs.}
+  \Description{Six panels report a complete transfer-probability by
+  redemption-share parameter sweep. The first row shows spread gains over the
+  strongest baseline, the second shows changes in duplicate-redemption
+  fraction, and the third shows budget interactions on Netscience and
+  NetFacebookEgo. Positive and negative regions are both visible.}
+  \label{fig:appendix-parameter-sweep}
+\end{figure*}
+
+Figure~\ref{fig:appendix-parameter-sweep}(a--b) reports the complete $k=100$
+grid. On NetFacebookEgo, \CIMRIS{} has higher mean spread than the strongest
+baseline in 16 of 20 cells, with a mean relative difference of $0.50\%$ and a
+maximum of $2.24\%$
+at $(t,r)=(0.85,0.60)$. The exception at $(0.93,0.20)$ is substantial:
+1Hop-Sort is $3.48\%$ higher. Netscience exhibits a different pattern:
+\CIMRIS{} has higher mean spread in only one cell, has a mean difference of
+$-1.62\%$, and ranges
+from $-4.74\%$ to $0.63\%$. Nevertheless, it exceeds DegreeTopM and PageRank
+in all 20 cells on both graphs. These results delimit the empirical advantage:
+coupon-aware global coverage is most consistently useful on the larger,
+sparser ego network, but it is not uniformly superior on the smaller
+Netscience graph.
+
+The budget slice in Figure~\ref{fig:appendix-parameter-sweep}(e--f) further
+shows that the favorable region can depend on campaign scale. On
+NetFacebookEgo, \CIMRIS{} has the higher mean in none of the five transfer
+settings at $k=25$, four at $k=100$, and all five at $k=200$; the corresponding
+mean differences are $-1.08\%$, $0.88\%$, and $1.26\%$. The same transition
+does not occur on Netscience, where the strongest baseline retains the higher
+mean at all three budgets throughout this slice.
+
+Finally, Figure~\ref{fig:appendix-parameter-sweep}(c--d) compares the
+duplicate-redemption fraction, defined as
+$(\bar\rho-\bar\sigma)/\bar\rho$, with that of the strongest baseline.
+Positive values indicate that \CIMRIS{} converts a larger fraction of
+redemptions into distinct adopters. This quantity does not track spread gain
+consistently: across the 40 cells at $k=100$, its Pearson correlation with the
+relative spread difference is only $0.03$. Avoiding duplicate redemptions is
+therefore one possible benefit of distinct-user coverage, but the measured
+advantage also depends on whether an allocation reaches users who redeem at
+all.
+\FloatBarrier
+\balance
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}
