@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex paper-v2 copy"] 1784179969 "paper-v2 copy.aux" "paper-v2 copy.bbl" "paper-v2 copy" 1784179972
+["bibtex paper-v2 copy"] 1784195535 "paper-v2 copy.aux" "paper-v2 copy.bbl" "paper-v2 copy" 1784195538
   "/usr/share/texlive/texmf-dist/bibtex/bst/acmart/ACM-Reference-Format.bst" 1581285989 84858 b41956ef46b831208d29ea3f9c91a555 ""
-  "paper-v2 copy.aux" 1784179972 17744 7730b2e878cea79662b0f06583ff8a15 "pdflatex"
+  "paper-v2 copy.aux" 1784195538 18046 6271a1ff9796248d823124f551c2bc97 "pdflatex"
   "references.bib" 1784102744 8566 3b9eec0496c757ddbd67067e02ae2eaf ""
   (generated)
-  "paper-v2 copy.blg"
   "paper-v2 copy.bbl"
-["pdflatex"] 1784179969 "paper-v2 copy.tex" "paper-v2 copy.pdf" "paper-v2 copy" 1784179972
+  "paper-v2 copy.blg"
+["pdflatex"] 1784195535 "paper-v2 copy.tex" "paper-v2 copy.pdf" "paper-v2 copy" 1784195538
   "/etc/texmf/web2c/texmf.cnf" 1784095645 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-4.enc" 1558214095 7693 0f2dce6d313c82989ec3a67fc24df2a0 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc" 1490131464 2921 8ca0eb0831f9bc5da080d3697cfe67bf ""
@@ -319,17 +319,17 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1581979058 38841 ce3692aa899bb693b90b87eaa5d4d84e ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1784096853 4466278 956ccdc8d57f396eef7b8798b3b11e08 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1784095653 4877305 aa779f48ea912df03edf89f43f0f9711 ""
-  "figures/experiments/appendix_parameter_sweep.png" 1784179294 592402 019c11d9d73b6c4769ce18c6ff8042fd ""
+  "figures/experiments/appendix_parameter_sweep.png" 1784195391 791044 ebcf0800af75389332f522b618850b08 ""
   "figures/experiments/validated_extension_evidence.png" 1784122584 426431 7d98b31adf62bc48e7c210456987b71c ""
   "figures/experiments/validated_quality_combined.png" 1784122585 516840 cbd203673318482d2fc3b12911f85d5a ""
   "figures/experiments/validated_runtime_scalability.png" 1784122586 162694 f3e2983381e429127113cdff2200dada ""
   "figures/experiments/validated_sampler_ablation.png" 1784122587 213481 2d0c5aa6233e2331c19115065f0be690 ""
-  "paper-v2 copy.aux" 1784179972 17744 7730b2e878cea79662b0f06583ff8a15 "pdflatex"
-  "paper-v2 copy.bbl" 1784179969 14860 08bace258a26ca747fcb13a41f49f7f0 "bibtex paper-v2 copy"
-  "paper-v2 copy.out" 1784179972 4045 221f0371176a6ce2afa0ff8450447c4b "pdflatex"
-  "paper-v2 copy.tex" 1784179890 84718 0bcb2167e05c07698ab1308869d246df ""
+  "paper-v2 copy.aux" 1784195538 18046 6271a1ff9796248d823124f551c2bc97 "pdflatex"
+  "paper-v2 copy.bbl" 1784195535 14860 08bace258a26ca747fcb13a41f49f7f0 "bibtex paper-v2 copy"
+  "paper-v2 copy.out" 1784195538 4045 221f0371176a6ce2afa0ff8450447c4b "pdflatex"
+  "paper-v2 copy.tex" 1784195180 86073 291f0d39fe9b184562281e81d8e7fab8 ""
   (generated)
+  "paper-v2 copy.aux"
+  "paper-v2 copy.out"
   "paper-v2 copy.pdf"
   "paper-v2 copy.log"
-  "paper-v2 copy.out"
-  "paper-v2 copy.aux"

@@ -1,59 +1,64 @@
-# Appendix Parameter-Sweep Peer Review
+# Adaptive Parameter-Sweep Peer Review
 
 ## Scope and verdict
 
-This review covers the validated-v2.4 parameter-grid runner, raw and aggregate
-artifacts, Figure 8, and the appendix interpretation. The appendix passes the
-specification and quality gates for a descriptive robustness experiment. It
-does not support a universal dominance or optimality claim.
+This review covers the validated-v2.5 adaptive-grid runner, raw and aggregate
+artifacts, the eight-panel appendix figure, and the revised interpretation.
+The appendix passes the specification and reproducibility gates for a
+descriptive robustness experiment. It does not establish universal dominance
+or instantiate the theorem-level epsilon-delta certificate.
 
 ## Specification compliance
 
-- The full prespecified grid contains both graph instances, five transfer
-  probabilities, four redemption shares, and the complete `k=100` cross
-  product. The `r=0.60` slice additionally contains `k=25` and `k=200`.
-- All six methods use the distinct-seed policy. CIM-RIS and IC-RIS each use
-  20,000 RR samples, and all allocations use 2,000 fresh forward evaluations
-  under common cell-level streams.
-- The five selection seeds are 20260715--20260719. Every accepted row is marked
-  `REAL_EXPERIMENT` under `validated-v2.4-appendix-grid`.
-- All favorable, tied, and unfavorable cells remain in the CSVs and figure.
-  MC-Greedy is absent and the appendix makes no exact-optimality claim.
+- The full prespecified grid retains both graphs, five transfer probabilities,
+  four redemption shares, the complete `k=100` cross product, and the
+  `r=0.60`, `k in {25,100,200}` budget slice.
+- All six methods use unit seed capacity. CIM-RIS starts at 100,000 nested
+  conditioned RR samples, reaches the prespecified observation floor, and then
+  applies the uniform 0.5% stability rule with a 3-million hard cap. IC-RIS
+  uses the same final sample count.
+- Stability uses 5,000 fresh paired forward streams at each stage. Final
+  method evaluation uses 10,000 streams disjoint from selection and all
+  stability batches.
+- All positive and negative cells, 11 hard-cap runs, and five unresolved runs
+  are retained. MC-Greedy is absent and no exact-optimality claim is made.
 
 ## Independent checks
 
-- The verifier reconstructed 1,800 raw rows, 360 method summaries, and 60
-  comparison summaries from 40 completed job files.
-- The checksum manifest validates `raw.csv`, `method_summary.csv`, and
-  `comparison_summary.csv`.
-- Five-run paired intervals use the Student-t critical value for four degrees
-  of freedom. The plot reads only rows with the expected status and protocol.
-- Manuscript values were independently matched to the summaries: 16/20 versus
-  1/20 higher-mean cells at `k=100`, the reported extrema, and the three-budget
-  NetFacebookEgo pattern.
-- The duplicate-reduction correlation is 0.03 across all 40 `k=100` cells, so
-  the appendix correctly rejects overlap reduction as a general explanation.
+- The verifier reconstructs 300 atomic jobs, 1,800 raw rows, 360 method
+  summaries, and 60 comparison summaries.
+- Every stage uses the same RR stream prefix within a job; sample counts follow
+  the required doubling/floor sequence; no stable post-floor stage is followed
+  by another stage.
+- Final evaluation stream IDs are disjoint from CIM-RIS, IC-RIS, and every
+  stability stream. All allocations satisfy the unit-capacity constraint.
+- Method summaries, strongest-baseline identities, relative differences, and
+  SHA-256 entries are independently recomputed. Nine adaptive/core unit tests
+  pass.
+- Manuscript values match the aggregate: 33/40 higher-mean `k=100` cells,
+  graph means of +0.75% and +2.20%, extrema of -0.69% and +4.75%, a 300,000
+  median final sample count, and 295/300 stable runs.
 
 ## Quality review
 
-- The prose reports the strongest baseline in each complete cell, not a
-  favorable fixed comparator, and explicitly discusses the largest negative
-  NetFacebookEgo cell and the broadly negative Netscience result.
-- "Higher mean" is used instead of statistical-significance language. The
-  confidence intervals are descriptive; no multiplicity-adjusted hypothesis
-  test is claimed after selecting the strongest aggregate baseline.
-- Figure 8 is legible in the compiled two-column PDF, preserves a common
-  diverging scale within each heatmap family, and appears before the balanced
-  references. All fonts are embedded.
+- The prose compares against the strongest aggregate non-oracle baseline in
+  every complete cell and reports the remaining unfavorable regions.
+- "Higher mean" is used instead of significance language. Paired intervals
+  are descriptive because the strongest baseline is selected after
+  aggregation and no multiplicity-adjusted confirmatory test was prespecified.
+- The figure exposes sample demand and unresolved stability instead of hiding
+  hard cells. Common scales are used within each heatmap family, and both
+  positive and negative spread differences remain visible.
+- Duplicate-reduction correlation is reported descriptively as 0.43 and is
+  interpreted as a partial mechanism, not a causal explanation.
 
 ## Residual risks
 
-- The study covers two real graph topologies with controlled synthetic
-  behavior probabilities, not observed campaign parameters.
-- Five selection runs give limited precision, and the strongest-baseline
-  choice makes the displayed intervals unsuitable for confirmatory inference.
-- The fixed 20,000-sample budget is an empirical setting, not the theorem's
-  epsilon-delta stopping certificate.
-- Results are network dependent: Netscience is predominantly unfavorable, so
-  claims must remain conditional on the observed parameter regions.
-
+- Five of 300 selections remain unstable at the hard cap and add uncertainty
+  to their aggregate cells, although all are retained and visibly flagged.
+- The empirical stopping check compares adjacent allocations on 5,000 forward
+  realizations; it is not the conservative theorem-level sample bound.
+- The study uses two real graph topologies with controlled behavior
+  probabilities, not observed coupon-campaign parameters.
+- Five selection runs limit precision, and strongest-baseline intervals are
+  unsuitable for unqualified statistical-significance claims.

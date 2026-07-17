@@ -1,9 +1,53 @@
 # Experiment Protocol
 
+## Validated-v2.5 adaptive-sampling parameter sweep
+
+> STATUS: LOCKED BEFORE ANY V2.5 RESULT FILE IS PRODUCED; EXECUTION COMPLETE.
+
+> PRE-RUN IMPLEMENTATION CLARIFICATION: before the formal adaptive-grid run
+> produced any result, smoke testing clarified that doubling uses nested RR
+> sample prefixes from one stream. Regenerating an independent sample at every
+> stage would not preserve the previous sample when the budget is doubled and
+> would repeat all earlier generation work. The full run used nested prefixes
+> uniformly in all 300 jobs; the temporary smoke outputs are outside the result
+> directory and are not manuscript evidence.
+
+This rerun preserves the complete v2.4 grid but replaces the underpowered
+fixed 20,000-sample selection with a uniform doubling/stability rule. It is
+designed to distinguish converged allocation quality from finite-sample
+selection overfitting.
+
+- Graphs, transfer values, redemption shares, budget slice, methods,
+  distinct-seed capacity, and five selection seeds are identical to v2.4.
+- Initial joint-sample budget: 100,000.
+- Coverage floor: for graph size n, root normalizer W, and adoption sum A,
+  require at least 10 expected nonempty current-index RR sets per candidate,
+  i.e. T*A/(W*n) >= 10. The resulting floor is rounded upward to 50,000 and
+  capped at 1.5 million.
+- Doubling: extend one nested RR sample prefix at 100,000, 200,000, 400,000,
+  ... until the coverage floor is reached; if doubling would cross the floor,
+  evaluate the exact rounded floor first. Compare each new allocation with the
+  preceding allocation on a fresh paired batch of 5,000 forward realizations.
+  Once the floor is reached, stop when the absolute relative mean difference
+  is at most 0.5%. Otherwise continue doubling, capped at 3 million samples.
+- Cap handling: reaching 3 million and remaining unstable at 3 million are
+  recorded separately. Every capped run is retained and is never removed or
+  rerun with an outcome-dependent rule.
+- IC-RIS sample parity: for each final allocation, IC-RIS uses the same number
+  of RR samples as the selected final CIM-RIS stage.
+- Final evaluation: 10,000 fresh forward realizations per allocation, using
+  common realization-level streams within a cell and selection seed. These
+  streams are disjoint from all stability batches.
+- Reporting: retain all positive, tied, and negative cells. Report selected
+  sample counts, stability/cap status, final spread, and strongest-baseline
+  comparisons. Training RR estimates are diagnostic only.
+- Output boundary: only rows marked REAL_EXPERIMENT under protocol
+  validated-v2.5-adaptive-grid may replace v2.4 appendix claims.
+
 ## Validated-v2.4 appendix parameter sweep
 
 > STATUS: LOCKED BEFORE ANY V2.4 RESULT FILE IS PRODUCED.
-> EXECUTION: COMPLETE; THE FULL LOCKED GRID IS RETAINED IN THE APPENDIX ARTIFACTS.
+> EXECUTION: COMPLETE AND ARCHIVED; SUPERSEDED BY V2.5 FOR MANUSCRIPT CLAIMS.
 
 This appendix experiment maps where coupon-aware allocation is more or less
 effective than non-oracle alternatives. It is a robustness and mechanism
@@ -47,8 +91,8 @@ study, not an optimality comparison.
 - Reporting: retain every grid cell and budget slice, including ties and
   negative values. Conclusions are descriptive because the grid is a
   controlled simulation study over two graph instances.
-- Output boundary: only files marked REAL_EXPERIMENT and protocol
-  validated-v2.4-appendix-grid may support appendix claims.
+- Output boundary: files remain archived for auditability but no longer
+  support the current appendix claims, which use validated-v2.5.
 
 > STATUS: VALIDATED-V2.2 COMPLETE. The repeated-seed study is the sole source
 > of revised submission claims. Earlier `real_*` outputs remain reproducible

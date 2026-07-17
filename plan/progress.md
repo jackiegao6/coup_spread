@@ -1,5 +1,45 @@
 # Progress
 
+## 2026-07-16 - Adaptive-Sampling Full Rerun
+
+- Stage: S3 Experiments, followed by S5 Review.
+- Status: complete and independently verified.
+- Objective: rerun the complete two-graph parameter grid with prespecified
+  sample doubling, independent stability validation, and independent final
+  evaluation.
+- Task packet: `plan/task-packets/2026-07-16-adaptive-sampling-rerun.md`.
+
+### Findings and artifacts
+
+- Added a resumable runner with one atomic job per
+  dataset--parameter--budget--selection-seed combination, nested RR sample
+  prefixes, independent 5,000-run stability batches, and independent
+  10,000-run final evaluation.
+- Completed all 300 selection jobs in 6,303 seconds with four workers,
+  producing 1,800 raw method rows, 360 method summaries, 60 comparison rows,
+  complete stage traces, and a checksum manifest under
+  `experiments/results/validated-v2/adaptive-grid/`.
+- The median final RR count is 300,000 and the mean is 534,500. The empirical
+  stopping rule is met in 295/300 runs; 11 reach the 3-million cap and five
+  remain unstable. Every capped and unresolved run is retained.
+- At `k=100`, CIM-RIS has higher mean spread than the strongest non-oracle
+  baseline in 33/40 cells. Mean differences are +0.75% on Netscience and
+  +2.20% on NetFacebookEgo; the complete range is -0.69% to +4.75%.
+- Replaced the superseded v2.4 appendix source with the v2.5 aggregate and
+  expanded the figure to show spread, adaptive sample counts, duplicate
+  reduction, and budget interaction.
+
+### Review gates
+
+- Spec compliance: passed. The verifier checks all job keys, stage sequences,
+  nested RR stream IDs, disjoint validation/final streams, capacity, stopping
+  conditions, aggregates, and checksums.
+- Verification: 300 jobs, 1,800 raw rows, 360 method summaries, and 60
+  comparison rows verified; nine adaptive/core unit tests pass.
+- Remaining risk: five runs remain unstable at the prespecified hard cap; the
+  stopping rule is empirical rather than the theorem's epsilon-delta sample
+  certificate; behavior probabilities are controlled rather than observed.
+
 ## 2026-07-16 - Weak-Gain Code Audit
 
 - Stage: S3 Experiments and S5 Review.
