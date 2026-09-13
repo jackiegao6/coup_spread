@@ -1,5 +1,19 @@
 # Figure Data Manifest
 
+## Chinese working draft: evidence repaired on 2026-09-13
+
+`paper-zh.tex` uses the following supplemental outputs; archived English figures and `validated-v2` data remain unchanged. The main quality means are retained, with Student-t intervals replacing normal intervals. New sampler times include root generation and come from a separate Windows run.
+
+| Figure | Data | Generator | Output directory |
+|---|---|---|---|
+| Main quality, corrected intervals | `experiments/results/evidence-20260913/ci/validated_summary.csv` plus archived strong-reference summary | `figures/experiments/evidence_20260913.py --part quality` | `figures/experiments/evidence-20260913/validated_quality_combined` |
+| Sampler, retained batch evidence | `experiments/results/evidence-20260913/sampler/summary.csv` and `summary_batches.csv` | `figures/experiments/evidence_20260913.py --part sampler` | `figures/experiments/evidence-20260913/validated_sampler_ablation` |
+| Full Douban independent quality | `experiments/results/evidence-20260913/large-graph/summary.csv`, `raw.csv`, and `jobs/` | `figures/experiments/evidence_20260913.py --part large` | `figures/experiments/evidence-20260913/large_graph_quality` |
+
+The reference-strength/capacity/sensitivity, historical runtime, and adaptive-grid figures retain their earlier data sources below. Original download provenance is still incomplete; see `plan/review/dataset-provenance-2026-09-13.md`.
+
+## Archived planning and English manuscript evidence
+
 > The first table records synthetic planning artifacts that are not valid
 > submission evidence. The second table records the real experiment
 > artifacts used by the manuscript.

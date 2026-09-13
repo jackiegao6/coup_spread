@@ -269,9 +269,17 @@ def main() -> None:
         digest, name = line.split("  ", 1)
         manifest[name] = digest
     for name in ("raw.csv", "method_summary.csv", "comparison_summary.csv", "traces.json"):
-        observed_digest = hashlib.sha256((results / name).read_bytes()).hexdigest()
+        artifact_bytes = (results / name).read_bytes()
+        observed_digest = hashlib.sha256(artifact_bytes).hexdigest()
         if manifest.get(name) != observed_digest:
-            raise AssertionError(f"Checksum mismatch: {name}")
+            # A Windows checkout can expand LF in JSON without changing data.
+            # Accept only this exact, reported transformation, never arbitrary
+            # reparsing/reserialization that could hide content changes.
+            lf_digest = hashlib.sha256(artifact_bytes.replace(b"\r\n", b"\n")).hexdigest()
+            if name.endswith(".json") and manifest.get(name) == lf_digest:
+                print(f"Checksum verified after CRLF-to-LF normalization: {name}")
+            else:
+                raise AssertionError(f"Checksum mismatch: {name}")
 
     print(
         "validated-v2.5 verified: 300 jobs, 1800 raw rows, "

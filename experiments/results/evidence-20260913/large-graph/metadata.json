@@ -1,0 +1,37 @@
+{
+  "status": "REAL_EXPERIMENT",
+  "protocol_version": "evidence-20260913-large-graph",
+  "environment": {
+    "python": "3.12.8",
+    "numpy": "2.2.4",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "processor": "Intel64 Family 6 Model 158 Stepping 10, GenuineIntel",
+    "parallelism": 1
+  },
+  "fingerprints": {
+    "experiments\\run_large_graph_quality.py": "8900382f6867e0d85f5ae043d502ab7d32db18d5985f619cb38df13bd3f57f3a",
+    "experiments\\run_real_submission.py": "240ede44730726a4ed8170e8b7cdf97b33bec6ea94a5fa2b5dd4dc96e9227f20",
+    "experiments\\run_validated_study.py": "43c89e66e9da4707cf9b3d1e0b6025a6481163e7e4a5ad5a05b6317dda19ca24",
+    "dataset\\network\\network.douban-adj.pkl": "bc458551ecb12a64d90f31a7fd699b9414503ad47a6993bf0434dd0d797ba683"
+  },
+  "completed_jobs": 30,
+  "rows": 210,
+  "summaries": 42,
+  "selection_seeds": [
+    20260715,
+    20260716,
+    20260717,
+    20260718,
+    20260719
+  ],
+  "budgets": [
+    10,
+    25,
+    50,
+    100,
+    150,
+    200
+  ],
+  "evaluation_simulations": 10000,
+  "limitations": "Controlled balanced probabilities; fixed RR budgets; no exact or MC-Greedy reference; timings are from this environment only."
+}

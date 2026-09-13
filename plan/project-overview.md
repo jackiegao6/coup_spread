@@ -20,6 +20,8 @@
 
 ## Chinese Working Draft
 
+- Experiment evidence repair on 2026-09-13 is recorded in `plan/review/experiment-evidence-repair-2026-09-13.md`: corrected Student-t intervals, 360 retained sampler batches, and 30 full-Douban independent-quality jobs. Chinese figures use separate outputs; archived English results remain unchanged. Full-Douban results include five budgets where Random has a slightly higher mean.
+
 - `paper-zh.tex` translates the abstract, main text, proofs, pseudocode, captions, tables, and parameter-sweep appendix. Existing experimental image assets retain their English in-image labels. Bibliography records and official ACM CCS metadata are retained.
 - Build from the repository root with `latexmk -xelatex -interaction=nonstopmode paper-zh.tex`. The source uses `ctex` with the Fandol font set, alongside the existing ACM dependencies.
 - Source checks passed for 46 display equations (excluding translated natural-language text), label/reference/citation keys, table numbers, graphic paths, and environment nesting. No LaTeX compiler was found in the current local environment, so PDF compilation and visual layout remain unverified.

@@ -1,0 +1,5 @@
+# Supplemental evidence was executed with CPython 3.12.8 on Windows.
+# Historical Linux experiments retain experiments/requirements.txt.
+numpy==2.2.4
+scipy==1.15.3
+matplotlib==3.10.1
