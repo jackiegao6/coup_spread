@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import itertools
+import importlib.util
 import random
+import sys
 import unittest
+from pathlib import Path
 
 import numpy as np
 
@@ -112,6 +115,49 @@ def rr_spread_estimate(
 
 
 class CouponCoreTests(unittest.TestCase):
+    def test_positive_probability_outputs_match_archived_core(self) -> None:
+        path = Path(__file__).parent / 'archives/run_real_submission-240ede44730726a4.py'
+        spec = importlib.util.spec_from_file_location('_historical_coupon_core', path)
+        legacy = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = legacy
+        try:
+            spec.loader.exec_module(legacy)
+            graph = make_graph([[1, 2], [2], [0]])
+            for alpha in [np.asarray([.2, .4, .6]), np.asarray([.01, .03, .05])]:
+                discard = np.asarray([.1, .1, .1])
+                for seed in (42, 20260913):
+                    args = (graph, alpha, discard, 4, 1000, seed)
+                    old = legacy.cim_ris_seeds(*args, capacity_per_node=2)
+                    new = cim_ris_seeds(*args, capacity_per_node=2)
+                    self.assertEqual((old[0], old[2], old[3]), (new[0], new[2], new[3]))
+        finally:
+            del sys.modules[spec.name]
+
+    def test_zero_adoption_returns_feasible_allocation(self) -> None:
+        graph = make_graph([[1], [0]])
+        seeds, _, estimate, memberships = cim_ris_seeds(
+            graph, np.zeros(2), np.ones(2), 3, 10, 42, capacity_per_node=2
+        )
+        self.assertEqual(seeds, [0, 0, 1])
+        self.assertEqual((estimate, memberships), (0.0, 0))
+
+    def test_empty_budget_and_invalid_capacity_budget(self) -> None:
+        graph = make_graph([[]])
+        alpha, discard = np.asarray([0.5]), np.asarray([0.5])
+        self.assertEqual(cim_ris_seeds(graph, alpha, discard, 0, 0, 42)[0], [])
+        for k, samples in [(-1, 10), (2, 10), (1, 0)]:
+            with self.subTest(k=k, samples=samples), self.assertRaises(ValueError):
+                cim_ris_seeds(graph, alpha, discard, k, samples, 42)
+
+    def test_tiny_positive_adoption_is_not_rounded_to_zero(self) -> None:
+        graph = make_graph([[]])
+        seeds, _, estimate, memberships = cim_ris_seeds(
+            graph, np.asarray([1e-20]), np.asarray([1.0]), 1, 20, 42
+        )
+        self.assertEqual(seeds, [0])
+        self.assertAlmostEqual(estimate / 1e-20, 1.0)
+        self.assertEqual(memberships, 20)
+
     def test_forward_simulation_matches_exact_realization_enumeration(self) -> None:
         graph = make_graph([[1, 2], [2], [0]])
         alpha = np.asarray([0.2, 0.4, 0.6])

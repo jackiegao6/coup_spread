@@ -1,0 +1,7 @@
+{
+  "reason": "Working core normalized from mixed CRLF/LF to LF after the pilot; no semantic change.",
+  "original_path": "experiments/run_real_submission.py",
+  "recorded_sha256": "748faf88b19d7928c0c94ca847eb68a90539b99d786f3b3d0f070231ecbbd162",
+  "snapshot": "experiments/results/ccfa-baseline-pilot/sources/run_real_submission-748faf88.py",
+  "current_lf_sha256": "8d8c1c84789e14864d644d0bb17d33b12b3ab5b61e6a62584e448879066e8a8f"
+}

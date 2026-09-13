@@ -1,0 +1,152 @@
+{
+  "status": "REAL_PILOT_NOT_PUBLICATION_EVIDENCE",
+  "protocol_version": "ccfa-forward-baseline-pilot-v1",
+  "config": {
+    "dataset": "Netscience",
+    "scenario": "balanced",
+    "k": 10,
+    "batches": 100,
+    "rr_samples": 2000,
+    "eval_simulations": 2000,
+    "selection_seed": 20260913
+  },
+  "environment": {
+    "python": "3.12.8",
+    "numpy": "2.2.4",
+    "platform": "Windows-10-10.0.19045-SP0"
+  },
+  "graph_load_and_probabilities_seconds": 0.10380279998935293,
+  "evaluation_seed": 2506588135837260960,
+  "fingerprints": {
+    "experiments\\run_forward_baseline_pilot.py": "031e2b85b270d18bba11d5945a7fb30191c12a06a72fd85231a23704c4598310",
+    "experiments\\run_real_submission.py": "748faf88b19d7928c0c94ca847eb68a90539b99d786f3b3d0f070231ecbbd162",
+    "experiments\\forward_coverage_baselines.py": "54c96636a281d7be902bf355357648a3f00829f12c2f12ee42f9978a9cb50531",
+    "dataset\\network\\network.netscience-adj.pkl": "c0e25ca2a8018edfa67ae06fa14a0e8770bcb5a5905c42561a9f3a7ba4d29aae"
+  },
+  "limitations": [
+    "One selection run; no cross-run interval or significance claim.",
+    "Different sample units; not a matched-time or matched-quality comparison.",
+    "Array bytes exclude Python objects and are not peak memory."
+  ],
+  "rows": [
+    {
+      "method": "CIM-RIS",
+      "seeds": [
+        272,
+        213,
+        82,
+        208,
+        229,
+        198,
+        170,
+        42,
+        307,
+        160
+      ],
+      "selection_stream": 12271426763065279075,
+      "mean_adopters": 6.333500000000003,
+      "mean_redemptions": 6.356500000000002,
+      "within_run_normal_ci95": 0.06664625393660092,
+      "forward_variance": 2.3124339669834937,
+      "selection_seconds": 0.0723193000012543,
+      "training_estimate_not_quality": 18.894295609579068,
+      "rr_memberships": 12763
+    },
+    {
+      "method": "IC-RIS",
+      "seeds": [
+        376,
+        26,
+        203,
+        238,
+        288,
+        195,
+        211,
+        228,
+        316,
+        122
+      ],
+      "selection_stream": 8150468847761025849,
+      "mean_adopters": 6.331000000000007,
+      "mean_redemptions": 6.339999999999999,
+      "within_run_normal_ci95": 0.06634512845141396,
+      "forward_variance": 2.291584792396199,
+      "selection_seconds": 0.05373719999624882
+    },
+    {
+      "method": "Forward-Lazy",
+      "seeds": [
+        23,
+        366,
+        97,
+        56,
+        353,
+        378,
+        139,
+        194,
+        351,
+        17
+      ],
+      "selection_stream": 15490305604279477330,
+      "mean_adopters": 6.392999999999997,
+      "mean_redemptions": 6.396999999999997,
+      "within_run_normal_ci95": 0.06728154103230573,
+      "forward_variance": 2.35672936468234,
+      "selection_seconds": 0.07221810000191908,
+      "sampling_seconds": 0.07192630000645295,
+      "greedy_seconds": 0.00029179999546613544,
+      "training_estimate_not_quality": 7.55,
+      "forward_trajectories": 37900,
+      "outcome_array_bytes_not_peak_memory": 190720,
+      "marginal_recomputations": 9
+    },
+    {
+      "method": "Forward-Stochastic",
+      "seeds": [
+        56,
+        353,
+        23,
+        139,
+        366,
+        97,
+        29,
+        89,
+        351,
+        17
+      ],
+      "selection_stream": 15490305604279477330,
+      "mean_adopters": 6.381000000000005,
+      "mean_redemptions": 6.3990000000000045,
+      "within_run_normal_ci95": 0.06724279848559311,
+      "forward_variance": 2.3540160080040007,
+      "selection_seconds": 0.07757900000433438,
+      "sampling_seconds": 0.06723349999811035,
+      "greedy_seconds": 0.010345500006224029,
+      "training_estimate_not_quality": 7.52,
+      "forward_trajectories": 37900,
+      "outcome_array_bytes_not_peak_memory": 190720,
+      "marginal_recomputations": 880
+    },
+    {
+      "method": "Random",
+      "seeds": [
+        209,
+        13,
+        202,
+        198,
+        69,
+        95,
+        229,
+        288,
+        359,
+        65
+      ],
+      "selection_stream": 9156216503151343141,
+      "mean_adopters": 6.123999999999994,
+      "mean_redemptions": 6.168499999999987,
+      "within_run_normal_ci95": 0.06738247827431988,
+      "forward_variance": 2.3638059029514746,
+      "selection_seconds": 3.0399998649954796e-05
+    }
+  ]
+}

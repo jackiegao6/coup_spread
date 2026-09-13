@@ -199,10 +199,23 @@ def cim_ris_seeds(
 ) -> tuple[list[int], float, float, int]:
     if capacity_per_node < 1:
         raise ValueError("capacity_per_node must be positive")
+    if k < 0 or k > graph.n * capacity_per_node:
+        raise ValueError("coupon budget must be nonnegative and fit seed capacity")
+    if k > 0 and samples <= 0:
+        raise ValueError("samples must be positive for a nonempty allocation")
     started = time.perf_counter()
+    if k == 0:
+        return [], time.perf_counter() - started, 0.0, 0
     rng = random.Random(seed)
     root_weights = 1.0 - np.power(1.0 - alpha, k)
+    # Preserve historical positive weights, recovering only cancellation to zero.
+    tiny_positive = (alpha > 0.0) & (alpha < 1.0) & (root_weights == 0.0)
+    root_weights[tiny_positive] = -np.expm1(k * np.log1p(-alpha[tiny_positive]))
     weight_sum = float(np.sum(root_weights))
+    if weight_sum == 0.0:
+        # All outcomes have zero adoption; return a deterministic feasible allocation.
+        selected = [index // capacity_per_node for index in range(k)]
+        return selected, time.perf_counter() - started, 0.0, 0
     roots = rng.choices(range(graph.n), weights=root_weights, k=samples)
     sample_seeds = [rng.getrandbits(64) for _ in range(samples)]
     coverage: list[dict[int, list[int]]] = [defaultdict(list) for _ in range(k)]

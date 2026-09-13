@@ -12,6 +12,26 @@ ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / 'experiments/results/evidence-20260913'
 T4 = 2.7764451051977987
 
+# Historical runs are checked against their exact source, not rewritten hashes.
+ARCHIVED_CORE_SHA256 = '240ede44730726a4ed8170e8b7cdf97b33bec6ea94a5fa2b5dd4dc96e9227f20'
+_reported_archives = set()
+
+
+def verify_fingerprint(name, digest):
+    current = ROOT / name
+    if hashlib.sha256(current.read_bytes()).hexdigest() == digest:
+        return
+    normalized = name.replace('\\', '/')
+    if normalized == 'experiments/run_real_submission.py' and digest == ARCHIVED_CORE_SHA256:
+        archived = ROOT / 'experiments/archives/run_real_submission-240ede44730726a4.py'
+        assert hashlib.sha256(archived.read_bytes()).hexdigest() == digest, archived
+        if normalized not in _reported_archives:
+            print('HISTORICAL SOURCE:', normalized, 'verified against byte-exact archive;',
+                  'current working source differs and is NOT certified by this check.')
+            _reported_archives.add(normalized)
+        return
+    raise AssertionError(('Fingerprint mismatch without a registered archive', name, digest))
+
 
 def rows(path):
     with path.open(newline='', encoding='utf-8') as handle:
@@ -68,7 +88,7 @@ def verify_sampler():
             close(row[aggregate_key], statistics.mean(float(r[raw_key]) for r in batch))
     for field in ('inputs_sha256', 'code_sha256'):
         for name, digest in metadata[field].items():
-            assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest
+            verify_fingerprint(name, digest)
     for name, digest in metadata['outputs_sha256'].items():
         assert hashlib.sha256((RESULTS / 'sampler' / name).read_bytes()).hexdigest() == digest
     old = rows(ROOT / 'experiments/results/validated-v2/validated_sampler_ablation.csv')
@@ -102,7 +122,7 @@ def verify_large():
         assert job['status'] == 'REAL_EXPERIMENT'
         assert len(job['rows']) == 7
         for name, digest in job['key']['fingerprints'].items():
-            assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest
+            verify_fingerprint(name, digest)
         evaluation_seeds = {r['evaluation_seed'] for r in job['rows']}
         assert len(evaluation_seeds) == 1
         assert not evaluation_seeds.intersection(job['selection_streams'].values())

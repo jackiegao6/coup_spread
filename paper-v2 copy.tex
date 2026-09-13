@@ -85,14 +85,18 @@ Based on these estimators, \CIMRIS{} returns a
 $(1-1/e-\epsilon)$-approximate allocation with high probability and runs
 in expected near-linear time in the graph size when the budget, accuracy,
 and spread lower bound are fixed.
-Experiments on five graph instances derived from real networks show
+Experiments on five archived network graph instances show
 competitive solution quality and practical scalability. Across two graphs
 and three scenarios with high-precision Monte Carlo greedy references, the
 observed gap is $0.3$--$11.1\%$; on Netscience, it is $1.1$--$4.4\%$.
 \CIMRIS{} outperforms both degree and PageRank baselines in all 72
 graph--scenario--budget configurations, while
 conditioned root sampling improves the variance--time product by
-$1.3\times$ and $1.5\times$ at $k=10$ on Netscience and EmailEnron.
+$1.20\times$ and $1.37\times$ at $k=10$ on Netscience and EmailEnron
+when root generation is included in the supplementary timing.
+Independent evaluation on full Douban finds slightly higher mean spread
+for Random at five of six budgets; scalability does not imply uniform
+quality gains over all baselines.
 \end{abstract}
 
 \begin{CCSXML}
@@ -190,11 +194,11 @@ In IC and LT, activation and propagation are coupled: an activated user
 may continue the cascade through multiple neighbors.
 In CIM, propagation follows one forwarding path, and an intermediate
 forwarder remains a non-adopter.
-Algorithmically, a classical RR set represents one broadcast realization,
-whereas a CIM sample must preserve the independent realization and
-identity of every coupon.
-Consequently, neither classical RR-set generation nor its induced
-maximum-coverage procedure can be applied directly.
+Our joint RR construction preserves independent coupon realizations and
+their indices to avoid matching a seed to another coupon's realization.
+Broadcast RR generation cannot be used unchanged for this process, but
+general submodular optimization remains applicable once a correct coupon
+coverage estimator is available.
 
 In summary, our contributions are threefold.
 First, we introduce the coupon influence model and formally define CIM,
@@ -206,13 +210,16 @@ supports a $(1-1/e)$ greedy approximation when marginal gains are exact.
 Third, we develop coupon-aware RR sampling and the scalable \CIMRIS{}
 algorithm, which estimates these marginal gains and retains a
 $(1-1/e-\epsilon)$ approximation guarantee with high probability.
-Experiments on five graph instances derived from real networks evaluate its
+Experiments on five archived network graph instances evaluate its
 solution quality, scalability, sensitivity to the sampling budget,
 capacity-aware placement, and the variance reduction obtained by conditioned
 root sampling. In particular, \CIMRIS{} is competitive with Monte Carlo
 greedy, consistently improves over topology-only seed rankings, and selects
 200 seeds on the 154,907-node Douban instance in 31.2 seconds using the
-validated sample budget.
+fixed empirical sample budget.
+Independent full-Douban evaluation under this budget does not show gains
+over every tested baseline, and the empirical budget is not a per-run
+certificate of the theoretical approximation guarantee.
 
 
 %% ============================================================
@@ -230,6 +237,10 @@ obtain a $(1-1/e)$ greedy approximation.
 Subsequent work accelerated marginal evaluation through lazy greedy
 methods and model-specific optimizations
 ~\cite{leskovec2007celf,goyal2011celf,chen2009efficient}.
+General stochastic greedy reduces the number of objective evaluations for
+monotone submodular maximization~\cite{mirzasoleiman2015lazier}.
+Such optimization frameworks apply to our objective; the cost of each
+objective or marginal evaluation remains a separate issue.
 These models describe copyable influence: an activated node can attempt
 to activate several neighbors.
 CIM instead allocates non-replicable coupons, each of which follows one
@@ -247,15 +258,36 @@ set generated from a broadcast realization.
 Our reverse construction differs in two ways: adoption at the root is a
 separate gate, and one sample contains independent RR components for the
 individual coupons.
-This indexed construction is necessary to estimate the distinct adopters
-created by a coupon allocation.
+Coverage tests in our joint samples must respect these indices. This
+requirement does not exclude other valid estimators or optimization frameworks.
+
+\textbf{Coupon and incentive allocation.}
+Yang et al.~\cite{yang2016continuous} allocate continuous discounts that
+control users' probabilities of becoming seeds under a budget.
+Their continuous influence maximization also uses the acronym CIM;
+here CIM denotes Coupon Influence Maximization and allocates integer
+counts of non-replicable coupons rather than discount levels.
+Tang~\cite{tang2018coupon} considers discrete coupon values, approximately
+submodular cascade utility, and matroid and budget constraints; a user's
+adoption probability depends on the highest coupon value offered.
+Chang et al.~\cite{chang2019socialcoupon} jointly select seeds and internal
+coupon resources in an IC extension with referral quotas, maximizing
+expected activation benefit divided by seed and coupon costs.
+That ratio differs from our coupon usage rate $\eta=\rho/k$.
+Coupon allocation is therefore an established application. Our focus is
+the specific process of transferring a single coupon, terminating it at
+redemption, and deduplicating terminal adopters across independent coupons.
+Forwarding alone creates no adoption reward, and different coupons induce
+independent decisions even at the same user. Existing propagation and
+reward evaluators thus require a justified transformation; general
+submodular optimization tools remain applicable.
 
 \textbf{Diffusion variants.}
 IM has also been studied under competitive diffusion, misinformation
 control, location constraints, adaptive seeding, and multi-round
 campaigns
 ~\cite{budak2011limiting,li2014efficient,lu2015competition,seeman2013adaptive,sun2018multi}.
-Most directly related to our application, Liao et
+Liao et
 al.~\cite{liao2023popularity} use coupon distribution as the motivation
 for allocating promotional seeds across rounds to improve a product's
 popularity ratio.
@@ -1423,15 +1455,17 @@ regimes that balance adoption, discard, and forwarding differently.
 \label{sec:exp-setup}
 
 \paragraph{Datasets.}
-We use five graph instances derived from real networks in the KONECT
-collection~\cite{kunegis2013konect}, with basic statistics shown in
-Table~\ref{tab:datasets}.
-The Netscience dataset is a scientific collaboration network, EmailEnron
-is an email communication network, and NetFacebookEgo and Douban are
-online social networks. DoubanRandom is a sampled Douban instance.
-We represent each undirected contact by two directed edges.
-The four smaller graphs form the primary quality suite, while
-network.douban is reserved for scalability tests.
+We use five locally archived network graph instances, with statistics in
+Table~\ref{tab:datasets}. Their names are archive identifiers and do not
+certify equivalence to an original publisher's version.
+All stored edges are reciprocal. The four smaller graphs form the primary
+quality suite; network.douban supports scalability and supplementary
+independent quality evaluation.
+An audit confirms that all five CSR graphs match the corresponding local
+MAT variables in values, indices, and row pointers. Original download
+versions, preprocessing and sampling steps, node mappings, and upstream
+licenses remain incompletely documented; local equality does not establish
+the full data provenance chain.
 
 \begin{table}[t]
   \caption{Datasets used in the experiments.}
@@ -1580,12 +1614,22 @@ including multiple redemptions by the same user (secondary metric).
 We use $k\in\{10,25,50,100,150,200\}$.
 
 \paragraph{Implementation and reproducibility.}
-All methods are implemented in Python~3.8 and evaluated on a machine with
+The historical main experiments use Python~3.8 on a machine with
 eight AMD EPYC 9654 cores and 16~GB of memory; the reported selection
 times use one process. The NetFacebookEgo MC-Greedy matrix is generated
 in 32 chunks using eight processes; this preprocessing time is not included
 in method selection times. We use five independent selection seeds
 ($20260715$--$20260719$).
+Each coupon has a separate visited-node record: an action is sampled on
+first visit, and a revisit terminates without redemption, matching a
+permanent forwarding cycle in a fixed-action realization.
+The experimental root generator uses cumulative weights and binary search,
+costing $O(n+T\log n)$ for root generation. The theoretical $O(n+T)$
+root-generation bound assumes alias tables; the distributions agree but
+the computational costs differ. Historical records are checked against
+the exact archived source hash. The revised implementation additionally
+handles zero-adoption, empty-budget, and infeasible-capacity boundaries
+without replacing hashes in historical records.
 The joint-sample budget is fixed before the cross-method comparison:
 $100{,}000$ samples for $k\leq50$ and $50{,}000$ samples for $k\geq100$.
 IC-RIS uses the same sample budget as \CIMRIS{}.
@@ -1600,19 +1644,21 @@ Theorem~\ref{thm:approx} for a particular $(\epsilon,\delta)$ pair.
 Every selected allocation is evaluated with $10{,}000$ fresh forward
 realizations, and methods within one configuration use common random-number
 streams.
-Figure error bars for \CIMRIS{} show 95\% confidence intervals over the
-five selection runs.
+Main quality-figure error bars for \CIMRIS{} use two-sided 95\% Student-$t$
+intervals over five selection runs, $\bar\sigma\pm2.776s/\sqrt{5}$
+(four degrees of freedom). These describe cross-run variation and are not
+multiple-comparison-adjusted significance tests.
 Across the 72 graph--scenario--budget configurations, the adoption spread
 has a mean cross-seed coefficient of variation of $0.51\%$ and a maximum
 of $3.07\%$; the mean relative range is $1.27\%$.
 
 \begin{figure*}[!t]
   \centering
-  \includegraphics[width=0.87\textwidth]{figures/experiments/validated_quality_combined}
+  \includegraphics[width=0.87\textwidth]{figures/experiments/evidence-20260913/validated_quality_combined}
   \caption{Adoption spread in the balanced (top) and forwarding-heavy
   (bottom) scenarios. Each point is the mean of five selection runs, each
   evaluated using $10{,}000$ forward realizations; \CIMRIS{} error bars
-  show 95\% confidence intervals across runs. MC-Greedy is reported on
+  show 95\% Student-$t$ intervals across runs (four degrees of freedom). MC-Greedy is reported on
   Netscience and NetFacebookEgo.}
   \Description{Eight line charts compare distinct adopters versus coupon
   budget across four networks and two diffusion scenarios.}
@@ -1767,22 +1813,29 @@ no root adoption gate fires.
 Conditioning removes this work and reduces the coefficient of variation
 from $0.128$ to $0.087$ on Netscience and from $0.809$ to $0.492$ on
 EmailEnron.
-After accounting for sampling time, the corresponding variance--time
-improvements are $1.30\times$ and $1.53\times$.
-Across all six measured conditions, the observed variance--time ratio is
-between $1.30\times$ and $1.59\times$ in favor of conditioning.
+Supplementary measurements retain all 360 batches across two graphs,
+three budgets, and two samplers. Reusing the recorded sampling seeds and
+allocations reproduces the earlier estimator means and standard deviations.
+Batch timing includes root weights, root generation, gates, and reverse
+traversal, but excludes graph loading. It uses one process on Windows with
+Python~3.12.8 and NumPy~2.2.4 and is not directly compared to the historical
+Linux selection times.
+The corresponding variance--time improvements at $k=10$ are $1.20\times$
+and $1.37\times$. Across all six conditions, the ratio ranges from
+$1.20\times$ to $1.61\times$ in favor of conditioning.
 By $k=200$, however, fewer than $0.3\%$ of uniform-root samples have no
 firing gate, so differences in empirical variance should be interpreted
 with the finite 30-batch sample size in mind.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\columnwidth]{figures/experiments/validated_sampler_ablation}
+  \includegraphics[width=\columnwidth]{figures/experiments/evidence-20260913/validated_sampler_ablation}
   \caption{Uniform-root versus conditioned-root estimation in the
   forwarding-heavy scenario. Each statistic uses 30 independent batches
   of $20{,}000$ samples. Relative efficiency is the ratio of the
   variance--time products of uniform and conditioned sampling; values
-  above one favor conditioning.}
+  above one favor conditioning. Timing includes root generation, and all
+  batch records are retained.}
   \Description{Three panels compare zero-contribution samples,
   coefficient of variation, and variance-time efficiency for uniform and
   conditioned root sampling on Netscience and EmailEnron.}
@@ -1817,6 +1870,47 @@ worst-case bound.
 %% ============================================================
 %% 7. CONCLUSION
 %% ============================================================
+\subsection{Independent Quality Evaluation on Full Douban}
+\label{sec:exp-large-quality}
+
+We supplement the earlier runtime study with independent quality evaluation
+on full network.douban in the balanced scenario. The six budgets
+$k\in\{10,25,50,100,150,200\}$, five selection seeds, and two-level RR
+budgets match the scalability study. We compare \CIMRIS{}, IC-RIS,
+1Hop-Sort, Alpha-Sort, DegreeTopM, PageRank, and Random.
+Each allocation receives $10{,}000$ fresh forward evaluations independent
+of selection, with shared evaluation streams within each configuration.
+The archive contains 30 jobs and 210 method allocations, with seeds,
+stream identifiers, and source and graph hashes. CIM training estimates
+and RR membership counts reproduce the earlier scalability records, but
+training estimates are not used as selected-allocation quality estimates.
+These supplementary measurements use the Windows environment described
+above and do not replace the historical Linux timing curve.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.95\textwidth]{figures/experiments/evidence-20260913/large_graph_quality}
+  \caption{Independent quality on full Douban in the balanced scenario.
+  (a) Distinct adopters with 95\% Student-$t$ intervals over five runs.
+  (b) Paired relative differences from the baseline with the highest mean
+  at each budget, with intervals computed from five paired differences.
+  Selection of that baseline uses the same observations, so intervals are
+  descriptive rather than selection- or multiplicity-adjusted tests.}
+  \Description{Seven methods' independent adoption spread and positive
+  or negative relative differences from the strongest measured baseline.}
+  \label{fig:large-independent-quality}
+\end{figure*}
+
+At $k=10$, mean spread is $6.7063$ for \CIMRIS{} and $6.6826$ for IC-RIS,
+the strongest measured baseline, a relative difference of about $+0.36\%$.
+At $k=25,50,100,150,200$, Random has the highest baseline mean; CIM's
+relative differences are $-0.24\%$, $-0.54\%$, $-0.54\%$, $-0.63\%$,
+and $-0.81\%$, respectively. At $k=200$, the two means are $133.0522$
+and $134.1437$. Fast selection therefore does not imply better quality
+than every simple strategy. This balanced-scenario supplement contains
+neither a full-graph MC-Greedy nor an exact optimum and does not validate
+the sufficient theoretical sample count or an approximation ratio to OPT.
+
 \section{Conclusion}
 \label{sec:conclusion}
 
@@ -1844,8 +1938,11 @@ appearing in the forwarding-heavy scenario.
 Local and broadcast baselines remain competitive on some instances, so
 no method dominates every graph and budget.
 Conditioned root sampling removes zero-contribution samples and improves
-the measured variance--time product by $1.3$--$1.5\times$ at $k=10$ on
-the two tested graphs. Capacity experiments further show that repeated
+the measured variance--time product by $1.20\times$ and $1.37\times$ at
+$k=10$ when supplementary timing includes root generation.
+On full Douban, Random has slightly higher mean spread at five of six
+budgets, by $0.24\%$--$0.81\%$; quality and scalability must be assessed
+separately. Capacity experiments further show that repeated
 placement provides a modest gain in the forwarding-heavy regime but is
 rarely selected when adoption is common.
 

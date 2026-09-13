@@ -1,0 +1,8 @@
+# Preserve the byte-exact historical source referenced by experiment hashes.
+experiments/archives/run_real_submission-240ede44730726a4.py -text whitespace=cr-at-eol
+# Keep the new pilot and its fingerprinted sources stable across checkouts.
+experiments/run_real_submission.py text eol=lf
+experiments/forward_coverage_baselines.py text eol=lf
+experiments/run_forward_baseline_pilot.py text eol=lf
+experiments/results/ccfa-baseline-pilot/*.json -text
+experiments/results/ccfa-baseline-pilot/sources/* -text whitespace=cr-at-eol
