@@ -11,13 +11,13 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import importlib
 import json
 import math
 import pickle
 import random
 import sys
 import time
-import types
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
@@ -68,39 +68,21 @@ def _stable_seed(*parts: object) -> int:
 
 
 def _load_raw_csr(path: Path) -> _CSRState:
-    # Some stored matrices were created with NumPy 2.x, whose pickle
-    # module path changed from numpy.core to numpy._core.
-    import numpy.core as numpy_core
-    import numpy.core.multiarray as numpy_multiarray
-    import numpy.core.numeric as numpy_numeric
+    # Resolve pickle names locally rather than replacing global NumPy modules.
+    # Global aliases recurse on NumPy 2 and can corrupt already-imported SciPy.
+    numpy_prefix = "numpy._core" if int(np.__version__.split(".")[0]) >= 2 else "numpy.core"
 
-    scipy_module = types.ModuleType("scipy")
-    sparse_module = types.ModuleType("scipy.sparse")
-    csr_module = types.ModuleType("scipy.sparse._csr")
-    csr_module.csr_matrix = _CSRState
-    sparse_module._csr = csr_module
-    scipy_module.sparse = sparse_module
+    class CSRReader(pickle.Unpickler):
+        def find_class(self, module: str, name: str):
+            if module.startswith("scipy.sparse") and name == "csr_matrix":
+                return _CSRState
+            for prefix in ("numpy._core", "numpy.core"):
+                if module == prefix or module.startswith(prefix + "."):
+                    return getattr(importlib.import_module(numpy_prefix + module[len(prefix):]), name)
+            return super().find_class(module, name)
 
-    aliases = {
-        "scipy": scipy_module,
-        "scipy.sparse": sparse_module,
-        "scipy.sparse._csr": csr_module,
-        "numpy._core": numpy_core,
-        "numpy._core.numeric": numpy_numeric,
-        "numpy._core.multiarray": numpy_multiarray,
-    }
-    previous = {name: sys.modules.get(name) for name in aliases}
-    sys.modules.update(aliases)
-    try:
-        with path.open("rb") as handle:
-            matrix = pickle.load(handle)
-    finally:
-        for name, module in previous.items():
-            if module is None:
-                sys.modules.pop(name, None)
-            else:
-                sys.modules[name] = module
-    return matrix
+    with path.open("rb") as handle:
+        return CSRReader(handle).load()
 
 
 def load_graph(name: str) -> Graph:

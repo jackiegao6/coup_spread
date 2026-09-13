@@ -1,0 +1,39 @@
+{
+  "status": "REAL_EXPERIMENT",
+  "protocol_version": "evidence-20260913-sampler",
+  "arguments": {
+    "seed_file": "F:\\00-gzc-gzc-paper\\coup_spread\\experiments\\results\\forwarding-heavy\\real_seeds_forwarding-heavy.json",
+    "validated_job_dir": "experiments/results/validated-v2/jobs",
+    "selection_seed": 20260715,
+    "protocol_version": "evidence-20260913-sampler",
+    "datasets": "Netscience,EmailEnron",
+    "budgets": "10,50,200",
+    "scenario": "forwarding-heavy",
+    "batch_size": 20000,
+    "repeats": 30,
+    "seed": 20260715,
+    "output": "experiments/results/evidence-20260913/sampler/summary.csv"
+  },
+  "python": "3.12.8",
+  "numpy": "2.2.4",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "processor": "Intel64 Family 6 Model 158 Stepping 10, GenuineIntel",
+  "inputs_sha256": {
+    "dataset\\network\\network.netscience-adj.pkl": "c0e25ca2a8018edfa67ae06fa14a0e8770bcb5a5905c42561a9f3a7ba4d29aae",
+    "experiments\\results\\validated-v2\\jobs\\forwarding-heavy\\Netscience\\k10_seed20260715.json": "5da864345e7ac61656663e9475235e502f7657d85aaf0644c5ebf2a1d639422e",
+    "experiments\\results\\validated-v2\\jobs\\forwarding-heavy\\Netscience\\k50_seed20260715.json": "b53039106b948f3ce273abc3b4f81a4b2986c1857b0676313228bc5d010575da",
+    "experiments\\results\\validated-v2\\jobs\\forwarding-heavy\\Netscience\\k200_seed20260715.json": "2907aa65dc455cceaea9fc3ee1f0edb95c162d19d12e08a9d7d3f9ef1146b839",
+    "dataset\\network\\network.EmailEnron-adj.pkl": "e5d3cd5d295b76d79bc9abfa0a0860ac5a26eb55aa32edb21adae50b711c18a7",
+    "experiments\\results\\validated-v2\\jobs\\forwarding-heavy\\EmailEnron\\k10_seed20260715.json": "140a66ca0fb8242f6cc26f7277da51185fae7a017190be15d51256f62449b8d1",
+    "experiments\\results\\validated-v2\\jobs\\forwarding-heavy\\EmailEnron\\k50_seed20260715.json": "41c654b98d5c637ef3749033dd5132a31a9c7c4d3a3edb35b0c159a286aa834a",
+    "experiments\\results\\validated-v2\\jobs\\forwarding-heavy\\EmailEnron\\k200_seed20260715.json": "a9c4f11e43c3a99db0a5000b5e3247dce249e661cfbcf7b07bd590156f56edf6"
+  },
+  "code_sha256": {
+    "experiments\\run_real_sampler_ablation.py": "84f84df52b165544ff44a68473e2059ac8ce4256061a96abe28c8e397f9111d6",
+    "experiments\\run_real_submission.py": "240ede44730726a4ed8170e8b7cdf97b33bec6ea94a5fa2b5dd4dc96e9227f20"
+  },
+  "outputs_sha256": {
+    "summary.csv": "0835e6ed7298f5773db77edbdd1137010a085d2d3b41ef660cc76978fdd25a95",
+    "summary_batches.csv": "d7a876e045d3519c18b750cc408636898334813e5c5c9a6918014a0ce26db225"
+  }
+}

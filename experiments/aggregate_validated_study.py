@@ -10,6 +10,8 @@ import statistics
 from collections import defaultdict
 from pathlib import Path
 
+from scipy.stats import t as student_t
+
 
 def write_csv(path: Path, fields: list[str], rows: list[dict[str, object]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -24,8 +26,10 @@ def main() -> None:
     parser.add_argument(
         "--input-dir", default="experiments/results/validated-v2"
     )
+    parser.add_argument("--output-dir", help="Separate output directory; defaults to input directory")
     args = parser.parse_args()
     input_dir = Path(args.input_dir)
+    output_dir = Path(args.output_dir) if args.output_dir else input_dir
     jobs = sorted((input_dir / "jobs").glob("*/*/*.json"))
     if not jobs:
         raise SystemExit(f"No completed jobs under {input_dir}")
@@ -57,7 +61,7 @@ def main() -> None:
         )
     )
     raw_fields = list(raw[0])
-    write_csv(input_dir / "validated_raw.csv", raw_fields, raw)
+    write_csv(output_dir / "validated_raw.csv", raw_fields, raw)
 
     groups: dict[tuple[object, ...], list[dict[str, object]]] = defaultdict(list)
     for row in raw:
@@ -74,7 +78,8 @@ def main() -> None:
         ]
         std = statistics.stdev(values) if len(values) > 1 else 0.0
         ci95_selection = (
-            1.96 * std / math.sqrt(len(values)) if len(values) > 1 else 0.0
+            float(student_t.ppf(0.975, len(values) - 1)) * std / math.sqrt(len(values))
+            if len(values) > 1 else ""
         )
         summary.append(
             {
@@ -86,6 +91,7 @@ def main() -> None:
                 "mean_adopters": statistics.mean(values),
                 "std_across_selection_runs": std,
                 "ci95_across_selection_runs": ci95_selection,
+                "ci_method": "student_t_two_sided_95" if len(values) > 1 else "unavailable_single_repeat",
                 "min_adopters": min(values),
                 "max_adopters": max(values),
                 "mean_redemptions": statistics.mean(redemptions),
@@ -96,7 +102,7 @@ def main() -> None:
             }
         )
     summary_fields = list(summary[0])
-    write_csv(input_dir / "validated_summary.csv", summary_fields, summary)
+    write_csv(output_dir / "validated_summary.csv", summary_fields, summary)
     print(f"Aggregated {len(jobs)} jobs, {len(raw)} raw rows, {len(summary)} summaries")
 
 
