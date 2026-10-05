@@ -1,0 +1,1 @@
+Candidate random-horizon backward construction: deterministic matrix-mixture check passed; 60000 reverse samples matched M; 60000 independent-world marginal samples matched closed form.

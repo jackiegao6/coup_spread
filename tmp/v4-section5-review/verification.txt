@@ -1,0 +1,3 @@
+Section 5 checks passed: scoped source edit; LaTeX labels/environments; exact rational endpoint enumeration; 30000 independent sample families; unconditional transition oracle; incremental greedy; empty and duplicate samples; zero usage; positive lower bound below 1.
+Max sampled entry error: 0.0032333333333333103
+No LaTeX compiler available; PDF layout not validated.

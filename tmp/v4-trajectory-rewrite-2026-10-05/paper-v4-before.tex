@@ -1,0 +1,1342 @@
+%%
+%% SIGMOD 2025 — New version following PRM writing style
+%%
+\documentclass[sigconf]{acmart}
+
+\AtBeginDocument{%
+  \providecommand\BibTeX{{Bib\TeX}}}
+
+\setcopyright{acmlicensed}
+\copyrightyear{2025}
+\acmYear{2025}
+\acmDOI{XXXXXXX.XXXXXXX}
+\acmConference[SIGMOD '25]{ACM International Conference on Management of Data}{June 2025}{Berlin, Germany}
+\acmISBN{978-1-4503-XXXX-X/2025/06}
+
+%%\usepackage[utf8]{inputenc}
+%%\usepackage[T1]{fontenc}
+%\usepackage{amsmath}
+%\usepackage{amsfonts}
+%%\usepackage{amssymb}
+%\usepackage{booktabs}
+%\usepackage{graphicx}
+%\usepackage{microtype}
+%\usepackage{xcolor}
+%\usepackage{algorithm}
+%\usepackage{algpseudocode}
+%\usepackage{enumitem}
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{amsmath,dsfont}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{graphicx}
+\usepackage{colortbl}
+\usepackage{wrapfig}
+\usepackage{balance}
+\usepackage{enumitem}
+%% Handy shorthands
+\newcommand{\CIMRIS}{\textsc{CIM-RIS}}
+\newcommand{\pa}{p_u^a}
+\newcommand{\pd}{p_u^d}
+\newcommand{\pt}{p_u^t}
+\newcommand{\sig}{\sigma}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\I}{\mathbb{I}}
+\newtheorem{remark}{Remark}[section]
+
+\begin{document}
+
+\title{Coupon influence maximization under random walk diffusion in social network}
+
+\author{Anonymous Author(s)}
+
+\renewcommand{\shortauthors}{Anon.}
+
+%% ============================================================
+%% ABSTRACT
+%% ============================================================
+\begin{abstract}
+
+
+
+\end{abstract}
+
+\begin{CCSXML}
+<ccs2012>
+ <concept>
+  <concept_id>10002951.10002952.10002953.10010820</concept_id>
+  <concept_desc>Information systems~Social networks</concept_desc>
+  <concept_significance>500</concept_significance>
+ </concept>
+ <concept>
+  <concept_id>10003752.10003809.10010170.10010171</concept_id>
+  <concept_desc>Theory of computation~Approximation algorithms analysis</concept_desc>
+  <concept_significance>300</concept_significance>
+ </concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Information systems~Social networks}
+\ccsdesc[300]{Theory of computation~Approximation algorithms analysis}
+
+\keywords{influence maximization, coupon diffusion, random walk,
+          reverse influence sampling, submodular optimization}
+
+\maketitle
+
+%% ============================================================
+%% 1. INTRODUCTION
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+
+Word-of-mouth and viral marketing have become important strategies for
+product promotion in social networks.
+By selecting a small set of influential seed users, a company can
+promote products' adoption by word-of-mouth marketing along social connections.
+However, how to choose the best initial seed users is a challenge,
+ a problem commonly referred
+to as influence maximization (IM)~\cite{kempe2003maximizing}.
+Over the past two decades, IM has been extensively studied under
+classical models such as the Independent Cascade (IC) and Linear
+Threshold (LT) models, where activated nodes attempt to trigger their
+neighbors in a broadcast manner, i.e.,one node could trigger multiple neighbors~\cite{domingos2001mining,borgs2014maximizing,tang2015influence}.
+However, many real-world promotional campaigns deviate from this
+paradigm.
+For example, a company sends some digital coupons for product promotion in the online social network (e.g., Social Media Promo Code from Amazon, Percentage Off from various e-commerce platforms,
+promotion codes form Google Play). The diffusion model of digital coupons is quite  different from the classical IM: A digital coupon could only be passed from one user to only one neighbor, where the diffusion follows random walk-like mechanism rather than IM's broadcast manner. Once a digital coupon is consumed by a user, the coupon cannot be further transferred in the social network. A user who consumes at least one coupon could be treated as activated. The aim is  to activate as more as possible users for future potential consumption. However, since a user might consume multiple coupons, how to choose the best initial seed users to activate most final users is a challenge, which we define as coupon influence maximization(CIM for short). Though IM has been well studied, the solution to IM could not be explicitly applied to CIM, because of the different underlying  diffusion mechanism. \textcolor[rgb]{1.00,0.00,0.00}{$However$}, the CIM is rarely investigated in previous works.
+
+
+
+
+We consider a concrete example:
+A company wants to promote a new product and issues $k$ digital coupons of Percentage off
+to $k$ seed users. We first consider the diffusion of one coupon. When a user receives the coupon, he/she has three candidate actions: consuming action, dropping action, and transferring action. For the consuming action, if the user didn't consume coupons previously, he/she consumes the coupon and becomes to activation state; if the user has consume other coupons previously, he/she keeps in the activation state, i.e., we allow the consumption of multiple coupons. After the consuming action, the diffusion of the coupon terminates at the user.
+ For the dropping action, the user refuses to consume\&transfer the coupon, and the user keep its state unchanged. Meanwhile, the diffusion of the coupon terminates at the user.
+ For the transferring action, the user refuse to consume\&drop the coupon, and transfer the coupon to only one random neighbor. Meanwhile, the user keep its state unchanged. The coupon diffuses in the social network following the above mechanism until termination. We now turn to the diffusion of multiple coupons: each coupon follows the same diffusion mechanism introduced above.
+  For simplification, we assume that different coupon diffuses independently. Hence, a user may consume multiple coupons, but only be counted as one activated user. Note that the users who only transfer coupons, but do not consume any coupon, are counted as inactive. 
+ When the diffusion of all coupons terminates, we count the activated users. 
+The primary objective is to select $k$ seed nodes that maximize the
+expected number of final activated nodes. Inappropriate seed nodes would lead to either the scenario that one user consume too many coupons, or the scenario that too many coupons are dropped. Hence, the CIM problem is a parallel important problem of IM. However, we still lack a strict analysis of CIM and the solution to the problem.
+
+
+In the paper, we propose the strict formalism of the CIM problem. We investigate the influence of network structure on CIM and prove that CIM problem is NP-hard. We further analytically shown that 
+the objective function(expected number of activated users) is monotone and submodular. Based on the NP-hard and submodular properties,  a plausible solution is greedy algorithm. The IM algorithm first samples RR sets and transfers IM problem into set covering problem, based on which greedy algorithm is performed. Inspired by the process, we first provide the special generation process for RR sets based on the diffusion mechanism of CIM. We then demonstrate that the induced set covering problem of CIM is quite different from IM. We then propose a dedicated greedy algorithm for the induced set cover problem of CIM. We prove that our algorithm could reach an approximation ratio $1-1/e$ and has time complexity \textcolor[rgb]{1.00,0.00,0.00}{$xxxx$}. At last, Experiments in various datasets demonstrate the effectiveness and efficiency of our algorithm. 
+
+An important point of our study is that coupon influence maximization is
+completely different from classical IM:
+(a) The diffusion mechanism is different. In classical IM, the information spreads in a broadcast manner, where one user could trigger multiple neighbors. However, in CIM, the information spreads in a random walk-like manner, where one user could only transfer to at most one neighbor(or consume/drop it). Moreover, the users that only transfer information(not consume information) are treated inactive in CIM, whereas all users on a spreading path are treated active. (b) In the solution algorithm, the RR set generation process and the induced set cover problem of CIM is more complex than these of IM. 
+We design a dedicated RR set generation process and the corresponding greedy algorithm for CIM.
+
+
+
+In summary, our contributions are as follows.
+% First, we initiate the formal study of coupon influence maximization by
+% proposing the coupon influence model, which captures the single-copy,
+% multi-coupon nature of real-world coupon campaigns, and by defining two
+% campaign objectives: adoption-spread maximization and coupon
+% usage-rate maximization.
+% Second, we prove that CIM is NP-hard and show that the adoption spread
+% function is monotone and submodular under the seed-node and coupon-index
+% representation.
+% Third, we develop a tailored reverse influence sampling scheme based on
+% $k$-joint RR sets and build the \CIMRIS{} algorithm for scalable seed
+% selection.
+
+
+%% ============================================================
+%% 2. RELATED WORK
+%% ============================================================
+\section{Related Work}
+\label{sec:related}
+
+
+\section{Model and Problem Definition}
+\label{sec:model}
+
+In this section, we introduce the coupon influence model, which
+characterizes the propagation of non-replicable coupons through a
+random-walk-like process in social networks.
+In this model, $k$ coupons are initially issued to $k$ seed users, and
+each coupon moves through the network one edge at a time until it is
+consumed or dropped; the campaign value is measured by the number of
+distinct users who eventually consume at least one coupon.
+Based on the coupon influence model, we define the optimization
+problem of Coupon Influence Maximization (CIM), which characterizes
+how to allocate the limited coupon budget across seed users to
+achieve the widest consumption.
+
+\subsection{Coupon Influence Model}
+
+The coupon influence model describes non-replicable coupons that move
+through a social network one edge at a time, forming a single
+forwarding trajectory rather than a broadcast cascade.
+Unlike copyable advertising content, each coupon is a single
+consumable object and produces campaign value only when it is
+consumed.
+We model the network as a directed graph $G=(V,E)$ with $n=|V|$
+nodes and $m=|E|$ edges, where each node $u\in V$ represents a user
+and each directed edge $(u,v)\in E$ indicates that $u$ may forward a
+coupon to $v$.
+Each node $u$ is associated with three mutually exclusive outcome
+probabilities: the consumption probability $p_u^a$, the dropping
+probability $p_u^d$, and the transfer probability $p_u^t$, satisfying
+$p_u^a+p_u^d+p_u^t=1$.
+For each edge $(u,v)\in E$, $p(u,v)\ge 0$ denotes the probability
+that $u$ transfers an arriving coupon to $v$; for a node $u$ with
+out-neighbor set $N^+(u)\neq\emptyset$, the edge transfer
+probabilities satisfy $\sum_{v\in N^+(u)}p(u,v)=p_u^t$, and hence
+\begin{equation}
+\label{eq:normalize}
+p_u^a+p_u^d+\sum_{v\in N^+(u)}p(u,v)=1.
+\end{equation}
+If $N^+(u)=\emptyset$, we set $p_u^t=0$.
+
+\textbf{Single-coupon propagation.}
+Given a seed set $S\subseteq V$ with $|S|=k$, each seed node initially
+receives one coupon.
+When a coupon arrives at node $u$, exactly one of three mutually
+exclusive outcomes occurs: $u$ consumes the coupon with probability
+$p_u^a$, drops it with probability $p_u^d$, or transfers it to an
+out-neighbor $v$ with probability $p(u,v)$.
+Consumption and dropping behaviors terminate the propagation of the coupon,
+while transfer continues it from the selected neighbor.
+If the coupon later revisits the same node, the action of the node toward a given coupon is sampled again. Hence, at last, the coupon is either consumed or dropped.
+
+\textbf{Multiple-coupons propagation.}
+For multiple coupons, when each of $k$ nodes receive one coupon, each coupon propagates independently in the network. We follow the process of single-coupon propagation until the termination of all coupons.
+
+
+\textbf{Difference from existing IM models}: The non-replicable nature of the coupon is the intrinsic 
+characteristic of the model.
+\begin{itemize}
+ \item Unlike the IC model, where an activated node simultaneously attempts
+to activate all of its neighbors, a transferred coupon moves to
+exactly one neighbor, tracing a chain rather than a branching cascade.
+
+ \item A user contributes to the campaign outcome only when he/she
+\emph{consumes} a coupon, not when he/she merely receives or forwards
+it, i.e., intermediate nodes along the forwarding trajectory contribute
+nothing.
+\end{itemize}
+This consumption-versus-receipt distinction separates our model from
+all classical IM models.
+It also implies that the number of consumed coupons may differ from
+the number of distinct consumers: if two coupons forwarded along
+different trajectories are eventually consumed by the same user, both
+coupons are consumed but only one consumer is counted.
+A user is regarded as activated if and only if he/she consumes at least
+one coupon, and each activated user is counted only once even if he/she
+consumes multiple coupons.
+
+\textbf{Possible-world formalization.}
+The propagation process described above admits an equivalent
+possible-world description, which we now give; it fixes all randomness
+up front and makes the coupling between seed assignments and outcomes
+explicit.
+First consider a single coupon.
+For each node $u$, we independently sample
+$r_u\sim\mathrm{Uniform}[0,1]$.
+If $r_u\le p_u^a$, node $u$ consumes the coupon when it reaches $u$,
+an event we denote by $A_u$; if $p_u^a<r_u\le p_u^a+p_u^d$, node $u$
+drops the coupon (event $D_u$); otherwise $u$ transfers the coupon to
+one of its out-neighbors, where the remaining interval of length
+$p_u^t$ is partitioned into sub-intervals proportional to $p(u,v)$,
+and $r_u$ falling into the sub-interval of edge $(u,v)$ means that
+$u$ transfers the coupon to $v$.
+We call $(u,v)$ the live edge selected at $u$.
+When a coupon revisits $u$, we generate a new random number $r_u'$ and use  $r_u'$ to determine the 
+action of $u$. Here, $r_u'$ is independent of $r_u$. Hence, a forwarding trajectory of a coupon may enter a directed cycle. But the coupon will be eventually consumed or dropped, since $p_u^a+p_u^d>0$ means that a node has a nonzero probability to consumed or dropped a coupon and the expectation of the length of forwarding trajectory is finite.
+
+
+For $k$ coupons, we index the coupons by $j\in[k]$ and use
+$r_u^{(j)}$, $A_u^{(j)}$, and $D_u^{(j)}$ to denote the sampled
+random number, consumption event, and dropping event of node $u$ for
+coupon $j$, respectively.
+Let $W_j$ denote the possible world associated with coupon $j$, and
+let $W=(W_1,\ldots,W_k)$ denote the joint possible world; the worlds
+$W_1,\ldots,W_k$ are mutually independent, reflecting that different
+coupons carry independent realizations of node actions and propagate
+independently.
+Fix an arbitrary labeling $S=\{s_1,\ldots,s_k\}$ of the $k$ seed
+nodes, with coupon $j$ assigned to $s_j$.
+Under $W_j$, user $u$ consumes coupon $j$ if and only if there exists
+a live-edge path from $s_j$ to $u$ and the consumption event
+$A_u^{(j)}$ occurs; we denote this event by $A_j(u,s_j;W_j)$.
+
+\textcolor[rgb]{1.00,0.00,0.00}{As a numerical illustration, consider two coupons seeded at $s_1$
+and $s_2$.
+In world $W_1$, $s_1$ transfers along live edge $(s_1,w)$, $w$
+transfers along $(w,u)$, and $u$ consumes coupon~1, so $u$ is
+activated; in the independent world $W_2$, the live path
+$s_2\to w\to v$ leads to a consumption at $v$.
+Node $w$ is visited by both coupons but consumes neither, so it
+contributes to propagation without contributing to the outcome, and
+the realized spread of this seed set is two consumers.}
+
+
+One remark to Eq.~\eqref{eq:normalize} is that both the propagation
+outcomes and the campaign objective are represented in the expectation
+form.
+One may formulate the consumption events as random variables over the
+joint possible world and take the expectation at the end.
+The expectation form is easier to handle, and our experimental
+evaluation shows that such a representation does not lose fidelity in
+terms of the solution quality.
+
+Another remark concerns the extreme behavioral regimes captured by
+the model.
+As $p_u^a\to 1$, a coupon reaching $u$ is almost surely consumed; as
+$p_u^d\to 1$, it is almost surely dropped without producing a
+consumer; and as $p_u^t\to 1$, $u$ behaves almost entirely as a
+forwarding node, so that consumption, if it happens, can only occur
+at the downstream end of a long trajectory.
+These regimes are useful abstractions of real campaigns, ranging from
+impulse purchases with immediate redemption to referral codes that
+travel far before being used.
+
+Finally, the coupon influence model can be further extended to allow
+a seed user to hold multiple coupons, biased forwarding targets
+(e.g., users preferentially forwarding to friends with higher
+consumption probability), and adaptive consumption where a user would transfer the coupon when he/she have already consumed.
+We arrange the discussion of these model extensions and their impact
+on algorithm design to Section~\ref{sec:conclusion}.
+
+\subsection{Coupon Influence Maximization}
+
+The \emph{coupon influence spread} of a seed set $S$ is the expected
+number of distinct users who consume at least one coupon.
+Under a joint possible world $W$, let $C(S,W)=\{u\in V : A(u;S,W)\}$
+denote the set of users activated under $W$, where
+$A(u;S,W)=\bigcup_{j=1}^{k} A_j(u,s_j;W_j)$ is the event that $u$
+consumes at least one of the $k$ coupons.
+The coupon influence spread is then defined as
+
+\begin{equation}
+\label{eq:coupon-spread}
+\sigma(S)
+=
+\mathbb{E}_{W}\bigl[|C(S,W)|\bigr]
+=
+\sum_{u\in V}
+\Pr{}_{W}\bigl[A(u;S,W)\bigr].
+\end{equation}
+
+We use $k$ to denote the coupon budget; since each seed node
+initially receives one coupon, the organizer selects a seed set
+$S\subseteq V$ with $|S|=k$.
+Informally, Coupon Influence Maximization (CIM) is to find a seed set
+of size $k$ whose coupon influence spread is maximized.
+Formally, we define the problem as follows.
+
+\begin{definition}[Coupon Influence Maximization]
+\label{def:cim}
+Given (a) a social network $G=(V,E)$,
+(b) the node behavior parameters
+$\{(p_u^a,p_u^d,p_u^t)\}_{u\in V}$,
+(c) the edge transfer probabilities
+$\{p(u,v)\}_{(u,v)\in E}$,
+and (d) a coupon budget $k$,
+the task of \emph{Coupon Influence Maximization (CIM)} is to find an
+optimal seed set $S^*\subseteq V$ such that $|S^*|=k$ and the coupon
+influence spread is maximized, i.e.,
+\begin{equation}
+\label{eq:cim}
+S^*
+\in
+\arg\max_{S\subseteq V,\ |S|=k}
+\sigma(S).
+\end{equation}
+\end{definition}
+
+Note that it may not be wise to select the $k$ nodes with the largest
+individual spreading potential, since coupons propagated from
+different seeds may eventually be consumed by the same user, who is
+counted only once in $\sigma(S)$.
+On the other hand, activation in our model also differs from that in
+conventional influence maximization: a user is considered activated
+only when she consumes at least one coupon, and merely receiving or
+forwarding a coupon contributes nothing to the spread.
+Nevertheless, activation is still tightly coupled with forwarding,
+because a coupon can be consumed by a user only after reaching that
+user along its forwarding trajectory.
+Consequently, CIM is non-trivial in jointly considering the overlap
+among multiple coupons and the relationship between forwarding and
+consumption.
+
+
+A parallel problem is maximizing the usage of coupons:
+\begin{definition}[Coupon Usage Maximization(CUM)]
+\label{def:cum}
+Under the input of CIM,
+the task of usage maximization is to find an
+optimal seed set $S^*\subseteq V$ such that $|S^*|=k$ and the ratio of consumed coupon
+ is maximized, i.e.,
+\begin{equation}
+\label{eq:cum}
+S^*
+\in
+\arg\max_{S\subseteq V,\ |S|=k}
+\mathbb{E}_{W}[\sum_{j=1}^{k} A_j(u,s_j;W_j)],
+\end{equation}
+\end{definition}
+where we refer to $A_j(u,s_j;W_j)=1$ if the node $u$ consumes the coupon of the corresponding possible world; otherwise we define $A_j(u,s_j;W_j)=0$.
+
+Note that CUM is much easier than CIM. Since multiple coupons are independent, we could choose the seed nodes as the ones that have top-$k$ individual influence. This will lead to the coupon usage maximization. Hence, in the rest of the paper, we mainly discuss the CIM problem.
+
+
+
+%% ============================================================
+%% 4. THEORETICAL ANALYSIS
+%% ============================================================
+\section{Theoretical Analysis}
+\label{sec:theory}
+
+In this section, we analyze the computational complexity and the
+properties of CIM.
+These results together define the algorithmic strategy in
+Section~\ref{sec:algo}: NP-hard complexity precludes exact polynomial-time
+algorithms, while monotonicity and submodularity admit an efficient
+approximation.
+
+We first show that CIM is NP-hard, even though the coupon influence
+spread $\sigma(S)$ of any given seed set can be computed efficiently
+(Remark~\ref{rem:tractable-eval}).
+The hardness stems from the union structure of
+Eq.~\eqref{eq:coupon-spread}: the objective couples all seeds through
+the ``counted only once'' semantics of distinct consumers.
+
+\begin{theorem}
+\label{thm:nphard}
+The CIM problem is NP-hard.
+\end{theorem}
+
+\begin{proof}
+We reduce from the Independent Set problem on $3$-regular (cubic)
+graphs, which is NP-complete~\cite{garey1979computers,garey1976some}. The central idea is to reduce the Independent Set problem to our CIM problem.
+Let $H=(V_H,E_H)$ be a cubic graph with $|V_H|=N$ and
+$|E_H|=M=\tfrac{3N}{2}$, and let $K$ be the target size.
+We construct a CIM instance $G=(V,E)$ as follows:
+The node set consists of two disjoint copies:
+$V=X\cup Y$ with $X=\{x_u: u\in V_H\}$ and
+$Y=\{y_e: e\in E_H\}$.
+For each edge $e=\{u,w\}\in E_H$, we add the directed edges
+$(x_u,y_e)$ and $(x_w,y_e)$; these are all the edges of $G$.
+Fix any constant $p\in(0,\tfrac13]$, e.g., $p=\tfrac14$.
+The node parameters are:
+for each $x_u\in X$, set $p_{x_u}^a=0$ and $p(x_u,y_e)=p$ on each of
+its three outgoing edges, so that $p_{x_u}^t=3p$ and
+$p_{x_u}^d=1-3p$;
+for each $y_e\in Y$, set $p_{y_e}^a=1$ and $p_{y_e}^d=p_{y_e}^t=0$.
+Finally, set the coupon budget $k=K$.
+
+We first express $\sigma(S)$ for a seed set $S\subseteq X$ with
+$|S|=K$.
+A coupon seeded at $x_u$ is transferred to $y_e$ (and consumed there,
+since $p_{y_e}^a=1$) if and only if the fixed action sampled at $x_u$
+is ``transfer along $(x_u,y_e)$'', which happens with probability
+$p$; with the remaining probability $1-3p$ the coupon is dropped at
+$x_u$, and $x_u$ never consumes.
+Since the actions of different coupons are independent, for an edge
+$e=\{u,w\}$ with $t_e=|\{u,w\}\cap S|\in\{0,1,2\}$ seeded endpoints,
+the probability that $y_e$ is activated equals
+$1-(1-p)^{t_e}$.
+Therefore
+\begin{equation}
+\label{eq:reduction-spread}
+\sigma(S)
+=\sum_{e\in E_H}\bigl[1-(1-p)^{t_e}\bigr].
+\end{equation}
+
+Because $H$ is cubic, each node of $S$ covers exactly three edge
+incidences, so $\sum_{e\in E_H} t_e = 3K$.
+Expanding each summand of Eq.~\eqref{eq:reduction-spread} gives
+$1-(1-p)^{t_e}=p\,t_e-p^2\,\mathbb{I}[t_e=2]$, and hence
+\begin{equation}
+\label{eq:reduction-identity}
+\sigma(S)=3pK-p^2\,e(S),
+\end{equation}
+where $e(S)$ denotes the number of edges of $H$ with both endpoints
+in $S$.
+Note also that $\sigma$ is monotone in $S$, since adding a seed adds
+one coupon and can only enlarge the union in
+Eq.~\eqref{eq:coupon-spread}; thus the maximum over $|S|\le K$ is
+attained at $|S|=K$.
+
+If $H$ has an independent set $I$ of size $K$, then seeding
+$S=\{x_u:u\in I\}$ yields $e(S)=0$ and, by
+Eq.~\eqref{eq:reduction-identity}, $\sigma(S)=3pK$.
+Conversely, if $H$ has no independent set of size $K$, then every
+$K$-subset $S$ has $e(S)\ge 1$, and
+Eq.~\eqref{eq:reduction-identity} yields
+$\sigma(S)\le 3pK-p^2<3pK$.
+Hence $\max_{|S|\le K}\sigma(S)\ge 3pK$ if and only if $H$ has an
+independent set of size $K$, which completes the reduction.
+\end{proof}
+
+\begin{remark}[Connection to Vertex Cover]
+\label{rem:vc}
+Via complementation, the same construction equivalently reduces
+Vertex Cover on cubic graphs: $H$ has a vertex cover of size $K$ if
+and only if the maximum spread among $N-K$ seeds equals $3p(N-K)$,
+since a set is a vertex cover exactly when its complement is an
+independent set.
+\end{remark}
+
+Despite the hardness above, the coupon influence spread has a key
+structural property that enables efficient approximation.
+The analysis relies on the single-coupon consumption matrix
+$M\in[0,1]^{n\times n}$, where
+\begin{equation}
+\label{eq:consume-prob}
+M_{u,v}
+:=
+\Pr{}_{W_1}\bigl[A_1(u,v;W_1)\bigr]
+\end{equation}
+is the probability that a coupon seeded at $v$ is eventually consumed
+by $u$.
+Since the worlds $W_1,\ldots,W_k$ are mutually independent, the
+consumption events of different coupons are independent, which yields
+the following closed form.
+
+\begin{lemma}
+\label{lem:closed-form}
+For any seed set $S\subseteq V$ (with any labeling of its elements),
+\begin{equation}
+\label{eq:closed-form}
+\sigma(S)
+=
+\sum_{u\in V}\Bigl[\,1-\prod_{s\in S}\bigl(1-M_{u,s}\bigr)\Bigr],
+\qquad
+\sigma(\emptyset)=0.
+\end{equation}
+Moreover, for any $v\notin S$, the marginal gain satisfies
+\begin{equation}
+\label{eq:marginal}
+\Delta(v\mid S)
+:=
+\sigma(S\cup\{v\})-\sigma(S)
+=
+\sum_{u\in V} M_{u,v}\prod_{s\in S}\bigl(1-M_{u,s}\bigr)
+\;\ge\; 0.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For Eq.~\eqref{eq:closed-form}, the event that $u$ consumes at least
+one coupon is $\bigcup_{j} A_j(u,s_j;W_j)$. By the independence of
+the worlds, its probability is
+$1-\prod_{j}\bigl(1-\Pr[A_j(u,s_j;W_j)]\bigr)
+=1-\prod_{s\in S}(1-M_{u,s})$, and summing over $u$ via
+Eq.~\eqref{eq:coupon-spread} gives the claim.
+For Eq.~\eqref{eq:marginal}, substituting $S\cup\{v\}$ into
+Eq.~\eqref{eq:closed-form}, we have
+\begin{align}
+\Delta(v\mid S)
+&=
+\sum_{u\in V}
+\Bigl[\prod_{s\in S}(1-M_{u,s})
+-\prod_{s\in S}(1-M_{u,s})(1-M_{u,v})\Bigr]\nonumber\\
+&=
+\sum_{u\in V}M_{u,v}\prod_{s\in S}(1-M_{u,s}),
+\end{align}
+which is non-negative since every factor lies in $[0,1]$.
+\end{proof}
+
+\begin{theorem}
+\label{thm:monosub}
+The coupon influence spread $\sigma(S)$ is monotone non-decreasing
+and submodular in $S$.
+\end{theorem}
+
+\begin{proof}
+Monotonicity follows from $\Delta(v\mid S)\ge 0$ in
+Eq.~\eqref{eq:marginal}.
+For submodularity, let $A\subseteq B\subseteq V$ and $v\notin B$.
+By Eq.~\eqref{eq:marginal},
+\[
+\Delta(v\mid B)
+=
+\sum_{u\in V}M_{u,v}\prod_{s\in B}(1-M_{u,s})
+\;\le\;
+\sum_{u\in V}M_{u,v}\prod_{s\in A}(1-M_{u,s})
+=
+\Delta(v\mid A),
+\]
+because $1-M_{u,s}\in[0,1]$ for every $s\in B\setminus A$ and
+$M_{u,v}\ge 0$.
+Hence the marginal gain of $v$ can only decrease as the seed set
+grows.
+\end{proof}
+
+Equivalently, Theorem~\ref{thm:monosub} can be read in the
+possible-world language of Kempe et al.~\cite{kempe2003maximizing}:
+under any fixed joint world $W$, the indicator that $u$ is activated
+is a coverage function of the seed--coupon pairs, which is monotone
+and submodular, and these properties are preserved by summation over
+$u$ and expectation over $W$.
+
+\begin{corollary}
+\label{cor:greedy}
+The greedy algorithm that starts from $S=\emptyset$ and iteratively
+adds $\arg\max_{v}\Delta(v\mid S)$ until $|S|=k$ achieves a
+$(1-1/e)$-approximation of CIM~\cite{nemhauser1978analysis}.
+\end{corollary}
+
+\begin{remark}[Exact evaluation is tractable]
+\label{rem:tractable-eval}
+Unlike the influence spread under IC or LT, which is
+\#P-hard to compute~\cite{chen2010scalable}, all entries of $M$ ---
+and hence $\sigma(S)$ and every marginal gain --- can be computed
+\emph{exactly} in polynomial time by standard absorbing Markov-chain
+techniques applied to the substochastic transfer chain: each column
+of $M$ solves one linear system induced by the transfer matrix
+(equivalently, via the fundamental-matrix computation
+$r=\alpha^{\top}(I-P)^{-1}P$ for the single-coupon case).
+Consequently, exact greedy runs in $O(n^3+kn^2)$ time: for $k=1$
+there is no coupling between seeds and the optimum is found exactly
+by ranking $\sum_{u}M_{u,v}$, while for $k\ge 2$ the union coupling
+makes the problem NP-hard (Theorem~\ref{thm:nphard}).
+The cubic factor, however, is infeasible for large networks, which
+motivates the near-linear reverse-sampling algorithm in
+Section~\ref{sec:algo}.
+\end{remark}
+
+
+
+%% ============================================================
+%% 5. ALGORITHM: CIM-RIS
+%% ============================================================
+
+
+
+%% ============================================================
+%% 5. ALGORITHM: CIM-RIS
+%% ============================================================
+\section{The Proposed Solution: \CIMRIS{}}
+\label{sec:algo}
+
+The theoretical results in Section~\ref{sec:theory} establish that CIM is
+NP-hard, while its objective function $\sigma(S)$ is monotone and submodular.
+Consequently, a greedy approximation algorithm can theoretically achieve the
+standard $(1-1/e)$ approximation factor~\cite{nemhauser1978analysis}.
+However, as noted in Remark~\ref{rem:tractable-eval}, directly evaluating the
+exact marginal gains requires computing the single-coupon consumption
+matrix $M$ via absorbing Markov-chain inversion, which incurs an expensive
+$\mathcal{O}(n^3)$ computational overhead that is prohibitive on large networks.
+
+To overcome this computational bottleneck, we propose \CIMRIS{}, a scalable
+and statistically sound algorithm based on trajectory inversion and reverse
+coverage sampling.
+While our framework is conceptually inspired by the Reverse Influence
+Sampling (RIS) paradigm in classical influence
+maximization~\cite{borgs2014maximizing,tang2015influence}, CIM introduces
+fundamental structural differences:
+(i) coupons propagate via single-path absorbing random walks with
+visit-dependent resampling rather than branching cascades over static live-edge
+graphs; and
+(ii) multiple coupons diffuse independently, yet yield zero marginal gain once
+a user is activated by an earlier coupon.
+In the following, we formalize the visit-resampled possible-world model,
+introduce our reverse coverage formulation, present the dedicated greedy seed
+selection algorithm, and establish its theoretical guarantees.
+
+\subsection{Visit-Resampled Worlds and Trajectory Inversion}
+\label{sec:source-worlds}
+
+In classical IM under the IC model, edge realizations can be statically
+determined in advance.
+In contrast, in the coupon influence model, whenever a coupon revisits a node
+$u$, the node makes a fresh, independent decision among consumption, dropping,
+or forwarding.
+To capture this visit-level independence, we make the underlying possible-world
+semantics explicit.
+
+For any sample realization index $t\in[\theta]$ and candidate seed $s\in V$,
+we define a candidate-specific possible world $\widetilde{W}_s^{(t)}$
+characterized by an infinite array of independent uniform random variables
+\[
+  \widetilde{W}_s^{(t)} = \bigl(r_{u,h}^{(s,t)}\bigr)_{u\in V,\ h\ge 1},
+  \qquad r_{u,h}^{(s,t)} \sim \mathrm{Uniform}[0,1),
+\]
+where $h$ denotes the $h$-th visit count to node $u$ by the coupon initiated at
+$s$.
+At the $h$-th visit to node $u$, the outcome is determined by comparing
+$r_{u,h}^{(s,t)}$ against the intervals defined by Eq.~\eqref{eq:normalize}.
+Specifically, node $u$ consumes the coupon if $r_{u,h}^{(s,t)} < p_u^a$, drops
+it if $p_u^a \le r_{u,h}^{(s,t)} < p_u^a + p_u^d$, and transfers it along edge
+$(u, v_i)$ if $r_{u,h}^{(s,t)}$ falls into the designated transfer interval of
+length $p(u, v_i)$.
+
+Let $Z_s^{(t)} \in V \cup \{\bot\}$ denote the terminal outcome of a coupon
+seeded at $s$ under world $\widetilde{W}_s^{(t)}$, where $Z_s^{(t)} = u$ indicates
+that $u$ eventually consumes the coupon, and $Z_s^{(t)} = \bot$ represents that
+the coupon is dropped along its trajectory.
+By the absorbing Markov chain definition of $M$ in Eq.~\eqref{eq:consume-prob},
+the distribution of $Z_s^{(t)}$ satisfies
+\begin{equation}
+\label{eq:endpoint-law}
+  \Pr\bigl[Z_s^{(t)} = u\bigr] = M_{u,s},
+  \qquad
+  \Pr\bigl[Z_s^{(t)} = \bot\bigr] = 1 - \sum_{u\in V} M_{u,s}.
+\end{equation}
+
+Since $V$ is finite and $\beta = \min_{u\in V}(p_u^a + p_u^d) > 0$, the
+probability that a walk continues for more than $h$ steps is at most
+$(1-\beta)^h$.
+Thus, each coupon walk terminates almost surely with an expected trajectory
+length of at most $1/\beta$.
+
+Algorithm~\ref{alg:kernel} outlines the exact procedure for generating the
+terminal outcome $Z_s^{(t)}$.
+For each node $u$, we fix an arbitrary ordering $v_1,\ldots,v_{d_u}$ of its
+out-neighbors ($d_u = |N^+(u)|$) and precompute the cumulative threshold intervals
+$b_{u,0} = p_u^a + p_u^d$ and $b_{u,i} = b_{u,0} + \sum_{\ell=1}^i p(u, v_\ell)$,
+with $b_{u,d_u} = 1$.
+The next-hop forwarding neighbor is located via binary search in
+$\mathcal{O}(\log(d_u + 1))$ time.
+
+\begin{algorithm}[t]
+\caption{Sample Terminal Consumer of One Coupon}
+\label{alg:kernel}
+\begin{algorithmic}[1]
+\Require Seed $s$; node probabilities and transfer boundaries $\{b_{u,i}\}$
+\Ensure Terminal consumer $Z \in V \cup \{\bot\}$
+\State $u \gets s$
+\While{true}
+  \State Draw a fresh random variable $r \sim \mathrm{Uniform}[0,1)$
+  \If{$r < p_u^a$}
+    \State \Return $u$ \Comment{Coupon consumed by $u$}
+  \ElsIf{$r < p_u^a + p_u^d$}
+    \State \Return $\bot$ \Comment{Coupon discarded}
+  \Else
+    \State Locate out-neighbor $v_i$ satisfying $b_{u,i-1} \le r < b_{u,i}$
+    \State $u \gets v_i$ \Comment{Coupon transferred to $v_i$}
+  \EndIf
+\EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Reverse Coverage Sets and Unbiased Spread Estimation}
+\label{sec:reverse-coverage}
+
+To estimate the collective coverage without maintaining the expensive matrix
+$M$, we invert the simulated forward trajectories to construct reverse coverage
+sets.
+
+\begin{definition}[Reverse Coverage Set]
+\label{def:reverse-set}
+For a sample realization $t\in[\theta]$ and any target user $u\in V$, the
+\emph{reverse coverage set} $R_t(u)$ is defined as the preimage of $u$ under the
+simulated terminal outcomes:
+\begin{equation}
+\label{eq:reverse-set-def}
+  R_t(u) = \bigl\{s \in V : Z_s^{(t)} = u\bigr\}.
+\end{equation}
+The collection $\mathcal{R}_t = \{R_t(u)\}_{u\in V}$ denotes the sample family of
+reverse sets for realization $t$.
+\end{definition}
+
+Each reverse set $R_t(u)$ collects all candidate seeds whose issued coupons
+are eventually consumed by $u$ under realization $t$.
+Because each candidate coupon walk terminates at at most one node, the sets
+$\{R_t(u)\}_{u\in V}$ are mutually disjoint within the same sample $t$, and
+any candidate seed $s$ appears in at most one set in $\mathcal{R}_t$.
+
+The following lemma establishes the exact coverage equivalence between our
+reverse set representation and the multi-coupon CIM objective.
+
+\begin{lemma}[Coverage Identity]
+\label{lem:coverage}
+For any target node $u \in V$, sample index $t$, and seed set $S \subseteq V$,
+\begin{equation}
+\label{eq:reverse-coverage}
+  \Pr\bigl[S \cap R_t(u) \ne \emptyset\bigr]
+  =
+  1 - \prod_{s\in S}(1 - M_{u,s}).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+By Definition~\ref{def:reverse-set}, $S \cap R_t(u) = \emptyset$ occurs if and
+only if $Z_s^{(t)} \ne u$ for all $s \in S$.
+Since the candidate worlds $\{\widetilde{W}_s^{(t)}\}_{s\in S}$ are drawn
+independently, the events $\{Z_s^{(t)} = u\}$ are mutually independent across
+distinct seeds.
+Using Eq.~\eqref{eq:endpoint-law}, we obtain
+\[
+  \Pr\bigl[S \cap R_t(u) = \emptyset\bigr]
+  =
+  \prod_{s\in S} \Pr\bigl[Z_s^{(t)} \ne u\bigr]
+  =
+  \prod_{s\in S} (1 - M_{u,s}).
+\]
+Taking the complement yields Eq.~\eqref{eq:reverse-coverage}, which matches the
+exact multi-coupon activation probability in Lemma~\ref{lem:closed-form}.
+\end{proof}
+
+Algorithm~\ref{alg:rrset} presents the procedure for generating one sample
+family $\mathcal{R}_t$.
+By simulating forward walks from each candidate seed and inverting the
+resulting endpoints, we obtain the reverse sets without traversing the network
+backward.
+
+\begin{algorithm}[t]
+\caption{Generate One Family of Reverse Coverage Sets}
+\label{alg:rrset}
+\begin{algorithmic}[1]
+\Require Graph $G=(V,E)$; node and edge transition probabilities
+\Ensure Terminal endpoints $(Z_s^{(t)})_{s\in V}$ and reverse sets $(R_t(u))_{u\in V}$
+\State $R_t(u) \gets \emptyset$ for all $u \in V$
+\For{each candidate seed $s \in V$}
+  \State $Z_s^{(t)} \gets \Call{SampleTerminalConsumer}{s}$ \Comment{Algorithm~\ref{alg:kernel}}
+  \If{$Z_s^{(t)} \ne \bot$}
+    \State Add $s$ to $R_t(Z_s^{(t)})$
+  \EndIf
+\EndFor
+\State \Return $(Z_s^{(t)})_{s\in V}$ and $(R_t(u))_{u\in V}$
+\end{algorithmic}
+\end{algorithm}
+
+Given $\theta$ independently generated families $\mathcal{Q} = \{\mathcal{R}_1,
+\ldots, \mathcal{R}_\theta\}$, we define the number of distinct users covered in
+sample $t$ by
+\begin{equation}
+\label{eq:yt-def}
+  Y_t(S) = \sum_{u\in V} \mathbf{1}\bigl[S \cap R_t(u) \ne \emptyset\bigr],
+\end{equation}
+and formulate the empirical coupon influence spread estimator as
+\begin{equation}
+\label{eq:empirical-spread}
+  \hat{\sigma}_{\theta}(S) = \frac{1}{\theta} \sum_{t=1}^{\theta} Y_t(S).
+\end{equation}
+
+\begin{lemma}[Unbiasedness]
+\label{lem:unbiased}
+For every fixed seed set $S \subseteq V$, $\hat{\sigma}_{\theta}(S)$ is an
+unbiased estimator of $\sigma(S)$, i.e., $\mathbb{E}[\hat{\sigma}_{\theta}(S)] = \sigma(S)$.
+\end{lemma}
+
+\begin{proof}
+By applying the linearity of expectation to Eq.~\eqref{eq:empirical-spread} and
+substituting Eq.~\eqref{eq:reverse-coverage}, we have
+\[
+  \mathbb{E}\bigl[\hat{\sigma}_{\theta}(S)\bigr]
+  =
+  \frac{1}{\theta}\sum_{t=1}^{\theta}\sum_{u\in V}
+  \Pr\bigl[S \cap R_t(u) \ne \emptyset\bigr]
+  =
+  \sum_{u\in V} \Bigl[1 - \prod_{s\in S}(1 - M_{u,s})\Bigr],
+\]
+which is identically $\sigma(S)$ by Lemma~\ref{lem:closed-form}.
+\end{proof}
+
+\subsection{Dedicated Greedy Seed Selection}
+\label{sec:greedy-selection}
+
+\textbf{Structural Difference from Classical RR Coverage.}
+In classical influence maximization, each sampled RR set represents an
+independent coverage requirement; a seed node $v$ covers an RR set $R$ as long
+as $v \in R$, forming a standard Maximum Coverage problem.
+In CIM, however, coverage operates over a two-dimensional product universe:
+\[
+  \mathcal{U} = \bigl\{(t, u) : t \in [\theta],\; u \in V\bigr\}.
+\]
+Selecting a seed $s$ covers the pair $(t, Z_s^{(t)})$ provided $Z_s^{(t)} \ne \bot$.
+Crucially, if multiple seeds in $S$ reach the same target user $u$ under the
+same realization $t$, the pair $(t, u)$ is credited only once.
+This directly mirrors the coupon marketing semantics: subsequent coupons
+consumed by an already-activated consumer produce zero incremental spread.
+
+\textbf{Greedy Optimization with Lazy Incremental Updates.}
+Because the empirical spread $\hat{\sigma}_\theta(S)$ is normalized, monotone,
+and submodular over the ground set $V$, we optimize it via greedy selection.
+To achieve fast iterations, we design an efficient gain tracking mechanism.
+We maintain a boolean coverage indicator $C_{t,u}$ initialized to $\mathrm{false}$
+for each pair $(t, u)$, and an integer marginal gain counter $g_s$ for each
+candidate seed $s \in V$.
+Initially, $g_s$ equals the total number of non-discarded walks initiated by $s$,
+i.e., $g_s = \sum_{t=1}^\theta \mathbf{1}[Z_s^{(t)} \ne \bot]$.
+
+In each greedy iteration, the algorithm selects the candidate $v^* = \arg\max_{s \in V \setminus S} g_s$.
+For each sample $t \in [\theta]$, let $u = Z_{v^*}^{(t)}$ be the endpoint covered
+by $v^*$.
+If $u \ne \bot$ and $(t, u)$ has not been covered yet ($C_{t,u} = \mathrm{false}$),
+we set $C_{t,u} \gets \mathrm{true}$.
+Since $(t, u)$ is now covered, any other candidate seed $s \in R_t(u)$ can no
+longer obtain marginal credit from this pair; hence, we decrement $g_s \gets g_s - 1$
+for all $s \in R_t(u)$.
+Algorithm~\ref{alg:cim-ris} details the complete seed selection workflow.
+
+\begin{algorithm}[t]
+\caption{\CIMRIS{}: Scalable Seed Selection for CIM}
+\label{alg:cim-ris}
+\begin{algorithmic}[1]
+\Require Network $G=(V,E)$; budget $k$; accuracy $\varepsilon$; failure probability $\delta$
+\Ensure Selected seed set $S$ with $|S|=k$
+\State Compute $S_a$ and deterministic lower bound $\mathrm{LB}$ via Eq.~\eqref{eq:opt-lower-bound}
+\If{$\mathrm{LB} = 0$}
+  \State \Return $S_a$ \Comment{All consumption probabilities are zero}
+\EndIf
+\State Set sample budget $\theta$ via Eq.~\eqref{eq:sample-budget}
+\For{$t = 1, \ldots, \theta$}
+  \State Generate sample family $\mathcal{R}_t$ and endpoints $(Z_s^{(t)})_{s\in V}$ via Algorithm~\ref{alg:rrset}
+\EndFor
+\State $S \gets \emptyset$; $C_{t,u} \gets \mathrm{false}$ for all $t\in[\theta], u\in V$
+\State $g_s \gets \sum_{t=1}^{\theta}\mathbf{1}[Z_s^{(t)} \ne \bot]$ for all $s \in V$
+\For{$i = 1, \ldots, k$}
+  \State $v^* \gets \arg\max_{s\in V\setminus S} g_s$
+  \State $S \gets S \cup \{v^*\}$
+  \For{$t = 1, \ldots, \theta$}
+    \State $u \gets Z_{v^*}^{(t)}$
+    \If{$u \ne \bot$ \textbf{and} $C_{t,u} = \mathrm{false}$}
+      \State $C_{t,u} \gets \mathrm{true}$
+      \For{each candidate $s \in R_t(u)$}
+        \State $g_s \gets g_s - 1$ \Comment{Deduct redundant marginal coverage}
+      \EndFor
+    \EndIf
+  \EndFor
+\EndFor
+\State \Return $S$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Theoretical Guarantees}
+\label{sec:theoretical-guarantees}
+
+To establish rigorous theoretical guarantees, we bound the required sample
+size $\theta$ using an explicit, deterministic lower bound on the optimal
+influence spread.
+
+\begin{definition}[Deterministic Spread Lower Bound]
+Let $S_a \subset V$ denote the set of $k$ nodes with the highest individual
+consumption probabilities $p_u^a$.
+We define
+\begin{equation}
+\label{eq:opt-lower-bound}
+  \mathrm{LB} = \sum_{u\in S_a} p_u^a.
+\end{equation}
+\end{definition}
+
+\begin{lemma}[Validity of Lower Bound]
+\label{lem:lower-bound}
+$\mathrm{LB} \le \sigma(S_a) \le \sigma(S^*)$.
+\end{lemma}
+
+\begin{proof}
+For any node $u \in S_a$, a coupon seeded at $u$ is consumed immediately at the
+first step with probability $p_u^a$.
+Since distinct seed nodes correspond to distinct consumers at step zero, the
+union bound guarantees $\sigma(S_a) \ge \sum_{u\in S_a} p_u^a = \mathrm{LB}$.
+The second inequality follows trivially from the optimality of $S^*$.
+\end{proof}
+
+If $\mathrm{LB} = 0$, then $p_u^a = 0$ for all $u \in V$, implying $\sigma(S) = 0$
+for all seed sets; in this case, any arbitrary $k$ nodes are optimal.
+For $\mathrm{LB} > 0$, given accuracy $\varepsilon \in (0, 1 - 1/e)$ and confidence
+$\delta \in (0,1)$, we set the sample budget $\theta$ as:
+\begin{equation}
+\label{eq:sample-budget}
+  \theta = \left\lceil
+    \frac{10k}{\varepsilon^2\mathrm{LB}}
+    \ln\!\left(\frac{2\binom{n}{k}}{\delta}\right)
+  \right\rceil.
+\end{equation}
+In practical implementations, the combinatorial factor $\ln\binom{n}{k}$ can be
+conveniently upper-bounded by $k\ln(en/k)$.
+
+\begin{theorem}[Approximation Guarantee]
+\label{thm:approx}
+For any $\varepsilon \in (0, 1-1/e)$ and $\delta \in (0,1)$,
+Algorithm~\ref{alg:cim-ris} returns a seed set $\hat{S}$ of size $k$ such that,
+with probability at least $1-\delta$,
+\begin{equation}
+\label{eq:approx-bound}
+  \sigma(\hat{S}) \ge \left(1 - \frac{1}{e} - \varepsilon\right) \sigma(S^*).
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+If $\mathrm{LB}=0$, the claim holds trivially.
+Assume $\mathrm{LB} > 0$, and denote $\mathrm{OPT} = \sigma(S^*)$.
+Set the error tolerance $a = \varepsilon\,\mathrm{OPT}/2$.
+For any fixed seed set $S$ with $|S|=k$, the empirical spread estimator
+$\hat{\sigma}_\theta(S) = \frac{1}{\theta}\sum_{t=1}^\theta Y_t(S)$ is the average
+of $\theta$ independent random variables $Y_t(S) \in [0,k]$, with mean $\sigma(S)$
+and variance $\operatorname{Var}(Y_t(S)) \le \mathbb{E}[Y_t(S)^2] \le k\,\sigma(S)$.
+Applying Bernstein's inequality for bounded random variables yields:
+\begin{align}
+\label{eq:bernstein}
+  \Pr\bigl[|\hat{\sigma}_\theta(S) - \sigma(S)| \ge a\bigr]
+  &\le
+  2\exp\!\left(
+    -\frac{\theta a^2}{2k\sigma(S) + \frac{2}{3}ka}
+  \right) \nonumber\\
+  &\le
+  2\exp\!\left(
+    -\frac{\theta \varepsilon^2 \mathrm{OPT}^2 / 4}{2k\mathrm{OPT} + \frac{1}{3}k\varepsilon\mathrm{OPT}}
+  \right) \nonumber\\
+  &\le
+  2\exp\!\left(
+    -\frac{\theta \varepsilon^2 \mathrm{OPT}}{10k}
+  \right),
+\end{align}
+where the denominator bound holds because $\varepsilon < 1$ implies
+$4(2 + \varepsilon/3) < 10$.
+Applying a union bound over all $\binom{n}{k}$ possible seed sets and using
+$\mathrm{LB} \le \mathrm{OPT}$ alongside Eq.~\eqref{eq:sample-budget}, we obtain
+\[
+  \Pr\left[\exists S \subseteq V, |S|=k : |\hat{\sigma}_\theta(S) - \sigma(S)| \ge a\right]
+  \le
+  2\binom{n}{k} \exp\!\left(-\frac{\theta \varepsilon^2 \mathrm{LB}}{10k}\right)
+  \le \delta.
+\]
+Thus, with probability at least $1-\delta$, uniform convergence holds:
+$|\hat{\sigma}_\theta(S) - \sigma(S)| \le a$ for all candidate seed sets of size $k$.
+Conditioned on this uniform event, the standard greedy guarantee on the
+empirical submodular objective~\cite{nemhauser1978analysis} ensures that
+$\hat{\sigma}_\theta(\hat{S}) \ge (1-1/e)\hat{\sigma}_\theta(S^*)$.
+Consequently,
+\begin{align*}
+  \sigma(\hat{S})
+  &\ge
+  \hat{\sigma}_\theta(\hat{S}) - a \\
+  &\ge
+  \left(1 - \frac{1}{e}\right)\hat{\sigma}_\theta(S^*) - a \\
+  &\ge
+  \left(1 - \frac{1}{e}\right)(\mathrm{OPT} - a) - a \\
+  &=
+  \left(1 - \frac{1}{e}\right)\mathrm{OPT} - \left(2 - \frac{1}{e}\right)\frac{\varepsilon\,\mathrm{OPT}}{2} \\
+  &\ge
+  \left(1 - \frac{1}{e} - \varepsilon\right)\mathrm{OPT},
+\end{align*}
+which completes the proof.
+\end{proof}
+
+\paragraph{Complexity Analysis.}
+We analyze the computational complexity of \CIMRIS{} as follows:
+\begin{itemize}
+  \item \textbf{Preprocessing}: Sorting nodes to compute $S_a$ and $\mathrm{LB}$ takes $\mathcal{O}(n\log k)$ time.
+  Precomputing the transfer intervals $\{b_{u,i}\}$ takes $\mathcal{O}(n+m)$ time.
+  \item \textbf{Trajectory Sampling}: In each sample family $t$, generating a forward walk from seed $s$ takes $\mathcal{O}(L_s \log(d_u + 1))$ time, where $L_s$ is the walk length.
+  Since $\mathbb{E}[L_s] \le 1/\beta$, sampling $n$ walks for $\theta$ families requires $\mathcal{O}(n\theta \log(n+1)/\beta)$ expected time.
+  \item \textbf{Reverse Indexing and Greedy Selection}: In Algorithm~\ref{alg:cim-ris}, each candidate $s$ belongs to at most one reverse set per sample family, yielding at most $n\theta$ non-empty set memberships.
+  Across all $k$ iterations, each reverse set $R_t(u)$ is examined at most once when $(t, u)$ is first marked as covered.
+  Thus, all marginal gain decrements collectively take $\mathcal{O}(n\theta)$ time.
+  Scanning for the maximum gain takes $\mathcal{O}(nk)$ time.
+\end{itemize}
+Summing these components, the total expected running time is
+\begin{equation}
+\label{eq:total-complexity}
+  \mathcal{O}\!\left(m + n\log n + \frac{n\theta\log n}{\beta} + nk\right),
+\end{equation}
+with an overall memory footprint of $\mathcal{O}(n + m + n\theta)$.
+
+\subsection{Discussion: Trajectory Inversion vs. Backward Walks}
+\label{sec:discussion-sampling}
+
+A natural question is whether one could generate reverse samples by directly
+traversing edges backward from a randomly sampled root $u$, exactly as in
+classical TIM/SSA algorithms~\cite{tang2015influence,chen2010scalable}.
+In CIM, direct backward sampling is fundamentally challenged by the nature of
+absorbing Markov chains:
+(1) calculating the reverse transition probability from node $v$ to $u$ requires
+knowing the unconditional arrival probability at $v$, which in turn depends on
+global matrix reachability; and
+(2) a single trajectory may revisit nodes cyclically with visit-resampled
+independence, making local reverse random walks ill-defined without global state
+knowledge.
+By decoupling the forward trajectory simulation from the reverse set
+construction via trajectory inversion ($R_t(u) = \{s: Z_s^{(t)}=u\}$),
+Algorithm~\ref{alg:rrset} strictly preserves visit-level independence while
+providing exact unbiasedness without matrix inversion.
+
+
+
+\section{The proposed solution}
+\label{sec:algo}
+
+We formulate reverse samples for the independent coupon walks of
+Section~\ref{sec:model}. Our starting point is the consumption
+probability $M_{u,s}$ in Eq.~\eqref{eq:consume-prob}: a reverse sample
+rooted at $u$ must represent the event that a coupon seeded at $s$
+is eventually consumed by $u$. We first specify the randomness needed
+for repeated visits, then define the reverse sets and establish their
+single-coupon coverage, multi-coupon coverage, and marginal-estimation
+identities. These results specify the distribution required of a
+reverse sampler; an efficient construction of that distribution
+remains to be developed.
+
+\subsection{Possible Worlds with Repeated Visits}
+\label{sec:visit-world}
+
+For coupon $j$, make the possible world of Section~\ref{sec:model}
+explicit as an array of independent random variables
+\[
+  W_j=(r_{u,h}^{(j)})_{u\in V,\ h\geq1},
+  \qquad r_{u,h}^{(j)}\sim\mathrm{Uniform}[0,1),
+\]
+where $h$ is the visit number at node $u$ for this coupon. The first
+visit uses $r_{u,1}^{(j)}$, the second uses $r_{u,2}^{(j)}$, and so on.
+The arrays for different coupons are independent. Fixing $W_j$
+determines the walk from a specified seed, while a revisit still uses
+a different entry of that array.
+
+At each visit to $u$, intervals of lengths $p_u^a$ and $p_u^d$
+select consumption and dropping. The remaining interval is partitioned
+into edge intervals of lengths $p(u,v)$ for $v\in N^+(u)$, consistent
+with Eq.~\eqref{eq:normalize}. In particular, $p(u,v)$ is already the
+unconditional probability of the corresponding transfer. A single
+fixed outgoing edge at $u$ does not encode all its visits.
+
+We use the condition $p_u^a+p_u^d>0$ for all $u$ stated in the
+possible-world discussion of Section~\ref{sec:model}. Since $V$ is
+finite, $\beta=\min_{u\in V}(p_u^a+p_u^d)>0$. For any starting seed,
+the probability of at least $h$ successive transfers is at most
+$(1-\beta)^h$. Thus a coupon terminates almost surely, and its expected
+number of action draws is at most $1/\beta$. The parameter $\beta$
+may depend on the instance.
+
+For a fixed $W_j$, each candidate starting seed defines a hypothetical
+walk with its visit counters initialized to zero. These hypothetical
+walks can be dependent because they refer to the same array. This
+coupling is distinct from the independent worlds assigned to the
+actual coupons from different selected seeds.
+
+\subsection{Single-Coupon Reverse Sets}
+\label{sec:single-reverse}
+
+\begin{definition}[Coupon reverse set]
+For a target user $u$ and a single-coupon world $W_j$, define
+\begin{equation}
+\label{eq:coupon-reverse-set}
+  R_j(u,W_j)=\{s\in V:A_j(u,s;W_j)\text{ occurs}\}.
+\end{equation}
+Here $A_j(u,s;W_j)$ is the consumption event of
+Section~\ref{sec:model}, evaluated along the visit-resampled walk
+from $s$. Thus $R_j(u,W_j)$ contains precisely the starting users
+whose coupons would be consumed by $u$ in that world.
+\end{definition}
+
+A seed that merely reaches or passes through $u$ is not necessarily
+in $R_j(u,W_j)$. It belongs to the set only if its coupon is consumed
+there, possibly on a later visit. The definition therefore includes
+both direct consumption at the seed and consumption after revisiting
+the target. It does not reduce consumption at $u$ to a single gate
+shared by all visits.
+
+\begin{lemma}[Single-coupon coverage]
+\label{lem:coverage}
+For every $s,u\in V$,
+\begin{equation}
+\label{eq:single-reverse-law}
+  \Pr_{W_j}[s\in R_j(u,W_j)]=M_{u,s}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Membership in Eq.~\eqref{eq:coupon-reverse-set} is exactly the event
+$A_j(u,s;W_j)$. The single-coupon worlds have the same distribution
+for every coupon index, so its probability equals $M_{u,s}$ by
+Eq.~\eqref{eq:consume-prob}.
+\end{proof}
+
+This lemma identifies the desired reverse-set law. Defining the set
+through consumption events does not yet give a procedure for sampling
+it by exploring incoming edges. Such a procedure must separately be
+shown to respect the randomness associated with repeated visits.
+
+\subsection{Independent Reverse Sets for Multiple Coupons}
+\label{sec:joint-reverse}
+
+Fix a labeling $S=\{s_1,\ldots,s_k\}$ and a root $u$. Draw mutually
+independent worlds $W_1,\ldots,W_k$ and define the tuple
+\[
+  \mathcal R(u)=\bigl(R_1(u,W_1),\ldots,R_k(u,W_k)\bigr).
+\]
+The tuple is covered by this seed assignment when
+\begin{equation}
+\label{eq:joint-coverage-event}
+  Y(S;u,W)=
+  \I\!\left[\bigvee_{j=1}^{k}\{s_j\in R_j(u,W_j)\}\right]=1.
+\end{equation}
+Each seed is tested against the world of its own coupon. In
+particular, a test against the union of the reverse sets would
+permit a seed to use a different coupon's realization and does not
+represent Eq.~\eqref{eq:joint-coverage-event}.
+
+\begin{lemma}[Multi-coupon coverage and unbiasedness]
+\label{lem:unbiased}
+For every fixed seed set $S$ and root $u$,
+\begin{equation}
+\label{eq:joint-reverse-law}
+  \Pr[Y(S;u,W)=1]=1-\prod_{s\in S}(1-M_{u,s}).
+\end{equation}
+If $U$ is sampled uniformly from $V$, independently of the worlds,
+then
+\begin{equation}
+\label{eq:reverse-spread-expectation}
+  n\,\E[Y(S;U,W)]=\sigma(S).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The events $s_j\in R_j(u,W_j)$ depend on independent worlds and have
+probabilities $M_{u,s_j}$ by Lemma~\ref{lem:coverage}. Their joint
+failure probability is $\prod_{j=1}^{k}(1-M_{u,s_j})$, proving
+Eq.~\eqref{eq:joint-reverse-law}. Averaging over $U$ and using
+Eq.~\eqref{eq:closed-form} gives
+Eq.~\eqref{eq:reverse-spread-expectation}.
+\end{proof}
+
+Consequently, if $\theta$ independent tuples with the specified law
+are available, the estimator
+\[
+  \hat\sigma_\theta(S)=\frac n\theta
+    \sum_{t=1}^{\theta}Y(S;U_t,W^{(t)})
+\]
+is unbiased for every fixed seed set and labeling. Empty tuples and
+zero-coverage observations remain in the denominator. This is a
+fixed-set statement; applying it to a seed set selected using the
+same data requires additional error analysis.
+
+\subsection{A Reverse-Sampling Identity for Marginal Gains}
+\label{sec:marginal-reverse}
+
+The marginal formula in Eq.~\eqref{eq:marginal} also has a reverse-set
+interpretation. Fix the current seed set $S=\{s_1,\ldots,s_i\}$ and
+a candidate $v\notin S$. For a uniformly sampled root $U$, draw
+independent worlds for the $i$ existing coupons and one additional
+world $W_0$ for the candidate coupon. Define
+\[
+  B_S(U)=\bigcap_{j=1}^{i}\{s_j\notin R_j(U,W_j)\}.
+\]
+When $S=\varnothing$, this event holds automatically. Define a random
+candidate set by
+\begin{equation}
+\label{eq:marginal-reverse-set}
+  R^S=
+  \begin{cases}
+    R_0(U,W_0)\setminus S,&\text{if }B_S(U)\text{ holds},\\
+    \varnothing,&\text{otherwise.}
+  \end{cases}
+\end{equation}
+This definition retains a zero observation whenever an existing
+coupon already consumes at the root; it does not condition the root
+distribution on the failure of those coupons.
+
+\begin{lemma}[Marginal coverage]
+\label{lem:marginal-coverage}
+For every fixed $S\subseteq V$ and $v\notin S$,
+\begin{equation}
+\label{eq:marginal-unbiased}
+  n\Pr[v\in R^S]
+    =\sum_{u\in V}M_{u,v}\prod_{s\in S}(1-M_{u,s})
+    =\Delta(v\mid S).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Condition on $U=u$. The probability of $B_S(u)$ is
+$\prod_{s\in S}(1-M_{u,s})$ by independence of the existing coupons.
+Independently, $v\in R_0(u,W_0)$ has probability $M_{u,v}$.
+Multiplying and averaging over the uniform root proves the first
+equality; Eq.~\eqref{eq:marginal} gives the second.
+\end{proof}
+
+Thus, given independent samples with the law of $R^S$, coverage
+frequencies would estimate all candidate marginal gains at the
+current $S$. Candidate memberships within one reverse set need not
+be independent, whereas the worlds associated with different actual
+coupons must be independent. The set $R^S$ depends on the current
+seed set, so changing $S$ requires justifying either new sampling or
+a valid update of the existing samples.
+
+\subsection{Requirements for the Sampling Construction}
+\label{sec:reverse-requirements}
+
+The preceding results give definitions and expectation identities.
+To complete the algorithm, a reverse generator must specify how it
+explores incoming edges and tracks the random choices needed for
+repeated visits. It must also establish its termination and sampling
+cost. Caching one action per original node and coupon does not
+represent the visit-resampled model; independently resampling every
+reverse edge examination is not justified by the identities above
+either. Both the dependence among examinations and the correspondence
+to valid forward coupon trajectories need a construction-specific
+proof.
+
+Once such a generator is established, seed selection must enforce
+$|S|=k$ with distinct users, and its estimation errors must be
+controlled for the sets chosen from the sampled data. The exact-greedy
+bound in Corollary~\ref{cor:greedy} alone does not establish a
+sampling-based approximation bound. We leave the reverse-generation
+procedure, pseudocode, sample-budget analysis, and running-time
+guarantee unspecified at this stage, pending validation of the
+construction.
+
+%% ============================================================
+%% 6. OTHER VARIANTS
+%% ============================================================
+% \section{Experiments}
+% \label{sec:experiment}
+
+
+%% ============================================================
+%% 7. EXPERIMENTS
+%% ============================================================
+\section{Experiments}
+\label{sec:exp}
+
+
+%% ============================================================
+%% 8. CONCLUSION
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+We introduced the coupon influence model and formalized CIM, capturing the
+single-path, non-replicable dynamics of digital coupon campaigns that
+fall outside the scope of classical IC/LT influence maximization.
+The key structural distinction is twofold: the coupon moves to exactly
+one neighbor at each step, and a user adopts only upon redemption
+-not upon receipt.
+We proved CIM is NP-hard and that adoption spread is monotone and
+submodular, then bridged the gap between theory and practice by
+developing $k$-joint RR sets with a provable unbiasedness lemma.
+Our algorithm \CIMRIS{} runs in near-linear expected time with a
+$(1/2{-}\epsilon)$-approximation guarantee.
+Experiments on five real-world networks confirm that \CIMRIS{} matches
+the Monte Carlo oracle while substantially outperforming both
+model-mismatched IC baselines and coupon-aware heuristics-validating
+that model fidelity is indispensable for optimizing non-replicable
+coupon campaigns.
+
+Several directions remain open.
+First, extending the model to \emph{adaptive} seeding-where the
+seed set of later stages depends on observed early adoptions-could
+reduce budget waste in time-sensitive campaigns.
+Second, the current model assumes the forwarding target is chosen
+uniformly among neighbors; modeling biased forwarding
+(e.g., users preferentially sharing with friends who would benefit
+most) is a practically important extension.
+Third, the connection between the coupon influence model and random walk theory
+(e.g., hitting probabilities and cover times) may yield tighter bounds
+on the expected RR-set size, improving the constant in the complexity
+of \CIMRIS{}.
+
+\begin{acks}
+Acknowledgments omitted for anonymous review.
+\end{acks}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{references}
+
+\end{document}

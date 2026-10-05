@@ -1,0 +1,379 @@
+\section{The proposed solution}
+\label{sec:algo}
+
+We develop a reverse-sampling construction for the coupon walks of
+Section~\ref{sec:model}. A revisit triggers a fresh action, so a single
+fixed live edge at each original node does not represent the walk.
+We instead construct a finite, randomly layered graph whose backward
+reachability probabilities equal the consumption probabilities
+$M_{u,s}$. Independent reverse samples then estimate the marginal
+spread of every candidate seed, and greedy selection operates directly
+on $k$ distinct users. We give the construction, its correctness proof,
+and an explicit sampling guarantee below. The time bound accounts for
+both the random number of layers and repeated marginal estimation.
+
+\subsection{A Finite Layered Representation of a Coupon Walk}
+\label{sec:layered-world}
+
+Write $c_u=p_u^a+p_u^d$ and
+$\beta=\min_{u\in V}c_u>0$, using the positive termination probabilities
+in Section~\ref{sec:model}. The quantity $\beta$ may depend on the
+instance. We introduce an auxiliary coupling of the possible outcomes
+from different candidate seeds; its purpose is to enable backward
+exploration. It preserves the law of a coupon from each fixed seed.
+Different coupons always use independent copies of this construction.
+
+Suppose first that $0<\beta<1$. Draw a nonnegative integer $H$ with
+\begin{equation}
+\label{eq:random-horizon}
+  \Pr[H=h]=\beta(1-\beta)^h,\qquad h=0,1,\ldots.
+\end{equation}
+At layers $\ell<H$, a state $(u,\ell)$ independently chooses one
+residual action with probabilities
+\begin{equation}
+\label{eq:residual-actions}
+\begin{split}
+  \widetilde p_u^a&=\frac{p_u^a-\beta p_u^a/c_u}{1-\beta},\qquad
+  \widetilde p_u^d=\frac{p_u^d-\beta p_u^d/c_u}{1-\beta},\\
+  \widetilde p(u,v)&=\frac{p(u,v)}{1-\beta}.
+\end{split}
+\end{equation}
+These are nonnegative and sum to one because $c_u\geq\beta$ and
+Eq.~\eqref{eq:normalize} holds. A transfer leads from $(u,\ell)$
+to $(v,\ell+1)$; consumption and dropping terminate the walk.
+At layer $H$, every state terminates: node $u$ consumes with probability
+$p_u^a/c_u$ and drops with probability $p_u^d/c_u$.
+All state actions are independent conditional on $H$.
+If $\beta=1$, take $H=0$ and use only this terminal layer; the residual
+probabilities in Eq.~\eqref{eq:residual-actions} are then unnecessary.
+
+\begin{lemma}[Preservation of the coupon law]
+\label{lem:layered-law}
+Starting at $(s,0)$ in the layered construction produces the same
+consumption and dropping trajectory distribution as a coupon seeded
+at $s$ in Section~\ref{sec:model}.
+\end{lemma}
+
+\begin{proof}
+Equivalently, draw independent Bernoulli variables of parameter $\beta$
+for successive layers and let $H$ be the first successful layer.
+At such a layer the coupon is forced to terminate, with the
+consumption/drop split above; otherwise it uses a residual action.
+Before the action at a visited state, the current Bernoulli variable
+is independent of the earlier path. For $\beta<1$, the resulting
+probabilities of consumption, dropping, and transfer to $v$ are
+\begin{align*}
+  \beta\frac{p_u^a}{c_u}+(1-\beta)\widetilde p_u^a&=p_u^a,\\
+  \beta\frac{p_u^d}{c_u}+(1-\beta)\widetilde p_u^d&=p_u^d,\\
+  (1-\beta)\widetilde p(u,v)&=p(u,v).
+\end{align*}
+Every subsequent step uses a new layer and fresh random variables,
+even if it revisits an original node. Thus each next-action distribution
+conditional on the observed path matches the original process. The
+case $\beta=1$ terminates immediately under both representations.
+\end{proof}
+
+The common horizon couples hypothetical walks from different seeds
+within one sample. Such hypothetical outcomes need not be independent:
+only one seed is assigned to any given coupon. The coupling does not
+change any single-seed walk law, and independent copies preserve the
+independence of the actual coupons. Since $H$ is finite almost surely
+and $\E[H+1]=1/\beta$, this is an exact representation, not a
+fixed-length truncation. A directed cycle in $G$ becomes a path through
+different layers; repeated visits therefore retain fresh actions.
+
+\subsection{Constructing a Reverse Sample}
+\label{sec:reverse-construction}
+
+Fix a target user $u$ and one layered realization. Define $R(u)$ as
+the set of seeds $s$ whose paths from $(s,0)$ terminate by consumption
+at some copy $(u,\ell)$, $0\leq\ell\leq H$. To construct $R(u)$,
+let $C_\ell$ be the original nodes whose copies at layer $\ell$ lead
+to such a consumption. At the terminal layer,
+\[
+  C_H=\begin{cases}\{u\},&\text{if $(u,H)$ consumes},\\
+                     \varnothing,&\text{otherwise.}\end{cases}
+\]
+For $\ell=H-1,\ldots,0$, the backward recurrence is
+\begin{equation}
+\label{eq:backward-layers}
+\begin{split}
+  C_\ell={}&\{u:\text{$(u,\ell)$ consumes}\}\\
+  &{}\cup\{w:\text{$(w,\ell)$ transfers to some }v\in C_{\ell+1}\}.
+\end{split}
+\end{equation}
+The desired reverse set is $R(u)=C_0$.
+For each layer, only the root $u$ and in-neighbors of nodes in
+$C_{\ell+1}$ need their actions sampled. If an in-neighbor is examined
+more than once in that layer, its sampled action is reused; at a
+different layer, it receives a fresh draw. Thus mutually exclusive
+outgoing choices at one state are respected without fixing an action
+for all visits to an original node.
+
+\begin{algorithm}[t]
+\caption{Layered Reverse Sample $\textsc{ReverseCoupon}(u)$}
+\label{alg:rrset}
+\begin{algorithmic}[1]
+\Require Root $u$; incoming adjacency lists; $\beta$ and action probabilities
+\Ensure Reverse set $R(u)$
+\If{$\beta=1$}
+  \State $H\gets0$
+\Else
+  \State Draw $H$ using Eq.~\eqref{eq:random-horizon}
+\EndIf
+\State $C\gets\{u\}$ with probability $p_u^a/c_u$; otherwise $C\gets\varnothing$
+\For{$\ell=H-1,\ldots,0$}
+  \State Start an empty action cache for layer $\ell$; $D\gets\varnothing$
+  \State Sample and cache the residual action $a_\ell(u)$
+  \If{$a_\ell(u)=\mathtt{consume}$}
+    \State $D\gets\{u\}$
+  \EndIf
+  \For{each $v\in C$}
+    \For{each $w\in N^-(v)$}
+      \If{$a_\ell(w)$ has not been sampled}
+        \State Sample and cache it using Eq.~\eqref{eq:residual-actions}
+      \EndIf
+      \If{$a_\ell(w)=\mathtt{transfer}(v)$}
+        \State $D\gets D\cup\{w\}$
+      \EndIf
+    \EndFor
+  \EndFor
+  \State $C\gets D$
+\EndFor
+\State \Return $C$
+\end{algorithmic}
+\end{algorithm}
+
+An empty $C$ at an intermediate layer is not a stopping condition:
+the root may consume at an earlier layer. Only layer zero completes
+the sample. In particular, a single failed consumption gate at the
+root does not eliminate later or earlier consumption opportunities.
+
+\begin{lemma}[Single-coupon coverage]
+\label{lem:coverage}
+For every root $u$ and seed $s$,
+\begin{equation}
+\label{eq:single-reverse-law}
+  \Pr[s\in R(u)]=M_{u,s}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+At layer $H$, membership in $C_H$ is exactly consumption at $u$.
+Inductively, a state at layer $\ell$ leads to consumption at $u$
+if it consumes there immediately, or transfers to a state with this
+property at layer $\ell+1$. This is precisely
+Eq.~\eqref{eq:backward-layers}. Hence $s\in C_0$ if and only if
+the layered walk from $s$ is consumed by $u$. Apply
+Lemma~\ref{lem:layered-law} and Eq.~\eqref{eq:consume-prob}.
+\end{proof}
+
+\subsection{Independent Coupons and Marginal Coverage}
+\label{sec:marginal-coverage}
+
+For a fixed labeling $S=\{s_1,\ldots,s_i\}$, generate independent
+reverse sets $R_1(u),\ldots,R_i(u)$, each with its own horizon and
+state actions. Lemma~\ref{lem:coverage} gives
+\begin{equation}
+\label{eq:joint-reverse-law}
+  \Pr\!\left[\bigvee_{j=1}^{i}s_j\in R_j(u)\right]
+       =1-\prod_{s\in S}(1-M_{u,s}).
+\end{equation}
+Thus, for a uniformly sampled root $U$,
+\[
+  \sigma(S)=n\,\E\!\left[
+    \I\!\left[\bigvee_{j=1}^{i}s_j\in R_j(U)\right]\right].
+\]
+The correspondence between each seed and its own independent reverse
+set is essential. A single shared $R(u)$ has correlated memberships
+across candidate seeds, so testing $S\cap R(u)\ne\varnothing$ does
+not in general give Eq.~\eqref{eq:joint-reverse-law}.
+
+For greedy selection, we directly estimate marginal gains. Given the
+current seed set $S$, sample $U$ uniformly. Generate an independent
+reverse set for each seed $s_j\in S$ and test $s_j\in R_j(U)$.
+If any test succeeds, return an empty sample. Otherwise generate a
+fresh independent reverse set $R_0(U)$ and return
+\begin{equation}
+\label{eq:marginal-reverse-set}
+  R^S=R_0(U)\setminus S.
+\end{equation}
+The empty sample is retained in the sample count. These samples are
+not conditioned on the event that earlier coupons fail to consume
+at the root.
+
+\begin{lemma}[Unbiased marginal estimator]
+\label{lem:unbiased}
+For every fixed $S\subseteq V$ and $v\notin S$,
+\begin{equation}
+\label{eq:marginal-unbiased}
+  n\Pr[v\in R^S]
+   =\sum_{u\in V}M_{u,v}\prod_{s\in S}(1-M_{u,s})
+   =\Delta(v\mid S).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Condition on $U=u$. The selected seeds fail their respective tests
+with probability $\prod_{s\in S}(1-M_{u,s})$.
+Independently, $v\in R_0(u)$ has probability $M_{u,v}$.
+Multiply these probabilities and average over the uniform root.
+The last equality is Eq.~\eqref{eq:marginal}.
+\end{proof}
+
+This construction separates the two uses of coupling. Within
+$R_0(U)$, correlated candidate memberships allow one reverse traversal
+to evaluate many alternative seeds. Across actual coupons, independent
+reverse sets preserve their independent consumption events.
+
+\subsection{Greedy Selection with Fresh Reverse Samples}
+\label{sec:reverse-greedy}
+
+Let $S_a$ be the $k$ users with the largest $p_u^a$, and define
+\[
+  \mathrm{LB}=\sum_{u\in S_a}p_u^a
+       \leq\sigma(S_a)\leq\mathrm{OPT},\qquad
+  \mathrm{OPT}=\sigma(S^*).
+\]
+The first inequality counts immediate consumption at the distinct
+seed users. If $\mathrm{LB}=0$ and $k\geq1$, every consumption
+probability is zero, and any $k$ distinct users are optimal.
+Otherwise, for accuracy $0<\varepsilon<1-1/e$ and failure probability
+$0<\delta<1$, set the number of samples per greedy round to
+\begin{equation}
+\label{eq:sample-budget}
+  \theta=\left\lceil
+     \frac{10nk^2}{\varepsilon^2\mathrm{LB}^2}
+     \ln\frac{2nk}{\delta}
+  \right\rceil.
+\end{equation}
+For the current $S$, generate $\theta$ independent marginal reverse
+sets $R_1^S,\ldots,R_\theta^S$ and estimate
+\[
+  \widehat\Delta(v\mid S)
+     =\frac n\theta\sum_{t=1}^{\theta}\I[v\in R_t^S].
+\]
+Select an unselected user maximizing this estimate. After adding it,
+draw new samples for the next round; samples constructed for the old
+$S$ are not treated as samples for its enlarged successor.
+
+\begin{algorithm}[t]
+\caption{\CIMRIS{}$(G,k,\varepsilon,\delta)$ by Marginal Reverse Sampling}
+\label{alg:cim-ris}
+\begin{algorithmic}[1]
+\Require $1\leq k\leq n$; $\beta>0$; $0<\varepsilon<1-1/e$; $0<\delta<1$
+\State Compute $S_a$ and $\mathrm{LB}$
+\If{$\mathrm{LB}=0$}
+  \State \Return $S_a$
+\EndIf
+\State Set $\theta$ using Eq.~\eqref{eq:sample-budget}; $S\gets\varnothing$
+\For{$i=1,\ldots,k$}
+  \State $g_v\gets0$ for every $v\in V\setminus S$
+  \For{$t=1,\ldots,\theta$}
+    \State Draw $U$ uniformly from $V$; $\mathrm{hit}\gets\mathrm{false}$
+    \For{each $s\in S$}
+      \State Independently generate $R\gets\textsc{ReverseCoupon}(U)$
+      \If{$s\in R$}
+        \State $\mathrm{hit}\gets\mathrm{true}$; \textbf{break}
+      \EndIf
+    \EndFor
+    \If{$\mathrm{hit}=\mathrm{false}$}
+      \State Independently generate $R\gets\textsc{ReverseCoupon}(U)$
+      \For{each $v\in R\setminus S$}
+        \State $g_v\gets g_v+1$
+      \EndFor
+    \EndIf
+  \EndFor
+  \State Select $v^*\in\arg\max_{v\in V\setminus S}g_v$
+  \State $S\gets S\cup\{v^*\}$
+\EndFor
+\State \Return $S$
+\end{algorithmic}
+\end{algorithm}
+
+Each round is a coverage-frequency computation over the candidates.
+The selected set contains no repeated user. Because the sampled
+marginal objective depends on $S$, the analysis below controls errors
+round by round rather than applying a fixed-sample maximum-coverage
+bound to all rounds.
+
+\subsection{Accuracy and Computational Cost}
+
+\begin{theorem}
+\label{thm:approx}
+Under Section~\ref{sec:model} with $\beta>0$,
+Algorithm~\ref{alg:cim-ris} returns $k$ distinct seeds $\hat S$ and,
+with probability at least $1-\delta$, satisfies
+\[
+  \sigma(\hat S)\geq(1-1/e-\varepsilon)\mathrm{OPT}.
+\]
+\end{theorem}
+
+\begin{proof}
+The zero-spread case is immediate. Otherwise put
+$\xi=\varepsilon\mathrm{LB}/(2k)<1/2$.
+Condition on the complete history before a round, so that its current
+$S$ is fixed. For a candidate $v\notin S$, the fresh observations
+$X_t(v)=n\I[v\in R_t^S]$ are independent across $t$, with mean
+$\Delta(v\mid S)$. Since an additional coupon activates at most one
+new user, $0\leq\Delta(v\mid S)\leq1$. Consequently,
+$\operatorname{Var}(X_t(v))\leq n\Delta(v\mid S)\leq n$ and
+$|X_t(v)-\E X_t(v)|\leq n$. Bernstein's inequality gives
+\[
+  \Pr\!\left[|\widehat\Delta(v\mid S)-\Delta(v\mid S)|\geq\xi
+      \mid\text{history}\right]
+  \leq2\exp\!\left(-\frac{\theta\xi^2}{2n+(2/3)n\xi}\right)
+  \leq\frac{\delta}{nk}.
+\]
+The last step uses Eq.~\eqref{eq:sample-budget} and $\xi<1/2$.
+A union bound over at most $n$ candidates and $k$ rounds, conditioning
+on each preceding history, bounds the total failure probability by
+$\delta$. Dependence between different candidates within a sample
+does not affect this argument.
+
+On the resulting event, the selected candidate has true marginal gain
+at least $\max_{v\notin S}\Delta(v\mid S)-2\xi$.
+By monotonicity and submodularity,
+$\max_{v\notin S}\Delta(v\mid S)\geq
+(\mathrm{OPT}-\sigma(S))/k$. Writing $F_i=\sigma(S_i)$ for the
+spread after $i$ selections therefore gives
+\[
+  F_i\geq F_{i-1}+\frac{\mathrm{OPT}-F_{i-1}}k-2\xi.
+\]
+Unrolling this recurrence from $F_0=0$ yields
+\begin{align*}
+  F_k&\geq\left[1-\left(1-\frac1k\right)^k\right]\mathrm{OPT}-2k\xi\\
+     &\geq(1-1/e)\mathrm{OPT}-\varepsilon\mathrm{LB}\\
+     &\geq(1-1/e-\varepsilon)\mathrm{OPT}.
+\end{align*}
+\end{proof}
+
+\paragraph{Sampling cost.}
+Precompute incoming adjacency lists and cumulative residual-action
+probabilities in $O(n+m)$ time. Conditional on $H$, one backward
+layer examines at most $m$ incoming edges and samples at most $n$
+state actions. With binary search for categorical actions, this costs
+$O(m+n\log(n+1))$ per layer. Since $\E[H+1]=1/\beta$, one reverse
+sample has expected cost
+\[
+  O\!\left(\frac{m+n\log(n+1)}\beta\right).
+\]
+Only two consecutive active layers and one layer's action cache are
+needed, so the sampler uses $O(n+m)$ working storage.
+
+In round $i$, one marginal sample invokes the reverse sampler at most
+$i$ times: up to $i-1$ tests for previously selected seeds and one
+sample for the candidate coupon. Summing over all rounds gives at
+most $\theta k(k+1)/2$ calls. Samples can be processed immediately
+into the counters $g_v$ and then discarded. Including sorting for
+$S_a$ and scanning candidates, a conservative total expected bound is
+\[
+  O\!\left(n\log(n+1)+m+nk+
+       \frac{\theta k^2\bigl(m+n\log(n+1)\bigr)}\beta\right),
+\]
+with $O(n+m)$ storage. This bound establishes a finite reverse-sampling
+algorithm and its approximation guarantee. It does not imply
+near-linear running time: the dependence on $\theta$, $k$, and
+$1/\beta$ can be large. Tighter sample budgets and more efficient
+reuse of reverse information require additional analysis.
+
