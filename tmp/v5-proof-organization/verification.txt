@@ -1,0 +1,14 @@
+Scope: Sections 1-4 unchanged; computational-cost subsection and all later content unchanged.
+LaTeX: labels unique; all cross-references defined; braces and environments balanced.
+Section 5: one sample-budget equation; three separately stated theorems; no missing citation keys in revised section.
+Probability proof: terminating trajectory products include repeated visits; independent candidate worlds establish joint coverage.
+Sample bound: independent families, Y in [0,k], variance <= k*sigma; Bernstein plus union bound over all size-k sets.
+No new simulation or experimental claims; no full PDF compilation performed.
+672: \subsection{Independent Trajectory Samples}
+733: \subsection{Reverse Coverage and Probability Equivalence}
+753: \label{thm:probability-equivalence}
+861: \subsection{Greedy Selection on the Sampled Objective}
+927: \subsection{Sample Complexity and Approximation Guarantee}
+971: \label{thm:sample-complexity}
+1034: \label{thm:approx}
+1073: \subsection{Computational Cost and Scope}
