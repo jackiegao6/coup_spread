@@ -269,47 +269,15 @@ Under $W_j$, user $u$ consumes coupon $j$ if and only if there exists
 a live-edge path from $s_j$ to $u$ and the consumption event
 $A_u^{(j)}$ occurs; we denote this event by $A_j(u,s_j;W_j)$.
 
-\textbf{Illustrative examples.}
-Figure~\ref{fig:coupon-model-example} illustrates four aspects of the
-coupon influence model. Panels (a)--(c) show alternative realizations
-with one coupon issued to each of the seed users $s_1$ and $s_2$.
-In panel (a), both coupons pass through $w$, but one is consumed by
-$u$ and the other by $v$. Thus, two users become activated, whereas
-$w$ remains inactive because it only forwards. In panel (b), both
-coupons are consumed by $u$. Although two coupons are used, only one
-user is activated: consuming another coupon does not contribute an
-additional activation. In panel (c), $w$ forwards coupon~1 to $u$
-but drops coupon~2, yielding one consumed coupon and one activated
-user. These outcomes distinguish the number of consumed coupons from
-the number of distinct consumers.
-
-Panel (d) separately follows one coupon along $s\to w\to x\to w$.
-On its first visit, $w$ forwards the coupon; on its second visit, $w$
-makes a fresh decision and consumes it. The two appearances of $w$
-represent the same user at different visits, not two users.
-This example shows that revisiting a node neither fixes its action
-to the previous choice nor automatically terminates the coupon.
-Each panel depicts a possible realization; expected spread averages
-the number of distinct consumers over the model's random outcomes.
-
-\begin{figure*}[t]
-  \centering
-  \includegraphics[width=\textwidth]{output/pdf/coupon-model-example.pdf}
-  \caption{Illustrative coupon propagation outcomes.
-  (a) Different consumers: two coupons activate two users.
-  (b) Repeated consumption: two coupons consumed by the same user
-  activate only one user.
-  (c) Dropping: a discarded coupon contributes no activation.
-  (d) Revisiting: a single coupon returns to the same user, whose
-  action is sampled again; the trajectory is drawn in visit order.
-  Blue solid and orange dashed arrows track individual coupons,
-  each following one path without being copied. Gray arrows are
-  network edges not traversed in the illustrated realization.
-  Filled nodes indicate consumption and activation; merely forwarding
-  or dropping does not activate a user. Panels are separate examples,
-  and all reported counts are realized outcomes.}
-  \label{fig:coupon-model-example}
-\end{figure*}
+\textcolor[rgb]{1.00,0.00,0.00}{As a numerical illustration, consider two coupons seeded at $s_1$
+and $s_2$.
+In world $W_1$, $s_1$ transfers along live edge $(s_1,w)$, $w$
+transfers along $(w,u)$, and $u$ consumes coupon~1, so $u$ is
+activated; in the independent world $W_2$, the live path
+$s_2\to w\to v$ leads to a consumption at $v$.
+Node $w$ is visited by both coupons but consumes neither, so it
+contributes to propagation without contributing to the outcome, and
+the realized spread of this seed set is two consumers.}
 
 
 One remark to Eq.~\eqref{eq:normalize} is that both the propagation

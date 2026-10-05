@@ -294,7 +294,7 @@ the number of distinct consumers over the model's random outcomes.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=\textwidth]{output/pdf/coupon-model-example.pdf}
+  \includegraphics[width=\textwidth]{coupon-model-example.pdf}
   \caption{Illustrative coupon propagation outcomes.
   (a) Different consumers: two coupons activate two users.
   (b) Repeated consumption: two coupons consumed by the same user
@@ -448,7 +448,7 @@ the ``counted only once'' semantics of distinct consumers.
 The CIM problem is NP-hard.
 \end{theorem}
 
-\begin{proof}
+\begin{proof}\renewcommand{\qedsymbol}{}
 We reduce from the Independent Set problem on $3$-regular (cubic)
 graphs, which is NP-complete~\cite{garey1979computers,garey1976some}. The central idea is to reduce the Independent Set problem to our CIM problem.
 Let $H=(V_H,E_H)$ be a cubic graph with $|V_H|=N$ and
@@ -559,7 +559,7 @@ Moreover, for any $v\notin S$, the marginal gain satisfies
 \end{equation}
 \end{lemma}
 
-\begin{proof}
+\begin{proof}\renewcommand{\qedsymbol}{}
 For Eq.~\eqref{eq:closed-form}, the event that $u$ consumes at least
 one coupon is $\bigcup_{j} A_j(u,s_j;W_j)$. By the independence of
 the worlds, its probability is
@@ -586,7 +586,7 @@ The coupon influence spread $\sigma(S)$ is monotone non-decreasing
 and submodular in $S$.
 \end{theorem}
 
-\begin{proof}
+\begin{proof}\renewcommand{\qedsymbol}{}
 Monotonicity follows from $\Delta(v\mid S)\ge 0$ in
 Eq.~\eqref{eq:marginal}.
 For submodularity, let $A\subseteq B\subseteq V$ and $v\notin B$.
@@ -759,7 +759,7 @@ For every fixed seed set $S\subseteq V$ and consumer $u$,
  =1-\prod_{s\in S}(1-M_{u,s}).
 \end{equation}
 \end{lemma}
-\begin{proof}
+\begin{proof}\renewcommand{\qedsymbol}{}
 The intersection is empty exactly when $Z_s^{(t)}\ne u$ for
 every $s\in S$. These events depend on mutually independent
 candidate worlds. Equation~\eqref{eq:endpoint-law} therefore gives
@@ -786,7 +786,7 @@ $\mathbb E[\hat\sigma_\theta(S)]=\sigma(S)$.
 For every fixed collection of samples, $\hat\sigma_\theta$ is a
 normalized, monotone, submodular function on $V$.
 \end{lemma}
-\begin{proof}
+\begin{proof}\renewcommand{\qedsymbol}{}
 Linearity of expectation and Lemma~\ref{lem:coverage} yield
 \[
  \mathbb E[\hat\sigma_\theta(S)]
@@ -839,7 +839,7 @@ the $k$ nodes with largest $p_u^a$, and set
 $\mathrm{LB}\le\sigma(S_a)\le\mathrm{OPT}$.
 If $\mathrm{LB}=0$, every seed set has zero expected spread.
 \end{lemma}
-\begin{proof}
+\begin{proof}\renewcommand{\qedsymbol}{}
 For $u\in S_a$, let $I_u$ indicate that the coupon seeded at $u$
 is consumed on its first visit. Every such event activates a
 distinct user, so the final number of activated users is at least
