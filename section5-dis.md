@@ -234,6 +234,12 @@ $ \hat\sigma(S)\approx\sigma(S). $
 
 这一反向过程持续进行，直至不存在新的可扩展节点，最终得到以u 为根的一次随机 RR set。
 
+
+
+
+
+
+
 ------
 
 这里我要特意停一下：
@@ -250,23 +256,15 @@ $ \hat\sigma(S)\approx\sigma(S). $
 
 这一点这次不能再猜。
 
-------
+---
 
-# 三、RR 构造之后，必须马上证明“正向 = 反向”
-
-老师录音里最反复强调的就是这个。
-
-这一部分建议直接设一个 Lemma。
-
-### 引理：正反向概率等价
+### 引理：正向传播概率和反向激活概率一致
 
 对于任意根节点u 和候选 seed \(s\)，有
 
 $ \boxed{ \Pr[s\in R(u)] = \Pr[A(u,s)] } $
 
-其中 \(A(u,s)\) 表示从 \(s\) 发出的一张 coupon 最终由u 消费的事件。
-
-证明不能一句话说“显然”。
+其中 A(u,s) 表示从 s 发出的一张 coupon 最终由u 消费的事件。
 
 应该按传播序列来。
 
@@ -294,27 +292,23 @@ $ P_F(\pi)=P_R(\pi). $
 
 $ \Pr[A(u,s)] = \Pr[s\in R(u)]. $
 
-**老师说的“正向传播概率和反向激活概率一致”，本质就是要把这一段写出来。**
+---
 
 但是同样，因为现在允许 revisit，具体求和对象到底是 path 还是 walk，以及反向过程中重复访问怎么对应，必须跟你们真正的 RR generator 对上。
 
 ------
 
-# 四、然后才是 5.2：从 RR 等价走到采样
+## 5.2：从 RR 等价走到采样
 
 这一部分我认为可以先完整写出来，因为逻辑已经很明确。
 
-设
+设$ S=(s_1,\ldots,s_k) $ 为 k张 coupon 对应的 seed allocation。
 
-$ S=(s_1,\ldots,s_k) $
-
-为 \(k\) 张 coupon 对应的 seed allocation。
-
-对于一个固定节点u，独立为 \(k\) 张 coupon 生成：
+对于一个固定节点u，独立为 k 张 coupon 生成：
 
 $ R_{u,1},R_{u,2},\ldots,R_{u,k}. $
 
-第 \(j\) 张 coupon 能够使u activated，当且仅当：
+第 j 张 coupon 能够使u activated，当且仅当：
 
 $ s_j\in R_{u,j}. $
 
@@ -334,7 +328,7 @@ $ \Pr[A(u;S)] = \Pr \left[ \exists j\in[k]: s_j\in R_{u,j} \right]. \tag{1} $
 
 $ \sigma(S) = \sum_{u\in V} \Pr[A(u;S)]. $
 
-令随机变量u 在 \(V\) 上均匀采样：
+令随机变量u 在 V 上均匀采样：
 
 $ \Pr[U=u]=\frac1n. $
 
@@ -364,7 +358,7 @@ $ \boxed{ (R_{U,1},\ldots,R_{U,k}) } $
 
 ------
 
-# 五、为什么是“k 个 RR-set 为一组”
+## k 个 RR-set 为一组SSR
 
 这是老师录音里很重要的一句话，我们之前英文第五节基本丢掉了。
 
@@ -376,7 +370,7 @@ $ R. $
 
 $ \boxed{ \mathcal R(U) = (R_{U,1},R_{U,2},\ldots,R_{U,k}). } $
 
-因为你们不是传播一个可复制的信息，而是有 \(k\) 张**相互独立的 coupons**。
+因为你们不是传播一个可复制的信息，而是有 k 张**相互独立的 coupons**。
 
 对于这个 rootu，只要存在一个 coupon：
 
@@ -424,6 +418,10 @@ $ \hat\sigma(S)\rightarrow\sigma(S). $
 
 后面如果要严格给 approximation guarantee，再上 Chernoff/Bernstein 等 concentration bound。
 
+
+
+
+
 ------
 
 # 六、所以老师这次真正否掉的是哪部分
@@ -461,6 +459,162 @@ $ \boxed{ \text{forward coupon diffusion} } $$ \Downarrow $$ \boxed{ \text{const
 
 
 
+
+---
+
+
+
+
+
+
+
+这个就非常关键了。现在“实验代码里的 RR-set 到底怎么生成”已经清楚了，我们终于可以不猜算法，而是**按真实实现来写第五节**。
+
+不过我先把结论说在前面：**这套代码的算法流程很好写，也很直观；但在写老师要求的“正向传播概率 = 反向可达概率”证明之前，有一个随机性细节必须核对。** 我下面先严格按你给的代码把中文方法写出来，再说明这个问题。
+
+## 5.1 优惠券传播模型下的反向可达集构造
+
+经典影响力最大化中的反向可达集（Reverse Reachable Set, RR set）通过反向搜索，将“一个种子节点是否能够激活目标节点”的正向传播事件转化为“种子节点是否属于目标节点的 RR set”的集合包含事件。对于优惠券传播模型，由于一张优惠券只能被逐节点转发，并且仅当优惠券最终被用户消费时该用户才被激活，因此需要根据 coupon 的消费—丢弃—转发机制重新构造 RR set。
+
+给定目标节点 \(u\)，我们首先确定 \(u\) 对当前 coupon 的消费事件。该判断由外层采样过程完成。如果本次随机实现中 \(u\) 不消费该 coupon，则即使优惠券能够到达 \(u\)，也不会产生激活，因此该 coupon 对应的反向可达集为空。若 \(u\) 的消费事件发生，则固定 \(u\) 为本次传播的最终消费节点，并从 \(u\) 出发执行反向搜索。
+
+记本次生成的反向可达集为 \(R(u)\)。初始化
+
+\[ R(u)=\{u\}, \]
+
+并将 \(u\) 加入待扩展队列 \(Q\)。将 \(u\) 本身加入反向可达集是因为，在已经固定 \(u\) 发生消费的条件下，若 coupon 直接投放给 \(u\)，则 coupon 可以立即被 \(u\) 消费。
+
+随后，每次从队列 \(Q\) 中取出一个当前节点 \(v\)，并检查其所有入邻居
+
+\[ N^-(v)=\{w:(w,v)\in E\}. \]
+
+对于每一个入邻居 \(w\)，反向搜索需要判断：
+
+\[ \text{如果 coupon 当前位于 }w,\text{ 是否会被转发给 }v? \]
+
+因此，该判断使用节点 \(w\) 的行为概率。按照正向传播模型，对 \(w\) 抽取一个随机数
+
+\[ r\sim\mathrm{Uniform}[0,1), \]
+
+并依据 \(p_w^a,p_w^d\) 以及 \(\{p(w,x)\}_{x\in N^+(w)}\) 判定其动作。若此次动作恰好为沿边
+
+\[ (w,v) \]
+
+转发，则称本次反向检查成功。若此时 \(w\notin R(u)\)，则将 \(w\) 加入 \(R(u)\)，并同时加入队列 \(Q\)，使反向搜索继续向 \(w\) 的入邻居扩展。若 \(w\) 选择消费、丢弃或转发给其他出邻居，则此次检查失败，不将 \(w\) 加入集合。
+
+这里需要强调，处理当前节点 \(v\) 时，需要检查 **所有** 入邻居，而不是随机选择一个入邻居。因此，一个 RR set 在反向生成过程中可以形成多个分支。这种分支并不表示一张 coupon 在正向传播时被复制成多张 coupon，而是表示在本次反向样本中，存在多个不同的候选初始投放节点，它们可能分别使 coupon 最终到达同一个消费节点 \(u\)。
+
+每个节点只在第一次进入 \(R(u)\) 时加入队列，因此每个被发现节点最多被扩展一次。当队列为空时，反向搜索结束并返回 \(R(u)\)。
+
+可以把伪代码先写成：
+
+```
+\begin{algorithm}[t]
+\caption{\textsc{GenerateRRSet}$(u)$}
+\label{alg:rr-generation}
+\begin{algorithmic}[1]
+\Require Graph $G=(V,E)$; root $u$; node and transfer probabilities
+\Ensure A reverse reachable set $R(u)$
+\If{the consumption event of $u$ does not occur}
+    \State \Return $\emptyset$
+\EndIf
+\State $R(u)\gets\{u\}$
+\State initialize a queue $Q$ with $u$
+\While{$Q$ is not empty}
+    \State remove a node $v$ from $Q$
+    \For{each $w\in N^-(v)$}
+        \State sample a fresh $r\sim\mathrm{Uniform}[0,1)$
+        \State determine the action of $w$ according to $r$
+        \If{$w$ transfers the coupon to $v$ and $w\notin R(u)$}
+            \State $R(u)\gets R(u)\cup\{w\}$
+            \State insert $w$ into $Q$
+        \EndIf
+    \EndFor
+\EndWhile
+\State \Return $R(u)$
+\end{algorithmic}
+\end{algorithm}
+```
+
+你给的例子也非常适合紧跟算法之后。
+
+对于
+
+\[ c\rightarrow a\rightarrow u,\qquad d\rightarrow a,\qquad d\rightarrow b\rightarrow u, \]
+
+若本次样本中 \(u\) 的消费事件成立，并且反向检查得到：
+
+\[ a\rightarrow u,\qquad c\rightarrow a \]
+
+成功，而 \(b\rightarrow u\) 和 \(d\rightarrow a\) 失败，则生成过程为
+
+\[ \{u\} \rightarrow \{u,a\} \rightarrow \{u,a,c\}, \]
+
+最终：
+
+\[ R(u)=\{u,a,c\}. \]
+
+其直观含义是：**在该次反向样本中，从 \(u,a,c\) 中任意一个节点投放 coupon，都被该样本判定为能够最终由 \(u\) 消费。**
+
+这已经比我们之前第五节里的 `inverted coverage set` 好解释得多，也完全符合老师说的“首先得告诉读者反向可达集到底怎么生成”。
+
+------
+
+## 但现在有一个必须解决的概率问题
+
+你特别说了一句：
+
+> **每次检查都重新抽 \(r\)**。
+
+如果这里确实是指：**同一个节点 \(w\) 在检查不同出边时，也重新独立抽一次 \(r\)**，那么按照目前 Section 3 的正向模型，老师要求的
+
+\[ \Pr[s\in R(u)] = \Pr[\text{coupon from }s\text{ is consumed by }u] \]
+
+一般情况下**不能直接成立**。
+
+一个很小的例子就能看出来。
+
+假设当前反向搜索中 \(a,b\) 都已经能够到达 root \(u\)，而节点 \(w\) 有：
+
+\[ w\rightarrow a,\qquad w\rightarrow b, \]
+
+并且
+
+\[ p(w,a)=0.4,\qquad p(w,b)=0.4,\qquad p_w^d=0.2. \]
+
+在正向传播中，coupon 第一次到达 \(w\) 时只做**一次**决策，所以它成功进入能够到达 \(u\) 的后继节点的概率为：
+
+\[ 0.4+0.4=0.8. \]
+
+但是按你描述的旧反向代码，如果检查 \((w,a)\) 时独立抽一次，检查 \((w,b)\) 时又独立抽一次，则
+
+\[ \Pr[w\in R(u)] = 1-(1-0.4)^2 = 0.64. \]
+
+于是：
+
+\[ 0.64\neq0.8. \]
+
+也就是说，**算法流程现在完全清楚了，但这个“每条入边独立重新抽 \(r\)”的细节会直接影响老师最需要的正反向概率等价证明。**
+
+这不是文字怎么写的问题，而是模型和代码必须先对齐。
+
+如果旧代码实际上是：
+
+> 第一次遇到 \(w\) 时只生成一个 \(r_w\)，以后检查 \(w\) 时复用这个 \(r_w\)，从而 \(w\) 在该 possible world 中只选择一个固定的 outgoing edge，
+
+那正反向证明就很好写，而且正是你们以前手稿里的 live-edge 方案。
+
+但如果实验代码**确实是每检查一次 \((w,v)\) 就重新采样**，那我们下一步必须根据代码重新证明它对应的究竟是什么概率；不能在论文里直接写“显然与正向传播等价”。
+
+所以现在我建议先把这一个问题钉死：
+
+\[ \boxed{ \text{同一个 }w\text{ 在一次 RR-set 生成过程中，如果先后检查 }(w,v_1),(w,v_2), \text{代码到底是共用一个随机数，还是各自重新采样？} } \]
+
+你刚才的文字说的是后者。如果你能把这段**真实代码**贴给我，我可以直接按代码逐行判断。这个一旦确认，我们马上就能继续写老师要求的核心内容：
+
+\[ \text{RR-set construction} \rightarrow \text{forward--reverse probability equivalence proof} \rightarrow \text{uniform root sampling} \rightarrow k\text{ 个 RR sets 为一组}. \]
+
+这次最重要的是先保证这条链在数学上真的和程序一致。
 
 
 
