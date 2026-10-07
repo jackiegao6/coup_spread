@@ -1,0 +1,415 @@
+\section{轨迹采样与覆盖优化}
+\label{sec:algo}
+
+目标函数 $\sigma(S)$ 的覆盖结构启发我们通过采样来选择种子。
+具体而言，我们从各个候选种子出发，独立模拟优惠券的传播轨迹，记录最终使用优惠券的用户，
+再按最终使用者将这些结果归类，建立倒排覆盖索引，并在该索引上执行贪心选择。
+这一过程无需显式计算使用概率矩阵 $M$。
+我们将该方法记为 \CIMRIS{}，以体现它与影响力最大化中反向覆盖表示的联系~\cite{borgs2014maximizing,tang2015influence}。
+这里的“反向覆盖”是指从最终使用者反查候选种子；样本本身通过正向模拟生成，
+而不是从一个目标节点出发，沿入边反向遍历生成。
+
+设 $\varepsilon\in(0,1-1/e)$ 为精度参数，$\delta\in(0,1)$ 为允许的失败概率。
+本节先证明：上述构造得到的反向覆盖事件，与原模型中的正向传播事件具有相同的概率。
+随后，我们推导保证估计误差同时受到控制所需的充分采样量，并据此证明算法具有
+$(1-1/e-\varepsilon)$ 近似保证。
+本节始终假设 $1\le k\le n$，并沿用第~\ref{sec:model}~节中每个节点均满足
+$p_u^a+p_u^d>0$ 的条件。记
+$\beta=\min_{u\in V}(p_u^a+p_u^d)>0$。
+其中，$\beta$ 的取值由具体输入实例决定。
+
+\subsection{独立轨迹采样}
+\label{sec:source-worlds}
+
+设 $\theta$ 为独立样本组的数量，每个样本组都包含从每个候选种子出发的一条传播轨迹。
+$\theta$ 的具体取值将在第~\ref{sec:theoretical-guarantees}~节给出。
+对于每个样本组编号 $t\in[\theta]=\{1,\ldots,\theta\}$ 和候选种子 $s\in V$，定义
+\[
+  \widetilde W_s^{(t)}
+  =\bigl(r_{u,h}^{(s,t)}\bigr)_{u\in V,\ h\ge1},
+  \qquad r_{u,h}^{(s,t)}\sim\mathrm{Uniform}[0,1),
+\]
+其中，所有不同索引 $(s,t,u,h)$ 对应的随机变量均相互独立。
+$h$ 表示从 $s$ 出发的这张优惠券到访节点 $u$ 的次数。
+每次到访时，优惠券分别以概率 $p_u^a$、$p_u^d$ 和 $p(u,v)$ 被使用、被废弃或沿边 $(u,v)$ 转发。
+特别地，重访同一节点时使用新的随机变量，不沿用上次到访时抽取的行为。
+由于每个被选中的种子只接收一张优惠券，且不同优惠券独立传播，
+因此可以为每个候选种子分配一个独立的随机世界。
+未被选中的候选种子所对应的轨迹，只用于构建种子选择时统一使用的经验目标函数。
+
+引入特殊符号 $\bot\notin V$，表示优惠券在未被使用的情况下被废弃。
+令 $Z_s^{(t)}\in V\cup\{\bot\}$ 表示第 $t$ 个样本组中从种子 $s$ 出发的优惠券的终止结果：
+若 $Z_s^{(t)}=u$，则优惠券最终被用户 $u$ 使用；若 $Z_s^{(t)}=\bot$，则优惠券被废弃。
+第~\ref{sec:reverse-coverage}~节将证明，这一模拟结果的分布与单券使用概率 $M_{u,s}$ 一致。
+令 $L_s^{(t)}$ 表示轨迹中到访节点的总次数，包括终止时的最后一次到访。
+由于每次到访后继续传播的概率至多为 $1-\beta$，对于任意整数 $h\ge0$，有
+$\Pr[L_s^{(t)}>h]\le(1-\beta)^h$。
+因此，轨迹以概率 $1$ 终止，且 $\mathbb E[L_s^{(t)}]\le1/\beta$。
+
+算法~\ref{alg:kernel}~给出了单张优惠券终止结果的采样过程。
+设 $d_u=|N^+(u)|$ 为节点 $u$ 的出度，将其出邻居按任意固定顺序记为
+$v_1,\ldots,v_{d_u}$，并预先计算
+\[
+ b_{u,0}=p_u^a+p_u^d,\qquad
+ b_{u,i}=b_{u,0}+\sum_{\ell=1}^{i}p(u,v_\ell).
+\]
+由式~\eqref{eq:normalize}~可知 $b_{u,d_u}=1$。
+转发行为直接使用无条件边转发概率 $p(u,v)$，不再额外乘以 $p_u^t$。
+
+\begin{algorithm}[t]
+\caption{单张优惠券的终止结果采样：\textsc{SampleTerminalConsumer}$(s)$}
+\label{alg:kernel}
+\begin{algorithmic}[1]
+\Require 种子 $s$；节点行为概率；预先计算的区间边界 $b_{u,i}$
+\Ensure 属于 $V\cup\{\bot\}$ 的终止结果
+\State $u\gets s$
+\While{true}
+  \State 独立抽取新的随机数 $r\sim\mathrm{Uniform}[0,1)$
+  \If{$r<p_u^a$}
+    \State \Return $u$
+  \ElsIf{$r<p_u^a+p_u^d$}
+    \State \Return $\bot$
+  \Else
+    \State 找到满足 $b_{u,i-1}\le r<b_{u,i}$ 的索引 $i$
+    \State $u\gets v_i$
+  \EndIf
+\EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{反向覆盖与概率一致性}
+\label{sec:reverse-coverage}
+
+\begin{definition}[倒排覆盖集合]
+对于样本组编号 $t$ 和潜在使用者 $u\in V$，定义
+\begin{equation}
+\label{eq:reverse-set-def}
+ R_t(u)=\{s\in V:Z_s^{(t)}=u\}.
+\end{equation}
+带索引的集合族 $\mathcal R_t=(R_t(u))_{u\in V}$ 为每个潜在使用者保留一个集合。
+\end{definition}
+
+生成 $\mathcal R_t$ 时，从每个候选种子 $s\in V$ 出发独立模拟一条轨迹。
+若优惠券最终被某个用户使用，则将 $s$ 加入该用户对应的集合；若优惠券被废弃，则不加入任何集合。
+由于一张优惠券最多被一个用户使用，每个候选种子在同一个样本组中至多属于一个集合。
+因此，对于固定的 $t$，各个 $R_t(u)$ 两两不相交。
+
+\begin{theorem}[正向传播与反向覆盖的概率一致性]
+\label{thm:probability-equivalence}
+对于算法~\ref{alg:kernel}~和式~\eqref{eq:reverse-set-def}~定义的集合，
+任意候选种子 $s$、潜在使用者 $u$ 和样本组编号 $t$ 均满足
+\begin{equation}
+\label{eq:endpoint-law}
+ \Pr[s\in R_t(u)]=\Pr[Z_s^{(t)}=u]=M_{u,s}.
+\end{equation}
+进一步，对于任意固定的种子集合 $S\subseteq V$，有
+\begin{equation}
+\label{eq:reverse-coverage}
+ \begin{aligned}
+ \Pr[S\cap R_t(u)\ne\emptyset]
+ &=\Pr_W[A(u;S,W)]\\
+ &=1-\prod_{s\in S}(1-M_{u,s}).
+ \end{aligned}
+\end{equation}
+其中，$A(u;S,W)$ 是第~\ref{sec:model}~节定义的激活事件，
+即从 $S$ 投放的独立优惠券中至少一张被用户 $u$ 使用。
+\end{theorem}
+\begin{proof}[证明]\renewcommand{\qedsymbol}{}
+\emph{首先考虑单张优惠券。}
+取任意一条有限轨迹 $\pi=(v_0=s,v_1,\ldots,v_\ell=u)$，
+并假设优惠券在最后一次到访时被使用。轨迹中的节点允许重复出现。
+根据第~\ref{sec:model}~节的模型，发生这一完整传播结果的概率为
+\begin{equation}
+\label{eq:trajectory-probability}
+ \left(\prod_{i=0}^{\ell-1}p(v_i,v_{i+1})\right)p_u^a.
+\end{equation}
+乘积中的各项对应每一步转发，最后的 $p_u^a$ 对应终点处的使用行为。
+当 $\ell=0$ 时，空乘积取值为 $1$，表示优惠券直接在种子处被使用。
+算法~\ref{alg:kernel}~所用随机区间的长度恰好等于上述行为概率，
+且每次到访都抽取新的独立随机数，因此模拟过程生成该完整轨迹的概率与原模型相同。
+这一结论也适用于重访节点的轨迹。
+将最后的 $p_u^a$ 替换为 $p_u^d$，即可同样证明以废弃结束的轨迹具有相同概率。
+
+在 $\beta>0$ 的条件下，原传播过程和模拟过程均以概率 $1$ 终止。
+对所有最终在 $u$ 处被使用的有限轨迹对应的互斥事件求和，可得
+$\Pr[Z_s^{(t)}=u]=M_{u,s}$。
+对所有以废弃结束的轨迹求和，则有
+$\Pr[Z_s^{(t)}=\bot]=1-\sum_{u\in V}M_{u,s}$。
+根据集合定义，$s\in R_t(u)$ 当且仅当 $Z_s^{(t)}=u$，
+故式~\eqref{eq:endpoint-law}~成立。
+
+\emph{再考虑多张独立优惠券。}
+固定种子集合的一个编号 $S=\{s_1,\ldots,s_{|S|}\}$。
+各候选世界 $\widetilde W_{s_j}^{(t)}$ 产生相互独立的轨迹，
+其分布分别与第~\ref{sec:model}~节中各优惠券世界 $W_j$ 对应的轨迹分布相同。
+因此，
+\[
+ \Pr[S\cap R_t(u)=\emptyset]
+ =\Pr[Z_s^{(t)}\ne u\text{ 对所有 }s\in S\text{ 成立}]
+ =\prod_{s\in S}(1-M_{u,s}).
+\]
+该乘积也正是原传播过程中，从 $S$ 投放的所有优惠券均未被 $u$ 使用的概率。
+取补事件即得式~\eqref{eq:reverse-coverage}。
+\end{proof}
+
+上述定理针对的是通过本文轨迹倒排过程生成的反向覆盖集合。
+其中，多券结论依赖于各候选种子对应随机世界之间的独立性。
+仅有单个种子的成员概率相等，尚不足以推出式~\eqref{eq:reverse-coverage}~中的乘积关系。
+
+独立生成 $\theta$ 个样本组，并保留每个样本组的编号；即使两个样本组的结果恰好相同，也分别计入估计。
+定义
+\begin{equation}
+\label{eq:empirical-spread}
+ Y_t(S)=\sum_{u\in V}\mathbb{I}[S\cap R_t(u)\ne\emptyset],
+ \qquad
+ \hat\sigma_\theta(S)=\frac1\theta\sum_{t=1}^\theta Y_t(S).
+\end{equation}
+这里沿用第~\ref{sec:theory}~节的指示函数记号 $\mathbb{I}[\cdot]$：条件成立时取 $1$，否则取 $0$。
+$Y_t(S)$ 统计第 $t$ 个样本组中不同使用者的人数，而不是被使用的优惠券张数。
+因此，$0\le Y_t(S)\le |S|$。
+
+\begin{lemma}[无偏性与经验目标的次模性]
+\label{lem:unbiased}
+对于任意固定的 $S\subseteq V$，有
+$\mathbb E[\hat\sigma_\theta(S)]=\sigma(S)$。
+对于任意固定的一组采样结果，$\hat\sigma_\theta$ 是定义在 $V$ 上的归一化、单调、次模函数。
+\end{lemma}
+\begin{proof}[证明]\renewcommand{\qedsymbol}{}
+由期望的线性性和定理~\ref{thm:probability-equivalence}，有
+\[
+ \mathbb E[\hat\sigma_\theta(S)]
+ =\sum_{u\in V}\left[1-\prod_{s\in S}(1-M_{u,s})\right]
+ =\sigma(S).
+\]
+固定所有采样结果，考虑覆盖全集 $\mathcal U=[\theta]\times V$。
+当 $Z_s^{(t)}\ne\bot$ 时，候选种子 $s$ 覆盖元素 $(t,Z_s^{(t)})$。
+因此，$\theta\hat\sigma_\theta(S)$ 等于种子集合 $S$ 覆盖的所有元素的并集大小。
+这是标准的覆盖函数，具有所述的归一化、单调性和次模性。
+\end{proof}
+
+需要区分两种独立性：不同样本组之间相互独立，同一组中不同候选种子的轨迹也相互独立；
+但同一样本组中，不同使用者的覆盖指示变量不必相互独立。
+因此，后续集中不等式分析将每个样本组对应的 $Y_t(S)$ 整体视为一个随机变量。
+
+\subsection{基于采样目标的贪心种子选择}
+\label{sec:greedy-selection}
+
+对固定的经验目标 $\hat\sigma_\theta$ 执行贪心选择。
+为每个覆盖元素维护一个布尔标记 $C_{t,u}$，并为每个候选种子维护整数计数器 $g_s$。
+初始时，$g_s$ 等于从 $s$ 出发且没有被废弃的样本轨迹数量。
+当元素 $(t,u)$ 首次被覆盖时，对所有 $s\in R_t(u)$，将 $g_s$ 减去 $1$。
+这样，对每个尚未选中的候选种子，始终有
+\[
+ g_s=\theta\bigl(\hat\sigma_\theta(S\cup\{s\})
+                       -\hat\sigma_\theta(S)\bigr).
+\]
+因此，这些更新精确维护了采样目标的边际收益，实现的是采样目标上的精确贪心选择。
+所有贪心迭代重复使用同一批样本。
+
+算法~\ref{alg:cim-ris}~给出了完整过程。
+其中，$S_a$ 表示使用概率 $p_u^a$ 最大的 $k$ 个节点组成的集合，$\mathrm{LB}$ 为这些概率之和。
+第~\ref{sec:theoretical-guarantees}~节将证明 $\mathrm{LB}$ 是最优传播规模的一个下界，并推导样本量 $\theta$。
+每个样本组包含从每个候选种子出发的一条轨迹，因此 $\theta$ 组样本共需模拟 $n\theta$ 条轨迹。
+
+\begin{algorithm}[t]
+\caption{\CIMRIS{}：轨迹采样与覆盖贪心}
+\label{alg:cim-ris}
+\begin{algorithmic}[1]
+\Require 图 $G$ 及模型概率；预算 $1\le k\le n$；参数 $\varepsilon,\delta$
+\Ensure 大小为 $k$ 的种子集合 $S$
+\State 根据式~\eqref{eq:opt-lower-bound}~计算 $S_a$ 和 $\mathrm{LB}$
+\If{$\mathrm{LB}=0$}
+  \State \Return $S_a$
+\EndIf
+\State 根据式~\eqref{eq:sample-budget}~确定 $\theta$
+\State 预先计算转发区间边界 $b_{u,i}$
+\For{$t=1,\ldots,\theta$}
+  \State 对所有 $u\in V$，令 $R_t(u)\gets\emptyset$
+  \For{每个 $s\in V$}
+    \State $Z_s^{(t)}\gets\Call{SampleTerminalConsumer}{s}$
+    \If{$Z_s^{(t)}\ne\bot$}
+      \State 将 $s$ 加入 $R_t(Z_s^{(t)})$
+    \EndIf
+  \EndFor
+\EndFor
+\State $S\gets\emptyset$；对所有 $(t,u)$，令 $C_{t,u}\gets\mathrm{false}$
+\State 对所有 $s$，令 $g_s\gets\sum_{t=1}^\theta\mathbb{I}[Z_s^{(t)}\ne\bot]$
+\For{$i=1,\ldots,k$}
+  \State 选择 $v\in\arg\max_{s\in V\setminus S}g_s$
+  \State $S\gets S\cup\{v\}$
+  \For{$t=1,\ldots,\theta$}
+    \State $u\gets Z_v^{(t)}$
+    \If{$u\ne\bot$}
+      \If{$C_{t,u}=\mathrm{false}$}
+        \State $C_{t,u}\gets\mathrm{true}$
+        \For{每个 $s\in R_t(u)$}
+          \State $g_s\gets g_s-1$
+        \EndFor
+      \EndIf
+    \EndIf
+  \EndFor
+\EndFor
+\State \Return $S$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{采样数量与近似保证}
+\label{sec:theoretical-guarantees}
+
+本小节先给出最优传播规模的可计算下界，再推导同时控制所有候选集合估计误差所需的充分采样量，
+最后将经验目标上的贪心保证转化为真实目标上的近似保证。
+
+记最优传播规模为 $\mathrm{OPT}=\max_{|S|=k}\sigma(S)$。
+计算样本量时，我们使用它的一个确定性下界。
+取使用概率 $p_u^a$ 最大的 $k$ 个节点构成 $S_a$，并定义
+\begin{equation}
+\label{eq:opt-lower-bound}
+ \mathrm{LB}=\sum_{u\in S_a}p_u^a.
+\end{equation}
+
+\begin{lemma}[传播规模下界]
+\label{lem:lower-bound}
+$\mathrm{LB}\le\sigma(S_a)\le\mathrm{OPT}$。
+若 $\mathrm{LB}=0$，则任意种子集合的期望传播规模均为零。
+\end{lemma}
+\begin{proof}[证明]\renewcommand{\qedsymbol}{}
+对于 $u\in S_a$，令 $I_u$ 表示从 $u$ 投放的优惠券是否在首次到访时就被使用。
+每个这样的事件都会激活一个不同的用户，因此在每次传播实现中，最终激活人数均不少于
+$\sum_{u\in S_a}I_u$。
+取期望可得 $\sigma(S_a)\ge\sum_{u\in S_a}p_u^a$。
+不等式 $\sigma(S_a)\le\mathrm{OPT}$ 则由最优值的定义直接得到。
+由于 $k\ge1$，且 $S_a$ 包含使用概率最大的节点，$\mathrm{LB}=0$ 意味着所有节点的 $p_u^a$ 均为零，
+因而任何优惠券都不可能被使用。
+\end{proof}
+
+当 $\mathrm{LB}>0$ 时，给定 $\varepsilon\in(0,1-1/e)$ 和 $\delta\in(0,1)$，令
+\begin{equation}
+\label{eq:sample-budget}
+ \theta=\left\lceil
+ \frac{10k}{\varepsilon^2\mathrm{LB}}
+ \ln\left(\frac{2\binom nk}{\delta}\right)
+ \right\rceil.
+\end{equation}
+实际计算这一预算时，可以用上界 $k\ln(en/k)$ 替代 $\ln\binom nk$。
+
+\begin{theorem}[充分采样量]
+\label{thm:sample-complexity}
+假设 $\mathrm{LB}>0$。对于 $\varepsilon\in(0,1-1/e)$ 和 $\delta\in(0,1)$，
+若 $\theta$ 不小于式~\eqref{eq:sample-budget}~给出的整数预算，则以至少 $1-\delta$ 的概率，
+\begin{equation}
+\label{eq:uniform-accuracy}
+ \begin{gathered}
+ \left|\hat\sigma_\theta(S)-\sigma(S)\right|
+ \le\frac{\varepsilon}{2}\mathrm{OPT},\\
+ \text{对所有满足 } |S|=k \text{ 的 } S\subseteq V \text{ 同时成立。}
+ \end{gathered}
+\end{equation}
+这里的概率针对构造 $\hat\sigma_\theta$ 时生成的独立样本组。
+\end{theorem}
+\begin{proof}[证明]\renewcommand{\qedsymbol}{}
+固定一个大小为 $k$ 的种子集合 $S$。
+由引理~\ref{lem:unbiased}，$Y_t(S)$ 的期望为 $\sigma(S)$。
+不同样本组对应的 $Y_t(S)$ 相互独立，且其取值位于 $[0,k]$ 中，因为每张优惠券最多激活一个用户。
+因此，
+\[
+ \operatorname{Var}(Y_t(S))\le\mathbb E[Y_t(S)^2]
+ \le k\mathbb E[Y_t(S)]=k\sigma(S).
+\]
+令 $a=\varepsilon\mathrm{OPT}/2$。
+中心化后的随机变量满足 $|Y_t(S)-\sigma(S)|\le k$。
+由 Bernstein 不等式，得到
+\begin{align}
+\label{eq:bernstein}
+ \Pr\bigl[|\hat\sigma_\theta(S)-\sigma(S)|\ge a\bigr]
+ &\le 2\exp\left(-\frac{\theta a^2}
+ {2k\sigma(S)+(2/3)ka}\right)\nonumber\\
+ &\le 2\exp\left(-\frac{\theta\varepsilon^2\mathrm{OPT}}
+ {10k}\right).
+\end{align}
+第二个不等式使用了 $\sigma(S)\le\mathrm{OPT}$，以及当 $\varepsilon<1$ 时成立的
+$4(2+\varepsilon/3)<10$。
+
+大小为 $k$ 的种子集合共有 $\binom nk$ 个。
+对这些集合应用联合界，再利用 $\mathrm{LB}\le\mathrm{OPT}$，可知至少一个集合的估计误差不小于 $a$ 的概率至多为
+\[
+ 2\binom nk\exp\left(-\frac{\theta\varepsilon^2\mathrm{LB}}
+ {10k}\right).
+\]
+只要满足
+\[
+ \theta\ge\frac{10k}{\varepsilon^2\mathrm{LB}}
+ \ln\left(\frac{2\binom nk}{\delta}\right),
+\]
+上述概率就不超过 $\delta$。
+式~\eqref{eq:sample-budget}~将这一充分阈值向上取整，故式~\eqref{eq:uniform-accuracy}~成立。
+\end{proof}
+
+这里需要同时控制所有大小为 $k$ 的集合，是因为算法使用同一批样本估计传播规模并选择最终输出。
+仅对预先固定的一个集合证明误差较小，不能直接保证根据样本选出的集合也满足同样的误差界。
+定理~\ref{thm:sample-complexity}~同时适用于算法输出和真实最优集合。
+上述预算给出的是充分采样量，并不声称是最少所需的样本数。
+这里的独立采样单位是各组对应的 $Y_t(S)$，而不是同一组中不同使用者的覆盖指示变量。
+
+\begin{theorem}[近似保证]
+\label{thm:approx}
+对于 $\varepsilon\in(0,1-1/e)$ 和 $\delta\in(0,1)$，在上述模型假设下，
+算法~\ref{alg:cim-ris}~返回大小为 $k$ 的种子集合 $\hat S$，并以至少 $1-\delta$ 的概率满足
+\begin{equation}
+\label{eq:approx-bound}
+ \sigma(\hat S)\ge(1-1/e-\varepsilon)\mathrm{OPT}.
+\end{equation}
+\end{theorem}
+\begin{proof}[证明]\renewcommand{\qedsymbol}{}
+若 $\mathrm{LB}=0$，则由引理~\ref{lem:lower-bound}~可知所有种子集合的传播规模均为零，
+算法返回 $S_a$ 即为最优。
+否则，考虑定理~\ref{thm:sample-complexity}~中的一致误差界成立的事件，其概率至少为 $1-\delta$。
+记 $\alpha=1-1/e$、$a=\varepsilon\mathrm{OPT}/2$，并令 $S^*$ 为真实目标 $\sigma$ 的最优种子集合。
+
+对于任意固定的样本，引理~\ref{lem:unbiased}~说明 $\hat\sigma_\theta$ 是归一化、单调、次模函数。
+算法对这一经验目标执行精确贪心选择，因此由基数约束下的标准贪心保证~\cite{nemhauser1978analysis}，有
+\[
+ \hat\sigma_\theta(\hat S)
+ \ge\alpha\max_{|S|=k}\hat\sigma_\theta(S)
+ \ge\alpha\hat\sigma_\theta(S^*).
+\]
+对两个大小均为 $k$ 的集合 $\hat S$ 和 $S^*$ 应用式~\eqref{eq:uniform-accuracy}，可得
+\begin{align*}
+ \sigma(\hat S)
+ &\ge\hat\sigma_\theta(\hat S)-a\\
+ &\ge\alpha\hat\sigma_\theta(S^*)-a\\
+ &\ge\alpha\mathrm{OPT}-(1+\alpha)a\\
+ &\ge(\alpha-\varepsilon)\mathrm{OPT},
+\end{align*}
+其中最后一步使用了 $(1+\alpha)/2\le1$。
+\end{proof}
+
+\subsection{计算成本与适用范围}
+\label{sec:discussion-sampling}
+
+通过排序计算 $S_a$ 需要 $O(n\log(n+1))$ 时间，预先计算转发区间边界需要 $O(n+m)$ 时间。
+若使用二分查找确定转发邻居，则每条轨迹的期望计算成本为 $O(\log(n+1)/\beta)$，
+其中也计入了终止行为所需的常数时间。
+因此，生成全部样本组的期望时间为 $O(n\theta\log(n+1)/\beta)$。
+
+倒排索引中至多包含 $n\theta$ 条成员记录。
+每个集合只在其对应元素首次被覆盖时处理一次，所以所有计数器递减操作总共需要 $O(n\theta)$ 时间。
+扫描候选种子的增益以寻找最大值需要 $O(nk)$ 时间，
+检查选中种子的样本终点需要 $O(k\theta)\le O(n\theta)$ 时间。
+因此，当 $\mathrm{LB}>0$ 时，总期望运行时间为
+\begin{equation}
+\label{eq:total-complexity}
+ O\left(m+n\log(n+1)+\frac{n\theta\log(n+1)}{\beta}+nk\right),
+\end{equation}
+空间开销为 $O(n+m+n\theta)$。
+当 $\mathrm{LB}=0$ 时，算法在计算下界后直接返回。
+
+上述界明确给出了该构造的成本：每个样本组都需要模拟 $n$ 条正向轨迹。
+当 $\mathrm{LB}$ 较小或所要求的精度较高时，充分采样量可能很大。
+该方法避免显式存储矩阵 $M$，并在整个贪心过程中复用采样结果，
+但仅凭这些性质还不能断言它比其他计算方法具有时间或空间优势。
+
+本构造也不同于为所有假想起点共享同一个随机世界的做法。
+这里，各候选种子对应随机世界之间的独立性，保证了集合的联合覆盖概率与独立优惠券传播相匹配。
+因此，即使某种直接生成的反向集合对每个 $s$ 都满足 $\Pr[s\in R_t(u)]=M_{u,s}$，
+也不能仅凭这一点替换当前构造；其联合成员分布还必须满足式~\eqref{eq:reverse-coverage}。
+其他反向生成方式的构造是另一个需要研究的问题，不是上述近似保证成立的前提。
